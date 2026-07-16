@@ -5,15 +5,23 @@ import { getCollection } from 'astro:content';
 import { abilities, siteConfig } from '../config/site';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-const projects = (await getCollection('projects')).sort((a, b) => a.data.order.general - b.data.order.general).slice(0, 4);
+const projects = (await getCollection('projects'))
+  .sort((a, b) => a.data.order.general - b.data.order.general)
+  .slice(0, 4);
 const resumeFiles = [
   { label: '通用 AI 产品简历', path: '/resume/zhao-tianqi-general.pdf' },
   { label: '游戏 AI 定向简历', path: '/resume/zhao-tianqi-game-ai.pdf' },
   { label: 'AI Agent 定向简历', path: '/resume/zhao-tianqi-agent.pdf' },
-].map((item) => ({ ...item, exists: existsSync(join(process.cwd(), 'public', item.path.replace(/^\//, ''))) }));
+].map((item) => ({
+  ...item,
+  exists: existsSync(join(process.cwd(), 'public', item.path.replace(/^\//, ''))),
+}));
 ---
 
-<BaseLayout title="在线简历｜赵天琦 AI 产品经理" description="赵天琦的在线简历：AI 产品、Agent、游戏 AI、Prompt、RAG 与产品评测实践。">
+<BaseLayout
+  title="在线简历｜赵天琦 AI 产品经理"
+  description="赵天琦的在线简历：AI 产品、Agent、游戏 AI、Prompt、RAG 与产品评测实践。"
+>
   <div class="resume-page container">
     <header class="resume-actions" data-no-print>
       <div>
@@ -21,8 +29,22 @@ const resumeFiles = [
         <p>可打印为黑白 A4；PDF 文件存在时自动显示下载按钮。</p>
       </div>
       <div>
-        {resumeFiles.map((file) => file.exists ? <a class="button" href={file.path} download>{file.label}</a> : <span class="button resume-actions__missing" aria-disabled="true">{file.label} · 待补充</span>)}
-        <button class="button button--primary" type="button" onclick="window.print()">打印 / 导出 PDF</button>
+        {
+          resumeFiles.map((file) =>
+            file.exists ? (
+              <a class="button" href={file.path} download>
+                {file.label}
+              </a>
+            ) : (
+              <span class="button resume-actions__missing" aria-disabled="true">
+                {file.label} · 待补充
+              </span>
+            ),
+          )
+        }
+        <button class="button button--primary" type="button" onclick="window.print()"
+          >打印 / 导出 PDF</button
+        >
       </div>
     </header>
 
@@ -42,40 +64,70 @@ const resumeFiles = [
 
       <section class="resume-section resume-profile">
         <h2>个人简介</h2>
-        <p>交通工程背景的 AI 产品实践者，聚焦大模型应用、Agent、Prompt 实验、RAG 与产品评测。习惯从用户任务和系统约束出发，把需求推进为可运行、可评测、可迭代的产品方案。</p>
+        <p>
+          交通工程背景的 AI 产品实践者，聚焦大模型应用、Agent、Prompt 实验、RAG
+          与产品评测。习惯从用户任务和系统约束出发，把需求推进为可运行、可评测、可迭代的产品方案。
+        </p>
       </section>
 
       <section class="resume-section">
         <h2>核心能力</h2>
         <div class="resume-capabilities">
-          {abilities.map((ability) => <div><strong>{ability.title}</strong><span>{ability.description}</span></div>)}
+          {
+            abilities.map((ability) => (
+              <div>
+                <>
+                  <strong>{ability.title}</strong>
+                  <span>{ability.description}</span>
+                </>
+              </div>
+            ))
+          }
         </div>
       </section>
 
       <section class="resume-section">
-        <div class="resume-section__heading"><h2>代表项目</h2><a href="/projects">全部项目 ↗</a></div>
+        <div class="resume-section__heading">
+          <h2>代表项目</h2><a href="/projects">全部项目 ↗</a>
+        </div>
         <div class="resume-projects">
-          {projects.map((project) => {
-            const slug = project.id.replace(/\.mdx?$/, '');
-            return (
-              <article class="resume-item">
-                <div class="resume-item__title">
-                  <div><span class="mono">{project.data.index}</span><h3>{project.data.title}</h3></div>
-                  <span>{project.data.period}</span>
-                </div>
-                <p><strong>{project.data.role}</strong> · {project.data.description}</p>
-                <ul>{project.data.responsibilities.slice(0, 2).map((item) => <li>{item}</li>)}</ul>
-                <a href={`/projects/${slug}`}>查看案例 ↗</a>
-              </article>
-            );
-          })}
+          {
+            projects.map((project) => {
+              const slug = project.id.replace(/\.mdx?$/, '');
+              return (
+                <article class="resume-item">
+                  <div class="resume-item__title">
+                    <div>
+                      <>
+                        <span class="mono">{project.data.index}</span>
+                        <h3>{project.data.title}</h3>
+                      </>
+                    </div>
+                    <span>{project.data.period}</span>
+                  </div>
+                  <p>
+                    <strong>{project.data.role}</strong> · {project.data.description}
+                  </p>
+                  <ul>
+                    {project.data.responsibilities.slice(0, 2).map((item) => (
+                      <li>{item}</li>
+                    ))}
+                  </ul>
+                  <a href={`/projects/${slug}`}>查看案例 ↗</a>
+                </article>
+              );
+            })
+          }
         </div>
       </section>
 
       <section class="resume-section resume-two-columns">
         <div>
           <h2>方法与工具</h2>
-          <p>Product Discovery · Agent Workflow · Prompt Engineering · RAG · LLM Evaluation · Experiment Design · Python · Streamlit · Dify · Astro · TypeScript</p>
+          <p>
+            Product Discovery · Agent Workflow · Prompt Engineering · RAG · LLM Evaluation ·
+            Experiment Design · Python · Streamlit · Dify · Astro · TypeScript
+          </p>
         </div>
         <div>
           <h2>教育与背景</h2>
@@ -303,4 +355,3 @@ const resumeFiles = [
     }
   }
 </style>
-

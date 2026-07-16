@@ -10,9 +10,13 @@ const { current } = Astro.props;
 ---
 
 <nav class="track-switcher" aria-label="定向首页切换">
-  {(Object.values(trackConfigs)).map((item) => (
-    <a href={item.path} aria-current={current === item.key ? 'page' : undefined}>{item.label}</a>
-  ))}
+  {
+    Object.values(trackConfigs).map((item) => (
+      <a href={item.path} aria-current={current === item.key ? 'page' : undefined}>
+        {item.label}
+      </a>
+    ))
+  }
 </nav>
 
 <style>
@@ -46,4 +50,3 @@ const { current } = Astro.props;
     }
   }
 </style>
-

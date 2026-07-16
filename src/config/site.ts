@@ -32,7 +32,7 @@ export const trackConfigs: Record<TargetTrack, TrackConfig> = {
     path: '/',
     label: '通用 AI 产品',
     eyebrow: 'AI PRODUCT PORTFOLIO · 2026',
-    title: '把 AI 的可能性，做成可验证的产品。',
+    title: '游戏 AI 与 Agent\n产品实践',
     role: 'AI 产品经理 / AI Agent 产品设计与开发',
     description:
       '你好，我是赵天琦。从交通工程走向 AI 产品，关注大模型应用、Agent、Prompt 实验与产品评测，把模糊需求推进为可运行、可评测、可迭代的产品。',
@@ -46,7 +46,7 @@ export const trackConfigs: Record<TargetTrack, TrackConfig> = {
     path: '/game',
     label: '游戏 AI',
     eyebrow: 'GAME AI TRACK · AIGC',
-    title: '让生成能力，回到真实的游戏生产与增长闭环。',
+    title: '游戏 AI 与 AIGC\n产品实践',
     role: '游戏 AI / AIGC 产品经理',
     description:
       '聚焦游戏内容生成、增长投放、角色一致性与 Prompt 工作流，用实验和评测判断 AI 是否真正提升生产质量。',
@@ -60,7 +60,7 @@ export const trackConfigs: Record<TargetTrack, TrackConfig> = {
     path: '/agent',
     label: 'AI Agent',
     eyebrow: 'AGENT SYSTEM · LLM APPLICATION',
-    title: '让 Agent 不只会回答，也能被理解、评测与接管。',
+    title: '大模型与 AI Agent\n产品实践',
     role: '大模型 / AI Agent 产品经理',
     description:
       '聚焦 Agent 工作流、RAG、模型评测、记忆系统与产品能力边界，把自动化过程设计成可观察的协作系统。',
@@ -74,7 +74,7 @@ export const trackConfigs: Record<TargetTrack, TrackConfig> = {
     path: '/auto',
     label: '智能汽车 AI',
     eyebrow: 'AUTOMOTIVE AI · SCENARIO AGENT',
-    title: '在复杂座舱里，让智能始终留有安全边界。',
+    title: '智能汽车与场景 AI\n产品实践',
     role: '智能座舱 / 场景 AI 产品经理',
     description:
       '聚焦智能座舱、场景 Agent、指令理解、安全确认与用户反馈，探索交通工程背景与 AI 产品能力的交叉价值。',
@@ -111,4 +111,3 @@ export const abilities = [
     description: '把成功率、稳定性、成本、体验与失败类型放进同一决策框架。',
   },
 ] as const;
-

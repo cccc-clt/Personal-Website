@@ -16,9 +16,13 @@ const isActive = (href: string) => (href === '/' ? pathname === '/' : pathname.s
     </a>
 
     <nav class="desktop-nav" aria-label="主要导航">
-      {siteConfig.nav.map((item) => (
-        <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>{item.label}</a>
-      ))}
+      {
+        siteConfig.nav.map((item) => (
+          <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
+            {item.label}
+          </a>
+        ))
+      }
     </nav>
 
     <div class="header-actions">
@@ -26,7 +30,14 @@ const isActive = (href: string) => (href === '/' ? pathname === '/' : pathname.s
         GitHub <span aria-hidden="true">↗</span>
       </a>
       <a class="header-resume" href="/resume">简历</a>
-      <button class="menu-button" type="button" aria-label="打开导航" aria-controls="mobile-menu" aria-expanded="false" data-menu-button>
+      <button
+        class="menu-button"
+        type="button"
+        aria-label="打开导航"
+        aria-controls="mobile-menu"
+        aria-expanded="false"
+        data-menu-button
+      >
         <span></span><span></span>
       </button>
     </div>
@@ -34,11 +45,14 @@ const isActive = (href: string) => (href === '/' ? pathname === '/' : pathname.s
 
   <div class="mobile-menu" id="mobile-menu" aria-hidden="true" data-mobile-menu>
     <nav aria-label="移动端导航">
-      {siteConfig.nav.map((item, index) => (
-        <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
-          <span class="mono">0{index + 1}</span>{item.label}
-        </a>
-      ))}
+      {
+        siteConfig.nav.map((item, index) => (
+          <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
+            <span class="mono">0{index + 1}</span>
+            {item.label}
+          </a>
+        ))
+      }
       <a href="/credits"><span class="mono">05</span>资源署名</a>
     </nav>
     <p>{siteConfig.availability}</p>
@@ -48,15 +62,17 @@ const isActive = (href: string) => (href === '/' ? pathname === '/' : pathname.s
 <script>
   const button = document.querySelector<HTMLButtonElement>('[data-menu-button]');
   const menu = document.querySelector<HTMLElement>('[data-mobile-menu]');
-  const closeMenu = () => {
+  const isMenuOpen = () => button?.getAttribute('aria-expanded') === 'true';
+  const closeMenu = (restoreFocus = true) => {
+    if (!isMenuOpen()) return;
     button?.setAttribute('aria-expanded', 'false');
     button?.setAttribute('aria-label', '打开导航');
     menu?.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('nav-open');
+    if (restoreFocus) button?.focus();
   };
   button?.addEventListener('click', () => {
-    const open = button.getAttribute('aria-expanded') === 'true';
-    if (open) {
+    if (isMenuOpen()) {
       closeMenu();
     } else {
       button.setAttribute('aria-expanded', 'true');
@@ -67,12 +83,15 @@ const isActive = (href: string) => (href === '/' ? pathname === '/' : pathname.s
     }
   });
   document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') {
+    if (event.key === 'Escape' && isMenuOpen()) {
       closeMenu();
-      button?.focus();
     }
   });
-  menu?.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeMenu));
+  menu?.querySelectorAll('a').forEach((link) =>
+    link.addEventListener('click', () => {
+      closeMenu(false);
+    }),
+  );
 </script>
 
 <style>
@@ -273,4 +292,3 @@ const isActive = (href: string) => (href === '/' ? pathname === '/' : pathname.s
     }
   }
 </style>
-

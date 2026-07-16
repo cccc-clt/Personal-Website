@@ -102,7 +102,13 @@
   width: 6.2%;
   height: 3.4%;
   border-radius: 50%;
-  background: radial-gradient(circle at 55% 45%, white 0 12%, #72c7f4 16% 38%, #6265be 42% 72%, #242c63 76%);
+  background: radial-gradient(
+    circle at 55% 45%,
+    white 0 12%,
+    #72c7f4 16% 38%,
+    #6265be 42% 72%,
+    #242c63 76%
+  );
   box-shadow: 0 0 12px rgba(103, 173, 240, 0.4);
 }
 
@@ -174,7 +180,13 @@
   aspect-ratio: 1;
   border: 1px solid rgba(255, 255, 255, 0.85);
   border-radius: 50%;
-  background: radial-gradient(circle, white 0 18%, var(--gold) 20% 26%, #7ea5f1 31% 58%, transparent 62%);
+  background: radial-gradient(
+    circle,
+    white 0 18%,
+    var(--gold) 20% 26%,
+    #7ea5f1 31% 58%,
+    transparent 62%
+  );
   box-shadow: 0 0 24px rgba(113, 168, 244, 0.85);
 }
 
@@ -213,4 +225,3 @@
     width: min(520px, 92vw);
   }
 }
-

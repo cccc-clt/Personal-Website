@@ -4,7 +4,9 @@ import InnerPageHero from '../../components/InnerPageHero.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
-const projects = (await getCollection('projects')).sort((a, b) => a.data.order.general - b.data.order.general);
+const projects = (await getCollection('projects')).sort(
+  (a, b) => a.data.order.general - b.data.order.general,
+);
 const filters = [
   { key: 'all', label: '全部项目' },
   { key: 'game', label: '游戏 AI' },
@@ -13,22 +15,40 @@ const filters = [
 ] as const;
 ---
 
-<BaseLayout title="项目展｜赵天琦 AI 产品作品集" description="七个 AI 产品案例，覆盖模型评测、游戏 AI、UI Agent、智能座舱、RAG 与角色记忆。">
+<BaseLayout
+  title="项目展｜赵天琦 AI 产品作品集"
+  description="七个 AI 产品案例，覆盖模型评测、游戏 AI、UI Agent、智能座舱、RAG 与角色记忆。"
+>
   <InnerPageHero
     eyebrow="PROJECT EXHIBITION / 07 CASES"
     title="作品不是功能集合，而是一连串被验证过的产品判断。"
     description="从问题、工作流与人工节点，到失败、评测与下一轮迭代。这里保留每个项目真正值得复盘的部分。"
   >
     <div class="project-filters" role="group" aria-label="按方向筛选项目" data-project-filters>
-      {filters.map((filter) => (
-        <button type="button" data-filter={filter.key} aria-pressed={filter.key === 'all' ? 'true' : 'false'}>{filter.label}</button>
-      ))}
+      {
+        filters.map((filter) => (
+          <button
+            type="button"
+            data-filter={filter.key}
+            aria-pressed={filter.key === 'all' ? 'true' : 'false'}
+          >
+            {filter.label}
+          </button>
+        ))
+      }
     </div>
   </InnerPageHero>
 
   <section class="project-index section" aria-live="polite">
     <div class="container project-index__grid" data-project-grid>
-      {projects.map((project, index) => <ProjectCard project={project} layout={index === 0 || index === 4 ? 'wide' : index % 3 === 1 ? 'portrait' : 'standard'} />)}
+      {
+        projects.map((project, index) => (
+          <ProjectCard
+            project={project}
+            layout={index === 0 || index === 4 ? 'wide' : index % 3 === 1 ? 'portrait' : 'standard'}
+          />
+        ))
+      }
     </div>
     <p class="sr-only" data-filter-status>当前展示全部 7 个项目</p>
   </section>
@@ -41,7 +61,9 @@ const filters = [
   filterGroup?.querySelectorAll<HTMLButtonElement>('button').forEach((button) => {
     button.addEventListener('click', () => {
       const filter = button.dataset.filter ?? 'all';
-      filterGroup.querySelectorAll('button').forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
+      filterGroup
+        .querySelectorAll('button')
+        .forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
       let visible = 0;
       cards.forEach((card) => {
         const matches = filter === 'all' || (card.dataset.tracks ?? '').split(' ').includes(filter);
@@ -111,4 +133,3 @@ const filters = [
     }
   }
 </style>
-

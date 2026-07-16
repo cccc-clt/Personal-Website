@@ -4,7 +4,11 @@ import { siteConfig, trackConfigs } from '../config/site';
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title={siteConfig.title} description={trackConfigs.general.seoDescription} track="general" image="/images/og/og-general.webp">
+<BaseLayout
+  title={siteConfig.title}
+  description={trackConfigs.general.seoDescription}
+  track="general"
+  image="/images/og/og-general.webp"
+>
   <HomePage config={trackConfigs.general} />
 </BaseLayout>
-

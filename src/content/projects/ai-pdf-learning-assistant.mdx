@@ -21,7 +21,16 @@ goal: '在缩短资料定位时间的同时，让用户清楚每个回答来自�
 problem: '关键词搜索无法处理概念相近但表述不同的问题；整份文档直接进入模型又会增加成本并弱化来源定位。'
 aiNeeded: '语义检索可以处理表达差异，大模型可以结合片段组织答案，但二者都需要证据展示和失败回退。'
 solution: '按文档结构与语义分块，通过向量检索和重排挑选片段，再基于片段回答并展示页码；检索不足时明确说明。'
-flow: ['解析 PDF', '按结构分块', '生成向量', '召回候选片段', '重排与阈值判断', '基于证据回答', '展示引用与状态']
+flow:
+  [
+    '解析 PDF',
+    '按结构分块',
+    '生成向量',
+    '召回候选片段',
+    '重排与阈值判断',
+    '基于证据回答',
+    '展示引用与状态',
+  ]
 aiDesign:
   - '输入包括 PDF 文档、用户问题与可选上下文'
   - '输出包括回答、引用片段、页码线索与检索状态'
@@ -30,7 +39,18 @@ aiDesign:
 humanCheckpoints: ['确认文档解析质量', '复核关键回答引用', '处理敏感或高风险资料']
 edgeCases: ['跨页表格', '扫描版 PDF', '标题层级丢失', '多个片段相互冲突']
 safety: ['所有回答展示来源', '证据不足时拒绝确定性回答', '本地资料不上传到未授权服务']
-evaluationMetrics: ['检索召回', '回答忠实度', '引用正确性', '稳定性', '响应时间', '调用成本', '可解释性', '安全性', '学习体验']
+evaluationMetrics:
+  [
+    '检索召回',
+    '回答忠实度',
+    '引用正确性',
+    '稳定性',
+    '响应时间',
+    '调用成本',
+    '可解释性',
+    '安全性',
+    '学习体验',
+  ]
 failures: ['固定长度分块切断语义', 'OCR 质量差却未提示', '召回片段相关但不能支持答案']
 iterations:
   - stage: 'ITERATION_02'
@@ -42,7 +62,8 @@ iterations:
 reflection: 'RAG 产品的信任来自“能指出证据，也能承认缺口”，而不只是更自然的回答。'
 nextSteps: ['加入 OCR 质量检测', '扩展表格解析', '建立查询—证据标注集']
 cover: '/images/projects/pdf-assistant/cover.webp'
-gallery: ['/images/projects/pdf-assistant/upload.webp', '/images/projects/pdf-assistant/answer.webp']
+gallery:
+  ['/images/projects/pdf-assistant/upload.webp', '/images/projects/pdf-assistant/answer.webp']
 featured: false
 order: { general: 5, game: 7, agent: 3, auto: 4 }
 ---
@@ -57,4 +78,3 @@ order: { general: 5, game: 7, agent: 3, auto: 4 }
 - 向量检索、重排和阈值链路
 - 引用片段与页码展示原型
 - 检索失败和证据冲突回退
-

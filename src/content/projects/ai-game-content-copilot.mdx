@@ -21,7 +21,16 @@ goal: '提升方向探索速度，同时让每个版本的策略差异、设定�
 problem: '一次性 Prompt 难以稳定携带复杂角色约束，多版本缺少可比较结构，反复修改后容易出现设定漂移。'
 aiNeeded: '生成模型适合快速发散语言表达，但必须用角色数据、世界规则和版本策略约束其开放性。'
 solution: '将角色信息、不可违反规则、创作目标和输出格式模块化，先生成差异策略，再输出 ABC 版本并保存优化意见。'
-flow: ['读取角色卡', '校验世界观规则', '确定内容目标', '生成差异策略', '输出 ABC 版本', '一致性自检', '人工选择与二次优化']
+flow:
+  [
+    '读取角色卡',
+    '校验世界观规则',
+    '确定内容目标',
+    '生成差异策略',
+    '输出 ABC 版本',
+    '一致性自检',
+    '人工选择与二次优化',
+  ]
 aiDesign:
   - '输入包括角色卡、世界观规则、内容场景、语气与格式'
   - '输出包括策略差异明确的 ABC 版本和自检结果'
@@ -30,7 +39,18 @@ aiDesign:
 humanCheckpoints: ['确认角色与世界观规则', '选择版本方向', '发布前内容审核']
 edgeCases: ['角色卡信息冲突', '版本差异只停留在措辞', '长链路修改丢失设定', '输出格式异常']
 safety: ['不生成未授权 IP 内容', '敏感主题人工审核', '保留版本与修改理由']
-evaluationMetrics: ['设定一致性', '策略差异度', '格式合规性', '稳定性', '响应时间', '修改成本', '可解释性', '安全性', '策划可用性']
+evaluationMetrics:
+  [
+    '设定一致性',
+    '策略差异度',
+    '格式合规性',
+    '稳定性',
+    '响应时间',
+    '修改成本',
+    '可解释性',
+    '安全性',
+    '策划可用性',
+  ]
 failures: ['多版本只是表面改写', '角色语气稳定但事实错误', '优化指令覆盖不可变设定']
 iterations:
   - stage: 'ITERATION_01'
@@ -42,7 +62,11 @@ iterations:
 reflection: '内容共创工具不应只追求“写得像”，更要帮助策划保留选择权、依据和世界观控制力。'
 nextSteps: ['扩展角色一致性规则', '支持批量任务', '增加版本差异可视化']
 cover: '/images/projects/game-copilot/cover.webp'
-gallery: ['/images/projects/game-copilot/character-config.webp', '/images/projects/game-copilot/versions.webp']
+gallery:
+  [
+    '/images/projects/game-copilot/character-config.webp',
+    '/images/projects/game-copilot/versions.webp',
+  ]
 featured: false
 order: { general: 6, game: 2, agent: 7, auto: 9 }
 ---
@@ -57,4 +81,3 @@ order: { general: 6, game: 2, agent: 7, auto: 9 }
 - ABC 多版本生成协议
 - 二次优化与版本记录
 - 角色漂移、事实冲突测试项
-

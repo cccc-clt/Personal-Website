@@ -11,16 +11,18 @@ import SectionIntro from './SectionIntro.astro';
       description="不是把所有问题都交给模型，而是明确产品目标、工作流、证据和边界。"
     />
     <ol class="abilities__list">
-      {abilities.map((ability, index) => (
-        <li class:list={[`abilities__item`, `abilities__item--${index + 1}`]}>
-          <span class="abilities__number mono">{ability.index}</span>
-          <div>
-            <span class="abilities__english mono">{ability.english}</span>
-            <h3>{ability.title}</h3>
-            <p>{ability.description}</p>
-          </div>
-        </li>
-      ))}
+      {
+        abilities.map((ability, index) => (
+          <li class:list={[`abilities__item`, `abilities__item--${index + 1}`]}>
+            <span class="abilities__number mono">{ability.index}</span>
+            <div>
+              <span class="abilities__english mono">{ability.english}</span>
+              <h3>{ability.title}</h3>
+              <p>{ability.description}</p>
+            </div>
+          </li>
+        ))
+      }
     </ol>
   </div>
 </section>
@@ -111,4 +113,3 @@ import SectionIntro from './SectionIntro.astro';
     }
   }
 </style>
-

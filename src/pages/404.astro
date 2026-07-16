@@ -3,7 +3,11 @@ import LabGuide from '../components/LabGuide.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="404｜数字向导暂时迷路" description="没有找到这个页面，返回首页或项目展继续浏览。" noindex>
+<BaseLayout
+  title="404｜数字向导暂时迷路"
+  description="没有找到这个页面，返回首页或项目展继续浏览。"
+  noindex
+>
   <section class="not-found">
     <div class="container not-found__grid">
       <div class="not-found__copy">
@@ -97,10 +101,23 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     box-shadow: 0 0 16px rgba(91, 109, 246, 0.5);
   }
 
-  .not-found__nodes i:nth-child(1) { top: 3%; left: 43%; }
-  .not-found__nodes i:nth-child(2) { top: 48%; right: 0; }
-  .not-found__nodes i:nth-child(3) { bottom: 8%; left: 22%; }
-  .not-found__nodes i:nth-child(4) { top: 24%; left: 2%; background: var(--gold); }
+  .not-found__nodes i:nth-child(1) {
+    top: 3%;
+    left: 43%;
+  }
+  .not-found__nodes i:nth-child(2) {
+    top: 48%;
+    right: 0;
+  }
+  .not-found__nodes i:nth-child(3) {
+    bottom: 8%;
+    left: 22%;
+  }
+  .not-found__nodes i:nth-child(4) {
+    top: 24%;
+    left: 2%;
+    background: var(--gold);
+  }
 
   .not-found__scene > span {
     position: absolute;
@@ -122,4 +139,3 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     }
   }
 </style>
-

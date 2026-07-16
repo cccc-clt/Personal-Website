@@ -9,8 +9,15 @@ import { siteConfig } from '../config/site';
       <h2>如果你也在做一件<br />值得被认真验证的事。</h2>
       <p>欢迎交流游戏 AI、Agent 产品、评测体系与 2027 届校招机会。</p>
       <div class="contact-section__actions">
-        <a class="button contact-section__mail" href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
-        <button class="button button--quiet" type="button" data-copy-email data-email={siteConfig.email}>复制邮箱</button>
+        <a class="button contact-section__mail" href={`mailto:${siteConfig.email}`}
+          >{siteConfig.email}</a
+        >
+        <button
+          class="button button--quiet"
+          type="button"
+          data-copy-email
+          data-email={siteConfig.email}>复制邮箱</button
+        >
       </div>
       <p class="contact-section__feedback" role="status" aria-live="polite" data-copy-feedback></p>
     </div>
@@ -135,10 +142,22 @@ import { siteConfig } from '../config/site';
     box-shadow: 0 0 15px #72adff;
   }
 
-  .contact-section__path i:nth-child(1) { top: 12%; left: 22%; }
-  .contact-section__path i:nth-child(2) { top: 42%; left: 54%; }
-  .contact-section__path i:nth-child(3) { right: 6%; bottom: 28%; }
-  .contact-section__path i:nth-child(4) { bottom: 4%; left: 27%; }
+  .contact-section__path i:nth-child(1) {
+    top: 12%;
+    left: 22%;
+  }
+  .contact-section__path i:nth-child(2) {
+    top: 42%;
+    left: 54%;
+  }
+  .contact-section__path i:nth-child(3) {
+    right: 6%;
+    bottom: 28%;
+  }
+  .contact-section__path i:nth-child(4) {
+    bottom: 4%;
+    left: 27%;
+  }
 
   .contact-section__scene > span {
     position: absolute;
@@ -159,4 +178,3 @@ import { siteConfig } from '../config/site';
     }
   }
 </style>
-

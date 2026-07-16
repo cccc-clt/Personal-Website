@@ -27,4 +27,3 @@ export interface TrackConfig {
   accent: string;
   seoDescription: string;
 }
-

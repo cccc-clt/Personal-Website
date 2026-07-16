@@ -12,9 +12,22 @@ const { project, layout = 'standard' } = Astro.props;
 const slug = project.id.replace(/\.mdx?$/, '');
 ---
 
-<article class:list={['project-card', `project-card--${layout}`]} data-project-card data-tracks={project.data.targetTracks.join(' ')}>
-  <a class="project-card__visual" href={`/projects/${slug}`} aria-label={`查看${project.data.title}详情`}>
-    <ProjectCover slug={slug} title={project.data.title} index={project.data.index} compact={layout !== 'wide'} />
+<article
+  class:list={['project-card', `project-card--${layout}`]}
+  data-project-card
+  data-tracks={project.data.targetTracks.join(' ')}
+>
+  <a
+    class="project-card__visual"
+    href={`/projects/${slug}`}
+    aria-label={`查看${project.data.title}详情`}
+  >
+    <ProjectCover
+      slug={slug}
+      title={project.data.title}
+      index={project.data.index}
+      compact={layout !== 'wide'}
+    />
   </a>
   <div class="project-card__body">
     <div class="project-card__meta">
@@ -26,7 +39,9 @@ const slug = project.id.replace(/\.mdx?$/, '');
     <ul aria-label="项目标签">
       {project.data.categories.slice(0, 3).map((category) => <li>{category}</li>)}
     </ul>
-    <a class="project-card__link" href={`/projects/${slug}`}>阅读案例 <span aria-hidden="true">↗</span></a>
+    <a class="project-card__link" href={`/projects/${slug}`}
+      >阅读案例 <span aria-hidden="true">↗</span></a
+    >
   </div>
 </article>
 
@@ -124,4 +139,3 @@ const slug = project.id.replace(/\.mdx?$/, '');
     }
   }
 </style>
-

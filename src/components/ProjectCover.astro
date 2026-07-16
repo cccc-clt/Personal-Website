@@ -19,7 +19,11 @@ const variantMap: Record<string, string> = {
 const variant = variantMap[slug] ?? 'matrix';
 ---
 
-<div class:list={['project-cover', `project-cover--${variant}`, { 'project-cover--compact': compact }]} role="img" aria-label={`${title} 概念封面`}>
+<div
+  class:list={['project-cover', `project-cover--${variant}`, { 'project-cover--compact': compact }]}
+  role="img"
+  aria-label={`${title} 概念封面`}
+>
   <div class="project-cover__wash"></div>
   <div class="project-cover__stage" aria-hidden="true">
     <span></span><span></span><span></span><span></span><span></span><span></span>
@@ -138,10 +142,21 @@ const variant = variantMap[slug] ?? 'matrix';
     box-shadow: 0 0 0 13px rgba(101, 154, 240, 0.12);
   }
 
-  .project-cover--tap .project-cover__stage span:nth-child(1) { top: 18%; left: 20%; }
-  .project-cover--tap .project-cover__stage span:nth-child(2) { top: 38%; left: 63%; }
-  .project-cover--tap .project-cover__stage span:nth-child(3) { top: 67%; left: 35%; }
-  .project-cover--tap .project-cover__stage span:nth-child(n + 4) { display: none; }
+  .project-cover--tap .project-cover__stage span:nth-child(1) {
+    top: 18%;
+    left: 20%;
+  }
+  .project-cover--tap .project-cover__stage span:nth-child(2) {
+    top: 38%;
+    left: 63%;
+  }
+  .project-cover--tap .project-cover__stage span:nth-child(3) {
+    top: 67%;
+    left: 35%;
+  }
+  .project-cover--tap .project-cover__stage span:nth-child(n + 4) {
+    display: none;
+  }
 
   .project-cover--growth .project-cover__wash {
     background: linear-gradient(140deg, #eefbff, #dce9ff 47%, #f6e4e0);
@@ -155,15 +170,40 @@ const variant = variantMap[slug] ?? 'matrix';
     box-shadow: var(--shadow-float);
   }
 
-  .project-cover--growth .project-cover__stage span:nth-child(1) { left: 9%; height: 20%; }
-  .project-cover--growth .project-cover__stage span:nth-child(2) { left: 26%; height: 32%; }
-  .project-cover--growth .project-cover__stage span:nth-child(3) { left: 43%; height: 48%; }
-  .project-cover--growth .project-cover__stage span:nth-child(4) { left: 60%; height: 63%; }
-  .project-cover--growth .project-cover__stage span:nth-child(5) { left: 77%; height: 78%; background: linear-gradient(#ffe8d4, #d88e76); }
-  .project-cover--growth .project-cover__stage span:nth-child(6) { display: none; }
+  .project-cover--growth .project-cover__stage span:nth-child(1) {
+    left: 9%;
+    height: 20%;
+  }
+  .project-cover--growth .project-cover__stage span:nth-child(2) {
+    left: 26%;
+    height: 32%;
+  }
+  .project-cover--growth .project-cover__stage span:nth-child(3) {
+    left: 43%;
+    height: 48%;
+  }
+  .project-cover--growth .project-cover__stage span:nth-child(4) {
+    left: 60%;
+    height: 63%;
+  }
+  .project-cover--growth .project-cover__stage span:nth-child(5) {
+    left: 77%;
+    height: 78%;
+    background: linear-gradient(#ffe8d4, #d88e76);
+  }
+  .project-cover--growth .project-cover__stage span:nth-child(6) {
+    display: none;
+  }
 
   .project-cover--cockpit .project-cover__wash {
-    background: radial-gradient(circle at 50% 100%, #223456, #1d2945 42%, #b8dffc 43%, #eaf8ff 68%, #e5e1fb);
+    background: radial-gradient(
+      circle at 50% 100%,
+      #223456,
+      #1d2945 42%,
+      #b8dffc 43%,
+      #eaf8ff 68%,
+      #e5e1fb
+    );
   }
 
   .project-cover--cockpit .project-cover__stage {
@@ -183,9 +223,15 @@ const variant = variantMap[slug] ?? 'matrix';
     box-shadow: 0 0 24px 8px rgba(111, 211, 255, 0.5);
   }
 
-  .project-cover--cockpit .project-cover__stage span:nth-child(2) { transform: translate(-150px, 40px); }
-  .project-cover--cockpit .project-cover__stage span:nth-child(3) { transform: translate(140px, 10px); }
-  .project-cover--cockpit .project-cover__stage span:nth-child(n + 4) { display: none; }
+  .project-cover--cockpit .project-cover__stage span:nth-child(2) {
+    transform: translate(-150px, 40px);
+  }
+  .project-cover--cockpit .project-cover__stage span:nth-child(3) {
+    transform: translate(140px, 10px);
+  }
+  .project-cover--cockpit .project-cover__stage span:nth-child(n + 4) {
+    display: none;
+  }
 
   .project-cover--branch .project-cover__wash {
     background: linear-gradient(150deg, #fff7f2, #f1dde4 45%, #dddffd);
@@ -212,11 +258,21 @@ const variant = variantMap[slug] ?? 'matrix';
     content: '';
   }
 
-  .project-cover--branch .project-cover__stage span:nth-child(1) { rotate: -48deg; }
-  .project-cover--branch .project-cover__stage span:nth-child(2) { rotate: -18deg; }
-  .project-cover--branch .project-cover__stage span:nth-child(3) { rotate: 18deg; }
-  .project-cover--branch .project-cover__stage span:nth-child(4) { rotate: 48deg; }
-  .project-cover--branch .project-cover__stage span:nth-child(n + 5) { display: none; }
+  .project-cover--branch .project-cover__stage span:nth-child(1) {
+    rotate: -48deg;
+  }
+  .project-cover--branch .project-cover__stage span:nth-child(2) {
+    rotate: -18deg;
+  }
+  .project-cover--branch .project-cover__stage span:nth-child(3) {
+    rotate: 18deg;
+  }
+  .project-cover--branch .project-cover__stage span:nth-child(4) {
+    rotate: 48deg;
+  }
+  .project-cover--branch .project-cover__stage span:nth-child(n + 5) {
+    display: none;
+  }
 
   .project-cover--documents .project-cover__wash {
     background: linear-gradient(135deg, #eefaff, #dcecff 50%, #e8e4ff);
@@ -230,13 +286,29 @@ const variant = variantMap[slug] ?? 'matrix';
     box-shadow: 18px 24px 38px rgba(75, 91, 148, 0.16);
   }
 
-  .project-cover--documents .project-cover__stage span:nth-child(1) { transform: translate(-18%, 18%) rotate(-11deg); }
-  .project-cover--documents .project-cover__stage span:nth-child(2) { transform: translate(0, 5%) rotate(3deg); }
-  .project-cover--documents .project-cover__stage span:nth-child(3) { transform: translate(18%, -8%) rotate(11deg); background: rgba(206, 224, 255, 0.86); }
-  .project-cover--documents .project-cover__stage span:nth-child(n + 4) { display: none; }
+  .project-cover--documents .project-cover__stage span:nth-child(1) {
+    transform: translate(-18%, 18%) rotate(-11deg);
+  }
+  .project-cover--documents .project-cover__stage span:nth-child(2) {
+    transform: translate(0, 5%) rotate(3deg);
+  }
+  .project-cover--documents .project-cover__stage span:nth-child(3) {
+    transform: translate(18%, -8%) rotate(11deg);
+    background: rgba(206, 224, 255, 0.86);
+  }
+  .project-cover--documents .project-cover__stage span:nth-child(n + 4) {
+    display: none;
+  }
 
   .project-cover--memory .project-cover__wash {
-    background: radial-gradient(circle at 50% 50%, #fff 0 5%, #d7ecff 6% 19%, #dcdcfb 20% 39%, #f2dfe7 40% 55%, #eef7ff 56%);
+    background: radial-gradient(
+      circle at 50% 50%,
+      #fff 0 5%,
+      #d7ecff 6% 19%,
+      #dcdcfb 20% 39%,
+      #f2dfe7 40% 55%,
+      #eef7ff 56%
+    );
   }
 
   .project-cover--memory .project-cover__stage span {
@@ -245,9 +317,18 @@ const variant = variantMap[slug] ?? 'matrix';
     border-radius: 50%;
   }
 
-  .project-cover--memory .project-cover__stage span:nth-child(2) { inset: 20%; border-style: dashed; rotate: 25deg; }
-  .project-cover--memory .project-cover__stage span:nth-child(3) { inset: 32%; rotate: -20deg; }
-  .project-cover--memory .project-cover__stage span:nth-child(n + 4) { display: none; }
+  .project-cover--memory .project-cover__stage span:nth-child(2) {
+    inset: 20%;
+    border-style: dashed;
+    rotate: 25deg;
+  }
+  .project-cover--memory .project-cover__stage span:nth-child(3) {
+    inset: 32%;
+    rotate: -20deg;
+  }
+  .project-cover--memory .project-cover__stage span:nth-child(n + 4) {
+    display: none;
+  }
 
   @media (max-width: 640px) {
     .project-cover,
@@ -257,4 +338,3 @@ const variant = variantMap[slug] ?? 'matrix';
     }
   }
 </style>
-

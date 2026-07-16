@@ -104,4 +104,3 @@ node scripts/generate-og.mjs
 - 简历按钮显示待补充：文件名必须与 `public/resume/README.md` 完全一致。
 
 资源待办以 `ASSET_CHECKLIST.md` 为准。
-

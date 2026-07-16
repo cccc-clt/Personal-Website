@@ -21,7 +21,16 @@ goal: '让团队能够回看一次结论由什么任务、样本、参数、输�
 problem: '普通对话界面难以保留完整实验条件，多次调用结果不能直接横向比较；样本、参数和版本变化后，结论也容易失去可复现性。'
 aiNeeded: '大模型输出存在随机性与模型差异，必须用批量调用、结构化记录和人机协同评分才能形成稳定证据。'
 solution: '以实验为中心串联 Prompt、样本、模型配置、原始输出、人工评分与调用成本，形成可筛选的对比视图和复盘记录。'
-flow: ['定义任务与样本', '固定模型与参数', '批量调用', '解析并保留原始输出', '人工与规则评分', '对比失败类型', '沉淀选型结论']
+flow:
+  [
+    '定义任务与样本',
+    '固定模型与参数',
+    '批量调用',
+    '解析并保留原始输出',
+    '人工与规则评分',
+    '对比失败类型',
+    '沉淀选型结论',
+  ]
 aiDesign:
   - '输入包括任务目标、Prompt 模板、测试样本、模型与参数配置'
   - '输出同时保留原始回答、结构化解析、耗时、Token 与异常信息'
@@ -30,7 +39,18 @@ aiDesign:
 humanCheckpoints: ['确认测试集代表性', '复核主观维度', '批准模型选型结论']
 edgeCases: ['超时或空响应', '结构化解析失败', '同一 Prompt 多次输出波动', '敏感问题拒答']
 safety: ['原始输出可追溯', '自动评分不替代人工复核', '敏感样本不进入公开演示数据']
-evaluationMetrics: ['任务完成度', '输出准确性', '格式合规性', '稳定性', '响应时间', '调用成本', '可解释性', '安全性', '用户体验']
+evaluationMetrics:
+  [
+    '任务完成度',
+    '输出准确性',
+    '格式合规性',
+    '稳定性',
+    '响应时间',
+    '调用成本',
+    '可解释性',
+    '安全性',
+    '用户体验',
+  ]
 failures: ['字段不一致导致对比困难', '平均分掩盖关键失败类型', '小样本结论被误当成通用结论']
 iterations:
   - stage: 'ITERATION_01'
@@ -42,7 +62,11 @@ iterations:
 reflection: '评测产品的价值不是制造一个总分，而是帮助团队看清能力、成本与风险之间的取舍。'
 nextSteps: ['扩充真实业务样本', '增加双人评分一致性检查', '沉淀模型版本变更记录']
 cover: '/images/projects/evaluation/cover.webp'
-gallery: ['/images/projects/evaluation/experiment-list.webp', '/images/projects/evaluation/model-compare.webp']
+gallery:
+  [
+    '/images/projects/evaluation/experiment-list.webp',
+    '/images/projects/evaluation/model-compare.webp',
+  ]
 featured: true
 order: { general: 1, game: 4, agent: 1, auto: 3 }
 ---
@@ -57,4 +81,3 @@ order: { general: 1, game: 4, agent: 1, auto: 3 }
 - 多模型、多版本并排比较原型
 - 九个评测维度及评分说明
 - 超时、拒答、格式错误等失败分类
-

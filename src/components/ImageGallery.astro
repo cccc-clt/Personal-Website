@@ -11,7 +11,12 @@ interface Props {
 }
 
 const { images, title, slug, index } = Astro.props;
-const availableImages = images.filter((src) => existsSync(join(process.cwd(), 'public', src.replace(/^\//, ''))));
+const isLocalAsset = (src: string) => src.startsWith('/') && !src.startsWith('//');
+const availableImages = images.filter(
+  (src) => isLocalAsset(src) && existsSync(join(process.cwd(), 'public', src.replace(/^\//, ''))),
+);
+const firstImage = availableImages[0];
+const firstImageAlt = firstImage ? `${title} 项目截图 1` : '';
 ---
 
 <section class="gallery" aria-labelledby="gallery-title">
@@ -31,7 +36,15 @@ const availableImages = images.filter((src) => existsSync(join(process.cwd(), 'p
             data-gallery-alt={`${title} 项目截图 ${imageIndex + 1}`}
             data-gallery-caption={`${title} · 图 ${String(imageIndex + 1).padStart(2, '0')}`}
           >
-            <img src={src} alt={`${title} 项目截图 ${imageIndex + 1}`} loading="lazy" decoding="async" />
+            <img
+              src={src}
+              alt={`${title} 项目截图 ${imageIndex + 1}`}
+              width="1600"
+              height="900"
+              loading="lazy"
+              decoding="async"
+              sizes="(max-width: 720px) calc(100vw - 48px), (max-width: 1200px) 60vw, 720px"
+            />
             <span>放大查看</span>
           </button>
         ))}
@@ -39,19 +52,43 @@ const availableImages = images.filter((src) => existsSync(join(process.cwd(), 'p
     ) : (
       <div class="gallery__fallback">
         <ProjectCover slug={slug} title={title} index={index} />
-        <p>真实项目截图尚未写入本地。页面先使用原创概念封面保持完整体验，待补充文件已记录在资源清单。</p>
+        <p>
+          真实项目截图尚未写入本地。页面先使用原创概念封面保持完整体验，待补充文件已记录在资源清单。
+        </p>
       </div>
     )
   }
 </section>
 
-<dialog class="gallery-dialog" data-gallery-dialog aria-labelledby="gallery-caption">
-  <button class="gallery-dialog__close" type="button" aria-label="关闭图片" data-gallery-close>×</button>
-  <figure>
-    <img src="" alt="" data-gallery-image />
-    <figcaption id="gallery-caption" data-gallery-caption></figcaption>
-  </figure>
-</dialog>
+{
+  firstImage && (
+    <dialog
+      class="gallery-dialog"
+      data-gallery-dialog
+      data-gallery-title={title}
+      aria-labelledby="gallery-caption"
+    >
+      <button class="gallery-dialog__close" type="button" aria-label="关闭图片" data-gallery-close>
+        ×
+      </button>
+      <figure>
+        <img
+          src={firstImage}
+          alt={firstImageAlt}
+          width="1600"
+          height="900"
+          loading="lazy"
+          decoding="async"
+          sizes="(max-width: 720px) calc(100vw - 48px), 1148px"
+          data-gallery-image
+        />
+        <figcaption id="gallery-caption" data-gallery-caption>
+          {title} · 图 01
+        </figcaption>
+      </figure>
+    </dialog>
+  )
+}
 
 <script>
   const dialog = document.querySelector<HTMLDialogElement>('[data-gallery-dialog]');
@@ -63,13 +100,14 @@ const availableImages = images.filter((src) => existsSync(join(process.cwd(), 'p
   const closeDialog = () => dialog?.close();
   document.querySelectorAll<HTMLButtonElement>('[data-gallery-open]').forEach((button) => {
     button.addEventListener('click', () => {
+      const source = button.dataset.gallerySrc;
+      if (!source || !dialog || !dialogImage) return;
       trigger = button;
-      if (dialogImage) {
-        dialogImage.src = button.dataset.gallerySrc ?? '';
-        dialogImage.alt = button.dataset.galleryAlt ?? '';
-      }
-      if (caption) caption.textContent = button.dataset.galleryCaption ?? '';
-      dialog?.showModal();
+      const fallbackText = dialog.dataset.galleryTitle ?? '项目截图';
+      dialogImage.src = source;
+      dialogImage.alt = button.dataset.galleryAlt ?? fallbackText;
+      if (caption) caption.textContent = button.dataset.galleryCaption ?? fallbackText;
+      dialog.showModal();
       closeButton?.focus();
     });
   });
@@ -78,7 +116,6 @@ const availableImages = images.filter((src) => existsSync(join(process.cwd(), 'p
     if (event.target === dialog) closeDialog();
   });
   dialog?.addEventListener('close', () => {
-    if (dialogImage) dialogImage.src = '';
     trigger?.focus();
   });
 </script>
@@ -215,4 +252,3 @@ const availableImages = images.filter((src) => existsSync(join(process.cwd(), 'p
     }
   }
 </style>
-

@@ -5,15 +5,43 @@ import { abilities, siteConfig } from '../config/site';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const journey = [
-  { index: '01', label: 'SYSTEM THINKING', title: '从交通工程理解复杂系统', text: '工程训练让我习惯先看参与者、约束、路径与异常，而不是把一个局部功能当成完整答案。' },
-  { index: '02', label: 'HANDS-ON AI', title: '用原型触摸模型边界', text: '通过 Prompt、RAG、工作流与轻量开发，把抽象的模型能力变成可观察的用户体验。' },
-  { index: '03', label: 'PRODUCT METHOD', title: '把“能做”改写为“值得做”', text: '从用户任务和业务目标判断 AI 是否必要，再设计输入、输出、人工节点与异常回退。' },
-  { index: '04', label: 'EVALUATION', title: '让失败成为共同语言', text: '通过样本、指标和失败分类，让产品、算法与业务能围绕同一组证据推进迭代。' },
-  { index: '05', label: 'NEXT STATION', title: '寻找游戏 AI 与 Agent 产品机会', text: '希望在真实团队中继续做作品优先、边界清楚、能够经受评测的 AI 产品。' },
+  {
+    index: '01',
+    label: 'SYSTEM THINKING',
+    title: '从交通工程理解复杂系统',
+    text: '工程训练让我习惯先看参与者、约束、路径与异常，而不是把一个局部功能当成完整答案。',
+  },
+  {
+    index: '02',
+    label: 'HANDS-ON AI',
+    title: '用原型触摸模型边界',
+    text: '通过 Prompt、RAG、工作流与轻量开发，把抽象的模型能力变成可观察的用户体验。',
+  },
+  {
+    index: '03',
+    label: 'PRODUCT METHOD',
+    title: '把“能做”改写为“值得做”',
+    text: '从用户任务和业务目标判断 AI 是否必要，再设计输入、输出、人工节点与异常回退。',
+  },
+  {
+    index: '04',
+    label: 'EVALUATION',
+    title: '让失败成为共同语言',
+    text: '通过样本、指标和失败分类，让产品、算法与业务能围绕同一组证据推进迭代。',
+  },
+  {
+    index: '05',
+    label: 'NEXT STATION',
+    title: '寻找游戏 AI 与 Agent 产品机会',
+    text: '希望在真实团队中继续做作品优先、边界清楚、能够经受评测的 AI 产品。',
+  },
 ] as const;
 ---
 
-<BaseLayout title="关于赵天琦｜AI 产品经理" description="赵天琦从交通工程走向 AI 产品的跨专业路径、产品方法与求职方向。">
+<BaseLayout
+  title="关于赵天琦｜AI 产品经理"
+  description="赵天琦从交通工程走向 AI 产品的跨专业路径、产品方法与求职方向。"
+>
   <InnerPageHero
     eyebrow="ABOUT / TIANQI ZHAO"
     title="我喜欢站在复杂系统与真实体验的交界处。"
@@ -45,13 +73,20 @@ const journey = [
         <h2 class="section-title">五个阶段，逐渐形成我的产品视角。</h2>
       </header>
       <ol>
-        {journey.map((item) => (
-          <li>
-            <span class="about-journey__number mono">{item.index}</span>
-            <span class="about-journey__label mono">{item.label}</span>
-            <div><h3>{item.title}</h3><p>{item.text}</p></div>
-          </li>
-        ))}
+        {
+          journey.map((item) => (
+            <li>
+              <span class="about-journey__number mono">{item.index}</span>
+              <span class="about-journey__label mono">{item.label}</span>
+              <div>
+                <>
+                  <h3>{item.title}</h3>
+                  <p>{item.text}</p>
+                </>
+              </div>
+            </li>
+          ))
+        }
       </ol>
     </div>
   </section>
@@ -63,13 +98,17 @@ const journey = [
         <h2 class="section-title">我如何推进一个 AI 产品问题。</h2>
       </header>
       <div class="about-method__grid">
-        {abilities.map((ability) => (
-          <article>
-            <span class="mono">{ability.index} / {ability.english}</span>
-            <h3>{ability.title}</h3>
-            <p>{ability.description}</p>
-          </article>
-        ))}
+        {
+          abilities.map((ability) => (
+            <article>
+              <span class="mono">
+                {ability.index} / {ability.english}
+              </span>
+              <h3>{ability.title}</h3>
+              <p>{ability.description}</p>
+            </article>
+          ))
+        }
       </div>
     </div>
   </section>
@@ -79,7 +118,9 @@ const journey = [
       <span class="eyebrow">03 / MODEL BOUNDARY</span>
       <div>
         <h2 class="section-title">好的 AI 体验，不是把人移出流程。</h2>
-        <p class="lede">它应该让重复劳动变轻，让证据更容易被看见，同时让用户在高风险、低置信和价值判断面前拥有清楚的控制权。</p>
+        <p class="lede">
+          它应该让重复劳动变轻，让证据更容易被看见，同时让用户在高风险、低置信和价值判断面前拥有清楚的控制权。
+        </p>
         <ul>
           <li>信息不足时，先暴露缺口</li>
           <li>高风险动作，保留人工确认</li>
@@ -97,7 +138,10 @@ const journey = [
         <h2>期待在真实团队里，把“可用”继续推进到“可信”。</h2>
       </div>
       <div>
-        <p>重点关注游戏 AI、AI Agent、大模型应用与产品评测方向，也愿意把工程背景带入智能汽车等复杂场景。</p>
+        <p>
+          重点关注游戏 AI、AI
+          Agent、大模型应用与产品评测方向，也愿意把工程背景带入智能汽车等复杂场景。
+        </p>
         <div class="about-direction__links">
           <a class="button button--primary" href="/projects">查看项目</a>
           <a class="button" href="/resume">在线简历</a>
@@ -311,4 +355,3 @@ const journey = [
     }
   }
 </style>
-

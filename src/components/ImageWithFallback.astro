@@ -10,6 +10,7 @@ interface Props {
   alt: string;
   width: number;
   height: number;
+  sizes?: string;
   priority?: boolean;
   fallbackLabel?: string;
   class?: string;
@@ -23,11 +24,13 @@ const {
   alt,
   width,
   height,
+  sizes = '100vw',
   priority = false,
   fallbackLabel = '本地视觉资产待补充',
   class: className,
 } = Astro.props;
-const publicExists = (path?: string) => Boolean(path && existsSync(join(process.cwd(), 'public', path.replace(/^\//, ''))));
+const publicExists = (path?: string) =>
+  Boolean(path && existsSync(join(process.cwd(), 'public', path.replace(/^\//, ''))));
 const hasAvif = publicExists(avif);
 const hasWebp = publicExists(webp);
 const hasMobileAvif = publicExists(mobileAvif);
@@ -47,6 +50,7 @@ const hasImage = Boolean(fallbackSource);
         alt={alt}
         width={width}
         height={height}
+        sizes={sizes}
         loading={priority ? 'eager' : 'lazy'}
         fetchpriority={priority ? 'high' : 'auto'}
         decoding="async"
@@ -79,4 +83,3 @@ const hasImage = Boolean(fallbackSource);
     font-size: 0.72rem;
   }
 </style>
-

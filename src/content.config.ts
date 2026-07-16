@@ -1,10 +1,11 @@
 import { defineCollection } from 'astro:content';
 import { z } from 'astro/zod';
+import { localMdxLoader } from './loaders/localMdxLoader';
 
 const track = z.enum(['general', 'game', 'agent', 'auto']);
 
 const projects = defineCollection({
-  type: 'content',
+  loader: localMdxLoader('./src/content/projects'),
   schema: z.object({
     index: z.string(),
     title: z.string(),

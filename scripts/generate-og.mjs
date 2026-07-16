@@ -1,12 +1,37 @@
+import { Buffer } from 'node:buffer';
 import { mkdir } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import sharp from 'sharp';
 
 const cards = [
-  { file: 'og-general.webp', eyebrow: 'AI PRODUCT PORTFOLIO', title: 'AI PRODUCT\nWITH EVIDENCE', accent: '#6475e9', mist: '#dcd8ff' },
-  { file: 'og-game.webp', eyebrow: 'GAME AI · AIGC', title: 'GAME AI\nPRODUCT PRACTICE', accent: '#d98772', mist: '#f5d7dd' },
-  { file: 'og-agent.webp', eyebrow: 'AGENT SYSTEM · LLM', title: 'AGENT\nPRODUCT PRACTICE', accent: '#6475e9', mist: '#d8e3ff' },
-  { file: 'og-auto.webp', eyebrow: 'AUTOMOTIVE AI', title: 'SCENARIO AI\nWITH BOUNDARIES', accent: '#3897b8', mist: '#d8eff5' },
+  {
+    file: 'og-general.webp',
+    eyebrow: 'AI PRODUCT PORTFOLIO',
+    title: 'AI PRODUCT\nWITH EVIDENCE',
+    accent: '#6475e9',
+    mist: '#dcd8ff',
+  },
+  {
+    file: 'og-game.webp',
+    eyebrow: 'GAME AI · AIGC',
+    title: 'GAME AI\nPRODUCT PRACTICE',
+    accent: '#d98772',
+    mist: '#f5d7dd',
+  },
+  {
+    file: 'og-agent.webp',
+    eyebrow: 'AGENT SYSTEM · LLM',
+    title: 'AGENT\nPRODUCT PRACTICE',
+    accent: '#6475e9',
+    mist: '#d8e3ff',
+  },
+  {
+    file: 'og-auto.webp',
+    eyebrow: 'AUTOMOTIVE AI',
+    title: 'SCENARIO AI\nWITH BOUNDARIES',
+    accent: '#3897b8',
+    mist: '#d8eff5',
+  },
 ];
 
 const outputDir = resolve('public/images/og');
@@ -50,5 +75,7 @@ for (const card of cards) {
     <text x="96" y="518" fill="#4d5670" font-family="Consolas, monospace" font-size="16" letter-spacing="2">GAME AI / AGENT / EVALUATION / RAG</text>
   </svg>`;
 
-  await sharp(Buffer.from(svg)).webp({ quality: 88, effort: 5 }).toFile(resolve(outputDir, card.file));
+  await sharp(Buffer.from(svg))
+    .webp({ quality: 88, effort: 5 })
+    .toFile(resolve(outputDir, card.file));
 }

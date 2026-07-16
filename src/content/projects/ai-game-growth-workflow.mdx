@@ -30,7 +30,18 @@ aiDesign:
 humanCheckpoints: ['确认用户假设', '审核品牌与渠道约束', '批准投放版本']
 edgeCases: ['目标用户缺失', '实验指标为空', '素材描述与实际画面冲突', '渠道规则不完整']
 safety: ['不补写缺失业务事实', '敏感内容进入人工审核', '实验结论标记样本范围']
-evaluationMetrics: ['任务完成度', '输出准确性', '格式合规性', '稳定性', '响应时间', '调用成本', '可解释性', '安全性', '可执行性']
+evaluationMetrics:
+  [
+    '任务完成度',
+    '输出准确性',
+    '格式合规性',
+    '稳定性',
+    '响应时间',
+    '调用成本',
+    '可解释性',
+    '安全性',
+    '可执行性',
+  ]
 failures: ['缺失输入被模型自行补全', '生成方向与实验目标脱节', '复盘只总结表现而不回写动作']
 iterations:
   - stage: 'DIFY_LIVE_001'
@@ -42,7 +53,8 @@ iterations:
 reflection: 'AI 在增长链路中的价值不是替代创意，而是把创意探索与实验学习连接起来。'
 nextSteps: ['接入真实实验样本', '细化渠道模板', '增加版本回看与差异对比']
 cover: '/images/projects/game-growth/cover.webp'
-gallery: ['/images/projects/game-growth/workflow.webp', '/images/projects/game-growth/evaluation.webp']
+gallery:
+  ['/images/projects/game-growth/workflow.webp', '/images/projects/game-growth/evaluation.webp']
 featured: true
 order: { general: 2, game: 1, agent: 5, auto: 8 }
 ---
@@ -57,4 +69,3 @@ order: { general: 2, game: 1, agent: 5, auto: 8 }
 - 输入输出契约与异常分支
 - 素材诊断和生成 Prompt 模板
 - `DIFY_LIVE_001` 流程复测记录
-
