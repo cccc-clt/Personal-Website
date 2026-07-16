@@ -1,43 +1,30 @@
+import type { CollectionEntry } from 'astro:content';
+
 export type ProjectStatus = 'LIVE' | 'TESTED' | 'ITERATING' | 'ARCHIVED';
 export type TargetTrack = 'general' | 'game' | 'agent' | 'auto';
+export type ProjectEntry = CollectionEntry<'projects'>;
 
-export interface IterationItem {
-  stage: string;
-  problem: string;
-  condition: string;
-  analysis: string;
-  change: string;
-  result: string;
-  next: string;
-}
-
-export interface Project {
-  slug: string;
-  index: string;
+export interface AssetCredit {
+  path: string;
   title: string;
-  englishTitle: string;
-  shortDescription: string;
-  fullDescription: string;
-  status: ProjectStatus;
-  category: string[];
-  targetTracks: TargetTrack[];
-  role: string;
-  period: string;
-  techStack: string[];
-  highlights: string[];
-  responsibilities: string[];
-  targetUser: string;
-  problem: string;
-  solution: string;
-  aiDesign: string[];
-  evaluationMetrics: string[];
-  iterations: IterationItem[];
-  coverImage: string;
-  screenshots: string[];
-  demoUrl?: string;
-  githubUrl?: string;
-  documentUrl?: string;
-  videoUrl?: string;
-  featured: boolean;
-  order: Record<TargetTrack, number>;
+  author: string;
+  source: string;
+  licenseStatus: 'ORIGINAL' | 'LICENSED' | 'PENDING';
+  note: string;
+  attributionRequired: boolean;
 }
+
+export interface TrackConfig {
+  key: TargetTrack;
+  path: string;
+  label: string;
+  eyebrow: string;
+  title: string;
+  role: string;
+  description: string;
+  tags: string[];
+  resumeLabel: string;
+  accent: string;
+  seoDescription: string;
+}
+

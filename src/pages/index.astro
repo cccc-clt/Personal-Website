@@ -1,9 +1,10 @@
 ---
 import HomePage from '../components/HomePage.astro';
-import { trackConfigs } from '../config/site';
+import { siteConfig, trackConfigs } from '../config/site';
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout pageTag="AI PRODUCT">
+<BaseLayout title={siteConfig.title} description={trackConfigs.general.seoDescription} track="general" image="/images/og/og-general.webp">
   <HomePage config={trackConfigs.general} />
 </BaseLayout>
+

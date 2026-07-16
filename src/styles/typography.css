@@ -1,0 +1,83 @@
+h1,
+h2,
+h3,
+p {
+  margin-block-start: 0;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+.display {
+  font-family: var(--font-cn);
+  font-size: clamp(3.4rem, 7.5vw, 7.5rem);
+  font-weight: 650;
+  letter-spacing: -0.075em;
+  line-height: 0.96;
+}
+
+.page-title {
+  max-width: 980px;
+  font-size: clamp(3.2rem, 7vw, 7rem);
+  font-weight: 650;
+  letter-spacing: -0.065em;
+  line-height: 0.98;
+}
+
+.section-title {
+  font-size: clamp(2.2rem, 4.6vw, 4.7rem);
+  font-weight: 620;
+  letter-spacing: -0.055em;
+  line-height: 1.03;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: var(--ink-650);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+.eyebrow::before {
+  width: 7px;
+  height: 7px;
+  border: 1px solid currentColor;
+  border-radius: 2px;
+  content: '';
+  rotate: 45deg;
+}
+
+.lede {
+  color: var(--ink-650);
+  font-size: clamp(1.08rem, 1.45vw, 1.35rem);
+  line-height: 1.85;
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+.en {
+  font-family: var(--font-en);
+}
+
+@media (max-width: 520px) {
+  .display,
+  .page-title {
+    font-size: clamp(2.8rem, 14vw, 4.4rem);
+    letter-spacing: -0.06em;
+  }
+}
+

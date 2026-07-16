@@ -4,15 +4,50 @@ import type { ProjectStatus } from '../types/project';
 interface Props {
   status: ProjectStatus;
 }
+
 const { status } = Astro.props;
 const labels: Record<ProjectStatus, string> = {
-  LIVE: '在线',
+  LIVE: '已上线',
   TESTED: '已测试',
   ITERATING: '迭代中',
   ARCHIVED: '已归档',
 };
 ---
 
-<span class:list={['status-badge', `status-${status.toLowerCase()}`]}>
-  <i aria-hidden="true"></i>{status}<span class="sr-only">，{labels[status]}</span>
+<span class:list={['status-badge', `status-badge--${status.toLowerCase()}`]}>
+  <i aria-hidden="true"></i>{labels[status]}
 </span>
+
+<style>
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--ink-650);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+  }
+
+  i {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: currentColor;
+    box-shadow: 0 0 0 4px color-mix(in srgb, currentColor 13%, transparent);
+  }
+
+  .status-badge--live,
+  .status-badge--tested {
+    color: var(--success);
+  }
+
+  .status-badge--iterating {
+    color: #5968ca;
+  }
+
+  .status-badge--archived {
+    color: var(--ink-500);
+  }
+</style>
+

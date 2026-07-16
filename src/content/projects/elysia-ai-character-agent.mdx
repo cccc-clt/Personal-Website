@@ -1,0 +1,60 @@
+---
+index: 'PROJECT_007'
+title: 'Elysia AI 角色 Agent'
+englishTitle: 'Elysia AI Character Agent'
+summary: '探索长期记忆、角色一致性与陪伴边界如何在同一个 Agent 中协同。'
+description: '支持多轮记忆与角色一致性的 AI 角色 Agent 实验项目。'
+status: 'ITERATING'
+categories: ['Character Agent', 'Memory', 'Game AI']
+targetTracks: ['game', 'agent']
+role: 'Agent 产品设计 / 记忆系统 / 体验评测'
+period: '2025–2026 · 实验迭代中'
+techStack: ['AI Agent', 'Memory', 'Prompt Engineering', 'Python', 'Conversation Design']
+highlights: ['多轮对话', '长短期记忆', '记忆总结', '角色一致性']
+responsibilities:
+  - '定义角色设定、表达风格和不可越界规则'
+  - '设计短期上下文、长期记忆摘要与召回策略'
+  - '构建角色一致性和记忆准确性测试场景'
+  - '分析陪伴型 Agent 的情绪表达与安全边界'
+targetUser: '关注持续陪伴、角色互动和叙事体验，同时需要稳定设定与安全边界的用户。'
+goal: '让角色在长对话中保持连贯，又让用户可以看见、纠正和删除被记住的信息。'
+problem: '长对话容易遗忘关键信息或把错误内容写入长期记忆；单纯追加上下文成本高，也不能稳定维持角色表达。'
+aiNeeded: '大模型能够维持自然对话与角色语言，但记忆选择、冲突处理和安全边界必须由独立机制管理。'
+solution: '将近期对话、用户事实和关系事件分层管理，生成可审查摘要；回答前检索相关记忆，并用角色规则校验输出。'
+flow: ['接收当前对话', '识别记忆候选', '评估稳定性与相关性', '检索已有记忆', '生成角色化回答', '边界与一致性校验', '用户纠正或删除']
+aiDesign:
+  - '输入包括当前对话、短期上下文、相关长期记忆与角色规则'
+  - '输出包括角色化回答、记忆候选与置信提示'
+  - '不自动保存所有对话，冲突信息不静默覆盖'
+  - '陪伴表达不替代医疗、法律或现实人际支持'
+humanCheckpoints: ['用户确认关键记忆', '用户纠正或删除记忆', '敏感内容边界复核']
+edgeCases: ['临时情绪被当成长期偏好', '不同会话事实冲突', '角色表达与安全规则冲突', '过度依赖暗示']
+safety: ['记忆可见、可改、可删', '明确非真人与能力边界', '危机情境优先现实支持']
+evaluationMetrics: ['角色一致性', '记忆准确性', '召回相关性', '稳定性', '响应时间', '上下文成本', '可解释性', '安全性', '陪伴体验']
+failures: ['临时态度被写为稳定偏好', '错误记忆被后续对话强化', '角色语气掩盖了边界提示']
+iterations:
+  - stage: 'MEMORY_TEST_02'
+    problem: '模型会把临时情绪误当成稳定用户偏好。'
+    analysis: '记忆写入规则缺少稳定性与重复性判断。'
+    change: '增加记忆候选分级、重复确认和用户纠正入口。'
+    result: '低置信候选不再直接进入长期记忆，用户拥有明确控制入口。'
+    next: '继续测试跨会话冲突与角色关系演变。'
+reflection: '陪伴型 Agent 的长期价值不来自记得更多，而来自记得克制、解释清楚，并让用户拥有最终控制权。'
+nextSteps: ['测试跨会话冲突', '增加记忆审计视图', '完善危机情境响应边界']
+cover: '/images/projects/elysia/cover.webp'
+gallery: ['/images/projects/elysia/chat.webp', '/images/projects/elysia/memory.webp']
+featured: false
+order: { general: 7, game: 3, agent: 4, auto: 7 }
+---
+
+## 产品判断
+
+“记住用户”不是越多越好。只有稳定、相关、可纠正的内容才值得进入长期记忆，而且用户始终应拥有控制权。
+
+## 证据与产物
+
+- 长短期记忆分层方案
+- 记忆候选与写入规则
+- 角色一致性测试场景
+- 用户纠正、删除与安全边界
+

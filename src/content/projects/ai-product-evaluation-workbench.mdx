@@ -1,0 +1,60 @@
+---
+index: 'PROJECT_001'
+title: 'AI 产品评测工作台'
+englishTitle: 'AI Product Evaluation Workbench'
+summary: '把零散的模型试用，变成可复现、可比较、可解释的产品实验。'
+description: '面向 AI 产品经理的 Prompt 实验、模型对比、调用记录与评测工作台。'
+status: 'ITERATING'
+categories: ['AI 产品评测', 'LLM', '实验平台']
+targetTracks: ['general', 'game', 'agent', 'auto']
+role: '产品设计 / 评测体系 / Demo 开发'
+period: '2026 · 持续迭代'
+techStack: ['Python', 'Streamlit', 'LLM API', 'Pandas', 'Prompt Engineering', 'Evaluation']
+highlights: ['Prompt 版本管理', '多模型输出对比', '调用日志', '九维评测框架']
+responsibilities:
+  - '拆解模型选型与 Prompt 迭代中的记录痛点'
+  - '设计实验、样本、输出和评分之间的数据关系'
+  - '定义准确性、稳定性、延迟、成本等评测维度'
+  - '完成 Streamlit Demo 与典型异常场景复测'
+targetUser: '需要快速验证模型能力、比较 Prompt 版本并向团队解释选型依据的 AI 产品经理。'
+goal: '让团队能够回看一次结论由什么任务、样本、参数、输出与人工判断组成。'
+problem: '普通对话界面难以保留完整实验条件，多次调用结果不能直接横向比较；样本、参数和版本变化后，结论也容易失去可复现性。'
+aiNeeded: '大模型输出存在随机性与模型差异，必须用批量调用、结构化记录和人机协同评分才能形成稳定证据。'
+solution: '以实验为中心串联 Prompt、样本、模型配置、原始输出、人工评分与调用成本，形成可筛选的对比视图和复盘记录。'
+flow: ['定义任务与样本', '固定模型与参数', '批量调用', '解析并保留原始输出', '人工与规则评分', '对比失败类型', '沉淀选型结论']
+aiDesign:
+  - '输入包括任务目标、Prompt 模板、测试样本、模型与参数配置'
+  - '输出同时保留原始回答、结构化解析、耗时、Token 与异常信息'
+  - '评分说明辅助人工评测，不把主观判断伪装成自动真值'
+  - '对超时、空响应、格式错误和拒答分别记录'
+humanCheckpoints: ['确认测试集代表性', '复核主观维度', '批准模型选型结论']
+edgeCases: ['超时或空响应', '结构化解析失败', '同一 Prompt 多次输出波动', '敏感问题拒答']
+safety: ['原始输出可追溯', '自动评分不替代人工复核', '敏感样本不进入公开演示数据']
+evaluationMetrics: ['任务完成度', '输出准确性', '格式合规性', '稳定性', '响应时间', '调用成本', '可解释性', '安全性', '用户体验']
+failures: ['字段不一致导致对比困难', '平均分掩盖关键失败类型', '小样本结论被误当成通用结论']
+iterations:
+  - stage: 'ITERATION_01'
+    problem: '不同实验输出字段不一致，难以横向比较。'
+    analysis: '实验配置与结果展示缺少统一的数据契约。'
+    change: '增加结构化结果适配层，并保留原始输出用于追溯。'
+    result: '主要测试场景可以进入统一对比视图，异常类型得到独立记录。'
+    next: '补充批量样本导入与评分一致性检查。'
+reflection: '评测产品的价值不是制造一个总分，而是帮助团队看清能力、成本与风险之间的取舍。'
+nextSteps: ['扩充真实业务样本', '增加双人评分一致性检查', '沉淀模型版本变更记录']
+cover: '/images/projects/evaluation/cover.webp'
+gallery: ['/images/projects/evaluation/experiment-list.webp', '/images/projects/evaluation/model-compare.webp']
+featured: true
+order: { general: 1, game: 4, agent: 1, auto: 3 }
+---
+
+## 产品判断
+
+模型评测不是一次“谁答得更好”的投票，而是一套能够复现判断过程的产品基础设施。这个项目首先约束实验条件，再讨论模型表现。
+
+## 证据与产物
+
+- 实验与样本的数据关系
+- 多模型、多版本并排比较原型
+- 九个评测维度及评分说明
+- 超时、拒答、格式错误等失败分类
+

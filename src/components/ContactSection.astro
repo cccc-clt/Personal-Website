@@ -2,62 +2,161 @@
 import { siteConfig } from '../config/site';
 ---
 
-<section class="section contact-section" id="contact">
-  <div class="shell">
-    <div class="contact-panel" data-reveal>
-      <div class="contact-copy">
-        <span class="eyebrow light"><i aria-hidden="true"></i>LET'S CONNECT</span>
-        <h2>寻找能把 AI 能力，变成真实用户价值的机会。</h2>
-        <p>目标岗位：AI 产品经理 / 大模型产品经理 / 游戏 AI / AI Agent / 智能座舱 AI</p>
-        <div class="availability">
-          <span class="status-dot"></span><strong>{siteConfig.status}</strong>
-        </div>
+<section class="contact-section" id="contact">
+  <div class="container contact-section__inner">
+    <div class="contact-section__copy">
+      <span class="eyebrow">OPEN TO OPPORTUNITIES</span>
+      <h2>如果你也在做一件<br />值得被认真验证的事。</h2>
+      <p>欢迎交流游戏 AI、Agent 产品、评测体系与 2027 届校招机会。</p>
+      <div class="contact-section__actions">
+        <a class="button contact-section__mail" href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
+        <button class="button button--quiet" type="button" data-copy-email data-email={siteConfig.email}>复制邮箱</button>
       </div>
-      <div class="contact-actions">
-        <div class="email-card">
-          <span>EMAIL</span>
-          <strong data-email>{siteConfig.email}</strong>
-          <button class="copy-button" type="button" data-copy-email aria-label="复制邮箱地址">
-            <span data-copy-label>复制邮箱</span>
-          </button>
-        </div>
-        <div class="contact-link-grid">
-          <a href={siteConfig.github} target="_blank" rel="noreferrer"
-            ><span>GITHUB</span><strong>查看公开项目</strong><i>↗</i></a
-          >
-          <a href="/resume"><span>RESUME</span><strong>在线简历</strong><i>→</i></a>
-          <a href="/resume"><span>DOWNLOAD</span><strong>下载定向简历</strong><i>↓</i></a>
-        </div>
-      </div>
+      <p class="contact-section__feedback" role="status" aria-live="polite" data-copy-feedback></p>
+    </div>
+    <div class="contact-section__scene" aria-hidden="true">
+      <div class="contact-section__moon"></div>
+      <div class="contact-section__path"><i></i><i></i><i></i><i></i></div>
+      <span class="mono">LET'S BUILD WITH EVIDENCE</span>
     </div>
   </div>
 </section>
 
 <script>
-  document.querySelectorAll<HTMLButtonElement>('[data-copy-email]').forEach((button) => {
-    button.addEventListener('click', async () => {
-      const email = button
-        .closest('.email-card')
-        ?.querySelector<HTMLElement>('[data-email]')
-        ?.textContent?.trim();
-      const label = button.querySelector<HTMLElement>('[data-copy-label]');
-      if (!email || !label) return;
-
-      try {
-        await navigator.clipboard.writeText(email);
-        label.textContent = '邮箱已复制';
-      } catch {
-        const selection = window.getSelection();
-        const range = document.createRange();
-        const emailNode = button.closest('.email-card')?.querySelector<HTMLElement>('[data-email]');
-        if (emailNode) {
-          range.selectNodeContents(emailNode);
-          selection?.removeAllRanges();
-          selection?.addRange(range);
-          label.textContent = '请手动复制';
-        }
+  const copyButton = document.querySelector<HTMLButtonElement>('[data-copy-email]');
+  const feedback = document.querySelector<HTMLElement>('[data-copy-feedback]');
+  copyButton?.addEventListener('click', async () => {
+    const email = copyButton.dataset.email ?? '';
+    try {
+      await navigator.clipboard.writeText(email);
+      if (feedback) feedback.textContent = '邮箱已复制。';
+    } catch {
+      if (feedback) feedback.textContent = `复制失败，请手动选择：${email}`;
+      const selection = window.getSelection();
+      const range = document.createRange();
+      const mail = document.querySelector<HTMLElement>('.contact-section__mail');
+      if (selection && mail) {
+        range.selectNodeContents(mail);
+        selection.removeAllRanges();
+        selection.addRange(range);
       }
-      window.setTimeout(() => (label.textContent = '复制邮箱'), 1800);
-    });
+    }
   });
 </script>
+
+<style>
+  .contact-section {
+    position: relative;
+    overflow: hidden;
+    padding-block: clamp(6rem, 11vw, 10rem);
+    background:
+      radial-gradient(circle at 78% 25%, rgba(101, 144, 236, 0.25), transparent 22rem),
+      radial-gradient(circle at 13% 100%, rgba(183, 126, 159, 0.18), transparent 25rem),
+      var(--night);
+    color: white;
+  }
+
+  .contact-section__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(300px, 0.65fr);
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .contact-section .eyebrow,
+  .contact-section p {
+    color: rgba(228, 235, 255, 0.7);
+  }
+
+  h2 {
+    margin: 1.5rem 0;
+    font-size: clamp(3rem, 6.7vw, 7rem);
+    font-weight: 560;
+    letter-spacing: -0.065em;
+    line-height: 1.02;
+  }
+
+  .contact-section__copy > p {
+    max-width: 620px;
+    font-size: 1.1rem;
+    line-height: 1.8;
+  }
+
+  .contact-section__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 2rem;
+  }
+
+  .contact-section .button {
+    border-color: rgba(255, 255, 255, 0.23);
+    background: rgba(255, 255, 255, 0.09);
+    color: white;
+  }
+
+  .contact-section__feedback {
+    min-height: 1.5em;
+    font-size: 0.78rem !important;
+  }
+
+  .contact-section__scene {
+    position: relative;
+    min-height: 430px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+  }
+
+  .contact-section__moon {
+    position: absolute;
+    top: 18%;
+    right: 19%;
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #f8f4e6, #aabce8);
+    box-shadow: 0 0 80px rgba(171, 199, 255, 0.42);
+  }
+
+  .contact-section__path {
+    position: absolute;
+    inset: 31% 6% 15% 10%;
+    border: 1px solid rgba(155, 187, 255, 0.22);
+    border-radius: 50%;
+    rotate: -18deg;
+  }
+
+  .contact-section__path i {
+    position: absolute;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #9ad6ff;
+    box-shadow: 0 0 15px #72adff;
+  }
+
+  .contact-section__path i:nth-child(1) { top: 12%; left: 22%; }
+  .contact-section__path i:nth-child(2) { top: 42%; left: 54%; }
+  .contact-section__path i:nth-child(3) { right: 6%; bottom: 28%; }
+  .contact-section__path i:nth-child(4) { bottom: 4%; left: 27%; }
+
+  .contact-section__scene > span {
+    position: absolute;
+    bottom: 2rem;
+    left: 2rem;
+    color: rgba(228, 235, 255, 0.5);
+    font-size: 0.64rem;
+    letter-spacing: 0.12em;
+  }
+
+  @media (max-width: 800px) {
+    .contact-section__inner {
+      grid-template-columns: 1fr;
+    }
+
+    .contact-section__scene {
+      min-height: 330px;
+    }
+  }
+</style>
+

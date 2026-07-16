@@ -1,89 +1,127 @@
 ---
-import { existsSync } from 'node:fs';
-import path from 'node:path';
-import type { Project } from '../types/project';
-import ProjectVisual from './ProjectVisual.astro';
+import ProjectCover from './ProjectCover.astro';
 import StatusBadge from './StatusBadge.astro';
+import type { ProjectEntry } from '../types/project';
 
 interface Props {
-  project: Project;
-  priority?: boolean;
+  project: ProjectEntry;
+  layout?: 'wide' | 'portrait' | 'standard';
 }
-const { project, priority = false } = Astro.props;
-const imagePath = path.join(process.cwd(), 'public', project.coverImage.replace(/^\//, ''));
-const hasImage = existsSync(imagePath);
-const abbreviation = project.englishTitle
-  .split(' ')
-  .map((word) => word[0])
-  .join('')
-  .slice(0, 4);
+
+const { project, layout = 'standard' } = Astro.props;
+const slug = project.id.replace(/\.mdx?$/, '');
 ---
 
-<article
-  class="project-card"
-  data-project-card
-  data-categories={project.category.join('|')}
-  data-reveal
->
-  <a
-    class="project-cover"
-    href={`/projects/${project.slug}`}
-    aria-label={`查看 ${project.title} 项目详情`}
-  >
-    {
-      hasImage ? (
-        <img
-          src={project.coverImage}
-          width="720"
-          height="450"
-          loading={priority ? 'eager' : 'lazy'}
-          decoding="async"
-          alt={`${project.title} 项目封面`}
-        />
-      ) : (
-        <ProjectVisual
-          abbreviation={abbreviation}
-          category={project.category[0]}
-          index={project.index}
-        />
-      )
-    }
+<article class:list={['project-card', `project-card--${layout}`]} data-project-card data-tracks={project.data.targetTracks.join(' ')}>
+  <a class="project-card__visual" href={`/projects/${slug}`} aria-label={`查看${project.data.title}详情`}>
+    <ProjectCover slug={slug} title={project.data.title} index={project.data.index} compact={layout !== 'wide'} />
   </a>
-  <div class="project-card-body">
-    <div class="project-meta">
-      <span>{project.index}</span><StatusBadge status={project.status} />
+  <div class="project-card__body">
+    <div class="project-card__meta">
+      <StatusBadge status={project.data.status} />
+      <span class="mono">{project.data.index}</span>
     </div>
-    <h3><a href={`/projects/${project.slug}`}>{project.title}</a></h3>
-    <p class="project-en">{project.englishTitle}</p>
-    <p class="project-summary">{project.shortDescription}</p>
-    <div class="project-role"><span>MY ROLE</span><strong>{project.role}</strong></div>
-    <div class="tag-list compact-tags">
-      {project.techStack.slice(0, 5).map((tag) => <span>{tag}</span>)}
-    </div>
-    <div class="project-actions">
-      <a class="text-link strong" href={`/projects/${project.slug}`}
-        >查看详情 <span aria-hidden="true">→</span></a
-      >
-      {
-        project.githubUrl && (
-          <a
-            class="icon-text-link"
-            href={project.githubUrl}
-            target="_blank"
-            rel="noreferrer"
-            aria-label={`${project.title} GitHub 仓库`}
-          >
-            GH ↗
-          </a>
-        )
-      }
-      {
-        project.demoUrl && (
-          <a class="icon-text-link" href={project.demoUrl} target="_blank" rel="noreferrer">
-            DEMO ↗
-          </a>
-        )
-      }
-    </div>
+    <h3><a href={`/projects/${slug}`}>{project.data.title}</a></h3>
+    <p>{project.data.summary}</p>
+    <ul aria-label="项目标签">
+      {project.data.categories.slice(0, 3).map((category) => <li>{category}</li>)}
+    </ul>
+    <a class="project-card__link" href={`/projects/${slug}`}>阅读案例 <span aria-hidden="true">↗</span></a>
   </div>
 </article>
+
+<style>
+  .project-card {
+    display: grid;
+    gap: 1.7rem;
+  }
+
+  .project-card__visual {
+    display: block;
+    border-radius: var(--radius-lg);
+    transition: translate 320ms var(--ease-out);
+  }
+
+  .project-card__visual:hover {
+    translate: 0 -5px;
+  }
+
+  .project-card__body {
+    max-width: 630px;
+  }
+
+  .project-card__meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    color: var(--ink-500);
+    font-size: 0.67rem;
+  }
+
+  h3 {
+    margin: 1rem 0 0.8rem;
+    font-size: clamp(1.55rem, 2.4vw, 2.5rem);
+    letter-spacing: -0.045em;
+    line-height: 1.15;
+  }
+
+  p {
+    margin: 0;
+    color: var(--ink-650);
+    line-height: 1.75;
+  }
+
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    padding: 0;
+    margin: 1.15rem 0 0;
+    list-style: none;
+  }
+
+  li {
+    padding: 0.4rem 0.65rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-pill);
+    color: var(--ink-650);
+    font-size: 0.72rem;
+  }
+
+  .project-card__link {
+    display: inline-flex;
+    gap: 0.5rem;
+    margin-top: 1.2rem;
+    font-weight: 650;
+  }
+
+  .project-card__link span {
+    transition: translate 220ms var(--ease-out);
+  }
+
+  .project-card__link:hover span {
+    translate: 3px -3px;
+  }
+
+  .project-card--wide {
+    grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.55fr);
+    align-items: end;
+  }
+
+  .project-card--wide .project-card__body {
+    padding-bottom: 1rem;
+  }
+
+  .project-card--portrait .project-card__visual :global(.project-cover) {
+    aspect-ratio: 0.88;
+  }
+
+  @media (max-width: 800px) {
+    .project-card--wide {
+      grid-template-columns: 1fr;
+      align-items: start;
+    }
+  }
+</style>
+

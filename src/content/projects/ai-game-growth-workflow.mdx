@@ -1,0 +1,60 @@
+---
+index: 'PROJECT_003'
+title: 'AI 游戏增长投放与实验评测工作流'
+englishTitle: 'AI Game Growth & Experiment Workflow'
+summary: '让素材诊断、Prompt 生成与实验反馈进入同一条可迭代的增长链路。'
+description: '基于 Dify 构建的游戏 AI 增长投放、素材诊断、Prompt 生成与实验复盘工作流。'
+status: 'TESTED'
+categories: ['Game AI', '增长实验', 'Dify Workflow']
+targetTracks: ['general', 'game', 'agent']
+role: '工作流设计 / Prompt 设计 / 实验评测'
+period: '2026 · DIFY_LIVE_001 复测通过'
+techStack: ['Dify', 'Workflow', 'Game AI', 'Prompt Engineering', 'Experiment Design', 'Evaluation']
+highlights: ['七阶段工作流', '结构化输出', 'Prompt 版本迭代', '异常输入处理']
+responsibilities:
+  - '梳理增长投放从业务输入到实验复盘的完整链路'
+  - '设计七个节点、输入输出契约与异常分支'
+  - '构建面向素材诊断与文案生成的 Prompt 模板'
+  - '制定评测标准并完成 DIFY_LIVE_001 流程复测'
+targetUser: '需要提高素材分析与实验复盘效率的游戏增长、发行和内容团队。'
+goal: '让每条生成建议都带着用户假设和可验证指标进入实验，而不是停在创意文本。'
+problem: '素材诊断、文案生成与实验数据分散在不同环节，生成内容缺少明确假设，复盘结果也难以反哺下一轮 Prompt。'
+aiNeeded: '增长团队需要快速探索大量表达方向，但生成质量必须受品牌、渠道与实验目标约束，并被真实反馈校准。'
+solution: '用七个阶段固定必要输入与产出，把内容建议绑定用户假设、素材证据和评测标准，再将实验反馈回写为迭代任务。'
+flow: ['输入标准化', '用户分析', '素材诊断', '方向生成', 'Prompt 组装', '实验复盘', '评测与迭代']
+aiDesign:
+  - '输入包括产品信息、目标用户、渠道场景、素材描述与实验数据'
+  - '输出包括素材诊断、文案方向、结构化 Prompt 与迭代建议'
+  - '信息不足时先输出缺口清单，不生成确定性结论'
+  - '人工确认品牌约束、投放目标与最终素材版本'
+humanCheckpoints: ['确认用户假设', '审核品牌与渠道约束', '批准投放版本']
+edgeCases: ['目标用户缺失', '实验指标为空', '素材描述与实际画面冲突', '渠道规则不完整']
+safety: ['不补写缺失业务事实', '敏感内容进入人工审核', '实验结论标记样本范围']
+evaluationMetrics: ['任务完成度', '输出准确性', '格式合规性', '稳定性', '响应时间', '调用成本', '可解释性', '安全性', '可执行性']
+failures: ['缺失输入被模型自行补全', '生成方向与实验目标脱节', '复盘只总结表现而不回写动作']
+iterations:
+  - stage: 'DIFY_LIVE_001'
+    problem: '缺失输入会让后续节点生成看似完整但不可用的方案。'
+    analysis: '入口缺少完整性校验，模型倾向补全假设。'
+    change: '增加字段校验、缺口提示与人工确认分支。'
+    result: '七个阶段正常流转，异常输入得到明确提示，流程复测通过。'
+    next: '接入更多真实实验样本，继续校准诊断标准。'
+reflection: 'AI 在增长链路中的价值不是替代创意，而是把创意探索与实验学习连接起来。'
+nextSteps: ['接入真实实验样本', '细化渠道模板', '增加版本回看与差异对比']
+cover: '/images/projects/game-growth/cover.webp'
+gallery: ['/images/projects/game-growth/workflow.webp', '/images/projects/game-growth/evaluation.webp']
+featured: true
+order: { general: 2, game: 1, agent: 5, auto: 8 }
+---
+
+## 产品判断
+
+如果生成内容不能回到实验，它就只是更快地产生文字。这个工作流把“生成”放在增长闭环中，而不是把它单独包装成能力。
+
+## 证据与产物
+
+- Dify 七阶段工作流
+- 输入输出契约与异常分支
+- 素材诊断和生成 Prompt 模板
+- `DIFY_LIVE_001` 流程复测记录
+

@@ -1,0 +1,60 @@
+---
+index: 'PROJECT_005'
+title: 'AI 游戏内容创作助手'
+englishTitle: 'AI Game Content Copilot'
+summary: '让角色设定、世界观约束与多版本探索同时成立，而不是靠一次 Prompt 碰运气。'
+description: '面向游戏内容创作的角色配置、文案生成与多版本迭代工具。'
+status: 'ITERATING'
+categories: ['Game AI', 'AIGC', '内容生产']
+targetTracks: ['game', 'agent']
+role: '产品设计 / Prompt 系统 / 原型开发'
+period: '2026 · 原型迭代中'
+techStack: ['Game AI', 'AIGC', 'Prompt Engineering', 'Structured Output', 'Versioning']
+highlights: ['角色配置', 'ABC 多版本', '二次优化', '内容一致性']
+responsibilities:
+  - '拆解游戏策划在批量文案与角色一致性上的需求'
+  - '设计角色配置、世界观规则和任务目标的数据结构'
+  - '搭建 ABC 多版本生成与二次优化流程'
+  - '定义角色漂移、事实冲突和格式异常测试项'
+targetUser: '需要快速探索多种文案方向，同时维护角色和世界观一致性的游戏内容策划。'
+goal: '提升方向探索速度，同时让每个版本的策略差异、设定依据和修改理由可追溯。'
+problem: '一次性 Prompt 难以稳定携带复杂角色约束，多版本缺少可比较结构，反复修改后容易出现设定漂移。'
+aiNeeded: '生成模型适合快速发散语言表达，但必须用角色数据、世界规则和版本策略约束其开放性。'
+solution: '将角色信息、不可违反规则、创作目标和输出格式模块化，先生成差异策略，再输出 ABC 版本并保存优化意见。'
+flow: ['读取角色卡', '校验世界观规则', '确定内容目标', '生成差异策略', '输出 ABC 版本', '一致性自检', '人工选择与二次优化']
+aiDesign:
+  - '输入包括角色卡、世界观规则、内容场景、语气与格式'
+  - '输出包括策略差异明确的 ABC 版本和自检结果'
+  - '固定设定层与可变任务层分离，降低角色漂移'
+  - '事实冲突、敏感内容和未授权设定进入人工复核'
+humanCheckpoints: ['确认角色与世界观规则', '选择版本方向', '发布前内容审核']
+edgeCases: ['角色卡信息冲突', '版本差异只停留在措辞', '长链路修改丢失设定', '输出格式异常']
+safety: ['不生成未授权 IP 内容', '敏感主题人工审核', '保留版本与修改理由']
+evaluationMetrics: ['设定一致性', '策略差异度', '格式合规性', '稳定性', '响应时间', '修改成本', '可解释性', '安全性', '策划可用性']
+failures: ['多版本只是表面改写', '角色语气稳定但事实错误', '优化指令覆盖不可变设定']
+iterations:
+  - stage: 'ITERATION_01'
+    problem: '多个版本只有表面措辞不同，策略差异不清楚。'
+    analysis: '版本生成前没有定义差异维度。'
+    change: '先生成内容策略，再分别约束节奏、情绪和信息密度。'
+    result: '版本之间形成可解释的方向差异，策划可以针对策略而非句子做选择。'
+    next: '增加角色一致性检查清单与批量对比。'
+reflection: '内容共创工具不应只追求“写得像”，更要帮助策划保留选择权、依据和世界观控制力。'
+nextSteps: ['扩展角色一致性规则', '支持批量任务', '增加版本差异可视化']
+cover: '/images/projects/game-copilot/cover.webp'
+gallery: ['/images/projects/game-copilot/character-config.webp', '/images/projects/game-copilot/versions.webp']
+featured: false
+order: { general: 6, game: 2, agent: 7, auto: 9 }
+---
+
+## 产品判断
+
+生成不是最终动作，选择与修改才是内容团队的核心工作。产品把差异策略和修改理由保留下来，让人始终掌握叙事方向。
+
+## 证据与产物
+
+- 角色卡与世界观数据结构
+- ABC 多版本生成协议
+- 二次优化与版本记录
+- 角色漂移、事实冲突测试项
+

@@ -1,0 +1,60 @@
+---
+index: 'PROJECT_004'
+title: 'AutoMate 智能汽车 AI 助手'
+englishTitle: 'AutoMate AI Car Copilot'
+summary: '在座舱问答、建议与控制之间建立清晰分流，让智能始终留有安全边界。'
+description: '面向智能汽车和智能座舱场景的 AI 助手产品原型。'
+status: 'ITERATING'
+categories: ['Automotive AI', '场景 Agent', '智能座舱']
+targetTracks: ['general', 'agent', 'auto']
+role: '场景产品设计 / 安全边界 / 原型开发'
+period: '2026 · 原型迭代中'
+techStack: ['Automotive AI', 'Agent', 'RAG', 'Safety Design', 'Product Prototype']
+highlights: ['场景识别', '指令澄清', '高风险二次确认', '用户反馈闭环']
+responsibilities:
+  - '梳理用车问答、座舱控制和主动服务的典型场景'
+  - '定义模糊指令澄清与高风险操作确认规则'
+  - '设计 RAG 问答、场景 Agent 与用户反馈闭环'
+  - '完成可交互产品原型和异常边界测试'
+targetUser: '希望自然获取用车知识、控制座舱功能并管理复杂场景的驾驶者与乘客。'
+goal: '在不扩大驾驶风险的前提下，降低座舱功能寻找与复杂指令表达的负担。'
+problem: '自然语言指令经常缺少对象、范围或时机；驾驶环境中，错误理解和冗长交互都会放大风险。'
+aiNeeded: '座舱交互同时涉及自然语言理解、车辆状态、个体偏好和实时场景，需要模型处理表达差异，但执行层必须被规则约束。'
+solution: '按问答、建议、控制三类意图分流；模糊指令先澄清，高风险动作二次确认，知识问答通过可追溯 RAG 返回。'
+flow: ['识别当前场景', '理解与拆分意图', '判断问答/建议/控制', '检索或生成候选', '权限与风险检查', '确认或执行', '收集反馈']
+aiDesign:
+  - '输入包括用户指令、座舱状态、车辆知识、当前场景与权限'
+  - '输出可能是回答、澄清问题、候选动作或确认请求'
+  - 'RAG 仅用于知识回答，车辆控制必须经过规则与权限校验'
+  - '低置信度、状态冲突或信息不足时优先澄清'
+humanCheckpoints: ['确认高风险动作', '处理多用户冲突', '决定主动服务是否开启']
+edgeCases: ['一句话包含多个动作', '驾驶中途场景变化', '多名乘员发出冲突指令', '车辆状态不可用']
+safety: ['高风险动作不由模型直接执行', '驾驶中减少交互轮次', '控制权限与知识问答隔离']
+evaluationMetrics: ['意图识别', '澄清效率', '任务完成度', '稳定性', '响应时间', '错误恢复', '可解释性', '安全性', '用户体验']
+failures: ['复合指令遗漏范围', '回答与控制职责混淆', '状态冲突仍继续执行']
+iterations:
+  - stage: 'ITERATION_02'
+    problem: '复合座舱动作容易遗漏范围或执行顺序。'
+    analysis: '意图解析未显式拆分对象、区域和顺序。'
+    change: '增加结构化槽位、冲突检测与执行前确认摘要。'
+    result: '复合指令能拆分为候选动作，并在执行前暴露冲突。'
+    next: '补充驾驶中断与多用户指令冲突场景。'
+reflection: '汽车 AI 产品的第一原则不是“更像人”，而是在高动态环境中让能力、权限和责任始终清楚。'
+nextSteps: ['扩充座舱状态模拟', '验证驾驶中断策略', '建立安全场景回归集']
+cover: '/images/projects/automate/cover.webp'
+gallery: ['/images/projects/automate/home.webp', '/images/projects/automate/confirm.webp']
+featured: true
+order: { general: 4, game: 9, agent: 6, auto: 1 }
+---
+
+## 产品判断
+
+座舱 Agent 不能把“理解到了”直接等同于“可以执行”。问答、建议与控制被分开设计，确保每类输出承担恰当的责任。
+
+## 证据与产物
+
+- 座舱场景与意图分流图
+- 模糊指令澄清规则
+- 高风险动作二次确认原型
+- 车辆知识 RAG 与异常边界测试
+

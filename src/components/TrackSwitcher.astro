@@ -3,35 +3,47 @@ import { trackConfigs } from '../config/site';
 import type { TargetTrack } from '../types/project';
 
 interface Props {
-  active: TargetTrack;
+  current: TargetTrack;
 }
-const { active } = Astro.props;
-const links: { key: TargetTrack; href: string; short: string }[] = [
-  { key: 'general', href: '/', short: 'GENERAL' },
-  { key: 'game', href: '/game', short: 'GAME AI' },
-  { key: 'agent', href: '/agent', short: 'AGENT' },
-  { key: 'auto', href: '/auto', short: 'AUTO AI' },
-];
+
+const { current } = Astro.props;
 ---
 
-<section class="track-strip" aria-label="切换求职方向视图">
-  <div class="shell track-inner">
-    <div class="track-title"><span>VIEW MODE</span><strong>按目标岗位浏览</strong></div>
-    <div class="track-links">
-      {
-        links.map((item) => (
-          <a
-            href={item.href}
-            class:list={{ active: active === item.key }}
-            aria-current={active === item.key ? 'page' : undefined}
-          >
-            <>
-              <small>{item.short}</small>
-              <span>{trackConfigs[item.key].label}</span>
-            </>
-          </a>
-        ))
-      }
-    </div>
-  </div>
-</section>
+<nav class="track-switcher" aria-label="定向首页切换">
+  {(Object.values(trackConfigs)).map((item) => (
+    <a href={item.path} aria-current={current === item.key ? 'page' : undefined}>{item.label}</a>
+  ))}
+</nav>
+
+<style>
+  .track-switcher {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.35rem;
+    padding: 0.35rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-pill);
+    background: rgba(255, 255, 255, 0.38);
+  }
+
+  a {
+    padding: 0.55rem 0.75rem;
+    border-radius: var(--radius-pill);
+    color: var(--ink-500);
+    font-size: 0.72rem;
+  }
+
+  a[aria-current='page'] {
+    background: white;
+    box-shadow: 0 8px 20px rgba(67, 84, 143, 0.12);
+    color: var(--ink-950);
+  }
+
+  @media (max-width: 820px) {
+    .track-switcher {
+      justify-content: flex-start;
+    }
+  }
+</style>
+

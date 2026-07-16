@@ -4,10 +4,7 @@ import { trackConfigs } from '../config/site';
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout
-  title="大模型与 AI Agent 产品实践｜赵天琦"
-  description="聚焦 Agent 工作流、RAG、模型评测、记忆系统与产品能力边界。"
-  pageTag="AI AGENT"
->
+<BaseLayout title="大模型与 AI Agent 产品实践｜赵天琦" description={trackConfigs.agent.seoDescription} track="agent" image="/images/og/og-agent.webp">
   <HomePage config={trackConfigs.agent} />
 </BaseLayout>
+

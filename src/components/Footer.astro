@@ -3,34 +3,75 @@ import { siteConfig } from '../config/site';
 ---
 
 <footer class="site-footer">
-  <div class="shell footer-grid">
+  <div class="container site-footer__top">
     <div>
-      <a class="brand footer-brand" href="/">
-        <span class="brand-mark" aria-hidden="true"><span></span></span>
-        <span class="brand-copy"><strong>TIANQI.Z</strong><small>AI PRODUCT PORTFOLIO</small></span>
-      </a>
-      <p>把 AI 能力转译成用户能理解、团队能验证、产品能迭代的体验。</p>
+      <p class="eyebrow">TIANQI.Z / AI PRODUCT</p>
+      <h2>让技术能力，最终落到人的体验。</h2>
     </div>
-    <div class="footer-links">
-      <div>
-        <span>EXPLORE</span><a href="/projects">项目</a><a href="/about">关于我</a><a href="/resume"
-          >在线简历</a
-        >
-      </div>
-      <div>
-        <span>TRACKS</span><a href="/game">游戏 AI</a><a href="/agent">AI Agent</a><a href="/auto"
-          >智能汽车 AI</a
-        >
-      </div>
-      <div>
-        <span>CONNECT</span><a href={siteConfig.github} target="_blank" rel="noreferrer">GitHub ↗</a
-        ><a href={`mailto:${siteConfig.email}`}>Email</a>
-      </div>
-    </div>
+    <nav aria-label="页脚导航">
+      <a href="/projects">项目</a>
+      <a href="/about">关于我</a>
+      <a href="/resume">简历</a>
+      <a href="/credits">资源署名</a>
+    </nav>
   </div>
-  <div class="shell footer-bottom">
-    <span>© {new Date().getFullYear()} 赵天琦</span>
-    <span>ASTRO / TYPESCRIPT / CLOUDFLARE PAGES</span>
-    <a href="#main-content">返回顶部 ↑</a>
+  <div class="container site-footer__bottom">
+    <span>© {new Date().getFullYear()} {siteConfig.name}</span>
+    <span>Astro · TypeScript · Cloudflare Pages</span>
   </div>
 </footer>
+
+<style>
+  .site-footer {
+    padding: 5rem 0 2rem;
+    background: #f0f4fc;
+  }
+
+  .site-footer__top {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(220px, 0.5fr);
+    gap: 4rem;
+    padding-bottom: 4rem;
+  }
+
+  h2 {
+    max-width: 740px;
+    margin: 1.2rem 0 0;
+    font-size: clamp(2.1rem, 4vw, 4.5rem);
+    letter-spacing: -0.055em;
+    line-height: 1.05;
+  }
+
+  nav {
+    display: grid;
+    align-content: start;
+  }
+
+  nav a {
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink-650);
+  }
+
+  .site-footer__bottom {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    color: var(--ink-500);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+  }
+
+  @media (max-width: 680px) {
+    .site-footer__top {
+      grid-template-columns: 1fr;
+    }
+
+    .site-footer__bottom {
+      flex-direction: column;
+    }
+  }
+</style>
+

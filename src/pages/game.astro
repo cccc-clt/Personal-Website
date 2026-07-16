@@ -4,10 +4,7 @@ import { trackConfigs } from '../config/site';
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout
-  title="游戏 AI 与 AIGC 产品实践｜赵天琦"
-  description="聚焦游戏内容生成、增长投放、Prompt 工作流与 AI 产品评测。"
-  pageTag="GAME AI"
->
+<BaseLayout title="游戏 AI 与 AIGC 产品实践｜赵天琦" description={trackConfigs.game.seoDescription} track="game" image="/images/og/og-game.webp">
   <HomePage config={trackConfigs.game} />
 </BaseLayout>
+

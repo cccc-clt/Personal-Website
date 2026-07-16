@@ -1,25 +1,28 @@
 ---
-import type { TrackConfig } from '../config/site';
-import { getProjectsForTrack } from '../data/projects';
+import { getCollection } from 'astro:content';
+import type { TrackConfig } from '../types/project';
 import AboutPreview from './AboutPreview.astro';
+import AbilitySection from './AbilitySection.astro';
+import BrandStory from './BrandStory.astro';
 import ContactSection from './ContactSection.astro';
 import FeaturedProjects from './FeaturedProjects.astro';
-import HeroSection from './HeroSection.astro';
-import ProductLoop from './ProductLoop.astro';
-import SkillGrid from './SkillGrid.astro';
-import TrackSwitcher from './TrackSwitcher.astro';
+import TrackHero from './TrackHero.astro';
 
 interface Props {
   config: TrackConfig;
 }
+
 const { config } = Astro.props;
-const selectedProjects = getProjectsForTrack(config.key, 4);
+const selectedProjects = (await getCollection('projects'))
+  .filter((project) => project.data.targetTracks.includes(config.key))
+  .sort((a, b) => a.data.order[config.key] - b.data.order[config.key])
+  .slice(0, 4);
 ---
 
-<HeroSection config={config} />
-<TrackSwitcher active={config.key} />
+<TrackHero config={config} />
+<BrandStory />
 <FeaturedProjects projects={selectedProjects} trackLabel={config.label} />
-<ProductLoop />
+<AbilitySection />
 <AboutPreview />
-<SkillGrid />
 <ContactSection />
+
