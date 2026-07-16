@@ -3,17 +3,70 @@ interface Props {
   eyebrow: string;
   title: string;
   description: string;
-  code?: string;
+  align?: 'left' | 'split';
 }
-const { eyebrow, title, description, code = 'PORTFOLIO_INDEX' } = Astro.props;
+
+const { eyebrow, title, description, align = 'split' } = Astro.props;
 ---
 
-<section class="inner-hero">
-  <div class="inner-hero-grid" aria-hidden="true"></div>
-  <div class="shell inner-hero-content" data-reveal>
-    <span class="eyebrow"><i aria-hidden="true"></i>{eyebrow}</span>
-    <h1>{title}</h1>
-    <p>{description}</p>
-    <div class="inner-hero-code"><span>{code}</span><i></i><small>SYSTEM READY</small></div>
+<header class:list={['inner-hero', `inner-hero--${align}`]}>
+  <div class="container inner-hero__grid">
+    <span class="eyebrow">{eyebrow}</span>
+    <div>
+      <h1 class="page-title">{title}</h1>
+      <p class="lede">{description}</p>
+      <slot />
+    </div>
   </div>
-</section>
+</header>
+
+<style>
+  .inner-hero {
+    position: relative;
+    overflow: hidden;
+    padding: clamp(6rem, 11vw, 11rem) 0 clamp(4.5rem, 8vw, 8rem);
+    background:
+      radial-gradient(circle at 86% 17%, rgba(139, 208, 255, 0.24), transparent 26rem),
+      radial-gradient(circle at 10% 90%, rgba(230, 202, 219, 0.3), transparent 23rem);
+  }
+
+  .inner-hero::after {
+    position: absolute;
+    right: -13vw;
+    bottom: -32vw;
+    width: 72vw;
+    height: 52vw;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    content: '';
+    rotate: -12deg;
+  }
+
+  .inner-hero__grid {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: minmax(150px, 0.28fr) minmax(0, 1fr);
+    gap: 2rem;
+  }
+
+  h1 {
+    margin: 0;
+  }
+
+  p {
+    max-width: 760px;
+    margin: 2rem 0 0;
+  }
+
+  .inner-hero--left .inner-hero__grid {
+    grid-template-columns: 1fr;
+  }
+
+  @media (max-width: 700px) {
+    .inner-hero__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+

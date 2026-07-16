@@ -1,105 +1,218 @@
 ---
 import { existsSync } from 'node:fs';
-import path from 'node:path';
-import type { Project } from '../types/project';
-import ProjectVisual from './ProjectVisual.astro';
+import { join } from 'node:path';
+import ProjectCover from './ProjectCover.astro';
 
 interface Props {
-  project: Project;
+  images: string[];
+  title: string;
+  slug: string;
+  index: string;
 }
-const { project } = Astro.props;
-const abbreviation = project.englishTitle
-  .split(' ')
-  .map((word) => word[0])
-  .join('')
-  .slice(0, 4);
-const galleryItems = project.screenshots.map((src, index) => ({
-  src,
-  index,
-  exists: existsSync(path.join(process.cwd(), 'public', src.replace(/^\//, ''))),
-  caption: `${project.title} · 界面预留 ${String(index + 1).padStart(2, '0')}`,
-}));
+
+const { images, title, slug, index } = Astro.props;
+const availableImages = images.filter((src) => existsSync(join(process.cwd(), 'public', src.replace(/^\//, ''))));
 ---
 
-<div class="image-gallery" data-gallery>
-  <div class="gallery-track">
-    {
-      galleryItems.map((item) => (
-        <button
-          class="gallery-item"
-          type="button"
-          data-gallery-open={item.index}
-          aria-label={`放大查看：${item.caption}`}
-        >
-          {item.exists ? (
-            <img
-              src={item.src}
-              width="960"
-              height="600"
-              loading="lazy"
-              decoding="async"
-              alt={item.caption}
-            />
-          ) : (
-            <ProjectVisual
-              abbreviation={`${abbreviation}-${item.index + 1}`}
-              category="SCREENSHOT PLACEHOLDER"
-              index={project.index}
-              compact
-            />
-          )}
-          <span>
-            {item.caption}
-            <i aria-hidden="true">↗</i>
-          </span>
-        </button>
-      ))
-    }
+<section class="gallery" aria-labelledby="gallery-title">
+  <div class="gallery__heading">
+    <span class="eyebrow">PROJECT GALLERY</span>
+    <h2 id="gallery-title">界面与过程证据</h2>
   </div>
+  {
+    availableImages.length > 0 ? (
+      <div class="gallery__grid">
+        {availableImages.map((src, imageIndex) => (
+          <button
+            class="gallery__item"
+            type="button"
+            data-gallery-open
+            data-gallery-src={src}
+            data-gallery-alt={`${title} 项目截图 ${imageIndex + 1}`}
+            data-gallery-caption={`${title} · 图 ${String(imageIndex + 1).padStart(2, '0')}`}
+          >
+            <img src={src} alt={`${title} 项目截图 ${imageIndex + 1}`} loading="lazy" decoding="async" />
+            <span>放大查看</span>
+          </button>
+        ))}
+      </div>
+    ) : (
+      <div class="gallery__fallback">
+        <ProjectCover slug={slug} title={title} index={index} />
+        <p>真实项目截图尚未写入本地。页面先使用原创概念封面保持完整体验，待补充文件已记录在资源清单。</p>
+      </div>
+    )
+  }
+</section>
 
-  <dialog class="gallery-dialog" data-gallery-dialog aria-label="项目截图大图">
-    <button class="dialog-close" type="button" data-gallery-close aria-label="关闭大图">×</button>
-    <div data-dialog-content></div>
-    <p data-dialog-caption></p>
-  </dialog>
-</div>
+<dialog class="gallery-dialog" data-gallery-dialog aria-labelledby="gallery-caption">
+  <button class="gallery-dialog__close" type="button" aria-label="关闭图片" data-gallery-close>×</button>
+  <figure>
+    <img src="" alt="" data-gallery-image />
+    <figcaption id="gallery-caption" data-gallery-caption></figcaption>
+  </figure>
+</dialog>
 
-<template data-placeholder-template>
-  <div class="dialog-placeholder"><strong>{abbreviation}</strong><span>项目截图待替换</span></div>
-</template>
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>('[data-gallery-dialog]');
+  const dialogImage = dialog?.querySelector<HTMLImageElement>('[data-gallery-image]');
+  const caption = dialog?.querySelector<HTMLElement>('[data-gallery-caption]');
+  const closeButton = dialog?.querySelector<HTMLButtonElement>('[data-gallery-close]');
+  let trigger: HTMLButtonElement | null = null;
 
-<script is:inline define:vars={{ galleryItems }}>
-  const gallery = document.querySelector('[data-gallery]');
-  const dialog = gallery?.querySelector('[data-gallery-dialog]');
-  const content = dialog?.querySelector('[data-dialog-content]');
-  const caption = dialog?.querySelector('[data-dialog-caption]');
-  const placeholder = document.querySelector('[data-placeholder-template]');
-
-  gallery?.querySelectorAll('[data-gallery-open]').forEach((button) => {
+  const closeDialog = () => dialog?.close();
+  document.querySelectorAll<HTMLButtonElement>('[data-gallery-open]').forEach((button) => {
     button.addEventListener('click', () => {
-      if (!(dialog instanceof HTMLDialogElement) || !(content instanceof HTMLElement)) return;
-      const index = Number(button.getAttribute('data-gallery-open'));
-      const item = galleryItems[index];
-      content.replaceChildren();
-      if (item?.exists) {
-        const image = new Image();
-        image.src = item.src;
-        image.alt = item.caption;
-        image.width = 1440;
-        image.height = 900;
-        content.append(image);
-      } else if (placeholder instanceof HTMLTemplateElement) {
-        content.append(placeholder.content.cloneNode(true));
+      trigger = button;
+      if (dialogImage) {
+        dialogImage.src = button.dataset.gallerySrc ?? '';
+        dialogImage.alt = button.dataset.galleryAlt ?? '';
       }
-      if (caption instanceof HTMLElement) caption.textContent = item?.caption ?? '';
-      dialog.showModal();
+      if (caption) caption.textContent = button.dataset.galleryCaption ?? '';
+      dialog?.showModal();
+      closeButton?.focus();
     });
   });
-
-  dialog?.querySelector('[data-gallery-close]')?.addEventListener('click', () => {
-    if (dialog instanceof HTMLDialogElement) dialog.close();
-  });
+  closeButton?.addEventListener('click', closeDialog);
   dialog?.addEventListener('click', (event) => {
-    if (event.target === dialog && dialog instanceof HTMLDialogElement) dialog.close();
+    if (event.target === dialog) closeDialog();
+  });
+  dialog?.addEventListener('close', () => {
+    if (dialogImage) dialogImage.src = '';
+    trigger?.focus();
   });
 </script>
+
+<style>
+  .gallery {
+    padding-block: clamp(5rem, 9vw, 9rem);
+  }
+
+  .gallery__heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-bottom: 2.5rem;
+  }
+
+  h2 {
+    margin: 0;
+    font-size: clamp(2.2rem, 4vw, 4.2rem);
+    letter-spacing: -0.05em;
+  }
+
+  .gallery__grid {
+    display: grid;
+    grid-template-columns: 1.3fr 0.7fr;
+    gap: 1rem;
+  }
+
+  .gallery__item {
+    position: relative;
+    min-height: 360px;
+    overflow: hidden;
+    padding: 0;
+    border-radius: var(--radius-md);
+    background: var(--paper-deep);
+    cursor: zoom-in;
+  }
+
+  .gallery__item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: scale 350ms var(--ease-out);
+  }
+
+  .gallery__item:hover img {
+    scale: 1.02;
+  }
+
+  .gallery__item span {
+    position: absolute;
+    right: 1rem;
+    bottom: 1rem;
+    padding: 0.5rem 0.7rem;
+    border-radius: var(--radius-pill);
+    background: rgba(18, 24, 44, 0.72);
+    color: white;
+    font-size: 0.7rem;
+  }
+
+  .gallery__fallback {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(240px, 0.38fr);
+    gap: 2rem;
+    align-items: end;
+  }
+
+  .gallery__fallback p {
+    margin: 0 0 1rem;
+    color: var(--ink-650);
+    line-height: 1.8;
+  }
+
+  .gallery-dialog {
+    width: min(1180px, calc(100vw - 40px));
+    max-width: none;
+    max-height: calc(100dvh - 40px);
+    padding: 1rem;
+    border: 0;
+    border-radius: var(--radius-md);
+    background: #101523;
+    color: white;
+  }
+
+  .gallery-dialog::backdrop {
+    background: rgba(10, 13, 24, 0.72);
+    backdrop-filter: blur(8px);
+  }
+
+  .gallery-dialog figure {
+    margin: 0;
+  }
+
+  .gallery-dialog img {
+    width: 100%;
+    max-height: calc(100dvh - 120px);
+    object-fit: contain;
+  }
+
+  .gallery-dialog figcaption {
+    padding: 0.8rem 0.3rem 0.2rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.78rem;
+  }
+
+  .gallery-dialog__close {
+    position: absolute;
+    z-index: 3;
+    top: 1.5rem;
+    right: 1.5rem;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.88);
+    color: var(--ink-950);
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+
+  @media (max-width: 720px) {
+    .gallery__heading {
+      align-items: start;
+      flex-direction: column;
+    }
+
+    .gallery__grid,
+    .gallery__fallback {
+      grid-template-columns: 1fr;
+    }
+
+    .gallery__item {
+      min-height: 260px;
+    }
+  }
+</style>
+

@@ -1,326 +1,650 @@
 ---
-import { existsSync } from 'node:fs';
-import path from 'node:path';
-import ContactSection from '../../components/ContactSection.astro';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
 import ImageGallery from '../../components/ImageGallery.astro';
-import ProjectVisual from '../../components/ProjectVisual.astro';
-import SectionHeading from '../../components/SectionHeading.astro';
+import ProjectCover from '../../components/ProjectCover.astro';
 import StatusBadge from '../../components/StatusBadge.astro';
-import Timeline from '../../components/Timeline.astro';
 import { siteConfig } from '../../config/site';
-import { projects } from '../../data/projects';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import type { Project } from '../../types/project';
 
-export function getStaticPaths() {
-  return projects.map((project) => ({ params: { slug: project.slug }, props: { project } }));
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((project) => ({
+    params: { slug: project.id.replace(/\.mdx?$/, '') },
+    props: { project },
+  }));
 }
 
 interface Props {
-  project: Project;
+  project: CollectionEntry<'projects'>;
 }
+
 const { project } = Astro.props;
-const projectIndex = projects.findIndex((item) => item.slug === project.slug);
-const previous = projectIndex > 0 ? projects[projectIndex - 1] : projects.at(-1);
-const next = projectIndex < projects.length - 1 ? projects[projectIndex + 1] : projects[0];
-const coverExists = existsSync(
-  path.join(process.cwd(), 'public', project.coverImage.replace(/^\//, '')),
-);
-const abbreviation = project.englishTitle
-  .split(' ')
-  .map((word) => word[0])
-  .join('')
-  .slice(0, 4);
-const noteSources = import.meta.glob('../../content/project-notes/*.md', {
-  eager: true,
-  query: '?raw',
-  import: 'default',
-});
-const noteSource = noteSources[`../../content/project-notes/${project.slug}.md`];
-const noteBlocks =
-  typeof noteSource === 'string'
-    ? noteSource
-        .trim()
-        .split(/\r?\n\s*\r?\n/)
-        .filter(Boolean)
-    : [];
-const structuredData = [
-  {
-    '@context': 'https://schema.org',
-    '@type': 'CreativeWork',
-    name: project.title,
-    alternateName: project.englishTitle,
-    description: project.shortDescription,
-    author: { '@type': 'Person', name: siteConfig.name, url: siteConfig.url },
-    url: new URL(`/projects/${project.slug}`, siteConfig.url).toString(),
-    keywords: project.techStack.join(', '),
-  },
-  {
-    '@context': 'https://schema.org',
-    '@type': 'Person',
-    name: siteConfig.name,
-    url: siteConfig.url,
-    sameAs: [siteConfig.github],
-    jobTitle: 'AI 产品经理',
-  },
-];
+const slug = project.id.replace(/\.mdx?$/, '');
+const { Content } = await render(project);
+const links = [
+  { label: '在线体验', href: project.data.demoUrl },
+  { label: 'GitHub', href: project.data.githubUrl },
+  { label: '项目文档', href: project.data.documentUrl },
+  { label: '演示视频', href: project.data.videoUrl },
+].filter((item): item is { label: string; href: string } => Boolean(item.href));
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'CreativeWork',
+  name: project.data.title,
+  alternateName: project.data.englishTitle,
+  description: project.data.description,
+  author: { '@type': 'Person', name: siteConfig.name, url: siteConfig.url },
+  url: new URL(`/projects/${slug}`, siteConfig.url).toString(),
+  keywords: project.data.categories,
+};
 ---
 
-<BaseLayout
-  title={`${project.title}｜项目详情 · 赵天琦`}
-  description={project.shortDescription}
-  pageTag={project.category[0].toUpperCase()}
-  structuredData={structuredData}
->
-  <article class="project-detail">
-    <header class="project-detail-hero">
-      <div class="detail-grid-bg" aria-hidden="true"></div>
-      <div class="shell detail-hero-grid">
-        <div class="detail-hero-copy" data-reveal>
-          <a class="back-link" href="/projects">← 返回项目列表</a>
-          <div class="project-meta detail-meta">
-            <span>{project.index}</span><StatusBadge status={project.status} />
-          </div>
-          <h1>{project.title}</h1>
-          <p class="detail-en">{project.englishTitle}</p>
-          <p class="detail-summary">{project.shortDescription}</p>
-          <dl class="detail-facts">
-            <div><dt>项目时间</dt><dd>{project.period}</dd></div>
-            <div><dt>我的角色</dt><dd>{project.role}</dd></div>
-          </dl>
-          <div class="tag-list">
-            {project.techStack.map((tag) => <span>{tag}</span>)}
-          </div>
-          <div class="detail-actions">
-            {
-              project.githubUrl && (
-                <a
-                  class="button button-primary"
-                  href={project.githubUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  GitHub ↗
-                </a>
-              )
-            }
-            {
-              project.demoUrl && (
-                <a
-                  class="button button-secondary"
-                  href={project.demoUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  在线 Demo ↗
-                </a>
-              )
-            }
-            {
-              project.documentUrl && (
-                <a
-                  class="button button-secondary"
-                  href={project.documentUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  项目文档 ↗
-                </a>
-              )
-            }
-            {
-              project.videoUrl && (
-                <a
-                  class="button button-secondary"
-                  href={project.videoUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  演示视频 ↗
-                </a>
-              )
-            }
+<BaseLayout title={`${project.data.title}｜赵天琦`} description={project.data.description}>
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+  <article class="case-study">
+    <header class="case-hero">
+      <div class="container case-hero__top">
+        <div class="case-hero__eyebrow">
+          <span class="mono">{project.data.index}</span>
+          <StatusBadge status={project.data.status} />
+        </div>
+        <div class="case-hero__title">
+          <p class="mono en">{project.data.englishTitle}</p>
+          <h1 class="page-title">{project.data.title}</h1>
+          <p class="lede">{project.data.summary}</p>
+          <div class="case-hero__links">
+            {links.map((link) => <a class="button" href={link.href} target="_blank" rel="noreferrer">{link.label} <span aria-hidden="true">↗</span></a>)}
           </div>
         </div>
-        <div class="detail-cover" data-reveal>
-          {
-            coverExists ? (
-              <img
-                src={project.coverImage}
-                width="960"
-                height="600"
-                alt={`${project.title} 项目封面`}
-              />
-            ) : (
-              <ProjectVisual
-                abbreviation={abbreviation}
-                category={project.category[0]}
-                index={project.index}
-              />
-            )
-          }
-        </div>
+      </div>
+      <div class="container case-hero__cover">
+        <ProjectCover slug={slug} title={project.data.title} index={project.data.index} />
       </div>
     </header>
 
-    <div class="shell case-study-layout">
-      <aside class="case-nav" aria-label="项目详情目录">
-        <span>CASE STUDY</span>
-        <a href="#context">01 背景与问题</a>
-        <a href="#responsibility">02 我的职责</a>
-        <a href="#solution">03 产品方案</a>
-        <a href="#ai-design">04 AI 技术方案</a>
-        <a href="#evaluation">05 评测体系</a>
-        <a href="#iteration">06 实验与迭代</a>
-        <a href="#gallery">07 项目截图</a>
-      </aside>
+    <section class="case-overview container">
+      <div class="case-overview__meta">
+        <dl>
+          <div><dt>我的角色</dt><dd>{project.data.role}</dd></div>
+          <div><dt>项目阶段</dt><dd>{project.data.period}</dd></div>
+          <div><dt>目标用户</dt><dd>{project.data.targetUser}</dd></div>
+        </dl>
+        <div class="case-overview__stack">
+          {project.data.techStack.map((item) => <span>{item}</span>)}
+        </div>
+      </div>
+      <div class="case-overview__role">
+        <span class="eyebrow">MY RESPONSIBILITY</span>
+        <h2>我负责的，不只是“把 AI 放进去”。</h2>
+        <ol>
+          {project.data.responsibilities.map((item, index) => <li><span class="mono">0{index + 1}</span>{item}</li>)}
+        </ol>
+      </div>
+    </section>
 
-      <div class="case-content">
-        <section class="case-section" id="context">
-          <SectionHeading eyebrow="01 / CONTEXT" title="项目背景与问题" />
-          <p class="case-lead">{project.fullDescription}</p>
-          <div class="question-grid" data-reveal>
-            <article><span>TARGET USER</span><h3>目标用户</h3><p>{project.targetUser}</p></article>
-            <article><span>WHY AI</span><h3>产品问题</h3><p>{project.problem}</p></article>
+    <section class="case-section case-section--paper">
+      <div class="container case-split">
+        <div class="case-section__label"><span class="eyebrow">01 / CONTEXT</span></div>
+        <div class="case-section__content">
+          <h2>先说清问题，再讨论 AI。</h2>
+          <div class="case-triptych">
+            <div><span class="mono">PROBLEM</span><p>{project.data.problem}</p></div>
+            <div><span class="mono">WHY AI</span><p>{project.data.aiNeeded}</p></div>
+            <div><span class="mono">GOAL</span><p>{project.data.goal}</p></div>
           </div>
-          {
-            noteBlocks.length > 0 && (
-              <div class="markdown-note" data-reveal>
-                {noteBlocks.map((block) =>
-                  block.startsWith('## ') ? <h3>{block.replace(/^##\s+/, '')}</h3> : <p>{block}</p>,
-                )}
-              </div>
-            )
-          }
-        </section>
+        </div>
+      </div>
+    </section>
 
-        <section class="case-section" id="responsibility">
-          <SectionHeading
-            eyebrow="02 / OWNERSHIP"
-            title="我的职责"
-            description="覆盖从场景理解、方案设计到 Demo 与评测的完整过程。"
-          />
-          <ol class="responsibility-list">
-            {
-              project.responsibilities.map((item, index) => (
-                <li data-reveal>
-                  <>
-                    <span>{String(index + 1).padStart(2, '0')}</span>
-                    <p>{item}</p>
-                  </>
-                </li>
-              ))
-            }
+    <section class="case-section">
+      <div class="container case-split">
+        <div class="case-section__label"><span class="eyebrow">02 / SOLUTION</span></div>
+        <div class="case-section__content">
+          <h2>把方案拆成一条可观察的产品路径。</h2>
+          <p class="case-section__lead">{project.data.solution}</p>
+          <ol class="case-flow">
+            {project.data.flow.map((item, index) => <li><span class="mono">{String(index + 1).padStart(2, '0')}</span><strong>{item}</strong></li>)}
           </ol>
-        </section>
+        </div>
+      </div>
+    </section>
 
-        <section class="case-section" id="solution">
-          <SectionHeading eyebrow="03 / PRODUCT SOLUTION" title="产品方案" />
-          <div class="solution-panel" data-reveal>
-            <div><span>SOLUTION OVERVIEW</span><p>{project.solution}</p></div>
-            <div class="solution-flow" aria-label="产品方案流程占位">
-              <i></i><span>用户输入</span><b>→</b><span>AI 系统处理</span><b>→</b><span
-                >人工确认</span
-              ><b>→</b><span>结果与反馈</span><i></i>
+    <section class="case-section case-section--night">
+      <div class="container case-split">
+        <div class="case-section__label"><span class="eyebrow">03 / AI DESIGN</span></div>
+        <div class="case-section__content">
+          <h2>模型负责生成，人负责目标、例外和最后决定。</h2>
+          <div class="case-numbered">
+            {project.data.aiDesign.map((item, index) => <div><span class="mono">A{String(index + 1).padStart(2, '0')}</span><p>{item}</p></div>)}
+          </div>
+          <div class="case-checkpoints">
+            <span class="mono">HUMAN CHECKPOINTS</span>
+            <ul>{project.data.humanCheckpoints.map((item) => <li>{item}</li>)}</ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="case-section case-section--paper">
+      <div class="container case-split">
+        <div class="case-section__label"><span class="eyebrow">04 / BOUNDARIES</span></div>
+        <div class="case-section__content">
+          <h2>能力边界，需要在正常流程之外被看见。</h2>
+          <div class="case-two-columns">
+            <div>
+              <h3>异常与边缘场景</h3>
+              <ul>{project.data.edgeCases.map((item) => <li>{item}</li>)}</ul>
+            </div>
+            <div>
+              <h3>安全与控制</h3>
+              <ul>{project.data.safety.map((item) => <li>{item}</li>)}</ul>
             </div>
           </div>
-          <div class="artifact-grid" data-reveal>
-            {
-              ['用户流程图', '产品架构图', '工作流图', '核心原型'].map((label, index) => (
-                <div>
-                  <>
-                    <span>0{index + 1}</span>
-                    <strong>{label}</strong>
-                    <small>ASSET PLACEHOLDER</small>
-                  </>
-                </div>
-              ))
-            }
-          </div>
-        </section>
-
-        <section class="case-section" id="ai-design">
-          <SectionHeading
-            eyebrow="04 / AI SYSTEM"
-            title="AI 技术方案"
-            description="用产品语言说明模型输入输出、人工节点、异常处理与边界。"
-          />
-          <div class="ai-design-list">
-            {
-              project.aiDesign.map((item, index) => (
-                <article data-reveal>
-                  <>
-                    <span>{String(index + 1).padStart(2, '0')}</span>
-                    <p>{item}</p>
-                  </>
-                </article>
-              ))
-            }
-          </div>
-        </section>
-
-        <section class="case-section" id="evaluation">
-          <SectionHeading
-            eyebrow="05 / EVALUATION"
-            title="评测体系"
-            description="不虚构提升百分比，用可复现任务、异常类型和复测记录表达项目证据。"
-          />
-          <div class="metrics-grid">
-            {
-              project.evaluationMetrics.map((metric, index) => (
-                <div data-reveal>
-                  <>
-                    <span>{String(index + 1).padStart(2, '0')}</span>
-                    <strong>{metric}</strong>
-                  </>
-                </div>
-              ))
-            }
-          </div>
-          <p class="evaluation-note">
-            完成多类型测试场景覆盖，识别主要异常类型，并形成相应修复策略。
-          </p>
-        </section>
-
-        <section class="case-section" id="iteration">
-          <SectionHeading eyebrow="06 / ITERATION" title="实验与迭代" />
-          <Timeline items={project.iterations} />
-        </section>
-
-        <section class="case-section" id="gallery">
-          <SectionHeading
-            eyebrow="07 / GALLERY"
-            title="项目截图"
-            description="当前为本地资源预留位，替换后会自动显示、懒加载并支持点击放大。"
-          />
-          <ImageGallery project={project} />
-        </section>
+        </div>
       </div>
+    </section>
+
+    <section class="case-section">
+      <div class="container case-split">
+        <div class="case-section__label"><span class="eyebrow">05 / EVALUATION</span></div>
+        <div class="case-section__content">
+          <h2>用一组互相制衡的维度，而不是一个漂亮总分。</h2>
+          <ol class="metric-list">
+            {project.data.evaluationMetrics.map((metric, index) => <li><span class="mono">{String(index + 1).padStart(2, '0')}</span>{metric}</li>)}
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section class="case-section case-section--failure">
+      <div class="container case-split">
+        <div class="case-section__label"><span class="eyebrow">06 / FAILURE & ITERATION</span></div>
+        <div class="case-section__content">
+          <h2>失败不是附录，而是下一轮设计的入口。</h2>
+          <ul class="failure-list">{project.data.failures.map((item) => <li>{item}</li>)}</ul>
+          <div class="iteration-list">
+            {project.data.iterations.map((iteration) => (
+              <article>
+                <span class="mono">{iteration.stage}</span>
+                <h3>{iteration.problem}</h3>
+                <dl>
+                  <div><dt>分析</dt><dd>{iteration.analysis}</dd></div>
+                  <div><dt>改动</dt><dd>{iteration.change}</dd></div>
+                  <div><dt>结果</dt><dd>{iteration.result}</dd></div>
+                  <div><dt>下一步</dt><dd>{iteration.next}</dd></div>
+                </dl>
+              </article>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="container">
+      <ImageGallery images={project.data.gallery} title={project.data.title} slug={slug} index={project.data.index} />
     </div>
 
-    <nav class="shell project-pagination" aria-label="项目翻页">
-      {
-        previous && (
-          <a href={`/projects/${previous.slug}`}>
-            <>
-              <span>← PREVIOUS</span>
-              <strong>{previous.title}</strong>
-            </>
-          </a>
-        )
-      }
-      <a class="all-projects" href="/projects">全部项目</a>
-      {
-        next && (
-          <a class="next" href={`/projects/${next.slug}`}>
-            <>
-              <span>NEXT →</span>
-              <strong>{next.title}</strong>
-            </>
-          </a>
-        )
-      }
-    </nav>
+    <section class="case-section case-section--mdx">
+      <div class="container case-split">
+        <div class="case-section__label"><span class="eyebrow">07 / PRODUCT NOTES</span></div>
+        <div class="case-section__content prose"><Content /></div>
+      </div>
+    </section>
+
+    <section class="case-reflection">
+      <div class="container case-reflection__grid">
+        <span class="eyebrow">REFLECTION / NEXT</span>
+        <div>
+          <blockquote>{project.data.reflection}</blockquote>
+          <ul>{project.data.nextSteps.map((item) => <li>{item}</li>)}</ul>
+          <a class="button" href="/projects">返回项目展 <span aria-hidden="true">←</span></a>
+        </div>
+      </div>
+    </section>
   </article>
-  <ContactSection />
 </BaseLayout>
+
+<style>
+  .case-hero {
+    padding: clamp(6rem, 10vw, 10rem) 0 0;
+    background:
+      radial-gradient(circle at 85% 8%, rgba(141, 209, 255, 0.25), transparent 25rem),
+      radial-gradient(circle at 8% 65%, rgba(238, 209, 222, 0.3), transparent 24rem);
+  }
+
+  .case-hero__top {
+    display: grid;
+    grid-template-columns: minmax(160px, 0.28fr) minmax(0, 1fr);
+    gap: 2rem;
+    padding-bottom: clamp(4rem, 7vw, 7rem);
+  }
+
+  .case-hero__eyebrow {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    color: var(--ink-500);
+    font-size: 0.68rem;
+  }
+
+  .case-hero__title > .mono {
+    margin-bottom: 1.2rem;
+    color: var(--ink-500);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+  }
+
+  .case-hero h1 {
+    margin: 0;
+  }
+
+  .case-hero .lede {
+    max-width: 760px;
+    margin: 2rem 0 0;
+  }
+
+  .case-hero__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 2rem;
+  }
+
+  .case-hero__cover {
+    position: relative;
+    z-index: 2;
+    transform: translateY(3rem);
+  }
+
+  .case-hero__cover :global(.project-cover) {
+    min-height: min(680px, 55vw);
+  }
+
+  .case-overview {
+    display: grid;
+    grid-template-columns: minmax(260px, 0.42fr) minmax(0, 0.85fr);
+    gap: clamp(3rem, 8vw, 9rem);
+    padding-top: clamp(9rem, 15vw, 14rem);
+    padding-bottom: clamp(6rem, 10vw, 10rem);
+  }
+
+  .case-overview__meta dl {
+    display: grid;
+    margin: 0;
+  }
+
+  .case-overview__meta dl div {
+    padding: 1.1rem 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .case-overview__meta dt {
+    margin-bottom: 0.45rem;
+    color: var(--ink-500);
+    font-size: 0.72rem;
+  }
+
+  .case-overview__meta dd {
+    margin: 0;
+    color: var(--ink-800);
+    line-height: 1.6;
+  }
+
+  .case-overview__stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 1.4rem;
+  }
+
+  .case-overview__stack span {
+    padding: 0.4rem 0.65rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-pill);
+    color: var(--ink-650);
+    font-size: 0.68rem;
+  }
+
+  .case-overview__role h2,
+  .case-section h2 {
+    margin: 1.3rem 0 2.4rem;
+    font-size: clamp(2.2rem, 4.5vw, 4.7rem);
+    letter-spacing: -0.055em;
+    line-height: 1.05;
+  }
+
+  .case-overview__role ol {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .case-overview__role li {
+    display: grid;
+    grid-template-columns: 42px 1fr;
+    gap: 1rem;
+    padding: 1.2rem 0;
+    border-top: 1px solid var(--line);
+    color: var(--ink-650);
+    line-height: 1.7;
+  }
+
+  .case-overview__role li span {
+    color: var(--ink-500);
+    font-size: 0.68rem;
+  }
+
+  .case-section {
+    padding-block: clamp(6rem, 11vw, 11rem);
+  }
+
+  .case-section--paper {
+    background: white;
+  }
+
+  .case-section--night {
+    background:
+      radial-gradient(circle at 80% 20%, rgba(99, 130, 215, 0.25), transparent 26rem),
+      var(--night);
+    color: white;
+  }
+
+  .case-section--night .eyebrow,
+  .case-section--night p,
+  .case-section--night li {
+    color: rgba(229, 235, 255, 0.72);
+  }
+
+  .case-section--failure {
+    background: linear-gradient(145deg, #f6e8e9, #f2f4ff 60%, #e9f6fb);
+  }
+
+  .case-split,
+  .case-reflection__grid {
+    display: grid;
+    grid-template-columns: minmax(150px, 0.28fr) minmax(0, 1fr);
+    gap: 2rem;
+  }
+
+  .case-section__content {
+    max-width: 980px;
+  }
+
+  .case-triptych {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--line);
+  }
+
+  .case-triptych > div {
+    padding: 1.8rem;
+    background: white;
+  }
+
+  .case-triptych span,
+  .case-numbered span,
+  .case-checkpoints > span {
+    color: var(--ink-500);
+    font-size: 0.66rem;
+    letter-spacing: 0.1em;
+  }
+
+  .case-triptych p,
+  .case-numbered p {
+    margin: 1.3rem 0 0;
+    color: var(--ink-650);
+    line-height: 1.85;
+  }
+
+  .case-section__lead {
+    max-width: 760px;
+    color: var(--ink-650);
+    font-size: 1.15rem;
+    line-height: 1.9;
+  }
+
+  .case-flow {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    padding: 0;
+    margin: 3.5rem 0 0;
+    background: var(--line);
+    list-style: none;
+  }
+
+  .case-flow li {
+    min-height: 155px;
+    padding: 1.2rem;
+    background: var(--paper);
+  }
+
+  .case-flow span {
+    display: block;
+    margin-bottom: 2.5rem;
+    color: var(--ink-500);
+    font-size: 0.66rem;
+  }
+
+  .case-numbered {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0 3rem;
+  }
+
+  .case-numbered > div {
+    padding: 1.6rem 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+  }
+
+  .case-checkpoints {
+    margin-top: 3rem;
+    padding: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .case-checkpoints ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    padding: 0;
+    margin: 1.2rem 0 0;
+    list-style: none;
+  }
+
+  .case-checkpoints li {
+    padding: 0.55rem 0.8rem;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: var(--radius-pill);
+  }
+
+  .case-two-columns {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3rem;
+  }
+
+  .case-two-columns h3 {
+    font-size: 1.5rem;
+  }
+
+  .case-two-columns ul,
+  .failure-list {
+    padding: 0;
+    margin: 1.5rem 0 0;
+    list-style: none;
+  }
+
+  .case-two-columns li,
+  .failure-list li {
+    position: relative;
+    padding: 1rem 0 1rem 1.4rem;
+    border-top: 1px solid var(--line);
+    color: var(--ink-650);
+    line-height: 1.7;
+  }
+
+  .case-two-columns li::before,
+  .failure-list li::before {
+    position: absolute;
+    top: 1.55rem;
+    left: 0;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--iris);
+    content: '';
+  }
+
+  .metric-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    padding: 0;
+    margin: 0;
+    border-top: 1px solid var(--line);
+    border-left: 1px solid var(--line);
+    list-style: none;
+  }
+
+  .metric-list li {
+    display: grid;
+    min-height: 130px;
+    align-content: space-between;
+    padding: 1.2rem;
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    font-size: 1.05rem;
+  }
+
+  .metric-list span {
+    color: var(--ink-500);
+    font-size: 0.66rem;
+  }
+
+  .iteration-list {
+    margin-top: 4rem;
+  }
+
+  .iteration-list article {
+    padding: 2.5rem;
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.58);
+  }
+
+  .iteration-list article > span {
+    color: #a26755;
+    font-size: 0.68rem;
+  }
+
+  .iteration-list h3 {
+    max-width: 700px;
+    margin: 1rem 0 2rem;
+    font-size: clamp(1.6rem, 3vw, 2.8rem);
+    letter-spacing: -0.04em;
+  }
+
+  .iteration-list dl {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem 2rem;
+  }
+
+  .iteration-list dl div {
+    padding-top: 1rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .iteration-list dt {
+    color: var(--ink-500);
+    font-size: 0.7rem;
+  }
+
+  .iteration-list dd {
+    margin: 0.6rem 0 0;
+    color: var(--ink-650);
+    line-height: 1.7;
+  }
+
+  .case-section--mdx {
+    background: white;
+  }
+
+  .prose :global(h2) {
+    margin-top: 0;
+  }
+
+  .prose :global(p),
+  .prose :global(li) {
+    max-width: var(--reading);
+    color: var(--ink-650);
+    line-height: 1.9;
+  }
+
+  .case-reflection {
+    padding-block: clamp(6rem, 11vw, 11rem);
+    background: linear-gradient(145deg, #e8f5ff, #ebe7ff 58%, #f6e6e8);
+  }
+
+  blockquote {
+    max-width: 960px;
+    margin: 0;
+    font-size: clamp(2.2rem, 4.3vw, 4.4rem);
+    font-weight: 560;
+    letter-spacing: -0.052em;
+    line-height: 1.12;
+  }
+
+  .case-reflection ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    padding: 0;
+    margin: 2.5rem 0;
+    list-style: none;
+  }
+
+  .case-reflection li {
+    padding: 0.6rem 0.85rem;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-pill);
+  }
+
+  @media (max-width: 820px) {
+    .case-hero__top,
+    .case-overview,
+    .case-split,
+    .case-reflection__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .case-triptych,
+    .case-flow,
+    .case-numbered,
+    .case-two-columns,
+    .metric-list {
+      grid-template-columns: 1fr;
+    }
+
+    .case-flow li {
+      min-height: auto;
+    }
+
+    .case-flow span {
+      margin-bottom: 1rem;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .iteration-list article {
+      padding: 1.5rem;
+    }
+
+    .iteration-list dl {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
