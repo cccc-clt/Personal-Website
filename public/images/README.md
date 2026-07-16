@@ -1,8 +1,22 @@
-# 图片资源放置说明
+# 图片资源目录
 
-- `avatar.webp`：个人头像，可选。
-- `anime-assistant.webp`：首页原创 AI 助手立绘，可选。建议尺寸 620 × 700。
-- `og-cover.webp`：社交分享封面，可选。建议尺寸 1200 × 630。
-- `projects/<project-slug>/`：项目封面与截图。优先使用 WebP 或 AVIF。
+所有资源必须本地托管并在 `/credits` 与 `ASSET_CHECKLIST.md` 登记，不使用外链图片、随机图片 API 或未经授权的动漫角色。
 
-图片不存在时，页面会自动显示本地 CSS 几何占位视觉，不会出现破图。
+## 角色文件
+
+放入 `character/`：
+
+- `lab-guide-hero.avif` / `lab-guide-hero.webp`：桌面 Hero，建议 1080×1320。
+- `lab-guide-mobile.avif` / `lab-guide-mobile.webp`：移动构图，建议 900×1125。
+- `lab-guide-avatar.webp`、`lab-guide-contact.webp`、`lab-guide-404.webp`：可选裁切。
+
+文件缺失时会自动使用原创成年女性 CSS 数字向导，不输出破图。
+
+## 项目截图
+
+Frontmatter 中的路径保持在 `projects/<slug>/` 下。建议先导出 WebP，再按需提供 AVIF；单张建议控制在 350KB 内，并保留与界面内容一致的 alt 描述。
+
+## OG 图片
+
+`og/` 中四张品牌卡由 `node scripts/generate-og.mjs` 生成，不依赖远程字体或图片。
+

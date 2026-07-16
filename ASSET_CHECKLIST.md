@@ -24,10 +24,10 @@
 
 ## 社交分享图
 
-- [ ] 通用首页 OG
-- [ ] 游戏 AI 首页 OG
-- [ ] Agent 首页 OG
-- [ ] 智能汽车首页 OG
+- [x] 通用首页 OG（本地品牌排版回退）
+- [x] 游戏 AI 首页 OG（本地品牌排版回退）
+- [x] Agent 首页 OG（本地品牌排版回退）
+- [x] 智能汽车首页 OG（本地品牌排版回退）
 
 ## 简历
 
@@ -40,4 +40,3 @@
 - [ ] 真实邮箱（当前占位：`your-email@example.com`）
 - [ ] 真实域名（当前占位：`https://your-domain.com`）
 - [ ] GitHub / LinkedIn 或其他真实外链
-

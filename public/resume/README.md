@@ -1,9 +1,10 @@
-# 简历文件放置说明
+# 简历文件目录
 
-请将三份 PDF 放到当前目录，并保持以下文件名：
+将正式 PDF 使用以下固定文件名放入本目录：
 
-- `resume-general.pdf`
-- `resume-game.pdf`
-- `resume-auto.pdf`
+- `zhao-tianqi-general.pdf`
+- `zhao-tianqi-game-ai.pdf`
+- `zhao-tianqi-agent.pdf`
 
-文件不存在时，在线简历页面会显示“简历文件待补充”，不会产生 404。
+`/resume` 在构建时检测文件是否存在：存在才渲染下载链接，缺失时显示“待补充”，不会产生 404 下载按钮。建议 PDF 内嵌中文字体、A4 尺寸、文件小于 5MB。
+

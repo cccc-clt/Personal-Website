@@ -2,6 +2,15 @@ import type { AssetCredit } from '../types/project';
 
 export const assetCredits: AssetCredit[] = [
   {
+    path: 'public/images/og/*.webp',
+    title: 'Directional Social Preview Cards',
+    author: '赵天琦作品集项目',
+    source: '本地脚本生成的原创品牌排版图',
+    licenseStatus: 'ORIGINAL',
+    note: '四套定向首页的本地 WebP 分享卡，不依赖第三方图片或字体服务。',
+    attributionRequired: false,
+  },
+  {
     path: 'src/styles/character.css',
     title: 'Game AI Lab Guide CSS Silhouette',
     author: '赵天琦作品集项目',
@@ -20,4 +29,3 @@ export const assetCredits: AssetCredit[] = [
     attributionRequired: false,
   },
 ];
-
