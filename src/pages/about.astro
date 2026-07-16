@@ -1,155 +1,314 @@
 ---
 import ContactSection from '../components/ContactSection.astro';
 import InnerPageHero from '../components/InnerPageHero.astro';
-import SectionHeading from '../components/SectionHeading.astro';
-import { skillGroups } from '../data/skills';
+import { abilities, siteConfig } from '../config/site';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-const timeline = [
-  {
-    period: 'START',
-    title: '从交通工程认识复杂系统',
-    text: '在流程、仿真、数据分析和多因素约束中，形成结构化理解问题的习惯。',
-  },
-  {
-    period: 'EXPLORE',
-    title: '把兴趣转化为 AI 产品实践',
-    text: '从 Prompt、RAG 和 Agent 入手，用项目验证技术能力如何进入真实使用场景。',
-  },
-  {
-    period: 'BUILD',
-    title: '完成可运行的产品原型',
-    text: '使用 Python、Streamlit、Dify 与 TypeScript，把需求和方案落到可交互 Demo。',
-  },
-  {
-    period: 'NOW',
-    title: '聚焦 AI 产品评测与落地',
-    text: '持续补足产品指标、模型评测、异常处理和迭代复盘，寻找更真实的业务验证。',
-  },
-];
+const journey = [
+  { index: '01', label: 'SYSTEM THINKING', title: '从交通工程理解复杂系统', text: '工程训练让我习惯先看参与者、约束、路径与异常，而不是把一个局部功能当成完整答案。' },
+  { index: '02', label: 'HANDS-ON AI', title: '用原型触摸模型边界', text: '通过 Prompt、RAG、工作流与轻量开发，把抽象的模型能力变成可观察的用户体验。' },
+  { index: '03', label: 'PRODUCT METHOD', title: '把“能做”改写为“值得做”', text: '从用户任务和业务目标判断 AI 是否必要，再设计输入、输出、人工节点与异常回退。' },
+  { index: '04', label: 'EVALUATION', title: '让失败成为共同语言', text: '通过样本、指标和失败分类，让产品、算法与业务能围绕同一组证据推进迭代。' },
+  { index: '05', label: 'NEXT STATION', title: '寻找游戏 AI 与 Agent 产品机会', text: '希望在真实团队中继续做作品优先、边界清楚、能够经受评测的 AI 产品。' },
+] as const;
 ---
 
-<BaseLayout
-  title="关于赵天琦｜AI 产品经理作品集"
-  description="了解赵天琦从交通工程到 AI 产品的跨专业路径、产品方法、项目实践与求职方向。"
-  pageTag="ABOUT ME"
->
+<BaseLayout title="关于赵天琦｜AI 产品经理" description="赵天琦从交通工程走向 AI 产品的跨专业路径、产品方法与求职方向。">
   <InnerPageHero
     eyebrow="ABOUT / TIANQI ZHAO"
-    title="用系统思维拆问题，用产品实验找答案。"
-    description="我关注 AI 能不能在真实任务里稳定创造价值，也愿意为每一个结论保留证据、边界和下一步。"
-    code="PROFILE_SYSTEM / OPEN"
+    title="我喜欢站在复杂系统与真实体验的交界处。"
+    description="从交通工程到 AI 产品，我的路径并不笔直，但它让我同时重视系统约束、人的感受和可被验证的证据。"
   />
 
-  <section class="section about-story-section">
-    <div class="shell about-story-grid">
-      <div class="story-sticky">
-        <SectionHeading eyebrow="MY STORY" title="跨专业，不是重置；是能力重新组合。" />
-        <div class="story-signature" aria-hidden="true">
-          <span>TQ</span><i></i><small>AI PRODUCT BUILDER</small>
-        </div>
+  <section class="about-opening section">
+    <div class="container about-opening__grid">
+      <div class="about-opening__statement">
+        <span class="mono">PROFILE / 2027</span>
+        <p>你好，我是赵天琦。</p>
+        <h2>比起把模型包装得无所不能，我更愿意把一件事的目标、风险和责任说清楚。</h2>
       </div>
-      <div class="story-content" data-reveal>
-        <p class="lead">
-          我是赵天琦，河南城建学院交通工程专业本科生，也是持续用项目学习 AI 产品的实践者。
-        </p>
-        <p>
-          交通工程背景让我形成了对复杂系统、流程、仿真与数据分析的理解；AI
-          产品实践则让我进一步把这些能力用于需求分析、产品设计、实验评测和智能应用开发。
-        </p>
-        <h3>为什么选择 AI 产品？</h3>
-        <p>
-          我喜欢站在技术能力和用户任务之间：既理解模型为什么会失败，也关注用户是否愿意使用、团队是否能验证、方案是否能够持续迭代。AI
-          产品正在快速形成新的交互方式，而我希望参与这个过程，而不是只旁观结果。
-        </p>
-        <h3>我的产品方法</h3>
-        <p>
-          先把问题定义清楚，再判断 AI
-          的必要性；先用原型验证核心链路，再扩大功能；把准确性、稳定性、延迟、成本和体验放进同一套评测视角，避免只展示“能跑”的最好一次。
-        </p>
-        <div class="quote-panel">
-          <span>PRODUCT NOTE</span><blockquote>
-            AI 不是功能标签，而是一组需要被设计、约束和验证的产品能力。
-          </blockquote>
-        </div>
+      <aside>
+        <dl>
+          <div><dt>当前方向</dt><dd>AI 产品经理 / 游戏 AI / Agent</dd></div>
+          <div><dt>跨专业背景</dt><dd>交通工程 → AI 产品实践</dd></div>
+          <div><dt>求职状态</dt><dd>{siteConfig.availability}</dd></div>
+          <div><dt>所在地</dt><dd>{siteConfig.location}</dd></div>
+        </dl>
+      </aside>
+    </div>
+  </section>
+
+  <section class="about-journey section">
+    <div class="container">
+      <header class="about-section-heading">
+        <span class="eyebrow">01 / JOURNEY</span>
+        <h2 class="section-title">五个阶段，逐渐形成我的产品视角。</h2>
+      </header>
+      <ol>
+        {journey.map((item) => (
+          <li>
+            <span class="about-journey__number mono">{item.index}</span>
+            <span class="about-journey__label mono">{item.label}</span>
+            <div><h3>{item.title}</h3><p>{item.text}</p></div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="about-method section">
+    <div class="container">
+      <header class="about-section-heading">
+        <span class="eyebrow">02 / PRODUCT METHOD</span>
+        <h2 class="section-title">我如何推进一个 AI 产品问题。</h2>
+      </header>
+      <div class="about-method__grid">
+        {abilities.map((ability) => (
+          <article>
+            <span class="mono">{ability.index} / {ability.english}</span>
+            <h3>{ability.title}</h3>
+            <p>{ability.description}</p>
+          </article>
+        ))}
       </div>
     </div>
   </section>
 
-  <section class="section about-timeline-section">
-    <div class="shell">
-      <SectionHeading eyebrow="LEARNING PATH" title="从工程系统到 AI 产品的学习路径" />
-      <div class="about-timeline">
-        {
-          timeline.map((item, index) => (
-            <article data-reveal>
-              <div>
-                <>
-                  <span>0{index + 1}</span>
-                  <i />
-                </>
-              </div>
-              <>
-                <small>{item.period}</small>
-                <h3>{item.title}</h3>
-                <p>{item.text}</p>
-              </>
-            </article>
-          ))
-        }
+  <section class="about-boundary section">
+    <div class="container about-boundary__grid">
+      <span class="eyebrow">03 / MODEL BOUNDARY</span>
+      <div>
+        <h2 class="section-title">好的 AI 体验，不是把人移出流程。</h2>
+        <p class="lede">它应该让重复劳动变轻，让证据更容易被看见，同时让用户在高风险、低置信和价值判断面前拥有清楚的控制权。</p>
+        <ul>
+          <li>信息不足时，先暴露缺口</li>
+          <li>高风险动作，保留人工确认</li>
+          <li>自动评分，不冒充唯一真值</li>
+          <li>失败记录，能推动下一轮改动</li>
+        </ul>
       </div>
     </div>
   </section>
 
-  <section class="section current-skills-section">
-    <div class="shell">
-      <SectionHeading
-        eyebrow="CURRENT SKILLS"
-        title="当前能力与学习方式"
-        description="以项目为载体，围绕真实问题持续补齐产品、AI 与开发能力。"
-      />
-      <div class="current-skill-grid">
-        {
-          skillGroups.map((group) => (
-            <article data-reveal>
-              <>
-                <span>{group.code}</span>
-                <h3>{group.title}</h3>
-                <p>{group.items.map((item) => item.name).join(' · ')}</p>
-              </>
-            </article>
-          ))
-        }
+  <section class="about-direction section">
+    <div class="container about-direction__grid">
+      <div>
+        <span class="eyebrow">04 / WHAT'S NEXT</span>
+        <h2>期待在真实团队里，把“可用”继续推进到“可信”。</h2>
       </div>
-      <div class="learning-method" data-reveal>
-        <span>LEARNING LOOP</span>
-        <div>
-          <strong>01 选定真实问题</strong><i>→</i><strong>02 做出可用原型</strong><i>→</i><strong
-            >03 设计测试任务</strong
-          ><i>→</i><strong>04 复盘并公开沉淀</strong>
+      <div>
+        <p>重点关注游戏 AI、AI Agent、大模型应用与产品评测方向，也愿意把工程背景带入智能汽车等复杂场景。</p>
+        <div class="about-direction__links">
+          <a class="button button--primary" href="/projects">查看项目</a>
+          <a class="button" href="/resume">在线简历</a>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="section direction-section">
-    <div class="shell direction-panel" data-reveal>
-      <span class="eyebrow"><i></i>CAREER DIRECTION</span>
-      <h2>我正在寻找这些方向的实践机会</h2>
-      <div class="direction-grid">
-        <a href="/"><span>01</span><strong>AI 产品经理</strong><small>模型能力 → 产品闭环</small></a
-        >
-        <a href="/agent"
-          ><span>02</span><strong>大模型 / Agent</strong><small>工作流 · RAG · 评测</small></a
-        >
-        <a href="/game"
-          ><span>03</span><strong>游戏 AI / AIGC</strong><small>内容 · 增长 · 创作工具</small></a
-        >
-        <a href="/auto"
-          ><span>04</span><strong>智能座舱 AI</strong><small>场景 · 指令 · 安全边界</small></a
-        >
-      </div>
-    </div>
-  </section>
   <ContactSection />
 </BaseLayout>
+
+<style>
+  .about-opening {
+    background: white;
+  }
+
+  .about-opening__grid,
+  .about-boundary__grid,
+  .about-direction__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(270px, 0.45fr);
+    gap: clamp(3rem, 8vw, 9rem);
+  }
+
+  .about-opening__statement > span {
+    color: var(--ink-500);
+    font-size: 0.68rem;
+  }
+
+  .about-opening__statement > p {
+    margin-top: 2rem;
+    color: var(--ink-650);
+    font-size: 1.1rem;
+  }
+
+  .about-opening h2 {
+    max-width: 930px;
+    margin: 1rem 0 0;
+    font-size: clamp(2.6rem, 5.4vw, 5.8rem);
+    font-weight: 560;
+    letter-spacing: -0.06em;
+    line-height: 1.08;
+  }
+
+  aside dl {
+    margin: 0;
+  }
+
+  aside dl div {
+    padding: 1rem 0;
+    border-top: 1px solid var(--line);
+  }
+
+  aside dt {
+    color: var(--ink-500);
+    font-size: 0.72rem;
+  }
+
+  aside dd {
+    margin: 0.45rem 0 0;
+    line-height: 1.65;
+  }
+
+  .about-journey {
+    background: linear-gradient(180deg, #f4f7ff, #edf3ff);
+  }
+
+  .about-section-heading {
+    display: grid;
+    grid-template-columns: 0.28fr 1fr;
+    gap: 2rem;
+    margin-bottom: 4rem;
+  }
+
+  .about-section-heading h2 {
+    margin: 0;
+  }
+
+  .about-journey ol {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .about-journey li {
+    display: grid;
+    grid-template-columns: 70px minmax(150px, 0.35fr) minmax(0, 1fr);
+    gap: 1.5rem;
+    padding: 2rem 0;
+    border-top: 1px solid var(--line-strong);
+  }
+
+  .about-journey__number,
+  .about-journey__label {
+    color: var(--ink-500);
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+  }
+
+  .about-journey h3 {
+    margin: 0 0 0.7rem;
+    font-size: clamp(1.5rem, 2.7vw, 2.8rem);
+    letter-spacing: -0.04em;
+  }
+
+  .about-journey p,
+  .about-method p,
+  .about-direction p {
+    max-width: 660px;
+    margin: 0;
+    color: var(--ink-650);
+    line-height: 1.8;
+  }
+
+  .about-method {
+    background: white;
+  }
+
+  .about-method__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: var(--line);
+  }
+
+  .about-method article {
+    min-height: 270px;
+    padding: 2rem;
+    background: white;
+  }
+
+  .about-method article > span {
+    color: var(--ink-500);
+    font-size: 0.66rem;
+  }
+
+  .about-method h3 {
+    margin: 3rem 0 1rem;
+    font-size: clamp(1.7rem, 3vw, 3rem);
+    letter-spacing: -0.05em;
+  }
+
+  .about-boundary {
+    background: var(--night);
+    color: white;
+  }
+
+  .about-boundary__grid {
+    grid-template-columns: minmax(150px, 0.28fr) minmax(0, 1fr);
+  }
+
+  .about-boundary .eyebrow,
+  .about-boundary .lede {
+    color: rgba(231, 237, 255, 0.7);
+  }
+
+  .about-boundary h2 {
+    margin: 0 0 1.5rem;
+  }
+
+  .about-boundary ul {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    padding: 0;
+    margin: 3rem 0 0;
+    background: rgba(255, 255, 255, 0.13);
+    list-style: none;
+  }
+
+  .about-boundary li {
+    padding: 1.4rem;
+    background: var(--night);
+    color: rgba(235, 240, 255, 0.8);
+  }
+
+  .about-direction {
+    background: linear-gradient(145deg, #e6f5ff, #e9e5ff 55%, #f5e6e8);
+  }
+
+  .about-direction h2 {
+    margin: 1.4rem 0 0;
+    font-size: clamp(2.5rem, 5vw, 5.4rem);
+    letter-spacing: -0.06em;
+    line-height: 1.08;
+  }
+
+  .about-direction__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 2rem;
+  }
+
+  @media (max-width: 760px) {
+    .about-opening__grid,
+    .about-boundary__grid,
+    .about-direction__grid,
+    .about-section-heading,
+    .about-method__grid,
+    .about-boundary ul {
+      grid-template-columns: 1fr;
+    }
+
+    .about-journey li {
+      grid-template-columns: 52px 1fr;
+    }
+
+    .about-journey li > div {
+      grid-column: 2;
+    }
+  }
+</style>
+

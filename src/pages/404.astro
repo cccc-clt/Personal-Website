@@ -1,31 +1,125 @@
 ---
+import LabGuide from '../components/LabGuide.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout
-  title="404｜页面暂时离线 · 赵天琦"
-  description="你访问的页面不存在，可以返回作品集首页或浏览全部项目。"
-  pageTag="SYSTEM 404"
->
-  <section class="error-page">
-    <div class="error-grid" aria-hidden="true"></div>
-    <div class="error-orbit" aria-hidden="true"><span></span><i></i><b></b></div>
-    <div class="shell error-content" data-reveal>
-      <span class="eyebrow"><i></i>CONNECTION LOST</span>
-      <div class="error-code">
-        <span>4</span><div class="error-face" aria-hidden="true"><i></i><i></i><b></b></div><span
-          >4</span
-        >
+<BaseLayout title="404｜数字向导暂时迷路" description="没有找到这个页面，返回首页或项目展继续浏览。" noindex>
+  <section class="not-found">
+    <div class="container not-found__grid">
+      <div class="not-found__copy">
+        <span class="eyebrow">AGENT NODE / LOST</span>
+        <p class="not-found__code mono">404</p>
+        <h1>数字向导在一条<br />不存在的节点上迷路了。</h1>
+        <p class="lede">这不是你的操作问题。可以回到首页，或者从七个项目案例重新进入。</p>
+        <div class="not-found__actions">
+          <a class="button button--primary" href="/">返回首页</a>
+          <a class="button" href="/projects">查看项目</a>
+        </div>
       </div>
-      <h1>这个节点暂时不在系统里。</h1>
-      <p>可能是链接更新了，也可能是项目还在另一个时间线。你可以返回首页，或继续浏览全部项目。</p>
-      <div class="hero-actions">
-        <a class="button button-primary" href="/">返回首页</a><a
-          class="button button-secondary"
-          href="/projects">查看项目</a
-        >
+      <div class="not-found__scene">
+        <LabGuide />
+        <div class="not-found__nodes" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+        <span class="mono">RECALCULATING PATH...</span>
       </div>
-      <small>ERROR_CODE: PAGE_NOT_FOUND / ROUTE_RECONNECT_AVAILABLE</small>
     </div>
   </section>
 </BaseLayout>
+
+<style>
+  .not-found {
+    min-height: calc(100svh - 78px);
+    display: grid;
+    align-items: center;
+    padding-block: 4rem;
+    background:
+      radial-gradient(circle at 82% 20%, rgba(143, 215, 255, 0.3), transparent 27rem),
+      radial-gradient(circle at 12% 85%, rgba(245, 215, 221, 0.4), transparent 25rem);
+  }
+
+  .not-found__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(350px, 0.75fr);
+    gap: 2rem;
+    align-items: center;
+  }
+
+  .not-found__code {
+    margin: 2rem 0 0.5rem;
+    color: var(--iris);
+    font-size: 1.1rem;
+    letter-spacing: 0.16em;
+  }
+
+  h1 {
+    margin: 0 0 1.5rem;
+    font-size: clamp(3rem, 6.3vw, 6.7rem);
+    font-weight: 560;
+    letter-spacing: -0.065em;
+    line-height: 1.02;
+  }
+
+  .not-found__copy .lede {
+    max-width: 650px;
+  }
+
+  .not-found__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 2rem;
+  }
+
+  .not-found__scene {
+    position: relative;
+    display: grid;
+    min-height: 620px;
+    place-items: center;
+  }
+
+  .not-found__scene :global(.lab-guide) {
+    z-index: 2;
+  }
+
+  .not-found__nodes {
+    position: absolute;
+    inset: 13%;
+    border: 1px dashed rgba(91, 109, 198, 0.25);
+    border-radius: 50%;
+    rotate: -13deg;
+  }
+
+  .not-found__nodes i {
+    position: absolute;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--iris);
+    box-shadow: 0 0 16px rgba(91, 109, 246, 0.5);
+  }
+
+  .not-found__nodes i:nth-child(1) { top: 3%; left: 43%; }
+  .not-found__nodes i:nth-child(2) { top: 48%; right: 0; }
+  .not-found__nodes i:nth-child(3) { bottom: 8%; left: 22%; }
+  .not-found__nodes i:nth-child(4) { top: 24%; left: 2%; background: var(--gold); }
+
+  .not-found__scene > span {
+    position: absolute;
+    z-index: 3;
+    right: 1rem;
+    bottom: 4rem;
+    color: var(--ink-500);
+    font-size: 0.66rem;
+    letter-spacing: 0.12em;
+  }
+
+  @media (max-width: 820px) {
+    .not-found__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .not-found__scene {
+      min-height: min(600px, 120vw);
+    }
+  }
+</style>
+

@@ -1,0 +1,135 @@
+---
+import InnerPageHero from '../components/InnerPageHero.astro';
+import { assetCredits } from '../data/credits';
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="资源署名｜赵天琦作品集" description="本站视觉资源的来源、授权状态与署名说明。">
+  <InnerPageHero eyebrow="CREDITS / ASSET LICENSE" title="每一份视觉记忆，都应该有清楚的来源。" description="本站不热链、不使用随机图片 API，也不使用未经授权的动漫或游戏角色。正式资源必须登记来源与授权状态。" />
+
+  <section class="credits section">
+    <div class="container credits__grid">
+      <div class="credits__intro">
+        <span class="eyebrow">LICENSE REGISTER</span>
+        <p>当前角色生成因网络失败未写入，页面使用原创 CSS 数字向导回退。待补充的角色、项目截图与 OG 图片均记录在 `ASSET_CHECKLIST.md`。</p>
+      </div>
+      <div class="credits__list">
+        {assetCredits.map((asset, index) => (
+          <article>
+            <div class="credits__index mono">{String(index + 1).padStart(2, '0')}</div>
+            <div>
+              <div class="credits__title"><h2>{asset.title}</h2><span class:list={['credits__status', `credits__status--${asset.licenseStatus.toLowerCase()}`]}>{asset.licenseStatus}</span></div>
+              <dl>
+                <div><dt>路径</dt><dd class="mono">{asset.path}</dd></div>
+                <div><dt>作者</dt><dd>{asset.author}</dd></div>
+                <div><dt>来源</dt><dd>{asset.source}</dd></div>
+                <div><dt>说明</dt><dd>{asset.note}</dd></div>
+                <div><dt>署名要求</dt><dd>{asset.attributionRequired ? '需要' : '不需要'}</dd></div>
+              </dl>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .credits {
+    background: white;
+  }
+
+  .credits__grid {
+    display: grid;
+    grid-template-columns: minmax(220px, 0.38fr) minmax(0, 1fr);
+    gap: clamp(3rem, 8vw, 9rem);
+  }
+
+  .credits__intro p {
+    margin: 1.3rem 0 0;
+    color: var(--ink-650);
+    line-height: 1.85;
+  }
+
+  .credits__list article {
+    display: grid;
+    grid-template-columns: 52px 1fr;
+    gap: 1rem;
+    padding: 2.5rem 0;
+    border-top: 1px solid var(--line-strong);
+  }
+
+  .credits__index {
+    color: var(--ink-500);
+    font-size: 0.68rem;
+  }
+
+  .credits__title {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  h2 {
+    margin: 0;
+    font-size: clamp(1.6rem, 3vw, 2.8rem);
+    letter-spacing: -0.045em;
+  }
+
+  .credits__status {
+    padding: 0.45rem 0.65rem;
+    border-radius: var(--radius-pill);
+    background: var(--paper-deep);
+    color: var(--ink-650);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+  }
+
+  .credits__status--original {
+    background: rgba(100, 216, 189, 0.14);
+    color: var(--success);
+  }
+
+  .credits__status--pending {
+    background: rgba(229, 189, 114, 0.16);
+    color: var(--warning);
+  }
+
+  dl {
+    display: grid;
+    margin: 1.8rem 0 0;
+  }
+
+  dl div {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 1rem;
+    padding: 0.75rem 0;
+    border-top: 1px solid var(--line);
+  }
+
+  dt {
+    color: var(--ink-500);
+    font-size: 0.72rem;
+  }
+
+  dd {
+    margin: 0;
+    color: var(--ink-650);
+    line-height: 1.65;
+    overflow-wrap: anywhere;
+  }
+
+  @media (max-width: 720px) {
+    .credits__grid {
+      grid-template-columns: 1fr;
+    }
+
+    dl div {
+      grid-template-columns: 1fr;
+      gap: 0.35rem;
+    }
+  }
+</style>
+

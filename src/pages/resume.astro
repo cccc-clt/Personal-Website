@@ -1,146 +1,306 @@
 ---
 import { existsSync } from 'node:fs';
-import path from 'node:path';
-import ContactSection from '../components/ContactSection.astro';
-import InnerPageHero from '../components/InnerPageHero.astro';
-import { siteConfig } from '../config/site';
-import { getProjectsForTrack } from '../data/projects';
-import { skillGroups } from '../data/skills';
+import { join } from 'node:path';
+import { getCollection } from 'astro:content';
+import { abilities, siteConfig } from '../config/site';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-const resumeOptions = [
-  { label: '通用 AI 产品简历', path: siteConfig.resumes.general, code: 'GENERAL' },
-  { label: '游戏 AI 定向简历', path: siteConfig.resumes.game, code: 'GAME AI' },
-  { label: '智能汽车 AI 定向简历', path: siteConfig.resumes.auto, code: 'AUTO AI' },
-].map((item) => ({
-  ...item,
-  exists: existsSync(path.join(process.cwd(), 'public', item.path.replace(/^\//, ''))),
-}));
-const selectedProjects = getProjectsForTrack('general', 4);
+const projects = (await getCollection('projects')).sort((a, b) => a.data.order.general - b.data.order.general).slice(0, 4);
+const resumeFiles = [
+  { label: '通用 AI 产品简历', path: '/resume/zhao-tianqi-general.pdf' },
+  { label: '游戏 AI 定向简历', path: '/resume/zhao-tianqi-game-ai.pdf' },
+  { label: 'AI Agent 定向简历', path: '/resume/zhao-tianqi-agent.pdf' },
+].map((item) => ({ ...item, exists: existsSync(join(process.cwd(), 'public', item.path.replace(/^\//, ''))) }));
 ---
 
-<BaseLayout
-  title="在线简历｜赵天琦 · AI 产品经理"
-  description="赵天琦的 AI 产品经理在线简历：教育背景、技能、精选项目与定向简历下载。"
-  pageTag="RESUME"
->
-  <InnerPageHero
-    eyebrow="ONLINE RESUME"
-    title="赵天琦 · AI 产品经理"
-    description="目标方向：AI 产品经理 / AI Agent / 游戏 AI。可在下方浏览在线简历，并按岗位方向下载 PDF。"
-    code="RESUME_PROFILE / 2027"
-  />
-
-  <section class="section resume-download-section">
-    <div class="shell">
-      <div class="resume-download-head" data-reveal>
-        <div>
-          <span class="eyebrow"><i></i>DOWNLOAD PDF</span><h2>选择与你的岗位更匹配的简历</h2>
-        </div>
-        <p>PDF 文件未加入仓库时，按钮会安全显示待补充状态，不会跳转到 404。</p>
+<BaseLayout title="在线简历｜赵天琦 AI 产品经理" description="赵天琦的在线简历：AI 产品、Agent、游戏 AI、Prompt、RAG 与产品评测实践。">
+  <div class="resume-page container">
+    <header class="resume-actions" data-no-print>
+      <div>
+        <span class="eyebrow">RESUME / 2027</span>
+        <p>可打印为黑白 A4；PDF 文件存在时自动显示下载按钮。</p>
       </div>
-      <div class="resume-option-grid">
-        {
-          resumeOptions.map((item, index) => (
-            <article class:list={['resume-option', { unavailable: !item.exists }]} data-reveal>
-              <>
-                <span>
-                  0{index + 1} / {item.code}
-                </span>
-                <h3>{item.label}</h3>
-              </>
-              <p>{item.exists ? 'PDF 已就绪，可直接下载。' : '简历文件待补充'}</p>
-              {item.exists ? (
-                <a class="button button-primary" href={item.path} download>
-                  下载 PDF ↓
-                </a>
-              ) : (
-                <button class="button button-disabled" type="button" disabled>
-                  简历文件待补充
-                </button>
-              )}
-            </article>
-          ))
-        }
+      <div>
+        {resumeFiles.map((file) => file.exists ? <a class="button" href={file.path} download>{file.label}</a> : <span class="button resume-actions__missing" aria-disabled="true">{file.label} · 待补充</span>)}
+        <button class="button button--primary" type="button" onclick="window.print()">打印 / 导出 PDF</button>
       </div>
-    </div>
-  </section>
+    </header>
 
-  <section class="section online-resume-section">
-    <div class="shell resume-paper" data-reveal>
-      <header class="resume-paper-head">
+    <article class="resume-sheet">
+      <header class="resume-sheet__hero">
         <div>
-          <span>赵天琦</span><h2>AI 产品经理 / AI Agent / 游戏 AI</h2><p>
-            从交通工程走向 AI 产品，用项目连接需求、原型、评测与迭代。
-          </p>
+          <p class="mono en">TIANQI ZHAO</p>
+          <h1>{siteConfig.name}</h1>
+          <p class="resume-sheet__role">AI 产品经理 / 游戏 AI / AI Agent</p>
         </div>
-        <dl>
-          <div>
-            <dt>GitHub</dt><dd>
-              <a href={siteConfig.github} target="_blank" rel="noreferrer">github.com/cccc-clt ↗</a>
-            </dd>
-          </div><div><dt>邮箱</dt><dd>{siteConfig.email}</dd></div><div>
-            <dt>个人网站</dt><dd>{siteConfig.url.replace('https://', '')}</dd>
-          </div>
-        </dl>
+        <address>
+          <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
+          <a href={siteConfig.github} target="_blank" rel="noreferrer">github.com/cccc-clt ↗</a>
+          <span>{siteConfig.location}</span>
+        </address>
       </header>
 
-      <div class="resume-paper-grid">
-        <aside>
-          <section>
-            <span>EDUCATION</span><h3>教育背景</h3><strong>河南城建学院</strong><p>
-              交通工程 · 本科
-            </p><small>复杂系统 / 流程 / 仿真 / 数据分析</small>
-          </section>
-          <section>
-            <span>SKILLS</span><h3>技能概览</h3>{
-              skillGroups.map((group) => (
-                <div class="resume-skill">
-                  <>
-                    <strong>{group.title}</strong>
-                    <p>
-                      {group.items
-                        .slice(0, 4)
-                        .map((item) => item.name)
-                        .join(' / ')}
-                    </p>
-                  </>
+      <section class="resume-section resume-profile">
+        <h2>个人简介</h2>
+        <p>交通工程背景的 AI 产品实践者，聚焦大模型应用、Agent、Prompt 实验、RAG 与产品评测。习惯从用户任务和系统约束出发，把需求推进为可运行、可评测、可迭代的产品方案。</p>
+      </section>
+
+      <section class="resume-section">
+        <h2>核心能力</h2>
+        <div class="resume-capabilities">
+          {abilities.map((ability) => <div><strong>{ability.title}</strong><span>{ability.description}</span></div>)}
+        </div>
+      </section>
+
+      <section class="resume-section">
+        <div class="resume-section__heading"><h2>代表项目</h2><a href="/projects">全部项目 ↗</a></div>
+        <div class="resume-projects">
+          {projects.map((project) => {
+            const slug = project.id.replace(/\.mdx?$/, '');
+            return (
+              <article class="resume-item">
+                <div class="resume-item__title">
+                  <div><span class="mono">{project.data.index}</span><h3>{project.data.title}</h3></div>
+                  <span>{project.data.period}</span>
                 </div>
-              ))
-            }
-          </section>
-        </aside>
-        <main>
-          <section>
-            <span>PROFILE</span><h3>个人概览</h3><p>
-              具备产品分析、Prompt 设计、Agent 工作流、RAG、模型评测及 AI 应用开发经验，能够使用
-              Dify、Python、Streamlit、LangChain 等工具，完成从需求分析、方案设计、Demo
-              开发到测试复盘的完整过程。
-            </p>
-          </section>
-          <section>
-            <span>SELECTED PROJECTS</span><h3>精选项目</h3><div class="resume-projects">
-              {
-                selectedProjects.map((project) => (
-                  <a href={`/projects/${project.slug}`}>
-                    <>
-                      <div>
-                        <>
-                          <strong>{project.title}</strong>
-                          <small>{project.period}</small>
-                        </>
-                      </div>
-                      <p>{project.shortDescription}</p>
-                      <span>{project.role}</span>
-                    </>
-                  </a>
-                ))
-              }
-            </div>
-          </section>
-        </main>
-      </div>
-    </div>
-  </section>
-  <ContactSection />
+                <p><strong>{project.data.role}</strong> · {project.data.description}</p>
+                <ul>{project.data.responsibilities.slice(0, 2).map((item) => <li>{item}</li>)}</ul>
+                <a href={`/projects/${slug}`}>查看案例 ↗</a>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+
+      <section class="resume-section resume-two-columns">
+        <div>
+          <h2>方法与工具</h2>
+          <p>Product Discovery · Agent Workflow · Prompt Engineering · RAG · LLM Evaluation · Experiment Design · Python · Streamlit · Dify · Astro · TypeScript</p>
+        </div>
+        <div>
+          <h2>教育与背景</h2>
+          <p>交通工程专业背景；具体学校、时间与课程信息请以用户后续补充的正式 PDF 简历为准。</p>
+        </div>
+      </section>
+
+      <footer class="resume-sheet__footer">
+        <span>{siteConfig.availability}</span><span>最后更新：2026</span>
+      </footer>
+    </article>
+  </div>
 </BaseLayout>
+
+<style>
+  .resume-page {
+    padding-block: clamp(4rem, 8vw, 8rem);
+  }
+
+  .resume-actions {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .resume-actions p {
+    margin: 0.8rem 0 0;
+    color: var(--ink-500);
+    font-size: 0.78rem;
+  }
+
+  .resume-actions > div:last-child {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.5rem;
+  }
+
+  .resume-actions__missing {
+    opacity: 0.5;
+  }
+
+  .resume-sheet {
+    max-width: 1080px;
+    padding: clamp(2rem, 6vw, 5rem);
+    margin: 0 auto;
+    border: 1px solid var(--line);
+    background: white;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .resume-sheet__hero {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    gap: 2rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 2px solid var(--ink-950);
+  }
+
+  .resume-sheet__hero .mono {
+    color: var(--ink-500);
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+  }
+
+  .resume-sheet__hero h1 {
+    margin: 0.5rem 0;
+    font-size: clamp(3rem, 6vw, 5.8rem);
+    letter-spacing: -0.07em;
+    line-height: 1;
+  }
+
+  .resume-sheet__role {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 650;
+  }
+
+  address {
+    display: grid;
+    gap: 0.45rem;
+    font-size: 0.8rem;
+    font-style: normal;
+    text-align: right;
+  }
+
+  .resume-section {
+    padding: 2.3rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .resume-section h2 {
+    margin: 0 0 1.5rem;
+    font-size: 1rem;
+    letter-spacing: 0.06em;
+  }
+
+  .resume-profile p {
+    max-width: 820px;
+    margin: 0;
+    font-size: 1.05rem;
+    line-height: 1.85;
+  }
+
+  .resume-capabilities {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.3rem 3rem;
+  }
+
+  .resume-capabilities div {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 1rem;
+  }
+
+  .resume-capabilities span,
+  .resume-item p,
+  .resume-item li,
+  .resume-two-columns p {
+    color: var(--ink-650);
+    line-height: 1.7;
+  }
+
+  .resume-section__heading,
+  .resume-item__title {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .resume-section__heading > a {
+    font-size: 0.8rem;
+  }
+
+  .resume-projects {
+    display: grid;
+    gap: 2rem;
+  }
+
+  .resume-item {
+    break-inside: avoid;
+  }
+
+  .resume-item__title > div {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+  }
+
+  .resume-item__title span {
+    color: var(--ink-500);
+    font-size: 0.68rem;
+  }
+
+  .resume-item h3 {
+    margin: 0;
+    font-size: 1.3rem;
+  }
+
+  .resume-item p {
+    margin: 0.7rem 0;
+  }
+
+  .resume-item ul {
+    padding-left: 1.2rem;
+    margin: 0.6rem 0;
+  }
+
+  .resume-item > a {
+    font-size: 0.75rem;
+    font-weight: 650;
+  }
+
+  .resume-two-columns {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3rem;
+  }
+
+  .resume-two-columns p {
+    margin: 0;
+  }
+
+  .resume-sheet__footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-top: 1.5rem;
+    color: var(--ink-500);
+    font-size: 0.7rem;
+  }
+
+  @media (max-width: 760px) {
+    .resume-actions,
+    .resume-sheet__hero {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .resume-actions > div:last-child,
+    address {
+      justify-content: flex-start;
+      text-align: left;
+    }
+
+    .resume-capabilities,
+    .resume-two-columns {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .resume-capabilities div {
+      grid-template-columns: 1fr;
+      gap: 0.35rem;
+    }
+
+    .resume-item__title {
+      flex-direction: column;
+    }
+  }
+</style>
+
