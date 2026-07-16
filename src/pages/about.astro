@@ -1,0 +1,155 @@
+---
+import ContactSection from '../components/ContactSection.astro';
+import InnerPageHero from '../components/InnerPageHero.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import { skillGroups } from '../data/skills';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const timeline = [
+  {
+    period: 'START',
+    title: '从交通工程认识复杂系统',
+    text: '在流程、仿真、数据分析和多因素约束中，形成结构化理解问题的习惯。',
+  },
+  {
+    period: 'EXPLORE',
+    title: '把兴趣转化为 AI 产品实践',
+    text: '从 Prompt、RAG 和 Agent 入手，用项目验证技术能力如何进入真实使用场景。',
+  },
+  {
+    period: 'BUILD',
+    title: '完成可运行的产品原型',
+    text: '使用 Python、Streamlit、Dify 与 TypeScript，把需求和方案落到可交互 Demo。',
+  },
+  {
+    period: 'NOW',
+    title: '聚焦 AI 产品评测与落地',
+    text: '持续补足产品指标、模型评测、异常处理和迭代复盘，寻找更真实的业务验证。',
+  },
+];
+---
+
+<BaseLayout
+  title="关于赵天琦｜AI 产品经理作品集"
+  description="了解赵天琦从交通工程到 AI 产品的跨专业路径、产品方法、项目实践与求职方向。"
+  pageTag="ABOUT ME"
+>
+  <InnerPageHero
+    eyebrow="ABOUT / TIANQI ZHAO"
+    title="用系统思维拆问题，用产品实验找答案。"
+    description="我关注 AI 能不能在真实任务里稳定创造价值，也愿意为每一个结论保留证据、边界和下一步。"
+    code="PROFILE_SYSTEM / OPEN"
+  />
+
+  <section class="section about-story-section">
+    <div class="shell about-story-grid">
+      <div class="story-sticky">
+        <SectionHeading eyebrow="MY STORY" title="跨专业，不是重置；是能力重新组合。" />
+        <div class="story-signature" aria-hidden="true">
+          <span>TQ</span><i></i><small>AI PRODUCT BUILDER</small>
+        </div>
+      </div>
+      <div class="story-content" data-reveal>
+        <p class="lead">
+          我是赵天琦，河南城建学院交通工程专业本科生，也是持续用项目学习 AI 产品的实践者。
+        </p>
+        <p>
+          交通工程背景让我形成了对复杂系统、流程、仿真与数据分析的理解；AI
+          产品实践则让我进一步把这些能力用于需求分析、产品设计、实验评测和智能应用开发。
+        </p>
+        <h3>为什么选择 AI 产品？</h3>
+        <p>
+          我喜欢站在技术能力和用户任务之间：既理解模型为什么会失败，也关注用户是否愿意使用、团队是否能验证、方案是否能够持续迭代。AI
+          产品正在快速形成新的交互方式，而我希望参与这个过程，而不是只旁观结果。
+        </p>
+        <h3>我的产品方法</h3>
+        <p>
+          先把问题定义清楚，再判断 AI
+          的必要性；先用原型验证核心链路，再扩大功能；把准确性、稳定性、延迟、成本和体验放进同一套评测视角，避免只展示“能跑”的最好一次。
+        </p>
+        <div class="quote-panel">
+          <span>PRODUCT NOTE</span><blockquote>
+            AI 不是功能标签，而是一组需要被设计、约束和验证的产品能力。
+          </blockquote>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section about-timeline-section">
+    <div class="shell">
+      <SectionHeading eyebrow="LEARNING PATH" title="从工程系统到 AI 产品的学习路径" />
+      <div class="about-timeline">
+        {
+          timeline.map((item, index) => (
+            <article data-reveal>
+              <div>
+                <>
+                  <span>0{index + 1}</span>
+                  <i />
+                </>
+              </div>
+              <>
+                <small>{item.period}</small>
+                <h3>{item.title}</h3>
+                <p>{item.text}</p>
+              </>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section current-skills-section">
+    <div class="shell">
+      <SectionHeading
+        eyebrow="CURRENT SKILLS"
+        title="当前能力与学习方式"
+        description="以项目为载体，围绕真实问题持续补齐产品、AI 与开发能力。"
+      />
+      <div class="current-skill-grid">
+        {
+          skillGroups.map((group) => (
+            <article data-reveal>
+              <>
+                <span>{group.code}</span>
+                <h3>{group.title}</h3>
+                <p>{group.items.map((item) => item.name).join(' · ')}</p>
+              </>
+            </article>
+          ))
+        }
+      </div>
+      <div class="learning-method" data-reveal>
+        <span>LEARNING LOOP</span>
+        <div>
+          <strong>01 选定真实问题</strong><i>→</i><strong>02 做出可用原型</strong><i>→</i><strong
+            >03 设计测试任务</strong
+          ><i>→</i><strong>04 复盘并公开沉淀</strong>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section direction-section">
+    <div class="shell direction-panel" data-reveal>
+      <span class="eyebrow"><i></i>CAREER DIRECTION</span>
+      <h2>我正在寻找这些方向的实践机会</h2>
+      <div class="direction-grid">
+        <a href="/"><span>01</span><strong>AI 产品经理</strong><small>模型能力 → 产品闭环</small></a
+        >
+        <a href="/agent"
+          ><span>02</span><strong>大模型 / Agent</strong><small>工作流 · RAG · 评测</small></a
+        >
+        <a href="/game"
+          ><span>03</span><strong>游戏 AI / AIGC</strong><small>内容 · 增长 · 创作工具</small></a
+        >
+        <a href="/auto"
+          ><span>04</span><strong>智能座舱 AI</strong><small>场景 · 指令 · 安全边界</small></a
+        >
+      </div>
+    </div>
+  </section>
+  <ContactSection />
+</BaseLayout>

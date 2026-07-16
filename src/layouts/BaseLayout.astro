@@ -1,0 +1,102 @@
+---
+import { existsSync } from 'node:fs';
+import path from 'node:path';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { siteConfig } from '../config/site';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  pageTag?: string;
+  image?: string;
+  structuredData?: Record<string, unknown> | Record<string, unknown>[];
+}
+
+const {
+  title = siteConfig.title,
+  description = siteConfig.description,
+  pageTag = 'AI PRODUCT',
+  image,
+  structuredData,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, siteConfig.url).toString();
+const requestedOgImage = image ?? '/images/og-cover.webp';
+const hasOgImage = existsSync(path.join(process.cwd(), 'public', requestedOgImage));
+const ogImage = hasOgImage ? new URL(requestedOgImage, siteConfig.url).toString() : undefined;
+const defaultStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: siteConfig.name,
+  url: siteConfig.url,
+  sameAs: [siteConfig.github],
+  jobTitle: 'AI 产品经理',
+  description: siteConfig.description,
+  knowsAbout: ['AI Product', 'AI Agent', 'LLM Evaluation', 'Prompt Engineering', 'RAG', 'Game AI'],
+};
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#F8FAFF" />
+    <meta name="color-scheme" content="light" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:site_name" content={siteConfig.siteName} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {ogImage && <meta name="twitter:image" content={ogImage} />}
+    <script
+      is:inline
+      type="application/ld+json"
+      set:html={JSON.stringify(structuredData ?? defaultStructuredData)}
+    />
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">跳到主要内容</a>
+    <Header currentPath={Astro.url.pathname} pageTag={pageTag} />
+    <main id="main-content">
+      <slot />
+    </main>
+    <Footer />
+    <script>
+      document.documentElement.classList.add('js');
+
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const revealItems = document.querySelectorAll<HTMLElement>('[data-reveal]');
+
+      if (reduceMotion || !('IntersectionObserver' in window)) {
+        revealItems.forEach((item) => item.classList.add('is-visible'));
+      } else {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { rootMargin: '0px 0px -8% 0px', threshold: 0.08 },
+        );
+        revealItems.forEach((item) => observer.observe(item));
+      }
+    </script>
+  </body>
+</html>

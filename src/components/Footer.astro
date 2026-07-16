@@ -1,0 +1,36 @@
+---
+import { siteConfig } from '../config/site';
+---
+
+<footer class="site-footer">
+  <div class="shell footer-grid">
+    <div>
+      <a class="brand footer-brand" href="/">
+        <span class="brand-mark" aria-hidden="true"><span></span></span>
+        <span class="brand-copy"><strong>TIANQI.Z</strong><small>AI PRODUCT PORTFOLIO</small></span>
+      </a>
+      <p>把 AI 能力转译成用户能理解、团队能验证、产品能迭代的体验。</p>
+    </div>
+    <div class="footer-links">
+      <div>
+        <span>EXPLORE</span><a href="/projects">项目</a><a href="/about">关于我</a><a href="/resume"
+          >在线简历</a
+        >
+      </div>
+      <div>
+        <span>TRACKS</span><a href="/game">游戏 AI</a><a href="/agent">AI Agent</a><a href="/auto"
+          >智能汽车 AI</a
+        >
+      </div>
+      <div>
+        <span>CONNECT</span><a href={siteConfig.github} target="_blank" rel="noreferrer">GitHub ↗</a
+        ><a href={`mailto:${siteConfig.email}`}>Email</a>
+      </div>
+    </div>
+  </div>
+  <div class="shell footer-bottom">
+    <span>© {new Date().getFullYear()} 赵天琦</span>
+    <span>ASTRO / TYPESCRIPT / CLOUDFLARE PAGES</span>
+    <a href="#main-content">返回顶部 ↑</a>
+  </div>
+</footer>

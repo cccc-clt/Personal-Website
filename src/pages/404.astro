@@ -1,0 +1,31 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="404｜页面暂时离线 · 赵天琦"
+  description="你访问的页面不存在，可以返回作品集首页或浏览全部项目。"
+  pageTag="SYSTEM 404"
+>
+  <section class="error-page">
+    <div class="error-grid" aria-hidden="true"></div>
+    <div class="error-orbit" aria-hidden="true"><span></span><i></i><b></b></div>
+    <div class="shell error-content" data-reveal>
+      <span class="eyebrow"><i></i>CONNECTION LOST</span>
+      <div class="error-code">
+        <span>4</span><div class="error-face" aria-hidden="true"><i></i><i></i><b></b></div><span
+          >4</span
+        >
+      </div>
+      <h1>这个节点暂时不在系统里。</h1>
+      <p>可能是链接更新了，也可能是项目还在另一个时间线。你可以返回首页，或继续浏览全部项目。</p>
+      <div class="hero-actions">
+        <a class="button button-primary" href="/">返回首页</a><a
+          class="button button-secondary"
+          href="/projects">查看项目</a
+        >
+      </div>
+      <small>ERROR_CODE: PAGE_NOT_FOUND / ROUTE_RECONNECT_AVAILABLE</small>
+    </div>
+  </section>
+</BaseLayout>

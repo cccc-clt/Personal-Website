@@ -1,0 +1,105 @@
+---
+import { existsSync } from 'node:fs';
+import path from 'node:path';
+import type { Project } from '../types/project';
+import ProjectVisual from './ProjectVisual.astro';
+
+interface Props {
+  project: Project;
+}
+const { project } = Astro.props;
+const abbreviation = project.englishTitle
+  .split(' ')
+  .map((word) => word[0])
+  .join('')
+  .slice(0, 4);
+const galleryItems = project.screenshots.map((src, index) => ({
+  src,
+  index,
+  exists: existsSync(path.join(process.cwd(), 'public', src.replace(/^\//, ''))),
+  caption: `${project.title} · 界面预留 ${String(index + 1).padStart(2, '0')}`,
+}));
+---
+
+<div class="image-gallery" data-gallery>
+  <div class="gallery-track">
+    {
+      galleryItems.map((item) => (
+        <button
+          class="gallery-item"
+          type="button"
+          data-gallery-open={item.index}
+          aria-label={`放大查看：${item.caption}`}
+        >
+          {item.exists ? (
+            <img
+              src={item.src}
+              width="960"
+              height="600"
+              loading="lazy"
+              decoding="async"
+              alt={item.caption}
+            />
+          ) : (
+            <ProjectVisual
+              abbreviation={`${abbreviation}-${item.index + 1}`}
+              category="SCREENSHOT PLACEHOLDER"
+              index={project.index}
+              compact
+            />
+          )}
+          <span>
+            {item.caption}
+            <i aria-hidden="true">↗</i>
+          </span>
+        </button>
+      ))
+    }
+  </div>
+
+  <dialog class="gallery-dialog" data-gallery-dialog aria-label="项目截图大图">
+    <button class="dialog-close" type="button" data-gallery-close aria-label="关闭大图">×</button>
+    <div data-dialog-content></div>
+    <p data-dialog-caption></p>
+  </dialog>
+</div>
+
+<template data-placeholder-template>
+  <div class="dialog-placeholder"><strong>{abbreviation}</strong><span>项目截图待替换</span></div>
+</template>
+
+<script is:inline define:vars={{ galleryItems }}>
+  const gallery = document.querySelector('[data-gallery]');
+  const dialog = gallery?.querySelector('[data-gallery-dialog]');
+  const content = dialog?.querySelector('[data-dialog-content]');
+  const caption = dialog?.querySelector('[data-dialog-caption]');
+  const placeholder = document.querySelector('[data-placeholder-template]');
+
+  gallery?.querySelectorAll('[data-gallery-open]').forEach((button) => {
+    button.addEventListener('click', () => {
+      if (!(dialog instanceof HTMLDialogElement) || !(content instanceof HTMLElement)) return;
+      const index = Number(button.getAttribute('data-gallery-open'));
+      const item = galleryItems[index];
+      content.replaceChildren();
+      if (item?.exists) {
+        const image = new Image();
+        image.src = item.src;
+        image.alt = item.caption;
+        image.width = 1440;
+        image.height = 900;
+        content.append(image);
+      } else if (placeholder instanceof HTMLTemplateElement) {
+        content.append(placeholder.content.cloneNode(true));
+      }
+      if (caption instanceof HTMLElement) caption.textContent = item?.caption ?? '';
+      dialog.showModal();
+    });
+  });
+
+  dialog?.querySelector('[data-gallery-close]')?.addEventListener('click', () => {
+    if (dialog instanceof HTMLDialogElement) dialog.close();
+  });
+  dialog?.addEventListener('click', (event) => {
+    if (event.target === dialog && dialog instanceof HTMLDialogElement) dialog.close();
+  });
+</script>

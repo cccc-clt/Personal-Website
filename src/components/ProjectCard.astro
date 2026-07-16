@@ -1,0 +1,89 @@
+---
+import { existsSync } from 'node:fs';
+import path from 'node:path';
+import type { Project } from '../types/project';
+import ProjectVisual from './ProjectVisual.astro';
+import StatusBadge from './StatusBadge.astro';
+
+interface Props {
+  project: Project;
+  priority?: boolean;
+}
+const { project, priority = false } = Astro.props;
+const imagePath = path.join(process.cwd(), 'public', project.coverImage.replace(/^\//, ''));
+const hasImage = existsSync(imagePath);
+const abbreviation = project.englishTitle
+  .split(' ')
+  .map((word) => word[0])
+  .join('')
+  .slice(0, 4);
+---
+
+<article
+  class="project-card"
+  data-project-card
+  data-categories={project.category.join('|')}
+  data-reveal
+>
+  <a
+    class="project-cover"
+    href={`/projects/${project.slug}`}
+    aria-label={`查看 ${project.title} 项目详情`}
+  >
+    {
+      hasImage ? (
+        <img
+          src={project.coverImage}
+          width="720"
+          height="450"
+          loading={priority ? 'eager' : 'lazy'}
+          decoding="async"
+          alt={`${project.title} 项目封面`}
+        />
+      ) : (
+        <ProjectVisual
+          abbreviation={abbreviation}
+          category={project.category[0]}
+          index={project.index}
+        />
+      )
+    }
+  </a>
+  <div class="project-card-body">
+    <div class="project-meta">
+      <span>{project.index}</span><StatusBadge status={project.status} />
+    </div>
+    <h3><a href={`/projects/${project.slug}`}>{project.title}</a></h3>
+    <p class="project-en">{project.englishTitle}</p>
+    <p class="project-summary">{project.shortDescription}</p>
+    <div class="project-role"><span>MY ROLE</span><strong>{project.role}</strong></div>
+    <div class="tag-list compact-tags">
+      {project.techStack.slice(0, 5).map((tag) => <span>{tag}</span>)}
+    </div>
+    <div class="project-actions">
+      <a class="text-link strong" href={`/projects/${project.slug}`}
+        >查看详情 <span aria-hidden="true">→</span></a
+      >
+      {
+        project.githubUrl && (
+          <a
+            class="icon-text-link"
+            href={project.githubUrl}
+            target="_blank"
+            rel="noreferrer"
+            aria-label={`${project.title} GitHub 仓库`}
+          >
+            GH ↗
+          </a>
+        )
+      }
+      {
+        project.demoUrl && (
+          <a class="icon-text-link" href={project.demoUrl} target="_blank" rel="noreferrer">
+            DEMO ↗
+          </a>
+        )
+      }
+    </div>
+  </div>
+</article>

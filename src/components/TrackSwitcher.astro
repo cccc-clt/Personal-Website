@@ -1,0 +1,37 @@
+---
+import { trackConfigs } from '../config/site';
+import type { TargetTrack } from '../types/project';
+
+interface Props {
+  active: TargetTrack;
+}
+const { active } = Astro.props;
+const links: { key: TargetTrack; href: string; short: string }[] = [
+  { key: 'general', href: '/', short: 'GENERAL' },
+  { key: 'game', href: '/game', short: 'GAME AI' },
+  { key: 'agent', href: '/agent', short: 'AGENT' },
+  { key: 'auto', href: '/auto', short: 'AUTO AI' },
+];
+---
+
+<section class="track-strip" aria-label="切换求职方向视图">
+  <div class="shell track-inner">
+    <div class="track-title"><span>VIEW MODE</span><strong>按目标岗位浏览</strong></div>
+    <div class="track-links">
+      {
+        links.map((item) => (
+          <a
+            href={item.href}
+            class:list={{ active: active === item.key }}
+            aria-current={active === item.key ? 'page' : undefined}
+          >
+            <>
+              <small>{item.short}</small>
+              <span>{trackConfigs[item.key].label}</span>
+            </>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</section>

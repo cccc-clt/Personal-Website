@@ -1,0 +1,29 @@
+---
+import type { Project } from '../types/project';
+import ProjectCard from './ProjectCard.astro';
+import SectionHeading from './SectionHeading.astro';
+
+interface Props {
+  projects: Project[];
+  trackLabel: string;
+}
+const { projects, trackLabel } = Astro.props;
+---
+
+<section class="section featured-section" id="featured-projects">
+  <div class="shell">
+    <div class="section-heading-row">
+      <SectionHeading
+        eyebrow="SELECTED WORK"
+        title="精选项目"
+        description={`当前按「${trackLabel}」方向排序，优先呈现与目标岗位更相关的实践。`}
+      />
+      <a class="button button-secondary" href="/projects"
+        >查看全部 7 个项目 <span aria-hidden="true">→</span></a
+      >
+    </div>
+    <div class="project-grid featured-grid">
+      {projects.map((project, index) => <ProjectCard project={project} priority={index === 0} />)}
+    </div>
+  </div>
+</section>

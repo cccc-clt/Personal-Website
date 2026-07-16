@@ -1,0 +1,146 @@
+---
+import { existsSync } from 'node:fs';
+import path from 'node:path';
+import ContactSection from '../components/ContactSection.astro';
+import InnerPageHero from '../components/InnerPageHero.astro';
+import { siteConfig } from '../config/site';
+import { getProjectsForTrack } from '../data/projects';
+import { skillGroups } from '../data/skills';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const resumeOptions = [
+  { label: '通用 AI 产品简历', path: siteConfig.resumes.general, code: 'GENERAL' },
+  { label: '游戏 AI 定向简历', path: siteConfig.resumes.game, code: 'GAME AI' },
+  { label: '智能汽车 AI 定向简历', path: siteConfig.resumes.auto, code: 'AUTO AI' },
+].map((item) => ({
+  ...item,
+  exists: existsSync(path.join(process.cwd(), 'public', item.path.replace(/^\//, ''))),
+}));
+const selectedProjects = getProjectsForTrack('general', 4);
+---
+
+<BaseLayout
+  title="在线简历｜赵天琦 · AI 产品经理"
+  description="赵天琦的 AI 产品经理在线简历：教育背景、技能、精选项目与定向简历下载。"
+  pageTag="RESUME"
+>
+  <InnerPageHero
+    eyebrow="ONLINE RESUME"
+    title="赵天琦 · AI 产品经理"
+    description="目标方向：AI 产品经理 / AI Agent / 游戏 AI。可在下方浏览在线简历，并按岗位方向下载 PDF。"
+    code="RESUME_PROFILE / 2027"
+  />
+
+  <section class="section resume-download-section">
+    <div class="shell">
+      <div class="resume-download-head" data-reveal>
+        <div>
+          <span class="eyebrow"><i></i>DOWNLOAD PDF</span><h2>选择与你的岗位更匹配的简历</h2>
+        </div>
+        <p>PDF 文件未加入仓库时，按钮会安全显示待补充状态，不会跳转到 404。</p>
+      </div>
+      <div class="resume-option-grid">
+        {
+          resumeOptions.map((item, index) => (
+            <article class:list={['resume-option', { unavailable: !item.exists }]} data-reveal>
+              <>
+                <span>
+                  0{index + 1} / {item.code}
+                </span>
+                <h3>{item.label}</h3>
+              </>
+              <p>{item.exists ? 'PDF 已就绪，可直接下载。' : '简历文件待补充'}</p>
+              {item.exists ? (
+                <a class="button button-primary" href={item.path} download>
+                  下载 PDF ↓
+                </a>
+              ) : (
+                <button class="button button-disabled" type="button" disabled>
+                  简历文件待补充
+                </button>
+              )}
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section online-resume-section">
+    <div class="shell resume-paper" data-reveal>
+      <header class="resume-paper-head">
+        <div>
+          <span>赵天琦</span><h2>AI 产品经理 / AI Agent / 游戏 AI</h2><p>
+            从交通工程走向 AI 产品，用项目连接需求、原型、评测与迭代。
+          </p>
+        </div>
+        <dl>
+          <div>
+            <dt>GitHub</dt><dd>
+              <a href={siteConfig.github} target="_blank" rel="noreferrer">github.com/cccc-clt ↗</a>
+            </dd>
+          </div><div><dt>邮箱</dt><dd>{siteConfig.email}</dd></div><div>
+            <dt>个人网站</dt><dd>{siteConfig.url.replace('https://', '')}</dd>
+          </div>
+        </dl>
+      </header>
+
+      <div class="resume-paper-grid">
+        <aside>
+          <section>
+            <span>EDUCATION</span><h3>教育背景</h3><strong>河南城建学院</strong><p>
+              交通工程 · 本科
+            </p><small>复杂系统 / 流程 / 仿真 / 数据分析</small>
+          </section>
+          <section>
+            <span>SKILLS</span><h3>技能概览</h3>{
+              skillGroups.map((group) => (
+                <div class="resume-skill">
+                  <>
+                    <strong>{group.title}</strong>
+                    <p>
+                      {group.items
+                        .slice(0, 4)
+                        .map((item) => item.name)
+                        .join(' / ')}
+                    </p>
+                  </>
+                </div>
+              ))
+            }
+          </section>
+        </aside>
+        <main>
+          <section>
+            <span>PROFILE</span><h3>个人概览</h3><p>
+              具备产品分析、Prompt 设计、Agent 工作流、RAG、模型评测及 AI 应用开发经验，能够使用
+              Dify、Python、Streamlit、LangChain 等工具，完成从需求分析、方案设计、Demo
+              开发到测试复盘的完整过程。
+            </p>
+          </section>
+          <section>
+            <span>SELECTED PROJECTS</span><h3>精选项目</h3><div class="resume-projects">
+              {
+                selectedProjects.map((project) => (
+                  <a href={`/projects/${project.slug}`}>
+                    <>
+                      <div>
+                        <>
+                          <strong>{project.title}</strong>
+                          <small>{project.period}</small>
+                        </>
+                      </div>
+                      <p>{project.shortDescription}</p>
+                      <span>{project.role}</span>
+                    </>
+                  </a>
+                ))
+              }
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+  </section>
+  <ContactSection />
+</BaseLayout>

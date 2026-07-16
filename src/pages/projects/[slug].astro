@@ -1,0 +1,326 @@
+---
+import { existsSync } from 'node:fs';
+import path from 'node:path';
+import ContactSection from '../../components/ContactSection.astro';
+import ImageGallery from '../../components/ImageGallery.astro';
+import ProjectVisual from '../../components/ProjectVisual.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import StatusBadge from '../../components/StatusBadge.astro';
+import Timeline from '../../components/Timeline.astro';
+import { siteConfig } from '../../config/site';
+import { projects } from '../../data/projects';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import type { Project } from '../../types/project';
+
+export function getStaticPaths() {
+  return projects.map((project) => ({ params: { slug: project.slug }, props: { project } }));
+}
+
+interface Props {
+  project: Project;
+}
+const { project } = Astro.props;
+const projectIndex = projects.findIndex((item) => item.slug === project.slug);
+const previous = projectIndex > 0 ? projects[projectIndex - 1] : projects.at(-1);
+const next = projectIndex < projects.length - 1 ? projects[projectIndex + 1] : projects[0];
+const coverExists = existsSync(
+  path.join(process.cwd(), 'public', project.coverImage.replace(/^\//, '')),
+);
+const abbreviation = project.englishTitle
+  .split(' ')
+  .map((word) => word[0])
+  .join('')
+  .slice(0, 4);
+const noteSources = import.meta.glob('../../content/project-notes/*.md', {
+  eager: true,
+  query: '?raw',
+  import: 'default',
+});
+const noteSource = noteSources[`../../content/project-notes/${project.slug}.md`];
+const noteBlocks =
+  typeof noteSource === 'string'
+    ? noteSource
+        .trim()
+        .split(/\r?\n\s*\r?\n/)
+        .filter(Boolean)
+    : [];
+const structuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'CreativeWork',
+    name: project.title,
+    alternateName: project.englishTitle,
+    description: project.shortDescription,
+    author: { '@type': 'Person', name: siteConfig.name, url: siteConfig.url },
+    url: new URL(`/projects/${project.slug}`, siteConfig.url).toString(),
+    keywords: project.techStack.join(', '),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: siteConfig.name,
+    url: siteConfig.url,
+    sameAs: [siteConfig.github],
+    jobTitle: 'AI 产品经理',
+  },
+];
+---
+
+<BaseLayout
+  title={`${project.title}｜项目详情 · 赵天琦`}
+  description={project.shortDescription}
+  pageTag={project.category[0].toUpperCase()}
+  structuredData={structuredData}
+>
+  <article class="project-detail">
+    <header class="project-detail-hero">
+      <div class="detail-grid-bg" aria-hidden="true"></div>
+      <div class="shell detail-hero-grid">
+        <div class="detail-hero-copy" data-reveal>
+          <a class="back-link" href="/projects">← 返回项目列表</a>
+          <div class="project-meta detail-meta">
+            <span>{project.index}</span><StatusBadge status={project.status} />
+          </div>
+          <h1>{project.title}</h1>
+          <p class="detail-en">{project.englishTitle}</p>
+          <p class="detail-summary">{project.shortDescription}</p>
+          <dl class="detail-facts">
+            <div><dt>项目时间</dt><dd>{project.period}</dd></div>
+            <div><dt>我的角色</dt><dd>{project.role}</dd></div>
+          </dl>
+          <div class="tag-list">
+            {project.techStack.map((tag) => <span>{tag}</span>)}
+          </div>
+          <div class="detail-actions">
+            {
+              project.githubUrl && (
+                <a
+                  class="button button-primary"
+                  href={project.githubUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  GitHub ↗
+                </a>
+              )
+            }
+            {
+              project.demoUrl && (
+                <a
+                  class="button button-secondary"
+                  href={project.demoUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  在线 Demo ↗
+                </a>
+              )
+            }
+            {
+              project.documentUrl && (
+                <a
+                  class="button button-secondary"
+                  href={project.documentUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  项目文档 ↗
+                </a>
+              )
+            }
+            {
+              project.videoUrl && (
+                <a
+                  class="button button-secondary"
+                  href={project.videoUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  演示视频 ↗
+                </a>
+              )
+            }
+          </div>
+        </div>
+        <div class="detail-cover" data-reveal>
+          {
+            coverExists ? (
+              <img
+                src={project.coverImage}
+                width="960"
+                height="600"
+                alt={`${project.title} 项目封面`}
+              />
+            ) : (
+              <ProjectVisual
+                abbreviation={abbreviation}
+                category={project.category[0]}
+                index={project.index}
+              />
+            )
+          }
+        </div>
+      </div>
+    </header>
+
+    <div class="shell case-study-layout">
+      <aside class="case-nav" aria-label="项目详情目录">
+        <span>CASE STUDY</span>
+        <a href="#context">01 背景与问题</a>
+        <a href="#responsibility">02 我的职责</a>
+        <a href="#solution">03 产品方案</a>
+        <a href="#ai-design">04 AI 技术方案</a>
+        <a href="#evaluation">05 评测体系</a>
+        <a href="#iteration">06 实验与迭代</a>
+        <a href="#gallery">07 项目截图</a>
+      </aside>
+
+      <div class="case-content">
+        <section class="case-section" id="context">
+          <SectionHeading eyebrow="01 / CONTEXT" title="项目背景与问题" />
+          <p class="case-lead">{project.fullDescription}</p>
+          <div class="question-grid" data-reveal>
+            <article><span>TARGET USER</span><h3>目标用户</h3><p>{project.targetUser}</p></article>
+            <article><span>WHY AI</span><h3>产品问题</h3><p>{project.problem}</p></article>
+          </div>
+          {
+            noteBlocks.length > 0 && (
+              <div class="markdown-note" data-reveal>
+                {noteBlocks.map((block) =>
+                  block.startsWith('## ') ? <h3>{block.replace(/^##\s+/, '')}</h3> : <p>{block}</p>,
+                )}
+              </div>
+            )
+          }
+        </section>
+
+        <section class="case-section" id="responsibility">
+          <SectionHeading
+            eyebrow="02 / OWNERSHIP"
+            title="我的职责"
+            description="覆盖从场景理解、方案设计到 Demo 与评测的完整过程。"
+          />
+          <ol class="responsibility-list">
+            {
+              project.responsibilities.map((item, index) => (
+                <li data-reveal>
+                  <>
+                    <span>{String(index + 1).padStart(2, '0')}</span>
+                    <p>{item}</p>
+                  </>
+                </li>
+              ))
+            }
+          </ol>
+        </section>
+
+        <section class="case-section" id="solution">
+          <SectionHeading eyebrow="03 / PRODUCT SOLUTION" title="产品方案" />
+          <div class="solution-panel" data-reveal>
+            <div><span>SOLUTION OVERVIEW</span><p>{project.solution}</p></div>
+            <div class="solution-flow" aria-label="产品方案流程占位">
+              <i></i><span>用户输入</span><b>→</b><span>AI 系统处理</span><b>→</b><span
+                >人工确认</span
+              ><b>→</b><span>结果与反馈</span><i></i>
+            </div>
+          </div>
+          <div class="artifact-grid" data-reveal>
+            {
+              ['用户流程图', '产品架构图', '工作流图', '核心原型'].map((label, index) => (
+                <div>
+                  <>
+                    <span>0{index + 1}</span>
+                    <strong>{label}</strong>
+                    <small>ASSET PLACEHOLDER</small>
+                  </>
+                </div>
+              ))
+            }
+          </div>
+        </section>
+
+        <section class="case-section" id="ai-design">
+          <SectionHeading
+            eyebrow="04 / AI SYSTEM"
+            title="AI 技术方案"
+            description="用产品语言说明模型输入输出、人工节点、异常处理与边界。"
+          />
+          <div class="ai-design-list">
+            {
+              project.aiDesign.map((item, index) => (
+                <article data-reveal>
+                  <>
+                    <span>{String(index + 1).padStart(2, '0')}</span>
+                    <p>{item}</p>
+                  </>
+                </article>
+              ))
+            }
+          </div>
+        </section>
+
+        <section class="case-section" id="evaluation">
+          <SectionHeading
+            eyebrow="05 / EVALUATION"
+            title="评测体系"
+            description="不虚构提升百分比，用可复现任务、异常类型和复测记录表达项目证据。"
+          />
+          <div class="metrics-grid">
+            {
+              project.evaluationMetrics.map((metric, index) => (
+                <div data-reveal>
+                  <>
+                    <span>{String(index + 1).padStart(2, '0')}</span>
+                    <strong>{metric}</strong>
+                  </>
+                </div>
+              ))
+            }
+          </div>
+          <p class="evaluation-note">
+            完成多类型测试场景覆盖，识别主要异常类型，并形成相应修复策略。
+          </p>
+        </section>
+
+        <section class="case-section" id="iteration">
+          <SectionHeading eyebrow="06 / ITERATION" title="实验与迭代" />
+          <Timeline items={project.iterations} />
+        </section>
+
+        <section class="case-section" id="gallery">
+          <SectionHeading
+            eyebrow="07 / GALLERY"
+            title="项目截图"
+            description="当前为本地资源预留位，替换后会自动显示、懒加载并支持点击放大。"
+          />
+          <ImageGallery project={project} />
+        </section>
+      </div>
+    </div>
+
+    <nav class="shell project-pagination" aria-label="项目翻页">
+      {
+        previous && (
+          <a href={`/projects/${previous.slug}`}>
+            <>
+              <span>← PREVIOUS</span>
+              <strong>{previous.title}</strong>
+            </>
+          </a>
+        )
+      }
+      <a class="all-projects" href="/projects">全部项目</a>
+      {
+        next && (
+          <a class="next" href={`/projects/${next.slug}`}>
+            <>
+              <span>NEXT →</span>
+              <strong>{next.title}</strong>
+            </>
+          </a>
+        )
+      }
+    </nav>
+  </article>
+  <ContactSection />
+</BaseLayout>

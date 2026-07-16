@@ -1,0 +1,9 @@
+---
+import HomePage from '../components/HomePage.astro';
+import { trackConfigs } from '../config/site';
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout pageTag="AI PRODUCT">
+  <HomePage config={trackConfigs.general} />
+</BaseLayout>

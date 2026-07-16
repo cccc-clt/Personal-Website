@@ -1,0 +1,18 @@
+---
+import type { ProjectStatus } from '../types/project';
+
+interface Props {
+  status: ProjectStatus;
+}
+const { status } = Astro.props;
+const labels: Record<ProjectStatus, string> = {
+  LIVE: '在线',
+  TESTED: '已测试',
+  ITERATING: '迭代中',
+  ARCHIVED: '已归档',
+};
+---
+
+<span class:list={['status-badge', `status-${status.toLowerCase()}`]}>
+  <i aria-hidden="true"></i>{status}<span class="sr-only">，{labels[status]}</span>
+</span>

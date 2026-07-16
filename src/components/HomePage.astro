@@ -1,0 +1,25 @@
+---
+import type { TrackConfig } from '../config/site';
+import { getProjectsForTrack } from '../data/projects';
+import AboutPreview from './AboutPreview.astro';
+import ContactSection from './ContactSection.astro';
+import FeaturedProjects from './FeaturedProjects.astro';
+import HeroSection from './HeroSection.astro';
+import ProductLoop from './ProductLoop.astro';
+import SkillGrid from './SkillGrid.astro';
+import TrackSwitcher from './TrackSwitcher.astro';
+
+interface Props {
+  config: TrackConfig;
+}
+const { config } = Astro.props;
+const selectedProjects = getProjectsForTrack(config.key, 4);
+---
+
+<HeroSection config={config} />
+<TrackSwitcher active={config.key} />
+<FeaturedProjects projects={selectedProjects} trackLabel={config.label} />
+<ProductLoop />
+<AboutPreview />
+<SkillGrid />
+<ContactSection />

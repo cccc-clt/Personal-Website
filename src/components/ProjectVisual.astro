@@ -1,0 +1,20 @@
+---
+interface Props {
+  abbreviation: string;
+  category: string;
+  index?: string;
+  compact?: boolean;
+}
+const { abbreviation, category, index = 'PROJECT', compact = false } = Astro.props;
+---
+
+<div class:list={['project-placeholder', { compact }]} aria-hidden="true">
+  <div class="placeholder-grid"></div>
+  <div class="placeholder-orbit one"></div>
+  <div class="placeholder-orbit two"></div>
+  <div class="placeholder-nodes"><i></i><i></i><i></i><i></i></div>
+  <span class="placeholder-index">{index}</span>
+  <strong>{abbreviation}</strong>
+  <small>{category}</small>
+  <div class="placeholder-line"><i></i><i></i><i></i><i></i><i></i></div>
+</div>

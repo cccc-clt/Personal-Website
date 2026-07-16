@@ -1,0 +1,13 @@
+---
+import HomePage from '../components/HomePage.astro';
+import { trackConfigs } from '../config/site';
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="智能汽车与场景 AI 产品实践｜赵天琦"
+  description="聚焦智能座舱、场景 Agent、指令理解、安全边界与用户反馈分析。"
+  pageTag="AUTO AI"
+>
+  <HomePage config={trackConfigs.auto} />
+</BaseLayout>

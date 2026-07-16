@@ -1,0 +1,66 @@
+---
+import type { IterationItem } from '../types/project';
+
+interface Props {
+  items: IterationItem[];
+}
+const { items } = Astro.props;
+---
+
+<div class="iteration-timeline">
+  {
+    items.map((item, index) => (
+      <article data-reveal>
+        <div class="timeline-marker">
+          <span>{String(index + 1).padStart(2, '0')}</span>
+        </div>
+        <div class="timeline-card">
+          <div class="timeline-head">
+            <>
+              <span>{item.stage}</span>
+              <i>TEST → LEARN → ITERATE</i>
+            </>
+          </div>
+          <dl>
+            <div>
+              <>
+                <dt>问题</dt>
+                <dd>{item.problem}</dd>
+              </>
+            </div>
+            <div>
+              <>
+                <dt>复现条件</dt>
+                <dd>{item.condition}</dd>
+              </>
+            </div>
+            <div>
+              <>
+                <dt>原因分析</dt>
+                <dd>{item.analysis}</dd>
+              </>
+            </div>
+            <div>
+              <>
+                <dt>修改方案</dt>
+                <dd>{item.change}</dd>
+              </>
+            </div>
+            <div>
+              <>
+                <dt>复测结果</dt>
+                <dd>{item.result}</dd>
+              </>
+            </div>
+            <div>
+              <>
+                <dt>后续计划</dt>
+                <dd>{item.next}</dd>
+              </>
+            </div>
+          </dl>
+        </div>
+      </article>
+    ))
+  }
+</div>

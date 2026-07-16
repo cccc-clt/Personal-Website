@@ -1,0 +1,90 @@
+---
+import ContactSection from '../../components/ContactSection.astro';
+import InnerPageHero from '../../components/InnerPageHero.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { projects } from '../../data/projects';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const categories = [
+  '全部',
+  'AI 产品评测',
+  'Game AI',
+  'UI Agent',
+  'Automotive AI',
+  'RAG',
+  'Character Agent',
+];
+---
+
+<BaseLayout
+  title="项目作品集｜赵天琦 · AI 产品经理"
+  description="浏览赵天琦的 AI 产品评测、AI Agent、游戏 AI、RAG 与智能汽车项目实践。"
+  pageTag="PROJECT INDEX"
+>
+  <InnerPageHero
+    eyebrow="PROJECT ARCHIVE"
+    title="七个项目，一条从问题到评测的实践路径。"
+    description="每个项目都说明目标用户、产品问题、AI 角色、我的职责和实验迭代；项目状态仅表达当前完成阶段。"
+    code="PROJECT_DATABASE / 07"
+  />
+  <section class="section projects-index-section">
+    <div class="shell">
+      <div class="project-filter" role="group" aria-label="按项目类别筛选">
+        {
+          categories.map((category, index) => (
+            <button
+              type="button"
+              class:list={{ active: index === 0 }}
+              data-filter={category}
+              aria-pressed={index === 0 ? 'true' : 'false'}
+            >
+              {category}
+              <span>
+                {category === '全部'
+                  ? projects.length
+                  : projects.filter((project) => project.category.includes(category)).length}
+              </span>
+            </button>
+          ))
+        }
+      </div>
+      <p class="filter-result" aria-live="polite" data-filter-result>
+        当前显示 {projects.length} 个项目
+      </p>
+      <div class="project-grid all-project-grid" data-project-grid>
+        {projects.map((project) => <ProjectCard project={project} />)}
+      </div>
+      <div class="filter-empty" data-filter-empty hidden>
+        <strong>未找到该类别项目</strong><p>可以切换到“全部”查看完整作品集。</p>
+      </div>
+    </div>
+  </section>
+  <ContactSection />
+</BaseLayout>
+
+<script>
+  const buttons = document.querySelectorAll<HTMLButtonElement>('[data-filter]');
+  const cards = document.querySelectorAll<HTMLElement>('[data-project-card]');
+  const result = document.querySelector<HTMLElement>('[data-filter-result]');
+  const empty = document.querySelector<HTMLElement>('[data-filter-empty]');
+
+  buttons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const filter = button.dataset.filter ?? '全部';
+      let visible = 0;
+      buttons.forEach((item) => {
+        const active = item === button;
+        item.classList.toggle('active', active);
+        item.setAttribute('aria-pressed', String(active));
+      });
+      cards.forEach((card) => {
+        const matches =
+          filter === '全部' || (card.dataset.categories ?? '').split('|').includes(filter);
+        card.hidden = !matches;
+        if (matches) visible += 1;
+      });
+      if (result) result.textContent = `当前显示 ${visible} 个项目`;
+      if (empty) empty.hidden = visible !== 0;
+    });
+  });
+</script>
