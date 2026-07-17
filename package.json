@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build",
+    "build": "astro build && pagefind --site dist",
     "preview": "astro preview",
     "check": "astro check",
     "lint": "eslint .",
@@ -28,5 +28,12 @@
     "sharp": "^0.35.3",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.64.0"
+  },
+  "dependencies": {
+    "@astrojs/rss": "^4.0.19",
+    "@swup/astro": "^1.8.0",
+    "@tailwindcss/vite": "^4.3.3",
+    "pagefind": "^1.5.2",
+    "tailwindcss": "^4.3.3"
   }
 }

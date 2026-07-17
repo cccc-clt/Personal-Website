@@ -8,7 +8,7 @@ interface Props {
 
 const { slug, title, index = 'CASE', compact = false } = Astro.props;
 const variantMap: Record<string, string> = {
-  'ai-product-evaluation-workbench': 'matrix',
+  'ai-product-evaluation-workbench': 'workbench',
   'mobile-uiagent-evaluation-lab': 'tap',
   'ai-game-growth-workflow': 'growth',
   'automate-ai-car-copilot': 'cockpit',
@@ -16,7 +16,7 @@ const variantMap: Record<string, string> = {
   'ai-pdf-learning-assistant': 'documents',
   'elysia-ai-character-agent': 'memory',
 };
-const variant = variantMap[slug] ?? 'matrix';
+const variant = variantMap[slug] ?? 'workbench';
 ---
 
 <div
@@ -93,13 +93,13 @@ const variant = variantMap[slug] ?? 'matrix';
     font-family: var(--font-mono);
   }
 
-  .project-cover--matrix .project-cover__wash {
+  .project-cover--workbench .project-cover__wash {
     background:
       radial-gradient(circle at 76% 20%, rgba(255, 255, 255, 0.9), transparent 20%),
       linear-gradient(150deg, #e8f7ff 0%, #dde2ff 55%, #f4e6ee 100%);
   }
 
-  .project-cover--matrix .project-cover__stage {
+  .project-cover--workbench .project-cover__stage {
     display: grid;
     width: 60%;
     height: 60%;
@@ -109,7 +109,7 @@ const variant = variantMap[slug] ?? 'matrix';
     transform: perspective(700px) rotateX(58deg) rotateZ(-28deg) translate(28%, 4%);
   }
 
-  .project-cover--matrix .project-cover__stage span {
+  .project-cover--workbench .project-cover__stage span {
     position: relative;
     border: 1px solid rgba(84, 104, 180, 0.22);
     border-radius: 12px;
@@ -117,8 +117,8 @@ const variant = variantMap[slug] ?? 'matrix';
     box-shadow: 14px 18px 24px rgba(84, 99, 157, 0.11);
   }
 
-  .project-cover--matrix .project-cover__stage span:nth-child(2),
-  .project-cover--matrix .project-cover__stage span:nth-child(5) {
+  .project-cover--workbench .project-cover__stage span:nth-child(2),
+  .project-cover--workbench .project-cover__stage span:nth-child(5) {
     background: rgba(104, 125, 224, 0.5);
   }
 
@@ -196,14 +196,9 @@ const variant = variantMap[slug] ?? 'matrix';
   }
 
   .project-cover--cockpit .project-cover__wash {
-    background: radial-gradient(
-      circle at 50% 100%,
-      #223456,
-      #1d2945 42%,
-      #b8dffc 43%,
-      #eaf8ff 68%,
-      #e5e1fb
-    );
+    background:
+      radial-gradient(circle at 50% 100%, rgba(119, 164, 211, 0.32), transparent 36%),
+      linear-gradient(145deg, #e7f6ff, #dfe9fa 52%, #eee8fb);
   }
 
   .project-cover--cockpit .project-cover__stage {
@@ -219,8 +214,8 @@ const variant = variantMap[slug] ?? 'matrix';
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    background: #9fe4ff;
-    box-shadow: 0 0 24px 8px rgba(111, 211, 255, 0.5);
+    border: 3px solid rgba(255, 255, 255, 0.72);
+    background: #87b7de;
   }
 
   .project-cover--cockpit .project-cover__stage span:nth-child(2) {

@@ -1,7 +1,7 @@
 ---
+import type { ProjectEntry } from '../types/project';
 import ProjectCover from './ProjectCover.astro';
 import StatusBadge from './StatusBadge.astro';
-import type { ProjectEntry } from '../types/project';
 
 interface Props {
   project: ProjectEntry;
@@ -10,132 +10,39 @@ interface Props {
 
 const { project, layout = 'standard' } = Astro.props;
 const slug = project.id.replace(/\.mdx?$/, '');
+const updated = project.data.updated.toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' });
 ---
 
-<article
-  class:list={['project-card', `project-card--${layout}`]}
-  data-project-card
-  data-tracks={project.data.targetTracks.join(' ')}
->
-  <a
-    class="project-card__visual"
-    href={`/projects/${slug}`}
-    aria-label={`查看${project.data.title}详情`}
-  >
-    <ProjectCover
-      slug={slug}
-      title={project.data.title}
-      index={project.data.index}
-      compact={layout !== 'wide'}
-    />
+<article class:list={['project-card', `project-card--${layout}`]} data-project-card data-tracks={project.data.targetTracks.join(' ')}>
+  <a class="project-card__cover" href={`/projects/${slug}/`} aria-label={`查看${project.data.title}详情`}>
+    <ProjectCover slug={slug} title={project.data.title} index={project.data.index} compact />
   </a>
   <div class="project-card__body">
-    <div class="project-card__meta">
-      <StatusBadge status={project.data.status} />
-      <span class="mono">{project.data.index}</span>
-    </div>
-    <h3><a href={`/projects/${slug}`}>{project.data.title}</a></h3>
-    <p>{project.data.summary}</p>
-    <ul aria-label="项目标签">
-      {project.data.categories.slice(0, 3).map((category) => <li>{category}</li>)}
-    </ul>
-    <a class="project-card__link" href={`/projects/${slug}`}
-      >阅读案例 <span aria-hidden="true">↗</span></a
-    >
+    <div class="project-card__meta"><StatusBadge status={project.data.status} /><time datetime={project.data.updated.toISOString()}>{updated}</time></div>
+    <h3><a href={`/projects/${slug}/`}>{project.data.title}</a></h3>
+    <p class="project-card__codename">视觉代号 · {project.data.codename}</p>
+    <p class="project-card__summary">{project.data.description}</p>
+    <div class="chip-row" aria-label="项目标签">{project.data.categories.slice(0, 3).map((category) => <span class="chip">{category}</span>)}</div>
+    <a class="project-card__link" href={`/projects/${slug}/`}>查看详情 <span aria-hidden="true">→</span></a>
   </div>
 </article>
 
 <style>
-  .project-card {
-    display: grid;
-    gap: 1.7rem;
-  }
-
-  .project-card__visual {
-    display: block;
-    border-radius: var(--radius-lg);
-    transition: translate 320ms var(--ease-out);
-  }
-
-  .project-card__visual:hover {
-    translate: 0 -5px;
-  }
-
-  .project-card__body {
-    max-width: 630px;
-  }
-
-  .project-card__meta {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    color: var(--ink-500);
-    font-size: 0.67rem;
-  }
-
-  h3 {
-    margin: 1rem 0 0.8rem;
-    font-size: clamp(1.55rem, 2.4vw, 2.5rem);
-    letter-spacing: -0.045em;
-    line-height: 1.15;
-  }
-
-  p {
-    margin: 0;
-    color: var(--ink-650);
-    line-height: 1.75;
-  }
-
-  ul {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.45rem;
-    padding: 0;
-    margin: 1.15rem 0 0;
-    list-style: none;
-  }
-
-  li {
-    padding: 0.4rem 0.65rem;
-    border: 1px solid var(--line);
-    border-radius: var(--radius-pill);
-    color: var(--ink-650);
-    font-size: 0.72rem;
-  }
-
-  .project-card__link {
-    display: inline-flex;
-    gap: 0.5rem;
-    margin-top: 1.2rem;
-    font-weight: 650;
-  }
-
-  .project-card__link span {
-    transition: translate 220ms var(--ease-out);
-  }
-
-  .project-card__link:hover span {
-    translate: 3px -3px;
-  }
-
-  .project-card--wide {
-    grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.55fr);
-    align-items: end;
-  }
-
-  .project-card--wide .project-card__body {
-    padding-bottom: 1rem;
-  }
-
-  .project-card--portrait .project-card__visual :global(.project-cover) {
-    aspect-ratio: 0.88;
-  }
-
-  @media (max-width: 800px) {
-    .project-card--wide {
-      grid-template-columns: 1fr;
-      align-items: start;
-    }
-  }
+  .project-card { overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--surface-solid); box-shadow: 0 10px 32px rgba(63, 84, 109, 0.08); transition: transform 220ms var(--ease-out), box-shadow 220ms ease; }
+  .project-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-soft); }
+  .project-card__cover { display: block; overflow: hidden; }
+  .project-card__cover :global(.project-cover) { min-height: 205px; border-radius: 0; }
+  .project-card__cover :global(.project-cover__stage) { transition: transform 300ms var(--ease-out); }
+  .project-card:hover .project-card__cover :global(.project-cover__stage) { transform: scale(1.02); }
+  .project-card__body { padding: 1.25rem; }
+  .project-card__meta { display: flex; align-items: center; justify-content: space-between; gap: 0.7rem; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.58rem; }
+  h3 { margin: 0.85rem 0 0.3rem; font-size: clamp(1.15rem, 2vw, 1.55rem); letter-spacing: -0.035em; line-height: 1.25; }
+  .project-card__codename { margin: 0 0 0.65rem; color: var(--violet); font-size: 0.66rem; }
+  .project-card__summary { margin: 0; color: var(--text-secondary); font-size: 0.8rem; line-height: 1.75; }
+  .chip-row { margin-top: 1rem; }
+  .project-card__link { display: inline-flex; gap: 0.4rem; margin-top: 1.1rem; color: var(--primary-strong); font-size: 0.74rem; font-weight: 700; }
+  .project-card--wide { display: grid; grid-template-columns: minmax(260px, 0.9fr) minmax(0, 1.1fr); }
+  .project-card--wide .project-card__cover :global(.project-cover) { min-height: 100%; }
+  .project-card--wide .project-card__body { display: grid; align-content: center; padding: clamp(1.5rem, 4vw, 3rem); }
+  @media (max-width: 620px) { .project-card--wide { grid-template-columns: 1fr; } .project-card--wide .project-card__cover :global(.project-cover) { min-height: 205px; } }
 </style>

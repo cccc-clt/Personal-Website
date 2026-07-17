@@ -1,27 +1,77 @@
 ---
 import { getCollection } from 'astro:content';
-import type { TrackConfig } from '../types/project';
-import AboutPreview from './AboutPreview.astro';
-import AbilitySection from './AbilitySection.astro';
-import BrandStory from './BrandStory.astro';
-import ContactSection from './ContactSection.astro';
-import FeaturedProjects from './FeaturedProjects.astro';
-import TrackHero from './TrackHero.astro';
+import { abilities } from '../config/site';
+import { timeline } from '../data/siteContent';
+import HeroBanner from './HeroBanner.astro';
+import MainGridLayout from './MainGridLayout.astro';
+import ProfileCard from './ProfileCard.astro';
+import ProjectCard from './ProjectCard.astro';
+import RightSidebar from './RightSidebar.astro';
 
-interface Props {
-  config: TrackConfig;
-}
-
-const { config } = Astro.props;
-const selectedProjects = (await getCollection('projects'))
-  .filter((project) => project.data.targetTracks.includes(config.key))
-  .sort((a, b) => a.data.order[config.key] - b.data.order[config.key])
-  .slice(0, 4);
+const allProjects = (await getCollection('projects')).sort((a, b) => a.data.order.general - b.data.order.general);
+const projects = allProjects.filter((project) => project.data.featured).slice(0, 4);
+const projectCount = String(allProjects.length).padStart(2, '0');
 ---
 
-<TrackHero config={config} />
-<BrandStory />
-<FeaturedProjects projects={selectedProjects} trackLabel={config.label} />
-<AbilitySection />
-<AboutPreview />
-<ContactSection />
+<HeroBanner />
+<MainGridLayout>
+  <ProfileCard slot="left" />
+
+  <article class="welcome-card panel">
+    <span class="eyebrow">WELCOME TO MY SPACE</span>
+    <h2>你好，我是赵天琦。</h2>
+    <p>我是一名交通工程专业本科生，目前正在向游戏 AI 与 AI 产品方向发展。</p>
+    <p>我持续实践 Prompt、Agent、RAG、模型评测和快速原型，尝试把复杂技术转化为更清楚、更可用、更容易验证的产品方案。</p>
+    <div class="welcome-card__links"><a href="/about/">进一步认识我 →</a><a href="/stack/">查看工具链 →</a></div>
+  </article>
+
+  <section class="home-section panel" aria-labelledby="featured-title">
+    <header class="home-section__heading"><div><span class="eyebrow">FEATURED PROJECTS</span><h2 id="featured-title">精选项目</h2></div><a href="/projects/">全部 {projectCount} 个项目 ↗</a></header>
+    <div class="featured-grid">{projects.map((project, index) => <ProjectCard project={project} layout={index === 0 ? 'wide' : 'standard'} />)}</div>
+  </section>
+
+  <section class="home-section panel" aria-labelledby="method-title">
+    <header class="home-section__heading"><div><span class="eyebrow">PRODUCT PRACTICE</span><h2 id="method-title">我如何推进 AI 产品</h2></div><a href="/about/">了解我的方法 ↗</a></header>
+    <div class="practice-grid">
+      {abilities.map((ability) => <article><span>{ability.index}</span><h3>{ability.title}</h3><p>{ability.description}</p></article>)}
+    </div>
+  </section>
+
+  <section class="home-section panel" aria-labelledby="timeline-title">
+    <header class="home-section__heading"><div><span class="eyebrow">MY TIMELINE</span><h2 id="timeline-title">项目与学习时间线</h2></div><a href="/archive/">完整归档 ↗</a></header>
+    <ol class="mini-timeline">{timeline.map((item) => <li><span class="mini-timeline__label">{item.period}</span><i aria-hidden="true"></i><div><span>{item.type}</span><h3>{item.title}</h3><p>{item.text}</p></div></li>)}</ol>
+  </section>
+
+  <a class="all-projects panel" href="/projects/"><span><small>CONTINUE EXPLORING</small>查看全部作品与案例研究</span><b aria-hidden="true">→</b></a>
+
+  <RightSidebar slot="right" />
+</MainGridLayout>
+
+<style>
+  .welcome-card,
+  .home-section { padding: clamp(1.4rem, 3vw, 2.3rem); }
+  .welcome-card h2 { margin: 0.7rem 0 1.1rem; font-size: clamp(1.8rem, 4vw, 3.3rem); letter-spacing: -0.05em; }
+  .welcome-card p { max-width: 780px; margin: 0 0 0.65rem; color: var(--text-secondary); font-size: 0.9rem; line-height: 1.85; }
+  .welcome-card__links { display: flex; flex-wrap: wrap; gap: 1.2rem; margin-top: 1.2rem; color: var(--primary-strong); font-size: 0.76rem; font-weight: 700; }
+  .home-section__heading { display: flex; align-items: end; justify-content: space-between; gap: 1rem; padding-bottom: 1.4rem; border-bottom: 1px solid var(--border); }
+  .home-section__heading h2 { margin: 0.45rem 0 0; font-size: clamp(1.6rem, 3.5vw, 2.7rem); letter-spacing: -0.045em; }
+  .home-section__heading > a { color: var(--text-muted); font-size: 0.7rem; }
+  .featured-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 1.3rem; }
+  .featured-grid > :global(:first-child) { grid-column: 1 / -1; }
+  .practice-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; margin-top: 1.3rem; overflow: hidden; border: 1px solid var(--border); border-radius: 14px; background: var(--border); }
+  .practice-grid article { padding: 1.25rem; background: var(--surface-solid); }
+  .practice-grid span, .mini-timeline span { color: var(--violet); font-family: var(--font-mono); font-size: 0.66rem; }
+  .practice-grid h3, .mini-timeline h3 { margin: 0.65rem 0 0.5rem; font-size: 1rem; }
+  .practice-grid p, .mini-timeline p { margin: 0; color: var(--text-secondary); font-size: 0.78rem; line-height: 1.75; }
+  .mini-timeline { padding: 0; margin: 1rem 0 0; list-style: none; }
+  .mini-timeline li { display: grid; grid-template-columns: 95px 12px 1fr; gap: 0.8rem; padding: 1rem 0; }
+  .mini-timeline__label { color: var(--text-muted) !important; font-family: var(--font-mono); font-size: 0.6rem !important; }
+  .mini-timeline i { position: relative; width: 9px; height: 9px; margin-top: 0.2rem; border: 2px solid var(--surface-solid); border-radius: 50%; background: var(--primary); box-shadow: 0 0 0 1px var(--primary); }
+  .mini-timeline i::after { position: absolute; top: 10px; bottom: -78px; left: 3px; width: 1px; background: var(--border-strong); content: ''; }
+  .mini-timeline li:last-child i::after { display: none; }
+  .all-projects { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.5rem 1.8rem; background: linear-gradient(120deg, var(--primary-soft), color-mix(in srgb, var(--pink) 20%, var(--surface-solid))); }
+  .all-projects span { font-size: clamp(1.05rem, 2.2vw, 1.5rem); font-weight: 750; }
+  .all-projects small { display: block; margin-bottom: 0.35rem; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.56rem; font-weight: 500; }
+  .all-projects b { font-size: 1.6rem; }
+  @media (max-width: 680px) { .featured-grid, .practice-grid { grid-template-columns: 1fr; } .featured-grid > :global(:first-child) { grid-column: 1; } .home-section__heading { align-items: start; flex-direction: column; } }
+</style>

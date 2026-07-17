@@ -1,70 +1,179 @@
 ---
-import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import FloatingControls from '../components/FloatingControls.astro';
+import SearchOverlay from '../components/SearchOverlay.astro';
 import { siteConfig } from '../config/site';
-import type { TargetTrack } from '../types/project';
 import '../styles/global.css';
 
 interface Props {
   title?: string;
   description?: string;
-  track?: TargetTrack;
   image?: string;
   noindex?: boolean;
+  pageClass?: string;
 }
 
 const {
   title = siteConfig.title,
   description = siteConfig.description,
-  track = 'general',
   image = '/images/og/og-general.webp',
   noindex = false,
+  pageClass = '',
 } = Astro.props;
-const canonical = new URL(Astro.url.pathname, siteConfig.url);
-const socialImage = new URL(image, siteConfig.url);
+const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site) : undefined;
+const socialImage = Astro.site ? new URL(image, Astro.site) : undefined;
 const structuredData = {
   '@context': 'https://schema.org',
   '@type': 'Person',
   name: siteConfig.name,
   alternateName: siteConfig.englishName,
-  url: siteConfig.url,
-  jobTitle: 'AI 产品经理',
+  ...(Astro.site ? { url: Astro.site.toString() } : {}),
+  jobTitle: '游戏 AI 产品实践者',
+  affiliation: { '@type': 'CollegeOrUniversity', name: siteConfig.school },
   sameAs: [siteConfig.github],
-  knowsAbout: ['AI Agent', 'Game AI', 'RAG', 'Prompt Engineering', 'LLM Evaluation'],
+  knowsAbout: ['游戏 AI', 'AI Agent', 'RAG', 'Prompt Engineering', 'AI 产品评测'],
 };
 ---
 
 <!doctype html>
-<html lang="zh-CN" data-track={track}>
+<html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
-    <meta name="theme-color" content="#f8faff" />
+    <meta name="theme-color" content="#edf3f8" />
     <meta name="description" content={description} />
     {noindex && <meta name="robots" content="noindex, follow" />}
-    <link rel="canonical" href={canonical} />
+    {canonical && <link rel="canonical" href={canonical} />}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    {Astro.site && <link rel="alternate" type="application/rss+xml" title={siteConfig.siteName} href="/rss.xml" />}
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="zh_CN" />
     <meta property="og:site_name" content={siteConfig.siteName} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:url" content={canonical} />
-    <meta property="og:image" content={socialImage} />
+    {canonical && <meta property="og:url" content={canonical} />}
+    {socialImage && <meta property="og:image" content={socialImage} />}
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={socialImage} />
+    {socialImage && <meta name="twitter:image" content={socialImage} />}
     <title>{title}</title>
+    <script is:inline>
+      (() => {
+        const saved = localStorage.getItem('theme');
+        const dark = saved === 'dark' || (!saved && matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+      })();
+    </script>
     <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
   </head>
-  <body>
-    <a class="skip-link" href="#main-content">跳到主要内容</a>
-    <Header />
-    <main id="main-content">
-      <slot />
-    </main>
-    <Footer />
+  <body class={pageClass}>
+    <div id="swup-container" class="transition-swup-fade">
+      <a class="skip-link" href="#main-content">跳到主要内容</a>
+      <Header />
+      <main id="main-content" data-pagefind-body>
+        <slot />
+      </main>
+      <Footer />
+      <SearchOverlay />
+      <FloatingControls />
+    </div>
+
+    <script>
+      interface PagefindData {
+        url: string;
+        excerpt?: string;
+        meta?: { title?: string };
+      }
+
+      interface PagefindResult {
+        data: () => Promise<PagefindData>;
+      }
+
+      interface PagefindModule {
+        init: () => Promise<void>;
+        search: (query: string) => Promise<{ results: PagefindResult[] }>;
+      }
+
+      const getMenu = () => document.querySelector<HTMLElement>('[data-mobile-menu]');
+      const getMenuButton = () => document.querySelector<HTMLButtonElement>('[data-menu-button]');
+      const setMenu = (open: boolean, restore = false) => {
+        const menu = getMenu();
+        const button = getMenuButton();
+        button?.setAttribute('aria-expanded', String(open));
+        button?.setAttribute('aria-label', open ? '关闭导航' : '打开导航');
+        menu?.setAttribute('aria-hidden', String(!open));
+        document.body.classList.toggle('nav-open', open);
+        if (open) menu?.querySelector<HTMLElement>('a')?.focus();
+        if (!open && restore) button?.focus();
+      };
+
+      const getSearch = () => document.querySelector<HTMLDialogElement>('[data-search-dialog]');
+      const closeSearch = (restore = false) => {
+        const dialog = getSearch();
+        if (dialog?.open) dialog.close();
+        if (restore) document.querySelector<HTMLButtonElement>('[data-search-open]')?.focus();
+      };
+
+      document.addEventListener('click', (event) => {
+        const target = event.target as HTMLElement;
+        if (target.closest('[data-menu-button]')) {
+          const open = getMenuButton()?.getAttribute('aria-expanded') !== 'true';
+          setMenu(open, !open);
+        }
+        if (target.closest('[data-mobile-menu] a')) setMenu(false);
+        if (target.closest('[data-theme-toggle]')) {
+          const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+          document.documentElement.dataset.theme = next;
+          localStorage.setItem('theme', next);
+        }
+        if (target.closest('[data-search-open]')) {
+          const dialog = getSearch();
+          dialog?.showModal();
+          dialog?.querySelector<HTMLInputElement>('input')?.focus();
+        }
+        if (target.closest('[data-search-close]')) closeSearch(true);
+        if (target.closest('[data-back-to-top]')) window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key !== 'Escape') return;
+        if (getMenuButton()?.getAttribute('aria-expanded') === 'true') setMenu(false, true);
+        else if (getSearch()?.open) closeSearch(true);
+      });
+
+      document.addEventListener('input', async (event) => {
+        const input = (event.target as HTMLElement).closest<HTMLInputElement>('[data-pagefind-input]');
+        if (!input) return;
+        const results = document.querySelector<HTMLElement>('[data-pagefind-results]');
+        const query = input.value.trim();
+        if (!results) return;
+        if (!query) {
+          results.innerHTML = '<p class="search-empty">输入关键词搜索项目、随想与页面。</p>';
+          return;
+        }
+        results.innerHTML = '<p class="search-empty">正在搜索…</p>';
+        try {
+          const pagefindUrl = '/pagefind/pagefind.js';
+          const pagefind = (await import(/* @vite-ignore */ pagefindUrl)) as PagefindModule;
+          await pagefind.init();
+          const search = await pagefind.search(query);
+          const items = await Promise.all(search.results.slice(0, 8).map((item) => item.data()));
+          results.innerHTML = items.length
+            ? items
+                .map((item) => `<a class="search-result" href="${item.url}"><strong>${item.meta?.title ?? '未命名页面'}</strong><span>${item.excerpt ?? ''}</span></a>`)
+                .join('')
+            : '<p class="search-empty">没有找到相关内容。</p>';
+        } catch {
+          results.innerHTML = '<p class="search-empty">本地开发时搜索索引尚未生成；执行 npm run build 后即可使用。</p>';
+        }
+      });
+
+      const updateHeader = () => document.querySelector('[data-header]')?.classList.toggle('is-scrolled', window.scrollY > 24);
+      window.addEventListener('scroll', updateHeader, { passive: true });
+      updateHeader();
+    </script>
   </body>
 </html>

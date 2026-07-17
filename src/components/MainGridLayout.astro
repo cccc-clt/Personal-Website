@@ -1,0 +1,61 @@
+<div class="main-grid page-shell">
+  <aside class="main-grid__left" aria-label="个人资料"><slot name="left" /></aside>
+  <section class="main-grid__content"><slot /></section>
+  <aside class="main-grid__right" aria-label="站点信息"><slot name="right" /></aside>
+</div>
+
+<style>
+  .main-grid {
+    position: relative;
+    z-index: 4;
+    display: grid;
+    grid-template-columns: minmax(218px, 0.68fr) minmax(0, 2.25fr) minmax(210px, 0.7fr);
+    gap: 1rem;
+    align-items: start;
+    margin-top: -2.2rem;
+    padding-bottom: 5rem;
+  }
+
+  .main-grid__left,
+  .main-grid__right {
+    position: sticky;
+    top: 92px;
+    display: grid;
+    gap: 1rem;
+  }
+
+  .main-grid__content {
+    display: grid;
+    min-width: 0;
+    gap: 1rem;
+  }
+
+  @media (max-width: 1180px) {
+    .main-grid {
+      grid-template-columns: minmax(210px, 0.65fr) minmax(0, 1.8fr);
+    }
+
+    .main-grid__right {
+      position: static;
+      grid-column: 1 / -1;
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (max-width: 760px) {
+    .main-grid {
+      grid-template-columns: 1fr;
+      margin-top: -1rem;
+    }
+
+    .main-grid__left,
+    .main-grid__right {
+      position: static;
+      grid-column: 1;
+    }
+
+    .main-grid__right {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

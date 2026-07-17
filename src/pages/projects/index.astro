@@ -4,132 +4,47 @@ import InnerPageHero from '../../components/InnerPageHero.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
-const projects = (await getCollection('projects')).sort(
-  (a, b) => a.data.order.general - b.data.order.general,
-);
-const filters = [
-  { key: 'all', label: '全部项目' },
-  { key: 'game', label: '游戏 AI' },
-  { key: 'agent', label: 'AI Agent' },
-  { key: 'auto', label: '智能汽车' },
-] as const;
+const projects = (await getCollection('projects')).sort((a, b) => a.data.order.general - b.data.order.general);
+const filters = [{ key: 'all', label: '全部项目' }, { key: 'game', label: '游戏 AI' }, { key: 'agent', label: 'AI Agent' }, { key: 'auto', label: '智能汽车' }] as const;
 ---
 
-<BaseLayout
-  title="项目展｜赵天琦 AI 产品作品集"
-  description="七个 AI 产品案例，覆盖模型评测、游戏 AI、UI Agent、智能座舱、RAG 与角色记忆。"
->
-  <InnerPageHero
-    eyebrow="PROJECT EXHIBITION / 07 CASES"
-    title="作品不是功能集合，而是一连串被验证过的产品判断。"
-    description="从问题、工作流与人工节点，到失败、评测与下一轮迭代。这里保留每个项目真正值得复盘的部分。"
-  >
-    <div class="project-filters" role="group" aria-label="按方向筛选项目" data-project-filters>
-      {
-        filters.map((filter) => (
-          <button
-            type="button"
-            data-filter={filter.key}
-            aria-pressed={filter.key === 'all' ? 'true' : 'false'}
-          >
-            {filter.label}
-          </button>
-        ))
-      }
-    </div>
+<BaseLayout title="项目｜赵天琦游戏 AI 产品作品集" description="七个真实 AI 产品案例，覆盖游戏 AI、Agent、产品评测、RAG、UI Agent 与智能座舱。">
+  <InnerPageHero eyebrow="PROJECTS / 07 CASE STUDIES" title="真实项目，清楚地说问题、方案与失败。" description="真实项目名称是主体，视觉代号只是一点游戏文化气息。这里不展示虚构用户规模、效率提升或商业成绩。">
+    <div class="project-filters" role="group" aria-label="按方向筛选项目" data-project-filters>{filters.map((filter) => <button type="button" data-filter={filter.key} aria-pressed={filter.key === 'all' ? 'true' : 'false'}>{filter.label}</button>)}</div>
   </InnerPageHero>
-
-  <section class="project-index section" aria-live="polite">
-    <div class="container project-index__grid" data-project-grid>
-      {
-        projects.map((project, index) => (
-          <ProjectCard
-            project={project}
-            layout={index === 0 || index === 4 ? 'wide' : index % 3 === 1 ? 'portrait' : 'standard'}
-          />
-        ))
-      }
-    </div>
+  <section class="project-index section page-shell" aria-live="polite">
+    <div class="project-index__grid" data-project-grid>{projects.map((project, index) => <ProjectCard project={project} layout={index === 0 || index === 4 ? 'wide' : 'standard'} />)}</div>
     <p class="sr-only" data-filter-status>当前展示全部 7 个项目</p>
   </section>
 </BaseLayout>
 
 <script>
-  const filterGroup = document.querySelector<HTMLElement>('[data-project-filters]');
-  const cards = Array.from(document.querySelectorAll<HTMLElement>('[data-project-card]'));
-  const status = document.querySelector<HTMLElement>('[data-filter-status]');
-  filterGroup?.querySelectorAll<HTMLButtonElement>('button').forEach((button) => {
-    button.addEventListener('click', () => {
+  const initFilters = () => {
+    const group = document.querySelector<HTMLElement>('[data-project-filters]');
+    if (!group || group.dataset.ready) return;
+    group.dataset.ready = 'true';
+    const cards = Array.from(document.querySelectorAll<HTMLElement>('[data-project-card]'));
+    const status = document.querySelector<HTMLElement>('[data-filter-status]');
+    group.addEventListener('click', (event) => {
+      const button = (event.target as HTMLElement).closest<HTMLButtonElement>('button[data-filter]');
+      if (!button) return;
       const filter = button.dataset.filter ?? 'all';
-      filterGroup
-        .querySelectorAll('button')
-        .forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
+      group.querySelectorAll('button').forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
       let visible = 0;
-      cards.forEach((card) => {
-        const matches = filter === 'all' || (card.dataset.tracks ?? '').split(' ').includes(filter);
-        card.hidden = !matches;
-        if (matches) visible += 1;
-      });
+      cards.forEach((card) => { const matches = filter === 'all' || (card.dataset.tracks ?? '').split(' ').includes(filter); card.hidden = !matches; if (matches) visible += 1; });
       if (status) status.textContent = `当前展示 ${visible} 个项目`;
     });
-  });
+  };
+  initFilters();
+  document.addEventListener('swup:contentReplaced', initFilters);
 </script>
 
 <style>
-  .project-filters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-top: 2.5rem;
-  }
-
-  .project-filters button {
-    padding: 0.62rem 0.9rem;
-    border: 1px solid var(--line);
-    border-radius: var(--radius-pill);
-    background: rgba(255, 255, 255, 0.4);
-    color: var(--ink-650);
-    cursor: pointer;
-  }
-
-  .project-filters button[aria-pressed='true'] {
-    border-color: var(--ink-950);
-    background: var(--ink-950);
-    color: white;
-  }
-
-  .project-index {
-    background: white;
-  }
-
-  .project-index__grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: clamp(5rem, 9vw, 9rem) clamp(2rem, 6vw, 7rem);
-    align-items: start;
-  }
-
-  .project-index__grid > :global(.project-card--wide) {
-    grid-column: 1 / -1;
-  }
-
-  .project-index__grid > :global(.project-card:nth-child(3n)) {
-    padding-top: 18%;
-  }
-
-  .project-index__grid > :global([hidden]) {
-    display: none;
-  }
-
-  @media (max-width: 760px) {
-    .project-index__grid {
-      grid-template-columns: 1fr;
-    }
-
-    .project-index__grid > :global(.project-card--wide),
-    .project-index__grid > :global(.project-card:nth-child(3n)) {
-      grid-column: 1;
-      padding-top: 0;
-    }
-  }
+  .project-filters { display: flex; flex-wrap: wrap; gap: .55rem; margin-top: 2rem; }
+  .project-filters button { padding: .64rem .9rem; border: 1px solid rgba(255,255,255,.55); border-radius: var(--radius-pill); background: rgba(255,255,255,.45); color: var(--text-secondary); cursor: pointer; }
+  .project-filters button[aria-pressed='true'] { border-color: var(--text-main); background: var(--text-main); color: var(--surface-solid); }
+  .project-index__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+  .project-index__grid > :global(.project-card--wide) { grid-column: 1 / -1; }
+  .project-index__grid > :global([hidden]) { display: none; }
+  @media (max-width: 700px) { .project-index__grid { grid-template-columns: 1fr; } .project-index__grid > :global(.project-card--wide) { grid-column: 1; } }
 </style>

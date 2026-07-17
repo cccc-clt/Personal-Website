@@ -10,8 +10,10 @@ const projects = defineCollection({
     index: z.string(),
     title: z.string(),
     englishTitle: z.string(),
+    codename: z.string(),
     summary: z.string(),
     description: z.string(),
+    updated: z.coerce.date(),
     status: z.enum(['LIVE', 'TESTED', 'ITERATING', 'ARCHIVED']),
     categories: z.array(z.string()),
     targetTracks: z.array(track),
@@ -60,4 +62,27 @@ const projects = defineCollection({
   }),
 });
 
-export const collections = { projects };
+const spec = defineCollection({
+  loader: localMdxLoader('./src/content/spec'),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+  }),
+});
+
+const game = defineCollection({
+  loader: localMdxLoader('./src/content/game'),
+  schema: z.object({
+    game: z.string(),
+    status: z.string(),
+    modules: z.array(z.string()),
+    favoriteDesign: z.string(),
+    painPoints: z.array(z.string()),
+    aiScenarios: z.array(z.string()),
+    risks: z.array(z.string()),
+    updated: z.coerce.date(),
+    draft: z.boolean().default(true),
+  }),
+});
+
+export const collections = { projects, spec, game };

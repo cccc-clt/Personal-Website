@@ -5,39 +5,33 @@ const pathname = Astro.url.pathname;
 const isActive = (href: string) => (href === '/' ? pathname === '/' : pathname.startsWith(href));
 ---
 
-<header class="site-header" data-header>
-  <div class="site-header__inner container">
-    <a class="brand" href="/" aria-label={`${siteConfig.name}作品集首页`}>
-      <span class="brand__mark" aria-hidden="true"><i></i></span>
-      <span>
-        <strong class="en">TIANQI.Z</strong>
-        <small class="mono">AI PRODUCT PORTFOLIO</small>
-      </span>
+<header id="site-header" class="site-header" data-header>
+  <div class="site-header__inner page-shell">
+    <a class="site-brand" href="/" aria-label={`${siteConfig.name}个人网站首页`}>
+      <span class="site-brand__petal" aria-hidden="true">◇</span>
+      <span><strong>{siteConfig.englishName}</strong><small>GAME AI · PERSONAL BLOG</small></span>
     </a>
 
     <nav class="desktop-nav" aria-label="主要导航">
       {
         siteConfig.nav.map((item) => (
           <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
-            {item.label}
+            <span>{item.label}</span><small>{item.subtitle}</small>
           </a>
         ))
       }
     </nav>
 
     <div class="header-actions">
-      <a class="header-github en" href={siteConfig.github} target="_blank" rel="noreferrer">
-        GitHub <span aria-hidden="true">↗</span>
-      </a>
-      <a class="header-resume" href="/resume">简历</a>
-      <button
-        class="menu-button"
-        type="button"
-        aria-label="打开导航"
-        aria-controls="mobile-menu"
-        aria-expanded="false"
-        data-menu-button
-      >
+      <button class="icon-button" type="button" data-search-open aria-label="搜索网站">
+        <span aria-hidden="true">⌕</span>
+      </button>
+      <button class="icon-button theme-toggle" type="button" data-theme-toggle aria-label="切换明暗主题">
+        <span class="theme-toggle__sun" aria-hidden="true">☼</span><span class="theme-toggle__moon" aria-hidden="true">☾</span>
+      </button>
+      <a class="header-github" href={siteConfig.github} target="_blank" rel="noreferrer" aria-label="访问 GitHub">GitHub ↗</a>
+      <a class="header-resume" href="/resume/">下载简历</a>
+      <button class="menu-button" type="button" aria-label="打开导航" aria-controls="mobile-menu" aria-expanded="false" data-menu-button>
         <span></span><span></span>
       </button>
     </div>
@@ -48,247 +42,13 @@ const isActive = (href: string) => (href === '/' ? pathname === '/' : pathname.s
       {
         siteConfig.nav.map((item, index) => (
           <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
-            <span class="mono">0{index + 1}</span>
-            {item.label}
+            <span>{String(index + 1).padStart(2, '0')}</span><strong>{item.label}</strong><small>{item.subtitle}</small>
           </a>
         ))
       }
-      <a href="/credits"><span class="mono">05</span>资源署名</a>
+      <a href="/stack/"><span>07</span><strong>工具链</strong><small>BUILDING STACK</small></a>
+      <a href="/archive/"><span>08</span><strong>归档</strong><small>ARCHIVE</small></a>
     </nav>
     <p>{siteConfig.availability}</p>
   </div>
 </header>
-
-<script>
-  const button = document.querySelector<HTMLButtonElement>('[data-menu-button]');
-  const menu = document.querySelector<HTMLElement>('[data-mobile-menu]');
-  const isMenuOpen = () => button?.getAttribute('aria-expanded') === 'true';
-  const closeMenu = (restoreFocus = true) => {
-    if (!isMenuOpen()) return;
-    button?.setAttribute('aria-expanded', 'false');
-    button?.setAttribute('aria-label', '打开导航');
-    menu?.setAttribute('aria-hidden', 'true');
-    document.body.classList.remove('nav-open');
-    if (restoreFocus) button?.focus();
-  };
-  button?.addEventListener('click', () => {
-    if (isMenuOpen()) {
-      closeMenu();
-    } else {
-      button.setAttribute('aria-expanded', 'true');
-      button.setAttribute('aria-label', '关闭导航');
-      menu?.setAttribute('aria-hidden', 'false');
-      document.body.classList.add('nav-open');
-      menu?.querySelector<HTMLElement>('a')?.focus();
-    }
-  });
-  document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && isMenuOpen()) {
-      closeMenu();
-    }
-  });
-  menu?.querySelectorAll('a').forEach((link) =>
-    link.addEventListener('click', () => {
-      closeMenu(false);
-    }),
-  );
-</script>
-
-<style>
-  .site-header {
-    position: sticky;
-    z-index: 50;
-    top: 0;
-    border-bottom: 1px solid rgba(70, 82, 128, 0.08);
-    background: rgba(248, 250, 255, 0.76);
-    backdrop-filter: blur(20px) saturate(140%);
-  }
-
-  .site-header__inner {
-    display: flex;
-    height: 78px;
-    align-items: center;
-    justify-content: space-between;
-    gap: 2rem;
-  }
-
-  .brand {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.8rem;
-    flex: 0 0 auto;
-  }
-
-  .brand__mark {
-    position: relative;
-    display: grid;
-    width: 38px;
-    height: 38px;
-    place-items: center;
-    border-radius: 13px;
-    background: linear-gradient(145deg, #eef7ff, #c4cdfd);
-    box-shadow: 0 8px 22px rgba(91, 109, 246, 0.2);
-  }
-
-  .brand__mark::before,
-  .brand__mark::after,
-  .brand__mark i {
-    position: absolute;
-    width: 21px;
-    height: 11px;
-    border: 1px solid #5d69c5;
-    border-radius: 50%;
-    content: '';
-  }
-
-  .brand__mark::after {
-    rotate: 60deg;
-  }
-
-  .brand__mark i {
-    rotate: -60deg;
-  }
-
-  .brand__mark i::after {
-    position: absolute;
-    top: 3px;
-    left: 8px;
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background: #5d69c5;
-    content: '';
-  }
-
-  .brand strong,
-  .brand small {
-    display: block;
-  }
-
-  .brand strong {
-    font-size: 0.88rem;
-    letter-spacing: 0.12em;
-  }
-
-  .brand small {
-    margin-top: 0.18rem;
-    color: var(--ink-500);
-    font-size: 0.57rem;
-    letter-spacing: 0.12em;
-  }
-
-  .desktop-nav {
-    display: flex;
-    align-items: center;
-    gap: 0.35rem;
-  }
-
-  .desktop-nav a {
-    padding: 0.66rem 0.85rem;
-    border-radius: var(--radius-pill);
-    color: var(--ink-650);
-    font-size: 0.9rem;
-  }
-
-  .desktop-nav a[aria-current='page'] {
-    background: rgba(99, 116, 223, 0.09);
-    color: var(--ink-950);
-  }
-
-  .header-actions {
-    display: flex;
-    align-items: center;
-    gap: 0.9rem;
-  }
-
-  .header-github {
-    color: var(--ink-650);
-    font-size: 0.82rem;
-  }
-
-  .header-resume {
-    padding: 0.62rem 1rem;
-    border-radius: var(--radius-pill);
-    background: var(--ink-950);
-    color: white;
-    font-size: 0.82rem;
-    font-weight: 650;
-  }
-
-  .menu-button,
-  .mobile-menu {
-    display: none;
-  }
-
-  @media (max-width: 860px) {
-    .desktop-nav,
-    .header-github,
-    .header-resume {
-      display: none;
-    }
-
-    .menu-button {
-      display: grid;
-      width: 44px;
-      height: 44px;
-      place-content: center;
-      gap: 6px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.7);
-      box-shadow: inset 0 0 0 1px var(--line);
-    }
-
-    .menu-button span {
-      width: 18px;
-      height: 1.5px;
-      background: var(--ink-950);
-      transition: transform 220ms ease;
-    }
-
-    .menu-button[aria-expanded='true'] span:first-child {
-      transform: translateY(3.75px) rotate(45deg);
-    }
-
-    .menu-button[aria-expanded='true'] span:last-child {
-      transform: translateY(-3.75px) rotate(-45deg);
-    }
-
-    .mobile-menu {
-      position: fixed;
-      inset: 78px 0 0;
-      height: calc(100dvh - 78px);
-      padding: 2.5rem max(24px, calc((100vw - var(--container)) / 2));
-      background: rgba(247, 250, 255, 0.98);
-    }
-
-    .mobile-menu[aria-hidden='false'] {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .mobile-menu nav {
-      display: grid;
-    }
-
-    .mobile-menu a {
-      display: flex;
-      align-items: baseline;
-      gap: 1rem;
-      padding: 1rem 0;
-      border-bottom: 1px solid var(--line);
-      font-size: clamp(1.8rem, 8vw, 3rem);
-      font-weight: 560;
-      letter-spacing: -0.04em;
-    }
-
-    .mobile-menu a span {
-      color: var(--ink-500);
-      font-size: 0.7rem;
-    }
-
-    .mobile-menu p {
-      color: var(--ink-650);
-    }
-  }
-</style>

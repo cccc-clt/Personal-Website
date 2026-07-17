@@ -1,2 +1,6 @@
 /404 /404.html 404
-
+/resume.pdf /resume/ 302
+/agent /projects/?track=agent 301
+/agent/ /projects/?track=agent 301
+/auto /projects/?track=auto 301
+/auto/ /projects/?track=auto 301

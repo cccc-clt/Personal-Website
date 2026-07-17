@@ -1,76 +1,21 @@
 ---
 import { siteConfig } from '../config/site';
+
+const hasPublishedFeeds = Boolean(Astro.site);
 ---
 
 <footer class="site-footer">
-  <div class="container site-footer__top">
+  <div class="page-shell site-footer__grid">
     <div>
-      <p class="eyebrow">TIANQI.Z / AI PRODUCT</p>
-      <h2>让技术能力，最终落到人的体验。</h2>
+      <span class="eyebrow">TIANQI.Z / PERSONAL SPACE</span>
+      <p>{siteConfig.signature}</p>
     </div>
     <nav aria-label="页脚导航">
-      <a href="/projects">项目</a>
-      <a href="/about">关于我</a>
-      <a href="/resume">简历</a>
-      <a href="/credits">资源署名</a>
+      <a href="/projects/">项目</a><a href="/game/">游戏观察</a><a href="/moments/">AI 随想</a><a href="/archive/">归档</a><a href="/credits/">资源署名</a>
     </nav>
-  </div>
-  <div class="container site-footer__bottom">
-    <span>© {new Date().getFullYear()} {siteConfig.name}</span>
-    <span>Astro · TypeScript · Cloudflare Pages</span>
+    <div class="site-footer__meta">
+      <p>本网站基于开源 Astro 主题 <a href="https://github.com/LyraVoid/Mizuki" target="_blank" rel="noreferrer">Mizuki</a> 进行二次开发。</p>
+      <p>© 2026 {siteConfig.name}{hasPublishedFeeds && <> · <a href="/rss.xml">RSS</a> · <a href="/sitemap-index.xml">Sitemap</a></>}</p>
+    </div>
   </div>
 </footer>
-
-<style>
-  .site-footer {
-    padding: 5rem 0 2rem;
-    background: #f0f4fc;
-  }
-
-  .site-footer__top {
-    display: grid;
-    grid-template-columns: minmax(0, 1.2fr) minmax(220px, 0.5fr);
-    gap: 4rem;
-    padding-bottom: 4rem;
-  }
-
-  h2 {
-    max-width: 740px;
-    margin: 1.2rem 0 0;
-    font-size: clamp(2.1rem, 4vw, 4.5rem);
-    letter-spacing: -0.055em;
-    line-height: 1.05;
-  }
-
-  nav {
-    display: grid;
-    align-content: start;
-  }
-
-  nav a {
-    padding: 0.85rem 0;
-    border-bottom: 1px solid var(--line);
-    color: var(--ink-650);
-  }
-
-  .site-footer__bottom {
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--line);
-    color: var(--ink-500);
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-  }
-
-  @media (max-width: 680px) {
-    .site-footer__top {
-      grid-template-columns: 1fr;
-    }
-
-    .site-footer__bottom {
-      flex-direction: column;
-    }
-  }
-</style>

@@ -1,0 +1,56 @@
+---
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
+import { siteConfig } from '../config/site';
+import { careerDirections } from '../data/siteContent';
+
+const hasAvatar = existsSync(join(process.cwd(), 'public/assets/images/avatar.webp'));
+const hasResume = siteConfig.resumes.some((item) => existsSync(join(process.cwd(), 'public', item.path.replace(/^\//, ''))));
+const hasEmail = Boolean(siteConfig.email);
+---
+
+<section class="profile-card panel">
+  <div class="profile-card__avatar">
+    {hasAvatar ? <img src="/assets/images/avatar.webp" width="512" height="512" alt="本站原创成年女性看板娘头像" decoding="async" /> : <span aria-hidden="true">TQ</span>}
+    <i aria-hidden="true"></i>
+  </div>
+  <h2>{siteConfig.name}</h2>
+  <p class="profile-card__english">{siteConfig.englishName}</p>
+  <p class="profile-card__role">交通工程专业本科生<br />游戏 AI 产品实践者</p>
+  <blockquote>{siteConfig.signature}</blockquote>
+  <div class="profile-card__status"><i aria-hidden="true"></i>{siteConfig.availability}</div>
+  <dl>
+    <div><dt>职业方向</dt><dd>游戏 AI 产品经理</dd></div>
+    <div><dt>专业背景</dt><dd>{siteConfig.major}</dd></div>
+    <div><dt>主线任务</dt><dd>需求—原型—评测—迭代</dd></div>
+  </dl>
+  <div class="chip-row">{careerDirections.map((item) => <span class="chip">{item}</span>)}</div>
+  <nav aria-label="个人链接">
+    <a href={siteConfig.github} target="_blank" rel="noreferrer">GitHub ↗</a>
+    {hasEmail ? <a href={`mailto:${siteConfig.email}`}>Email</a> : <span aria-disabled="true">邮箱待补充</span>}
+    <a href="/resume/">在线简历</a>
+    {hasResume ? <a href={siteConfig.resumes[0].path} download>PDF 简历</a> : <span aria-disabled="true">PDF 待补充</span>}
+  </nav>
+</section>
+
+<style>
+  .profile-card { padding: 1.35rem; text-align: center; }
+  .profile-card__avatar { position: relative; display: grid; width: 92px; height: 92px; place-items: center; margin: 0 auto; border: 5px solid var(--surface-solid); border-radius: 50%; background: linear-gradient(145deg, var(--primary-soft), #f6dfe7); color: var(--primary-strong); font-family: var(--font-mono); font-weight: 800; box-shadow: 0 10px 28px rgba(63, 101, 135, 0.18); overflow: hidden; }
+  .profile-card__avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .profile-card__avatar i { position: absolute; right: 2px; bottom: 8px; width: 12px; height: 12px; border: 2px solid white; border-radius: 50%; background: var(--mint); }
+  h2 { margin: 1rem 0 0; font-size: 1.3rem; }
+  .profile-card__english { margin: 0.15rem 0 0; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.65rem; }
+  .profile-card__role { color: var(--text-secondary); font-size: 0.78rem; line-height: 1.7; }
+  blockquote { margin: 1rem 0; padding: 0.9rem 0; border-block: 1px solid var(--border); color: var(--text-secondary); font-size: 0.78rem; line-height: 1.7; }
+  .profile-card__status { display: flex; align-items: center; gap: 0.45rem; padding: 0.7rem; border-radius: 12px; background: color-mix(in srgb, var(--mint) 15%, transparent); color: var(--text-secondary); font-size: 0.72rem; text-align: left; }
+  .profile-card__status i { width: 8px; height: 8px; flex: 0 0 auto; border-radius: 50%; background: var(--mint); box-shadow: 0 0 0 4px color-mix(in srgb, var(--mint) 18%, transparent); }
+  dl { margin: 1rem 0; text-align: left; }
+  dl div { padding: 0.7rem 0; border-top: 1px solid var(--border); }
+  dt { color: var(--text-muted); font-size: 0.62rem; }
+  dd { margin: 0.25rem 0 0; font-size: 0.75rem; line-height: 1.55; }
+  .chip-row { justify-content: center; }
+  nav { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.45rem; margin-top: 1rem; }
+  nav a, nav span { padding: 0.55rem; border: 1px solid var(--border); border-radius: 10px; color: var(--text-secondary); font-size: 0.68rem; }
+  nav a:hover { border-color: var(--primary); color: var(--primary-strong); }
+  nav span { opacity: 0.5; }
+</style>

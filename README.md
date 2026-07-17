@@ -1,18 +1,19 @@
 # 赵天琦 AI 产品作品集
 
-原创成年日系二次元女性数字向导 × 游戏 AI 产品作品集 × Apple 式内容聚焦 × Microsoft Fluent 式空间光感。项目使用 Astro 7、TypeScript、MDX Content Collections 与原生 CSS，可静态构建并部署到 Cloudflare Pages。
+基于 Mizuki 布局语言重建的浅色游戏 AI 产品作品集：保留悬浮导航、Banner、三栏内容、明暗主题、Swup 页面过渡与 Pagefind 本地搜索。项目使用 Astro 7、TypeScript、MDX Content Collections、Tailwind 构建能力与组件级 CSS，可静态构建并部署到 Cloudflare Pages。
 
 ## 页面
 
-- `/`：通用 AI 产品首页
-- `/game`：游戏 AI / AIGC 定向首页
-- `/agent`：大模型 / AI Agent 定向首页
-- `/auto`：智能汽车 / 场景 AI 定向首页
-- `/projects`：七个项目的可访问筛选展览
+- `/`：Mizuki 三栏作品集首页
+- `/game`：游戏体验与 AI 产品观察
+- `/moments`：真实随想的空状态与后续入口
+- `/stack`：工具链与实践记录
+- `/archive`：项目与成长归档
+- `/projects`：七个真实项目的可访问展览
 - `/projects/[slug]`：MDX 案例详情
 - `/about`、`/resume`、`/credits`、`/404`
 
-四套首页共享 `HomePage`、Hero、项目展、能力、About 与联系组件，只更换 `src/config/site.ts` 的文案、排序、强调色和 SEO。
+首页由 `HeroBanner`、`MainGridLayout`、`ProfileCard`、`ProjectCard` 与 `RightSidebar` 组成；图片缺失时使用本地安全回退。
 
 ## 本地开发
 
@@ -33,10 +34,9 @@ npm run validate
 
 编辑 `src/config/site.ts`：
 
-- `email`：当前是 `your-email@example.com`
-- `url`：当前是 `https://your-domain.com`
+- `email`：当前为空，补充前不生成邮件链接
 - GitHub、所在地、求职状态
-- 四套定向首页的标题、描述与关键词
+- 正式域名：构建或部署时通过 `SITE_URL` 环境变量提供
 
 真实链接缺失时不要填写 `#`。项目 Frontmatter 的 `demoUrl`、`githubUrl`、`documentUrl`、`videoUrl` 均为可选字段，缺失时页面不会显示按钮。
 
@@ -53,13 +53,13 @@ npm run validate
 
 ## 角色与图片
 
-角色路径与尺寸见 `public/images/README.md`。组件在构建时检测本地文件：
+资源路径与尺寸见 `public/images/README.md` 和 `ASSET_CHECKLIST.md`。组件在构建时检测本地文件：
 
-1. 优先使用移动 AVIF / WebP。
-2. 桌面优先 AVIF，WebP 作为兼容回退。
-3. 文件都不存在时，使用 `src/styles/character.css` 的成年女性数字向导轮廓。
+1. Banner 的桌面、1440、960 与移动版本分别检查，只有存在的文件会进入 `srcset`。
+2. 头像缺失时显示 `TQ` 文字占位。
+3. Banner 全部缺失时显示浅色 CSS 渐变；看板娘缺失时不创建图片节点。
 
-项目真实截图缺失时使用不同的 CSS 概念封面；不会请求外链或输出破图。所有正式资源在 `src/data/credits.ts` 登记，并由 `/credits` 展示。
+项目真实截图缺失时使用不同的浅色 CSS 概念封面；不会请求外链或输出破图。计划中的正式资源在 `src/data/assetCredits.ts` 登记，并由 `/credits` 展示当前状态。
 
 生成四张品牌 OG：
 
@@ -80,7 +80,7 @@ node scripts/generate-og.mjs
 - Build output directory：`dist`
 - Node.js：22 或当前 Astro 7 支持版本
 
-`public/_headers` 提供安全响应头与分层缓存；`public/_redirects` 只处理 `/404`，未知路由由 Pages 原生 `404.html` 接管。部署前把 `astro.config.mjs`、`public/robots.txt` 与 `src/config/site.ts` 的占位域名替换为正式域名。
+`public/_headers` 提供安全响应头与分层缓存；`public/_redirects` 处理兼容路由。部署时设置 `SITE_URL` 后，构建会生成 Canonical、Sitemap 与绝对社交分享链接；未设置时不会输出占位域名。
 
 ## 中国大陆访问与性能
 
@@ -93,7 +93,7 @@ node scripts/generate-og.mjs
 
 1. 阅读 `CODEX_PROGRESS.md` 与 `ASSET_CHECKLIST.md`。
 2. 运行 `git status`，不要重新初始化或覆盖已有修改。
-3. 旧站基线位于 `backup-before-rebuild` 分支与提交 `2e189c4`。
+3. 旧站基线位于 `backup-before-rebuild` 分支与提交 `2e189c4`；科技主题备份位于 `backup-tech-theme`，Mizuki 迁移前检查点为 `634f4ef`。
 4. 继续当前未完成阶段，完成后更新进度并提交。
 
 ## 常见排错

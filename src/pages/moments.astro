@@ -1,0 +1,24 @@
+---
+import InnerPageHero from '../components/InnerPageHero.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="AI 随想｜赵天琦" description="模型体验、游戏 AI 场景、Prompt 失败、项目日志与 Agent 产品边界的短记录。">
+  <InnerPageHero eyebrow="DIARY / MOMENTS" title="AI 前沿碎片、项目日志与产品思考" description="这里只发布来自真实项目或实际体验的短记录，不用示例文章填充页面。" />
+  <section class="moments-page section page-shell">
+    <article class="moments-empty panel">
+      <span class="eyebrow">REAL NOTES ONLY</span>
+      <h2>真实记录准备中</h2>
+      <p>当前还没有适合公开的随想文章。后续会从真实项目复盘、Prompt 失败样本和游戏体验观察中逐步整理。</p>
+      <nav aria-label="继续浏览"><a href="/projects/">先看项目案例 →</a><a href="/game/">查看游戏观察说明 →</a></nav>
+    </article>
+  </section>
+</BaseLayout>
+
+<style>
+  .moments-page { max-width: 1020px; }
+  .moments-empty { padding: clamp(1.6rem, 5vw, 4rem); text-align: center; }
+  .moments-empty h2 { margin: 0.7rem 0; font-size: clamp(2rem, 5vw, 4rem); letter-spacing: -0.05em; }
+  .moments-empty p { max-width: 680px; margin: 0 auto; color: var(--text-secondary); line-height: 1.85; }
+  .moments-empty nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin-top: 1.5rem; color: var(--primary-strong); font-size: 0.78rem; font-weight: 700; }
+</style>
