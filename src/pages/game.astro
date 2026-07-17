@@ -4,27 +4,36 @@ import InnerPageHero from '../components/InnerPageHero.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const observations = (await getCollection('game')).filter((item) => !item.data.draft);
-const fields = ['游戏名称', '当前体验状态', '主要体验模块', '最喜欢的产品设计', '当前体验痛点', '可引入 AI 的场景', 'AI 风险和边界', '观察更新时间'];
+const fields = [
+  { label: '游戏体验记录', help: '只记录实际体验过的游戏、可确认版本与体验范围，不补写时长或进度。' },
+  { label: '核心体验与角色／叙事感受', help: '描述核心体验，以及角色表达、叙事节奏或情感连接带来的具体感受。' },
+  { label: '产品设计观察', help: '观察任务、成长、社交、内容生产或长期留存等具体机制。' },
+  { label: '玩家行为路径与系统反馈', help: '记录玩家从目标到行动再到反馈的路径，以及仍存在的体验问题。' },
+  { label: 'AI 应用机会（探索方向）', help: '先说明为什么需要 AI，再描述可能的输入、输出、人工节点与价值假设。' },
+  { label: '产品思考', help: '区分体验事实、原因判断与产品假设，并说明对玩家关系可能产生的影响。' },
+  { label: '风险边界与验证方法', help: '覆盖误导、沉迷、版权、隐私等风险，并明确需要的样本、对照和反馈。' },
+  { label: '仍需观察的问题／更新时间', help: '保留尚不能下结论的问题；内容真实变化后再更新日期。' },
+];
 ---
 
-<BaseLayout title="二次元游戏体验与 AI 产品观察｜赵天琦" description="从真实游戏体验出发，记录产品设计、体验痛点、AI 场景与风险边界。">
-  <InnerPageHero eyebrow="GAME CULTURE / PRODUCT NOTES" title="二次元游戏体验与 AI 产品观察" description="从具体体验出发，再讨论 AI 是否值得进入场景。这里不记录虚构时长、氪金、段位或角色练度。" />
+<BaseLayout title="游戏产品观察库｜赵天琦" description="从真实游戏体验出发，记录核心体验、产品设计、AI 应用机会与产品思考。">
+  <InnerPageHero eyebrow="GAME CULTURE / PRODUCT NOTES" title="游戏产品观察库" description="从可确认的体验事实出发，拆解产品机制，再判断 AI 是否值得进入场景；这里不记录虚构时长、充值、段位或账号数据。" />
   <section class="game-page section page-shell">
     {
       observations.length ? (
         <div class="game-list">
-          {observations.map((item) => <article class="panel"><span class="eyebrow">{item.data.status}</span><h2>{item.data.game}</h2><p>{item.data.favoriteDesign}</p></article>)}
+          {observations.map((item) => <article class="game-entry panel"><header><span class="eyebrow">{item.data.status}</span><time>{item.data.updated.toLocaleDateString('zh-CN')}</time></header><h2>{item.data.game}</h2><p>{item.data.favoriteDesign}</p><div class="chip-row">{item.data.modules.map((module) => <span class="chip">{module}</span>)}</div><div class="game-entry__grid"><section><h3>体验与产品观察</h3><ul>{item.data.painPoints.map((point) => <li>{point}</li>)}</ul></section><section><h3>AI 应用机会（探索方向）</h3><ul>{item.data.aiScenarios.map((scene) => <li>{scene}</li>)}</ul></section><section><h3>产品思考与验证</h3><ul>{item.data.risks.map((risk) => <li>{risk}</li>)}</ul></section></div></article>)}
         </div>
       ) : (
         <div class="game-empty panel">
           <div class="game-empty__art" aria-hidden="true"><span>◇</span><i></i><i></i></div>
-          <div><span class="eyebrow">REAL EXPERIENCE FIRST</span><h2>待补充真实体验记录</h2><p>当前仓库没有可验证的个人游戏体验数据，因此暂不展示具体游戏、时长或进度。内容模板已经建立，后续只需填写真实观察并解除草稿状态。</p></div>
+          <div><span class="eyebrow">REAL EXPERIENCE FIRST</span><h2>真实游戏产品观察尚未发布</h2><p>当前没有达到公开标准的可核验观察记录，因此不展示具体游戏、时长、进度或账号信息。下方保留统一观察方法，后续只在真实体验与产品判断可以清楚区分时发布内容。</p></div>
         </div>
       )
     }
     <section class="game-template panel">
-      <header><span class="eyebrow">OBSERVATION TEMPLATE</span><h2>一条观察应该包含什么？</h2></header>
-      <ol>{fields.map((field, index) => <li><span>{String(index + 1).padStart(2, '0')}</span><strong>{field}</strong><p>待补充真实体验记录</p></li>)}</ol>
+      <header><span class="eyebrow">OBSERVATION TEMPLATE</span><h2>从体验事实到产品机会判断</h2></header>
+      <ol>{fields.map((field, index) => <li><span>{String(index + 1).padStart(2, '0')}</span><strong>{field.label}</strong><p>{field.help}</p></li>)}</ol>
       <aside><strong>图片原则</strong><p>仅使用用户自己的合法截图、原创抽象封面或授权清晰的素材；不使用官方角色资产包装个人品牌。</p></aside>
     </section>
   </section>
@@ -32,6 +41,15 @@ const fields = ['游戏名称', '当前体验状态', '主要体验模块', '最
 
 <style>
   .game-page { display: grid; gap: 1rem; }
+  .game-list { display: grid; gap: 1rem; }
+  .game-entry { padding: clamp(1.4rem, 4vw, 2.5rem); }
+  .game-entry header { display: flex; justify-content: space-between; gap: 1rem; color: var(--text-muted); font-size: .65rem; }
+  .game-entry h2 { margin: .7rem 0; font-size: clamp(1.8rem, 4vw, 3.2rem); }
+  .game-entry > p { color: var(--text-secondary); line-height: 1.8; }
+  .game-entry__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; margin-top: 1.4rem; background: var(--border); }
+  .game-entry__grid section { padding: 1rem; background: var(--surface-solid); }
+  .game-entry__grid h3 { margin: 0 0 .7rem; font-size: .85rem; }
+  .game-entry__grid ul { padding-left: 1rem; margin: 0; color: var(--text-secondary); font-size: .75rem; line-height: 1.7; }
   .game-empty { display: grid; grid-template-columns: 220px 1fr; gap: clamp(1.5rem, 4vw, 4rem); align-items: center; padding: clamp(1.5rem, 4vw, 3rem); }
   .game-empty__art { position: relative; display: grid; aspect-ratio: 1; place-items: center; overflow: hidden; border-radius: 38% 62% 45% 55%; background: linear-gradient(145deg, var(--primary-soft), #eadff6 55%, #f8e0e6); color: var(--violet); font-size: 2rem; }
   .game-empty__art i { position: absolute; width: 50%; height: 50%; border: 1px solid rgba(125, 113, 181, .25); rotate: 45deg; }
@@ -45,5 +63,6 @@ const fields = ['游戏名称', '当前体验状态', '主要体验模块', '最
   .game-template li p { grid-column: 2; margin: 0; font-size: 0.75rem; }
   .game-template aside { margin-top: 1.5rem; padding: 1rem; border-left: 3px solid var(--mint); background: color-mix(in srgb, var(--mint) 10%, transparent); }
   .game-template aside p { margin: 0.45rem 0 0; font-size: 0.78rem; }
+  @media (max-width: 760px) { .game-entry__grid { grid-template-columns: 1fr; } }
   @media (max-width: 680px) { .game-empty { grid-template-columns: 1fr; } .game-empty__art { max-width: 180px; } .game-template ol { grid-template-columns: 1fr; } }
 </style>

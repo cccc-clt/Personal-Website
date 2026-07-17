@@ -32,7 +32,7 @@ const structuredData = {
     <header class="case-hero">
       <div class="page-shell case-hero__grid">
         <div>
-          <div class="case-hero__meta"><StatusBadge status={project.data.status} /><span>{project.data.index}</span><time>{updated}</time></div>
+          <div class="case-hero__meta"><StatusBadge status={project.data.status} /><span>{project.data.index}</span><span>内容校对 · <time>{updated}</time></span></div>
           <h1>{project.data.title}</h1>
           <p class="case-hero__codename">视觉代号 · {project.data.codename}</p>
           <p class="case-hero__summary">{project.data.summary}</p>
@@ -44,19 +44,20 @@ const structuredData = {
 
     <div class="case-layout page-shell section">
       <aside class="case-sidebar panel">
-        <dl><div><dt>我的角色</dt><dd>{project.data.role}</dd></div><div><dt>项目阶段</dt><dd>{project.data.period}</dd></div><div><dt>目标用户</dt><dd>{project.data.targetUser}</dd></div><div><dt>技术与工具</dt><dd>{project.data.techStack.join(' · ')}</dd></div></dl>
+        <div class="case-source"><span>内容来源</span><p>{project.data.sourceNote}</p></div>
+        <dl><div><dt>我的角色</dt><dd>{project.data.role}</dd></div><div><dt>当前状态</dt><dd>{project.data.period}</dd></div><div><dt>目标用户</dt><dd>{project.data.targetUser}</dd></div><div><dt>技术方案与工具</dt><dd>{project.data.techStack.join(' · ')}</dd></div></dl>
         <nav><a href="/projects/">← 返回全部项目</a>{project.data.githubUrl && <a href={project.data.githubUrl} target="_blank" rel="noreferrer">GitHub ↗</a>}</nav>
       </aside>
 
       <div class="case-content panel">
-        <section><span class="case-index">01 / PROJECT OVERVIEW</span><h2>项目概览与核心问题</h2><div class="callout callout--note"><strong>项目定位</strong><p>{project.data.description}</p></div><div class="case-columns"><div><h3>背景与目标用户</h3><p>{project.data.targetUser}</p></div><div><h3>核心问题</h3><p>{project.data.problem}</p></div><div><h3>为什么使用 AI</h3><p>{project.data.aiNeeded}</p></div><div><h3>项目目标</h3><p>{project.data.goal}</p></div></div></section>
+        <section><span class="case-index">01 / PROJECT OVERVIEW</span><h2>项目定位、用户问题与产品目标</h2><div class="callout callout--note"><strong>项目定位</strong><p>{project.data.description}</p></div><div class="case-columns"><div><h3>目标用户与使用场景</h3><p>{project.data.targetUser}</p></div><div><h3>用户问题</h3><p>{project.data.problem}</p></div><div><h3>为什么需要 AI</h3><p>{project.data.aiNeeded}</p></div><div><h3>产品目标</h3><p>{project.data.goal}</p></div></div></section>
         <section><span class="case-index">02 / MY ROLE</span><h2>我的职责</h2><ol class="number-list">{project.data.responsibilities.map((item, index) => <li><span>{String(index + 1).padStart(2, '0')}</span><p>{item}</p></li>)}</ol></section>
-        <section><span class="case-index">03 / PRODUCT SOLUTION</span><h2>产品方案与工作流</h2><div class="callout callout--tip"><strong>核心产品决策</strong><p>{project.data.solution}</p></div><ol class="flow-list">{project.data.flow.map((item, index) => <li><span>{String(index + 1).padStart(2, '0')}</span><strong>{item}</strong></li>)}</ol></section>
-        <section><span class="case-index">04 / AI DESIGN</span><h2>Prompt、RAG 或 Agent 设计</h2><ul class="plain-list">{project.data.aiDesign.map((item) => <li>{item}</li>)}</ul><h3>人工确认节点</h3><div class="chip-row">{project.data.humanCheckpoints.map((item) => <span class="chip">{item}</span>)}</div></section>
-        <section><span class="case-index">05 / EVALUATION</span><h2>测试方法与评测体系</h2><div class="metric-grid">{project.data.evaluationMetrics.map((item, index) => <div><span>E{String(index + 1).padStart(2, '0')}</span><p>{item}</p></div>)}</div></section>
+        <section><span class="case-index">03 / PRODUCT SOLUTION</span><h2>产品方案与技术工作流</h2><div class="callout callout--tip"><strong>核心产品决策</strong><p>{project.data.solution}</p></div><ol class="flow-list">{project.data.flow.map((item, index) => <li><span>{String(index + 1).padStart(2, '0')}</span><strong>{item}</strong></li>)}</ol></section>
+        <section><span class="case-index">04 / AI DESIGN</span><h2>Prompt、RAG 与 Agent 技术方案</h2><ul class="plain-list">{project.data.aiDesign.map((item) => <li>{item}</li>)}</ul><h3>人工确认节点</h3><div class="chip-row">{project.data.humanCheckpoints.map((item) => <span class="chip">{item}</span>)}</div></section>
+        <section><span class="case-index">05 / EVALUATION</span><h2>测试方法与 Evaluation focus</h2><p class="section-note">以下内容是项目中记录或计划观察的评测维度，用于指导验证与迭代，不代表已经取得对应结果。</p><div class="metric-grid">{project.data.evaluationMetrics.map((item, index) => <div><span>E{String(index + 1).padStart(2, '0')}</span><p>{item}</p></div>)}</div></section>
         <section><span class="case-index">06 / FAILURE</span><h2>失败案例、边界与风险</h2><div class="callout callout--warning"><strong>模型边界与风险</strong><p>{project.data.safety.join('；')}</p></div><div class="case-columns"><div><h3>失败类型</h3><ul>{project.data.failures.map((item) => <li>{item}</li>)}</ul></div><div><h3>异常与边缘场景</h3><ul>{project.data.edgeCases.map((item) => <li>{item}</li>)}</ul></div></div></section>
         <section><span class="case-index">07 / ITERATION</span><h2>迭代记录</h2><div class="iteration-list">{project.data.iterations.map((item) => <article><small>{item.stage}</small><h3>{item.problem}</h3><dl><div><dt>分析</dt><dd>{item.analysis}</dd></div><div><dt>改动</dt><dd>{item.change}</dd></div><div><dt>结果</dt><dd>{item.result}</dd></div><div><dt>下一步</dt><dd>{item.next}</dd></div></dl></article>)}</div></section>
-        <section><span class="case-index">08 / PRODUCT NOTES</span><h2>产品反思与下一步</h2><blockquote>{project.data.reflection}</blockquote><ul class="plain-list">{project.data.nextSteps.map((item) => <li>{item}</li>)}</ul><div class="mdx-content prose"><Content /></div></section>
+        <section><span class="case-index">08 / PRODUCT NOTES</span><h2>产品思考与下一步</h2><blockquote>{project.data.reflection}</blockquote><ul class="plain-list">{project.data.nextSteps.map((item) => <li>{item}</li>)}</ul><div class="mdx-content prose"><Content /></div></section>
         {project.data.githubUrl && <GitHubCard url={project.data.githubUrl} title={project.data.title} description={project.data.description} />}
       </div>
     </div>
@@ -74,6 +75,9 @@ const structuredData = {
   .case-hero :global(.project-cover) { min-height: 300px; }
   .case-layout { display: grid; grid-template-columns: minmax(220px, .65fr) minmax(0, 2fr); gap: 1rem; align-items: start; }
   .case-sidebar { position: sticky; top: 96px; padding: 1.25rem; }
+  .case-source { padding: .9rem; margin-bottom: .4rem; border-radius: 12px; background: var(--primary-soft); }
+  .case-source span { color: var(--primary-strong); font-family: var(--font-mono); font-size: .58rem; letter-spacing: .08em; }
+  .case-source p { margin: .4rem 0 0; color: var(--text-secondary); font-size: .7rem; line-height: 1.65; }
   .case-sidebar dl { margin: 0; }
   .case-sidebar dl div { padding: .9rem 0; border-top: 1px solid var(--border); }
   .case-sidebar dt { color: var(--text-muted); font-size: .63rem; }
@@ -87,6 +91,7 @@ const structuredData = {
   .case-content h2 { margin: .65rem 0 1.8rem; font-size: clamp(1.8rem, 4vw, 3.6rem); letter-spacing: -.05em; }
   .case-content h3 { margin: 1.4rem 0 .7rem; }
   .case-content p, .case-content li, .case-content dd { color: var(--text-secondary); line-height: 1.85; }
+  .section-note { max-width: 720px; margin: -1rem 0 1.4rem; font-size: .78rem; }
   .case-columns { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
   .case-columns > div { padding: 1.1rem; border: 1px solid var(--border); border-radius: 14px; background: var(--surface-soft); }
   .case-columns p { margin: 0; font-size: .8rem; }

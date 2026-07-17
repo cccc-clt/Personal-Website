@@ -2,81 +2,63 @@
 index: 'PROJECT_002'
 title: 'Mobile UIAgent Evaluation Lab'
 englishTitle: 'Mobile UIAgent Evaluation Lab'
-codename: '镜界行动'
-summary: '把 Agent 的感知、规划与执行过程拆开，定位失败究竟发生在哪一层。'
-description: '面向移动端 UI Agent 的任务设计、执行结果分析与能力边界评测平台。'
+codename: '界面巡航'
+summary: '用标准任务、错误分类和确定性模拟整理移动 UI Agent 的评测方法。'
+description: '面向移动 UI Agent 的 Streamlit Mock 评测平台；它用于验证评测产品结构，不执行真实设备操作。'
 updated: 2026-07-17
-status: 'TESTED'
-categories: ['UI Agent', 'Agent 评测', '移动端']
-targetTracks: ['general', 'agent', 'auto']
-role: '任务设计 / 失败分析 / 产品评测'
-period: '2026 · 已完成阶段测试'
-techStack: ['UI Agent', 'Evaluation', 'Python', 'Task Design', 'Product Metrics']
-highlights: ['任务完成率', '操作步骤分析', '异常类型分类', '能力边界图谱']
+status: 'ITERATING'
+categories: ['AI Agent', '产品评测', 'Mobile UI']
+targetTracks: ['general', 'agent']
+role: '评测产品设计 / 数据结构 / 原型开发'
+period: '公开仓库 · Mock 评测原型'
+techStack: ['Python', 'Streamlit', 'Pandas', 'Plotly', 'JSON', 'CSV', 'Deterministic Mock']
+highlights: ['7 类任务', '43 个标准用例', '8 项评测指标', '8 类错误标签']
 responsibilities:
-  - '建立覆盖信息获取、跨页面操作与异常恢复的测试任务集'
-  - '定义任务完成、步骤效率、错误恢复和人工接管指标'
-  - '按感知、规划、执行三个层级归因失败'
-  - '整理能力边界与下一轮产品优化优先级'
-targetUser: '正在验证移动端操作 Agent 可用性与上线边界的产品、算法和测试团队。'
-goal: '从最终成功或失败，深入到可定位、可复现、可推动产品改进的步骤级证据。'
-problem: '只看任务最终结果，无法解释 Agent 在哪个步骤因为什么信息缺失而偏离目标，也难以指导下一轮优化。'
-aiNeeded: 'UI Agent 要在不断变化的页面中识别状态、规划动作并执行，传统固定脚本无法覆盖其开放性与不确定性。'
-solution: '为每类任务建立标准起点、完成条件和风险约束，记录关键步骤与异常类型，再按感知、规划、执行三层生成结论。'
-flow:
-  [
-    '定义任务与成功条件',
-    '准备初始页面状态',
-    '执行并记录动作',
-    '截取关键节点',
-    '判断完成结果',
-    '三层归因',
-    '形成优化优先级',
-  ]
+  - '整理移动 UI Agent 的任务分类与用例结构'
+  - '定义指标、错误标签和结果记录字段'
+  - '设计可复现的确定性 Mock 运行逻辑'
+  - '完成结果看板与报告导出入口'
+targetUser: '希望在接入真实执行器前，先验证 UI Agent 评测流程与数据结构的产品和评测人员。'
+goal: '让不同 Agent 配置能够在同一套任务、指标和错误口径下进行结构化观察。'
+problem: 'UI Agent 任务跨应用、多步骤且错误类型复杂，若没有标准用例和统一标签，结果很难复盘。'
+aiNeeded: 'Agent 的规划、定位与执行会形成连续链路，需要把最终结果和中间错误都纳入评测设计。'
+solution: '用标准 Case 库、确定性 Mock 运行器、过程记录、八项指标和八类错误标签先验证评测产品结构，同时明确模拟结果不代表真实 Agent 能力。'
+flow: ['选择 Agent 配置', '选择标准任务', '运行确定性 Mock', '记录步骤与结果', '聚合指标', '查看错误分布', '导出报告']
 aiDesign:
-  - '输入包括任务目标、初始页面状态、允许操作范围与完成条件'
-  - '输出包括动作序列、关键页面状态、完成结果与失败标签'
-  - '高风险或不可逆操作设置人工确认节点'
-  - '重复执行用于识别环境差异与稳定性问题'
-humanCheckpoints: ['验证任务成功条件', '确认高风险动作', '复核失败归因']
-edgeCases: ['系统弹窗遮挡', '页面延迟加载', '跨应用状态丢失', '按钮同名或位置变化']
-safety: ['不可逆操作默认禁止', '超出允许范围立即停止', '保留人工接管入口']
-evaluationMetrics:
-  [
-    '任务完成度',
-    '操作步数',
-    '恢复能力',
-    '稳定性',
-    '响应时间',
-    '人工接管率',
-    '归因清晰度',
-    '安全性',
-    '用户体验',
-  ]
-failures: ['长任务只保留最终状态', '环境变化被误判为规划失败', '单次成功被误认为稳定可用']
+  - '任务库覆盖七类移动端操作场景'
+  - 'Mock 运行由固定输入产生可复现结果，便于验证页面和统计逻辑'
+  - '指标与错误标签同时呈现，避免只看总成功率'
+  - '多套 Agent 配置用于验证比较界面，不代表真实模型基准'
+humanCheckpoints: ['审核任务定义', '复核错误标签', '判断 Mock 结构能否迁移到真实执行器']
+edgeCases: ['页面状态变化', '目标元素不存在', '步骤超限', '权限或登录前置条件缺失']
+safety: ['不把 Mock 结果描述为真实设备实测', '不执行真实账户操作', '报告需注明模拟数据来源']
+evaluationMetrics: ['任务成功率', '平均步骤数', '平均耗时', '操作准确率', '元素定位准确率', '恢复率', '安全违规率', '稳定性']
+failures: ['只记录最终成败', '模拟结果被误解为真实模型能力', '任务前置条件没有被写入用例']
 iterations:
-  - stage: 'ITERATION_01'
-    problem: '长任务失败后只能看到最终状态，定位成本高。'
-    analysis: '缺少步骤级记录和失败阶段标签。'
-    change: '增加关键节点快照与感知、规划、执行三级归因。'
-    result: '主要异常可以归入明确阶段，并对应到不同的修复策略。'
-    next: '扩充环境变化与弹窗干扰测试。'
-reflection: 'Agent 评测不能只交付成功率，还要交付一张团队可以行动的失败地图。'
-nextSteps: ['加入多设备环境差异', '补充人工接管体验', '沉淀回归测试集']
-cover: '/images/projects/uiagent/cover.webp'
-gallery: ['/images/projects/uiagent/task-board.webp', '/images/projects/uiagent/failure-map.webp']
+  - stage: 'CURRENT_REPOSITORY'
+    problem: '接入真实设备执行器之前，评测页面、用例和统计口径缺少可运行载体。'
+    analysis: '先用确定性模拟可以低成本验证产品结构，但必须清晰标注数据性质。'
+    change: '仓库提供标准 Case、模拟记录、Agent 配置、指标看板与报告导出。'
+    result: '当前公开仓库已形成可运行的 Mock 评测平台，不包含真实设备控制。'
+    next: '未来接入真实执行日志时，保留相同字段并新增环境与版本信息。'
+reflection: '评测原型可以先验证方法，但模拟结果与真实 Agent 能力必须严格区分。'
+nextSteps: ['接入真实执行器日志', '补充环境与版本字段', '验证错误标签的一致性']
+gallery: []
 featured: true
 githubUrl: 'https://github.com/cccc-clt/mobile-uiagent-evaluation-lab'
-order: { general: 3, game: 8, agent: 2, auto: 2 }
+sourceNote: '已依据公开 GitHub 仓库 cccc-clt/mobile-uiagent-evaluation-lab 的 README 校对；页面明确标注为 Mock 评测原型。'
+order: { general: 2, game: 7, agent: 2, auto: 7 }
 ---
 
-## 产品判断
+## 为什么先做 Mock
 
-UI Agent 的失败不是一个结果标签，而是一条可被逐段理解的因果链。评测设计因此围绕“可观察”展开。
+真实移动端执行涉及设备、应用版本、账号和权限。当前仓库先验证评测产品本身：任务如何定义、过程如何记录、错误如何归类、结果如何比较。
 
-## 证据与产物
+## 可核验内容
 
-- 真实移动任务分层与成功条件
-- 步骤级轨迹和关键页面快照
-- 感知 / 规划 / 执行三级失败地图
-- 风险动作与人工接管规则
+- 七类任务、四十三个标准 Case
+- 八项评测指标和八类错误标签
+- 六套用于界面比较的 Agent 配置
+- 一百二十五条以上模拟记录，用于验证统计与筛选
+
+以上数量来自仓库 README，记录均为模拟数据，不代表真实设备或真实模型的测试结论。

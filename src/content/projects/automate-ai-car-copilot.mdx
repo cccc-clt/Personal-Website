@@ -1,82 +1,57 @@
 ---
-index: 'PROJECT_004'
-title: 'AutoMate AI Car Copilot'
-englishTitle: 'AutoMate AI Car Copilot'
-codename: '星舱协议'
-summary: '在座舱问答、建议与控制之间建立清晰分流，让智能始终留有安全边界。'
-description: '面向智能汽车和智能座舱场景的 AI 助手产品原型。'
+index: 'PROJECT_003'
+title: 'Automate AI Car Copilot'
+englishTitle: 'Automate AI Car Copilot'
+codename: '座舱协律'
+summary: '把座舱问答、意图理解、场景 Agent、反馈与安全规则放进一个 Mock 原型。'
+description: '基于 Python 与 Streamlit 的智能座舱 AI Copilot 原型；所有车辆控制均为 Mock，不连接真实车辆。'
 updated: 2026-07-17
 status: 'ITERATING'
-categories: ['Automotive AI', '场景 Agent', '智能座舱']
+categories: ['智能座舱', 'AI Agent', '产品评测']
 targetTracks: ['general', 'agent', 'auto']
-role: '场景产品设计 / 安全边界 / 原型开发'
-period: '2026 · 原型迭代中'
-techStack: ['Automotive AI', 'Agent', 'RAG', 'Safety Design', 'Product Prototype']
-highlights: ['场景识别', '指令澄清', '高风险二次确认', '用户反馈闭环']
+role: '产品流程 / Agent 设计 / 评测与安全'
+period: '公开仓库 · Mock 原型'
+techStack: ['Python', 'Streamlit', 'OpenAI-compatible API', 'LangChain', 'ChromaDB', 'JSON State', 'LLM-as-Judge']
+highlights: ['RAG 座舱问答', '8 字段意图解析', '4 类场景 Agent', '3 级安全规则']
 responsibilities:
-  - '梳理用车问答、座舱控制和主动服务的典型场景'
-  - '定义模糊指令澄清与高风险操作确认规则'
-  - '设计 RAG 问答、场景 Agent 与用户反馈闭环'
-  - '完成可交互产品原型和异常边界测试'
-targetUser: '希望自然获取用车知识、控制座舱功能并管理复杂场景的驾驶者与乘客。'
-goal: '在不扩大驾驶风险的前提下，降低座舱功能寻找与复杂指令表达的负担。'
-problem: '自然语言指令经常缺少对象、范围或时机；驾驶环境中，错误理解和冗长交互都会放大风险。'
-aiNeeded: '座舱交互同时涉及自然语言理解、车辆状态、个体偏好和实时场景，需要模型处理表达差异，但执行层必须被规则约束。'
-solution: '按问答、建议、控制三类意图分流；模糊指令先澄清，高风险动作二次确认，知识问答通过可追溯 RAG 返回。'
-flow:
-  [
-    '识别当前场景',
-    '理解与拆分意图',
-    '判断问答/建议/控制',
-    '检索或生成候选',
-    '权限与风险检查',
-    '确认或执行',
-    '收集反馈',
-  ]
+  - '拆解座舱问答、意图理解和场景执行流程'
+  - '定义车辆状态、指令参数与反馈结构'
+  - '设计测试集、Judge 维度和安全分级'
+  - '通过 Mock 控制验证人机确认与拒绝路径'
+targetUser: '需要验证智能座舱 Copilot 产品流程、评测方法和安全边界的产品团队。'
+goal: '在不连接真实车辆的前提下，验证知识问答、意图解析、场景编排和安全确认。'
+problem: '座舱请求同时涉及知识、车辆状态、控制意图和安全风险，单轮聊天难以表达完整产品闭环。'
+aiNeeded: '自然语言请求需要被解析成结构化意图，并结合知识、状态和安全规则决定回答、确认或拒绝。'
+solution: '在 Streamlit Mock 原型中依次读取车辆状态、解析八字段意图、调用 RAG 或场景 Agent，再由三级安全规则决定直接响应、二次确认或拒绝。'
+flow: ['接收用户请求', '读取 Mock 车辆状态', '解析结构化意图', '检索座舱知识', '执行安全分级', '确认或模拟执行', '记录反馈与评测']
 aiDesign:
-  - '输入包括用户指令、座舱状态、车辆知识、当前场景与权限'
-  - '输出可能是回答、澄清问题、候选动作或确认请求'
-  - 'RAG 仅用于知识回答，车辆控制必须经过规则与权限校验'
-  - '低置信度、状态冲突或信息不足时优先澄清'
-humanCheckpoints: ['确认高风险动作', '处理多用户冲突', '决定主动服务是否开启']
-edgeCases: ['一句话包含多个动作', '驾驶中途场景变化', '多名乘员发出冲突指令', '车辆状态不可用']
-safety: ['高风险动作不由模型直接执行', '驾驶中减少交互轮次', '控制权限与知识问答隔离']
-evaluationMetrics:
-  [
-    '意图识别',
-    '澄清效率',
-    '任务完成度',
-    '稳定性',
-    '响应时间',
-    '错误恢复',
-    '可解释性',
-    '安全性',
-    '用户体验',
-  ]
-failures: ['复合指令遗漏范围', '回答与控制职责混淆', '状态冲突仍继续执行']
+  - '八字段结构化意图用于承接动作、对象、参数与上下文'
+  - '四类场景 Agent 组织不同座舱任务'
+  - 'RAG 回答返回本地知识证据'
+  - '五维 LLM-as-Judge 用于辅助评测，不替代人工安全判断'
+humanCheckpoints: ['确认高风险指令', '复核意图解析', '审核安全规则与测试集']
+edgeCases: ['车辆状态不允许操作', '意图字段缺失', '知识库没有依据', '用户连续修改指令']
+safety: ['所有车辆控制仅为 Mock', '三级规则决定直接响应、二次确认或拒绝', '不得用于真实驾驶控制']
+evaluationMetrics: ['意图解析正确性', '回答相关性', '场景完成度', '安全规则符合度', '回复清晰度']
+failures: ['把自然语言直接映射为控制', '忽略当前车辆状态', '模型回答越过安全规则']
 iterations:
-  - stage: 'ITERATION_02'
-    problem: '复合座舱动作容易遗漏范围或执行顺序。'
-    analysis: '意图解析未显式拆分对象、区域和顺序。'
-    change: '增加结构化槽位、冲突检测与执行前确认摘要。'
-    result: '复合指令能拆分为候选动作，并在执行前暴露冲突。'
-    next: '补充驾驶中断与多用户指令冲突场景。'
-reflection: '汽车 AI 产品的第一原则不是“更像人”，而是在高动态环境中让能力、权限和责任始终清楚。'
-nextSteps: ['扩充座舱状态模拟', '验证驾驶中断策略', '建立安全场景回归集']
-cover: '/images/projects/automate/cover.webp'
-gallery: ['/images/projects/automate/home.webp', '/images/projects/automate/confirm.webp']
+  - stage: 'CURRENT_REPOSITORY'
+    problem: '知识问答、座舱控制和评测容易被拆成互不连通的 Demo。'
+    analysis: '需要一个共同状态和清晰的安全决策顺序。'
+    change: '仓库将 RAG、意图解析、四类 Agent、反馈池和 Judge 评测整合到 Streamlit。'
+    result: '当前公开仓库提供完整 Mock 流程；车辆状态与控制均为模拟。'
+    next: '继续扩展异常状态和人工安全复核样本。'
+reflection: '智能座舱 AI 的产品价值不仅是听懂指令，更在于知道什么时候必须确认或拒绝。'
+nextSteps: ['扩展异常车辆状态', '复核安全规则覆盖', '区分模型错误与规则错误']
+gallery: []
 featured: true
 githubUrl: 'https://github.com/cccc-clt/automate-ai-car-copilot'
-order: { general: 4, game: 9, agent: 6, auto: 1 }
+sourceNote: '已依据公开 GitHub 仓库 cccc-clt/automate-ai-car-copilot 的 README 校对；所有车辆控制均标注为 Mock。'
+order: { general: 3, game: 6, agent: 3, auto: 1 }
 ---
 
-## 产品判断
+## 仓库事实
 
-座舱 Agent 不能把“理解到了”直接等同于“可以执行”。问答、建议与控制被分开设计，确保每类输出承担恰当的责任。
+公开仓库包含 RAG 座舱问答、八字段意图解析、四类场景 Agent、由反馈整理的需求池、十八题测试集、五维 LLM-as-Judge 和三级安全规则。
 
-## 证据与产物
-
-- 座舱场景与意图分流图
-- 模糊指令澄清规则
-- 高风险动作二次确认原型
-- 车辆知识 RAG 与异常边界测试
+这些内容用于验证产品流程和评测结构。页面不宣称项目已经接入真实车辆，也不把测试集规模当作业务指标。

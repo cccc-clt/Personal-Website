@@ -13,19 +13,19 @@ const hasImage = existsSync(join(process.cwd(), 'public/assets/images/about.webp
 ---
 
 <BaseLayout title="关于赵天琦｜游戏 AI 与 AI 产品实践" description={about.data.description}>
-  <InnerPageHero eyebrow="ABOUT / TIANQI.Z" title="从交通工程，到游戏 AI 与产品实践" description="我的路径并不笔直，但它让我同时重视复杂系统、人的感受、产品边界和可以验证的证据。" />
+  <InnerPageHero eyebrow="ABOUT / TIANQI.Z" title="从复杂系统出发，走向游戏 AI 产品" description="交通工程让我理解系统、数据与流程；AI 实践让我把这些方法转化为需求判断、快速原型和可验证的产品迭代。" />
   <section class="about-page section page-shell">
     <aside class="about-profile panel">
       <div class="about-profile__image">
         {hasImage ? <img src="/assets/images/about.webp" width="1600" height="1000" alt="原创成年女性研究者在窗边整理产品笔记的插画" loading="lazy" decoding="async" /> : <span aria-hidden="true">◇</span>}
       </div>
       <h2>{siteConfig.name}</h2>
-      <p>{siteConfig.school} · {siteConfig.major}</p>
-      <dl><div><dt>当前方向</dt><dd>游戏 AI / Agent / 产品评测</dd></div><div><dt>当前状态</dt><dd>{siteConfig.availability}</dd></div><div><dt>个人签名</dt><dd>{siteConfig.signature}</dd></div></dl>
-      <div class="about-profile__links"><a href="/projects/">查看项目</a><a href="/resume/">在线简历</a></div>
+      <p>AI Product Explorer</p>
+      <dl><div><dt>当前方向</dt><dd>游戏 AI 产品 / AI 应用产品 / AI Agent</dd></div><div><dt>当前状态</dt><dd>{siteConfig.availability}</dd></div><div><dt>个人签名</dt><dd>{siteConfig.signature}</dd></div></dl>
+      <div class="about-profile__links"><a href="/projects/">查看项目</a><a href={siteConfig.github} target="_blank" rel="noreferrer">GitHub ↗</a><a href="/resume/">在线简历</a></div>
     </aside>
     <article class="about-content panel prose"><Content /></article>
-    <section class="about-method panel"><header><span class="eyebrow">PRODUCT METHOD</span><h2>需求—原型—评测—迭代</h2></header><div>{abilities.map((ability) => <article><span>{ability.index}</span><h3>{ability.title}</h3><p>{ability.description}</p></article>)}</div></section>
+    <section class="about-method panel"><header><span class="eyebrow">PRODUCT METHOD</span><h2>从需求拆解到评测迭代</h2></header><div>{abilities.map((ability) => <article><span>{ability.index}</span><h3>{ability.title}</h3><p>{ability.description}</p></article>)}</div></section>
   </section>
 </BaseLayout>
 
@@ -40,7 +40,7 @@ const hasImage = existsSync(join(process.cwd(), 'public/assets/images/about.webp
   .about-profile dl div { padding: .8rem 0; border-top: 1px solid var(--border); }
   .about-profile dt { color: var(--text-muted); font-size: .62rem; }
   .about-profile dd { margin: .3rem 0 0; font-size: .75rem; line-height: 1.65; }
-  .about-profile__links { display: grid; grid-template-columns: repeat(2, 1fr); gap: .5rem; }
+  .about-profile__links { display: grid; gap: .5rem; }
   .about-profile__links a { padding: .65rem; border: 1px solid var(--border); border-radius: 11px; color: var(--primary-strong); font-size: .72rem; text-align: center; }
   .about-content { padding: clamp(1.6rem, 5vw, 4rem); }
   .about-content :global(h2) { margin: 3.4rem 0 1.2rem; padding-top: 1rem; border-top: 1px solid var(--border); font-size: clamp(1.55rem, 3.5vw, 2.6rem); letter-spacing: -.04em; }

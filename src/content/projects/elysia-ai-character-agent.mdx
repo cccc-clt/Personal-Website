@@ -1,82 +1,59 @@
 ---
-index: 'PROJECT_007'
-title: 'Elysia AI 角色 Agent'
-englishTitle: 'Elysia AI Character Agent'
-codename: '记忆回廊'
-summary: '探索长期记忆、角色一致性与陪伴边界如何在同一个 Agent 中协同。'
-description: '支持多轮记忆与角色一致性的 AI 角色 Agent 实验项目。'
+index: 'PROJECT_006'
+title: '爱莉希雅 AI 角色陪伴应用'
+englishTitle: 'Elysia AI Character Companion'
+codename: '往世回响'
+summary: '围绕记忆确认、陪伴流程、语音接入与一致性评测搭建同人角色 Agent 原型。'
+description: '基于 Streamlit 的非商业同人角色陪伴 Demo，包含长期记忆、待确认记忆、陪伴场景、可选语音提供方与一致性评测。'
 updated: 2026-07-17
 status: 'ITERATING'
-categories: ['Character Agent', 'Memory', 'Game AI']
-targetTracks: ['game', 'agent']
-role: 'Agent 产品设计 / 记忆系统 / 体验评测'
-period: '2025–2026 · 实验迭代中'
-techStack: ['AI Agent', 'Memory', 'Prompt Engineering', 'Python', 'Conversation Design']
-highlights: ['多轮对话', '长短期记忆', '记忆总结', '角色一致性']
+categories: ['角色 Agent', '长期记忆', '陪伴体验']
+targetTracks: ['general', 'game', 'agent']
+role: '产品设计 / 记忆机制 / Agent 评测'
+period: '公开仓库 · Fan-made 原型'
+techStack: ['Python', 'Streamlit', 'SQLite', 'JSON Fallback', 'OpenAI-compatible API', 'edge-tts', 'Optional GPT-SoVITS']
+highlights: ['长期记忆', '待确认记忆', '陪伴场景', '角色一致性评测']
 responsibilities:
-  - '定义角色设定、表达风格和不可越界规则'
-  - '设计短期上下文、长期记忆摘要与召回策略'
-  - '构建角色一致性和记忆准确性测试场景'
-  - '分析陪伴型 Agent 的情绪表达与安全边界'
-targetUser: '关注持续陪伴、角色互动和叙事体验，同时需要稳定设定与安全边界的用户。'
-goal: '让角色在长对话中保持连贯，又让用户可以看见、纠正和删除被记住的信息。'
-problem: '长对话容易遗忘关键信息或把错误内容写入长期记忆；单纯追加上下文成本高，也不能稳定维持角色表达。'
-aiNeeded: '大模型能够维持自然对话与角色语言，但记忆选择、冲突处理和安全边界必须由独立机制管理。'
-solution: '将近期对话、用户事实和关系事件分层管理，生成可审查摘要；回答前检索相关记忆，并用角色规则校验输出。'
-flow:
-  [
-    '接收当前对话',
-    '识别记忆候选',
-    '评估稳定性与相关性',
-    '检索已有记忆',
-    '生成角色化回答',
-    '边界与一致性校验',
-    '用户纠正或删除',
-  ]
+  - '设计记忆写入、待确认和用户管理流程'
+  - '拆解陪伴场景与角色一致性约束'
+  - '接入可选语音提供方并保留文本降级'
+  - '整理一致性评测和使用分析入口'
+targetUser: '希望研究角色陪伴 Agent、记忆控制和一致性评测的产品学习者与开发者。'
+goal: '验证角色陪伴中长期记忆、用户控制、语音降级和一致性评测如何组成完整产品体验。'
+problem: '角色 Agent 容易出现记忆误写、设定漂移和过度拟人化，语音资源也涉及额外的合规边界。'
+aiNeeded: '模型负责自然语言互动和记忆候选提取，但记忆确认、角色边界和风险提示需要产品机制约束。'
+solution: '用 SQLite 或 JSON 保存会话，把模型提取的信息先放入待确认记忆，再由用户决定保存或拒绝；陪伴场景、可选语音和一致性评测均保留降级与人工控制。'
+flow: ['进入陪伴场景', '进行文本对话', '提取记忆候选', '用户确认或拒绝记忆', '写入长期记忆', '可选生成语音', '查看一致性与使用记录']
 aiDesign:
-  - '输入包括当前对话、短期上下文、相关长期记忆与角色规则'
-  - '输出包括角色化回答、记忆候选与置信提示'
-  - '不自动保存所有对话，冲突信息不静默覆盖'
-  - '陪伴表达不替代医疗、法律或现实人际支持'
-humanCheckpoints: ['用户确认关键记忆', '用户纠正或删除记忆', '敏感内容边界复核']
-edgeCases: ['临时情绪被当成长期偏好', '不同会话事实冲突', '角色表达与安全规则冲突', '过度依赖暗示']
-safety: ['记忆可见、可改、可删', '明确非真人与能力边界', '危机情境优先现实支持']
-evaluationMetrics:
-  [
-    '角色一致性',
-    '记忆准确性',
-    '召回相关性',
-    '稳定性',
-    '响应时间',
-    '上下文成本',
-    '可解释性',
-    '安全性',
-    '陪伴体验',
-  ]
-failures: ['临时态度被写为稳定偏好', '错误记忆被后续对话强化', '角色语气掩盖了边界提示']
+  - 'OpenAI-compatible API 承接对话，模型配置由本地环境提供'
+  - '记忆候选先进入待确认区，不自动永久写入'
+  - 'SQLite 为主要存储，JSON 可作为回退'
+  - '语音提供方为可选能力，缺失时保持文本体验'
+humanCheckpoints: ['确认或删除记忆', '复核角色设定边界', '决定是否启用本地语音资源']
+edgeCases: ['模型虚构共同经历', '不应保存的隐私被提取', '语音服务不可用', '长期对话后角色语气漂移']
+safety: ['用户保留记忆控制权', '不把 Agent 描述为现实关系替代品', '仓库不包含官方美术、音频、模型权重或角色资产', '非商业同人 Demo，与米哈游或 HoYoverse 无隶属关系']
+evaluationMetrics: ['角色一致性', '记忆引用正确性', '记忆确认可控性', '回复边界', '语音失败降级']
+failures: ['未经确认写入长期记忆', '把模型推断当成用户事实', '语音失败阻断文本对话']
 iterations:
-  - stage: 'MEMORY_TEST_02'
-    problem: '模型会把临时情绪误当成稳定用户偏好。'
-    analysis: '记忆写入规则缺少稳定性与重复性判断。'
-    change: '增加记忆候选分级、重复确认和用户纠正入口。'
-    result: '低置信候选不再直接进入长期记忆，用户拥有明确控制入口。'
-    next: '继续测试跨会话冲突与角色关系演变。'
-reflection: '陪伴型 Agent 的长期价值不来自记得更多，而来自记得克制、解释清楚，并让用户拥有最终控制权。'
-nextSteps: ['测试跨会话冲突', '增加记忆审计视图', '完善危机情境响应边界']
-cover: '/images/projects/elysia/cover.webp'
-gallery: ['/images/projects/elysia/chat.webp', '/images/projects/elysia/memory.webp']
-featured: false
+  - stage: 'CURRENT_REPOSITORY'
+    problem: '长期记忆若自动写入，用户难以纠正错误或控制隐私。'
+    analysis: '角色陪伴中的记忆需要可见、可确认、可删除。'
+    change: '仓库提供待确认记忆、长期记忆管理、陪伴场景、可选语音和一致性评测。'
+    result: '当前公开仓库形成可运行的同人角色陪伴 Demo，且不包含官方角色资产。'
+    next: '继续扩展记忆冲突和角色漂移测试样本。'
+reflection: '陪伴体验越自然，越需要把记忆控制、身份边界和降级路径做得清楚。'
+nextSteps: ['扩展记忆冲突测试', '完善角色漂移样本', '加强语音资源合规说明']
+gallery: []
+featured: true
 githubUrl: 'https://github.com/cccc-clt/elysia-ai-character-agent'
-order: { general: 7, game: 3, agent: 4, auto: 7 }
+sourceNote: '已依据公开 GitHub 仓库 cccc-clt/elysia-ai-character-agent 的 README 校对；这是非商业同人 Demo，仓库不含官方角色资产。'
+order: { general: 6, game: 2, agent: 5, auto: 4 }
 ---
 
-## 产品判断
+## 记忆不是默认授权
 
-“记住用户”不是越多越好。只有稳定、相关、可纠正的内容才值得进入长期记忆，而且用户始终应拥有控制权。
+原型把模型提取到的信息先放进“待确认记忆”，由用户决定保存或拒绝。这个流程比自动积累更多记忆更重要，因为错误记忆和隐私误收集都会直接伤害陪伴体验。
 
-## 证据与产物
+## 同人项目说明
 
-- 长短期记忆分层方案
-- 记忆候选与写入规则
-- 角色一致性测试场景
-- 用户纠正、删除与安全边界
+这是用于产品与工程学习的非商业同人 Demo，与米哈游或 HoYoverse 没有隶属或授权关系。公开仓库不包含官方图片、音频、模型权重或角色资产；可选语音能力需要使用者自行确认资源来源与许可。

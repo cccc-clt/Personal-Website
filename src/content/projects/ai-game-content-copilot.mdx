@@ -1,86 +1,62 @@
 ---
-index: 'PROJECT_005'
+index: 'PROJECT_004'
 title: 'AI Game Content Copilot'
 englishTitle: 'AI Game Content Copilot'
-codename: '万象织梦'
-summary: '让角色设定、世界观约束与多版本探索同时成立，而不是靠一次 Prompt 碰运气。'
-description: '面向游戏内容创作的角色配置、文案生成与多版本迭代工具。'
+codename: '叙事工坊'
+summary: '用固定表单和可比较版本，把游戏文本生成变成可评审的内容工作流。'
+description: 'Python/FastAPI 与 React/Vite 构建的游戏内容生成原型，覆盖七类文本场景、A/B/C 版本与五维评估。'
 updated: 2026-07-17
 status: 'ITERATING'
-categories: ['Game AI', 'AIGC', '内容生产']
-targetTracks: ['game', 'agent']
-role: '产品设计 / Prompt 系统 / 原型开发'
-period: '2026 · 原型迭代中'
-techStack: ['Game AI', 'AIGC', 'Prompt Engineering', 'Structured Output', 'Versioning']
-highlights: ['角色配置', 'ABC 多版本', '二次优化', '内容一致性']
+categories: ['游戏 AI', '内容生成', '工作流']
+targetTracks: ['general', 'game']
+role: '产品设计 / 工作流 / 前后端原型'
+period: '公开仓库 · 原型迭代'
+techStack: ['Python', 'FastAPI', 'React 18', 'Vite', 'OpenAI-compatible API']
+highlights: ['7 类游戏文本场景', 'A/B/C 三版本生成', '5 维内容评估', '优化与导出流程']
 responsibilities:
-  - '拆解游戏策划在批量文案与角色一致性上的需求'
-  - '设计角色配置、世界观规则和任务目标的数据结构'
-  - '搭建 ABC 多版本生成与二次优化流程'
-  - '定义角色漂移、事实冲突和格式异常测试项'
-targetUser: '需要快速探索多种文案方向，同时维护角色和世界观一致性的游戏内容策划。'
-goal: '提升方向探索速度，同时让每个版本的策略差异、设定依据和修改理由可追溯。'
-problem: '一次性 Prompt 难以稳定携带复杂角色约束，多版本缺少可比较结构，反复修改后容易出现设定漂移。'
-aiNeeded: '生成模型适合快速发散语言表达，但必须用角色数据、世界规则和版本策略约束其开放性。'
-solution: '将角色信息、不可违反规则、创作目标和输出格式模块化，先生成差异策略，再输出 ABC 版本并保存优化意见。'
-flow:
-  [
-    '读取角色卡',
-    '校验世界观规则',
-    '确定内容目标',
-    '生成差异策略',
-    '输出 ABC 版本',
-    '一致性自检',
-    '人工选择与二次优化',
-  ]
+  - '拆解游戏文本场景与结构化输入字段'
+  - '设计三版本生成、评估和优化流程'
+  - '明确模型生成与人工评审边界'
+  - '完成 FastAPI 后端与 React 前端原型'
+targetUser: '需要快速形成游戏文本草案并对不同版本进行人工比较的内容策划或 AI 产品团队。'
+goal: '让内容生成从空白对话框变成输入明确、版本可比、结果可修改的工作流。'
+problem: '开放式聊天难以稳定承接题材、语气、角色和长度约束，也不利于多版本比较。'
+aiNeeded: '大模型适合提供文本候选，但必须通过结构化约束、版本对照和人工评审控制可用性。'
+solution: '把内容需求拆成结构化输入、A/B/C 候选生成、五维检查提示、人工比选、反馈优化与文档导出，让模型产出进入可评审工作流。'
+flow: ['选择文本场景', '填写结构化约束', '生成 A/B/C 版本', '查看五维评估', '选择候选', '提交优化要求', '导出结果']
 aiDesign:
-  - '输入包括角色卡、世界观规则、内容场景、语气与格式'
-  - '输出包括策略差异明确的 ABC 版本和自检结果'
-  - '固定设定层与可变任务层分离，降低角色漂移'
-  - '事实冲突、敏感内容和未授权设定进入人工复核'
-humanCheckpoints: ['确认角色与世界观规则', '选择版本方向', '发布前内容审核']
-edgeCases: ['角色卡信息冲突', '版本差异只停留在措辞', '长链路修改丢失设定', '输出格式异常']
-safety: ['不生成未授权 IP 内容', '敏感主题人工审核', '保留版本与修改理由']
-evaluationMetrics:
-  [
-    '设定一致性',
-    '策略差异度',
-    '格式合规性',
-    '稳定性',
-    '响应时间',
-    '修改成本',
-    '可解释性',
-    '安全性',
-    '策划可用性',
-  ]
-failures: ['多版本只是表面改写', '角色语气稳定但事实错误', '优化指令覆盖不可变设定']
+  - '七类文本场景共享基础输入，同时保留各自约束'
+  - '一次生成三个候选版本，支持并排比较'
+  - '五维评估用于提示检查方向，不替代内容负责人判断'
+  - 'API Key 由本地环境配置，仓库不提供托管模型凭据'
+humanCheckpoints: ['确认世界观和角色约束', '选择或改写候选', '检查敏感内容与版权风险']
+edgeCases: ['输入约束冲突', '版本差异不足', '内容偏离角色设定', 'API 不可用']
+safety: ['不内置真实游戏 IP 内容', '不包含官方美术或音频资产', '生成结果需人工审核后使用']
+evaluationMetrics: ['设定一致性', '角色一致性', '表达质量', '可编辑性', '安全与合规']
+failures: ['三个版本高度相似', '评估描述过于笼统', '模型补写未提供的世界观事实']
 iterations:
-  - stage: 'ITERATION_01'
-    problem: '多个版本只有表面措辞不同，策略差异不清楚。'
-    analysis: '版本生成前没有定义差异维度。'
-    change: '先生成内容策略，再分别约束节奏、情绪和信息密度。'
-    result: '版本之间形成可解释的方向差异，策划可以针对策略而非句子做选择。'
-    next: '增加角色一致性检查清单与批量对比。'
-reflection: '内容共创工具不应只追求“写得像”，更要帮助策划保留选择权、依据和世界观控制力。'
-nextSteps: ['扩展角色一致性规则', '支持批量任务', '增加版本差异可视化']
-cover: '/images/projects/game-copilot/cover.webp'
-gallery:
-  [
-    '/images/projects/game-copilot/character-config.webp',
-    '/images/projects/game-copilot/versions.webp',
-  ]
-featured: false
+  - stage: 'CURRENT_REPOSITORY'
+    problem: '游戏文本生成缺少固定输入、版本比较和后续优化路径。'
+    analysis: '仅提供聊天框无法稳定复现相同创作条件。'
+    change: '仓库建立七类场景表单、三版本生成、五维评估、优化与导出流程。'
+    result: '当前公开仓库提供 FastAPI 后端和 React 18/Vite 前端原型。'
+    next: '继续补充失败样本和人工评审记录格式。'
+reflection: '内容 Copilot 应该提高候选形成和比较效率，而不是替代内容负责人做最终判断。'
+nextSteps: ['补充失败样本库', '完善评审记录', '增加输入冲突提示']
+gallery: []
+featured: true
 githubUrl: 'https://github.com/cccc-clt/ai-game-content-copilot'
-order: { general: 6, game: 2, agent: 7, auto: 9 }
+sourceNote: '已依据公开 GitHub 仓库 cccc-clt/ai-game-content-copilot 的 README 校对；仓库无托管 Demo，也不包含真实 IP 资产。'
+order: { general: 4, game: 1, agent: 6, auto: 6 }
 ---
 
-## 产品判断
+## 产品结构
 
-生成不是最终动作，选择与修改才是内容团队的核心工作。产品把差异策略和修改理由保留下来，让人始终掌握叙事方向。
+这个原型没有把生成入口做成一个无约束聊天框，而是让用户先选择场景、填写约束，再比较三个候选版本。五维评估提供检查提示，最终选择和修改仍由人完成。
 
-## 证据与产物
+## 当前限制
 
-- 角色卡与世界观数据结构
-- ABC 多版本生成协议
-- 二次优化与版本记录
-- 角色漂移、事实冲突测试项
+- 需要在本地配置模型 API
+- 没有在线托管 Demo
+- 不包含真实游戏 IP、官方图片或音频
+- 生成结果仍需人工检查事实、语气与合规风险

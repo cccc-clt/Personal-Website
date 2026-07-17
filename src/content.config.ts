@@ -46,6 +46,7 @@ const projects = defineCollection({
     ),
     reflection: z.string(),
     nextSteps: z.array(z.string()),
+    sourceNote: z.string(),
     cover: z.string().optional(),
     gallery: z.array(z.string()).default([]),
     demoUrl: z.url().optional(),

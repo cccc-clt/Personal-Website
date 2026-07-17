@@ -1,12 +1,17 @@
 ---
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
+import { projectAssetConfig } from '../config/visualAssets';
+
 interface Props {
   slug: string;
   title: string;
   index?: string;
+  cover?: string;
   compact?: boolean;
 }
 
-const { slug, title, index = 'CASE', compact = false } = Astro.props;
+const { slug, title, index = 'CASE', cover, compact = false } = Astro.props;
 const variantMap: Record<string, string> = {
   'ai-product-evaluation-workbench': 'workbench',
   'mobile-uiagent-evaluation-lab': 'tap',
@@ -17,13 +22,38 @@ const variantMap: Record<string, string> = {
   'elysia-ai-character-agent': 'memory',
 };
 const variant = variantMap[slug] ?? 'workbench';
+const coverPath = cover
+  ? cover.startsWith('/')
+    ? cover
+    : `${projectAssetConfig.root}${cover.replace(/^\/+/, '')}`
+  : undefined;
+const hasImageCover = coverPath
+  ? existsSync(join(process.cwd(), 'public', coverPath.replace(/^\//, '')))
+  : false;
 ---
 
 <div
-  class:list={['project-cover', `project-cover--${variant}`, { 'project-cover--compact': compact }]}
+  class:list={[
+    'project-cover',
+    `project-cover--${variant}`,
+    { 'project-cover--compact': compact, 'project-cover--image': hasImageCover },
+  ]}
   role="img"
-  aria-label={`${title} 概念封面`}
+  aria-label={`${title}${hasImageCover ? '项目封面' : '概念封面'}`}
 >
+  {
+    hasImageCover && coverPath && (
+      <img
+        class="project-cover__image"
+        src={coverPath}
+        width="1600"
+        height="900"
+        alt=""
+        loading="lazy"
+        decoding="async"
+      />
+    )
+  }
   <div class="project-cover__wash"></div>
   <div class="project-cover__stage" aria-hidden="true">
     <span></span><span></span><span></span><span></span><span></span><span></span>
@@ -48,6 +78,17 @@ const variant = variantMap[slug] ?? 'workbench';
     min-height: 320px;
   }
 
+  .project-cover__image {
+    position: absolute;
+    z-index: 0;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 300ms var(--ease-out);
+  }
+
   .project-cover__wash {
     position: absolute;
     inset: 0;
@@ -55,6 +96,15 @@ const variant = variantMap[slug] ?? 'workbench';
       radial-gradient(circle at 75% 18%, rgba(255, 255, 255, 0.9), transparent 20%),
       radial-gradient(circle at 18% 80%, rgba(250, 207, 219, 0.42), transparent 28%),
       linear-gradient(135deg, rgba(132, 210, 255, 0.44), rgba(224, 216, 255, 0.68));
+  }
+
+  .project-cover--image .project-cover__wash {
+    z-index: 2;
+    background: linear-gradient(180deg, transparent 45%, rgba(26, 33, 47, 0.36));
+  }
+
+  .project-cover--image .project-cover__stage {
+    display: none;
   }
 
   .project-cover__stage,
@@ -82,6 +132,11 @@ const variant = variantMap[slug] ?? 'workbench';
     color: rgba(31, 40, 77, 0.62);
     font-size: 0.68rem;
     letter-spacing: 0.08em;
+  }
+
+  .project-cover--image .project-cover__meta {
+    color: rgba(255, 255, 255, 0.88);
+    text-shadow: 0 2px 12px rgba(24, 30, 43, 0.46);
   }
 
   .project-cover__seal {

@@ -15,7 +15,7 @@ const updated = project.data.updated.toLocaleDateString('zh-CN', { year: 'numeri
 
 <article class:list={['project-card', `project-card--${layout}`]} data-project-card data-tracks={project.data.targetTracks.join(' ')}>
   <a class="project-card__cover" href={`/projects/${slug}/`} aria-label={`查看${project.data.title}详情`}>
-    <ProjectCover slug={slug} title={project.data.title} index={project.data.index} compact />
+    <ProjectCover slug={slug} title={project.data.title} index={project.data.index} cover={project.data.cover} compact />
   </a>
   <div class="project-card__body">
     <div class="project-card__meta"><StatusBadge status={project.data.status} /><time datetime={project.data.updated.toISOString()}>{updated}</time></div>
@@ -34,6 +34,7 @@ const updated = project.data.updated.toLocaleDateString('zh-CN', { year: 'numeri
   .project-card__cover :global(.project-cover) { min-height: 205px; border-radius: 0; }
   .project-card__cover :global(.project-cover__stage) { transition: transform 300ms var(--ease-out); }
   .project-card:hover .project-card__cover :global(.project-cover__stage) { transform: scale(1.02); }
+  .project-card:hover .project-card__cover :global(.project-cover__image) { transform: scale(1.025); }
   .project-card__body { padding: 1.25rem; }
   .project-card__meta { display: flex; align-items: center; justify-content: space-between; gap: 0.7rem; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.58rem; }
   h3 { margin: 0.85rem 0 0.3rem; font-size: clamp(1.15rem, 2vw, 1.55rem); letter-spacing: -0.035em; line-height: 1.25; }
