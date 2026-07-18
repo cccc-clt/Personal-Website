@@ -1,19 +1,18 @@
 ---
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
-import { projectAssetConfig } from '../config/visualAssets';
+import { projectCovers, type ProjectCoverKey } from '../config/visualAssets';
 
 interface Props {
   slug: string;
   title: string;
   index?: string;
-  cover?: string;
+  cover?: ProjectCoverKey;
   compact?: boolean;
 }
 
 const { slug, title, index = 'CASE', cover, compact = false } = Astro.props;
 const variantMap: Record<string, string> = {
-  'ai-product-evaluation-workbench': 'workbench',
   'mobile-uiagent-evaluation-lab': 'tap',
   'ai-game-growth-workflow': 'growth',
   'automate-ai-car-copilot': 'cockpit',
@@ -21,36 +20,41 @@ const variantMap: Record<string, string> = {
   'ai-pdf-learning-assistant': 'documents',
   'elysia-ai-character-agent': 'memory',
 };
-const variant = variantMap[slug] ?? 'workbench';
-const coverPath = cover
-  ? cover.startsWith('/')
-    ? cover
-    : `${projectAssetConfig.root}${cover.replace(/^\/+/, '')}`
-  : undefined;
-const hasImageCover = coverPath
-  ? existsSync(join(process.cwd(), 'public', coverPath.replace(/^\//, '')))
-  : false;
+const variant = variantMap[slug] ?? 'generic';
+const coverConfig = cover ? projectCovers[cover] : undefined;
+const coverCandidates = [coverConfig?.image, coverConfig?.fallback].filter(
+  (source): source is string => Boolean(source),
+);
+const coverPath = coverCandidates.find((source) =>
+  existsSync(join(process.cwd(), 'public', source.replace(/^\//, ''))),
+);
+const hasImageCover = Boolean(coverPath);
 ---
 
 <div
   class:list={[
     'project-cover',
     `project-cover--${variant}`,
-    { 'project-cover--compact': compact, 'project-cover--image': hasImageCover },
+    {
+      'project-cover--compact': compact,
+      'project-cover--image': hasImageCover,
+      'project-cover--metrics-overlay': hasImageCover && coverConfig?.overlay === 'metrics',
+    },
   ]}
   role="img"
-  aria-label={`${title}${hasImageCover ? '项目封面' : '概念封面'}`}
+  aria-label={coverConfig?.alt ?? `${title} 概念封面`}
 >
   {
     hasImageCover && coverPath && (
       <img
         class="project-cover__image"
         src={coverPath}
-        width="1600"
-        height="900"
+        width={coverConfig?.width ?? 1600}
+        height={coverConfig?.height ?? 900}
         alt=""
         loading="lazy"
         decoding="async"
+        style={`object-position: ${coverConfig?.position ?? 'center'};`}
       />
     )
   }
@@ -67,7 +71,8 @@ const hasImageCover = coverPath
 <style>
   .project-cover {
     position: relative;
-    min-height: 420px;
+    aspect-ratio: 16 / 9;
+    min-height: 0;
     overflow: hidden;
     border-radius: var(--radius-lg);
     background: #eaf4ff;
@@ -75,7 +80,7 @@ const hasImageCover = coverPath
   }
 
   .project-cover--compact {
-    min-height: 320px;
+    min-height: 0;
   }
 
   .project-cover__image {
@@ -100,7 +105,13 @@ const hasImageCover = coverPath
 
   .project-cover--image .project-cover__wash {
     z-index: 2;
-    background: linear-gradient(180deg, transparent 45%, rgba(26, 33, 47, 0.36));
+    background: linear-gradient(180deg, transparent 52%, rgba(255, 255, 255, 0.08) 72%, rgba(248, 250, 255, 0.48));
+  }
+
+  .project-cover--metrics-overlay .project-cover__wash {
+    background:
+      linear-gradient(90deg, rgba(245, 248, 255, 0.22), transparent 54%),
+      linear-gradient(180deg, transparent 42%, rgba(255, 255, 255, 0.12) 68%, rgba(248, 250, 255, 0.54));
   }
 
   .project-cover--image .project-cover__stage {
@@ -135,8 +146,8 @@ const hasImageCover = coverPath
   }
 
   .project-cover--image .project-cover__meta {
-    color: rgba(255, 255, 255, 0.88);
-    text-shadow: 0 2px 12px rgba(24, 30, 43, 0.46);
+    color: rgba(39, 49, 78, 0.78);
+    text-shadow: 0 2px 12px rgba(255, 255, 255, 0.62);
   }
 
   .project-cover__seal {
@@ -146,35 +157,6 @@ const hasImageCover = coverPath
     background: rgba(255, 255, 255, 0.36);
     backdrop-filter: blur(10px);
     font-family: var(--font-mono);
-  }
-
-  .project-cover--workbench .project-cover__wash {
-    background:
-      radial-gradient(circle at 76% 20%, rgba(255, 255, 255, 0.9), transparent 20%),
-      linear-gradient(150deg, #e8f7ff 0%, #dde2ff 55%, #f4e6ee 100%);
-  }
-
-  .project-cover--workbench .project-cover__stage {
-    display: grid;
-    width: 60%;
-    height: 60%;
-    place-self: center;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    transform: perspective(700px) rotateX(58deg) rotateZ(-28deg) translate(28%, 4%);
-  }
-
-  .project-cover--workbench .project-cover__stage span {
-    position: relative;
-    border: 1px solid rgba(84, 104, 180, 0.22);
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.55);
-    box-shadow: 14px 18px 24px rgba(84, 99, 157, 0.11);
-  }
-
-  .project-cover--workbench .project-cover__stage span:nth-child(2),
-  .project-cover--workbench .project-cover__stage span:nth-child(5) {
-    background: rgba(104, 125, 224, 0.5);
   }
 
   .project-cover--tap .project-cover__wash {
@@ -380,10 +362,25 @@ const hasImageCover = coverPath
     display: none;
   }
 
+  :global(:root[data-theme='dark']) .project-cover--image .project-cover__wash {
+    background: linear-gradient(180deg, transparent 50%, rgba(29, 32, 58, 0.08) 68%, rgba(30, 35, 62, 0.5));
+  }
+
+  :global(:root[data-theme='dark']) .project-cover--metrics-overlay .project-cover__wash {
+    background:
+      linear-gradient(90deg, rgba(43, 48, 82, 0.22), transparent 56%),
+      linear-gradient(180deg, transparent 40%, rgba(34, 38, 68, 0.12) 66%, rgba(30, 35, 62, 0.56));
+  }
+
+  :global(:root[data-theme='dark']) .project-cover--image .project-cover__meta {
+    color: rgba(255, 255, 255, 0.88);
+    text-shadow: 0 2px 12px rgba(17, 20, 37, 0.62);
+  }
+
   @media (max-width: 640px) {
     .project-cover,
     .project-cover--compact {
-      min-height: 270px;
+      min-height: 0;
       border-radius: var(--radius-md);
     }
   }

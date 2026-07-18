@@ -1,63 +1,57 @@
 # 资源清单
 
-本项目只加载本地资源，不热链、不使用随机图片 API，也不使用未经授权的动漫或游戏角色。下列图片缺失时，页面使用 CSS 或文字占位，不输出空 `src` 或请求不存在的文件。
+本项目只加载本地资源，不热链、不使用随机图片 API，也不使用未经授权的动漫或游戏角色。图片缺失时使用 CSS 或文字降级，不输出空 `src`。
 
-## 首页 Banner
+## 第五阶段已接入
 
-- [ ] `public/assets/images/banner/home.webp`（桌面主图，建议 1920×900）
-- [ ] `public/assets/images/banner/home-1440.webp`（可选响应式版本）
-- [ ] `public/assets/images/banner/home-960.webp`（可选响应式版本）
-- [ ] `public/assets/images/character-mobile.webp`（可选移动端构图）
-- [x] 每个 `srcset` 候选在构建时单独检查；缺失版本不会写入 HTML
-- [x] 全部 Banner 图片缺失时显示浅蓝、淡紫与浅粉 CSS 渐变，不出现破图
+### 头像与个人名片
 
-## 头像与看板娘
+- [x] `public/images/avatar/tianqi-avatar.webp`（640×640；ProfileCard 头像）
+- [x] `public/images/avatar/tianqi-profile-card.webp`（1200×900；About 个人名片）
+- [x] PNG 发布副本保留为备用，不作为当前页面主路径
+- [x] 图片保留独立 HTML 姓名、身份、求职状态和链接
+- [x] 原始 PNG 保留在 `incoming-assets/`，发布副本经过尺寸与 WebP 格式优化
 
-- [ ] `public/assets/images/avatar.webp`（个人资料卡头像，建议 512×512）
-- [ ] `public/assets/images/character.webp`（后续可选看板娘立绘；本轮未接入页面）
-- [x] 头像缺失时显示 `TQ` 文字头像
-- [x] 看板娘文件缺失时不创建图片节点，不产生网络请求
+### 备用角色源图
 
-## 内页可选插画
+- [x] `public/images/avatar/character-alt-source.png`（1086×1448；未接入页面）
+- [ ] 真正去除背景后再输出透明角色立绘
+- [x] 当前文件没有 Alpha 通道，棋盘格已经写入像素；不得用 CSS 伪装成透明背景
+- [x] Hero 继续使用 CSS 角色舞台，不使用方形头像或该备用源图
 
-- [ ] `public/assets/images/about.webp`
+### 项目概念封面
+
+- [x] `public/images/projects/game-growth-workflow.webp` → AI 游戏增长投放与实验评测工作流
+- [x] `public/images/projects/ai-product-evaluation-workbench.webp` → AI Product Evaluation Workbench
+- [x] `public/images/projects/mobile-uiagent-lab.webp` → Mobile UIAgent Evaluation Lab
+- [x] `public/images/projects/automate-car-copilot.webp` → Automate AI Car Copilot
+- [x] `public/images/projects/game-content-copilot.webp` → AI Game Content Copilot
+- [x] `public/images/projects/pdf-learning-assistant.webp` → AI PDF Learning Assistant
+- [x] `public/images/projects/elysia-character-agent.webp` → 爱莉希雅 AI 角色陪伴应用
+- [x] 七张封面均为 1672×941 WebP，且分别映射到七个真实项目
+- [x] 概念封面只承担视觉主题表达，不代表真实运行界面或项目指标
+- [x] 增长工作流封面的示意数字已通过蒙层降低视觉权重，正文不引用这些数字
+- [x] Workbench 封面的评分、雷达图、图表和数字仅为视觉概念，正文不提取或引用
+
+### 安全降级与真实性
+
+- [x] AI Product Evaluation Workbench 使用独立图片，不重复其他项目封面
+- [x] 已删除 AI Product Evaluation Workbench 专用 CSS 占位封面
+- [x] 图片路径缺失时回退到通用 CSS 视觉或文字，不输出空 `src`
+
+## 尚未提供
+
+- [ ] `public/images/banner/hero-bg.webp`（Hero 背景）
+- [ ] `public/images/avatar/character.png`（真正透明的原创看板娘立绘）
+- [ ] 七个项目的真实界面或过程截图；当前 Gallery 继续与概念封面明确区分
 - [ ] `public/assets/images/404.webp`
-- [x] About 与 404 插画缺失时显示本地 CSS 占位
+- [ ] 三份正式简历 PDF
+- [ ] 真实邮箱与正式域名
 
-## 项目真实截图（待用户补充）
-
-- [ ] AI Product Evaluation Workbench
-- [ ] AI 游戏增长投放与实验评测工作流
-- [ ] Mobile UIAgent Evaluation Lab
-- [ ] AutoMate AI Car Copilot
-- [ ] AI Game Content Copilot
-- [ ] AI PDF Learning Assistant
-- [ ] Elysia AI 角色 Agent
-- [x] 截图缺失时使用每个项目自己的浅色 CSS 概念封面
-
-## 社交分享图
-
-- [x] 通用首页 OG（本地品牌排版图）
-- [x] 游戏 AI OG（本地品牌排版图）
-- [x] Agent OG（本地品牌排版图）
-- [x] 智能汽车 OG（本地品牌排版图）
-
-## 简历
-
-- [ ] `public/resume/resume-general.pdf`
-- [ ] `public/resume/resume-game.pdf`
-- [ ] `public/resume/resume-auto.pdf`
-- [x] PDF 缺失时只显示“待补充”或在线简历入口，不生成 404 下载链接
-
-## 待用户补充的信息
-
-- [ ] 真实邮箱（当前为空；页面不生成 `mailto:` 链接）
-- [ ] 正式域名（部署时通过 `SITE_URL` 提供；未提供时不生成 Canonical、Sitemap 与绝对社交图链接）
-- [ ] 需要公开的其他真实外链
-
-## 本轮降级检查
+## 固定原则
 
 - [x] 不调用 imagegen
-- [x] 不下载或热链远程动漫图片
-- [x] Banner、头像、看板娘、About 与 404 均有安全降级
+- [x] 不下载或热链远程图片
+- [x] 不覆盖、删除或把概念图冒充真实项目截图
+- [x] 首页、头像、名片和项目封面均有安全降级
 - [x] 远程图片开关保持关闭

@@ -38,7 +38,7 @@ const structuredData = {
           <p class="case-hero__summary">{project.data.summary}</p>
           <div class="chip-row">{project.data.categories.slice(0, 3).map((item) => <span class="chip">{item}</span>)}</div>
         </div>
-        <ProjectCover slug={slug} title={project.data.title} index={project.data.index} compact />
+        <ProjectCover slug={slug} title={project.data.title} index={project.data.index} cover={project.data.cover} compact />
       </div>
     </header>
 
@@ -72,7 +72,7 @@ const structuredData = {
   .case-hero__codename { margin: .55rem 0 0; color: var(--violet); }
   .case-hero h1 { max-width: 950px; margin: 0; font-size: clamp(2.6rem, 6vw, 6rem); letter-spacing: -.065em; line-height: 1.04; }
   .case-hero__summary { max-width: 760px; margin: 1.2rem 0; color: var(--text-secondary); font-size: 1rem; line-height: 1.85; }
-  .case-hero :global(.project-cover) { min-height: 300px; }
+  .case-hero :global(.project-cover) { width: 100%; min-width: 0; min-height: 0; }
   .case-layout { display: grid; grid-template-columns: minmax(220px, .65fr) minmax(0, 2fr); gap: 1rem; align-items: start; }
   .case-sidebar { position: sticky; top: 96px; padding: 1.25rem; }
   .case-source { padding: .9rem; margin-bottom: .4rem; border-radius: 12px; background: var(--primary-soft); }

@@ -4,12 +4,13 @@ import { join } from 'node:path';
 import { getEntry, render } from 'astro:content';
 import InnerPageHero from '../components/InnerPageHero.astro';
 import { abilities, siteConfig } from '../config/site';
+import { profileVisual } from '../config/visualAssets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const about = await getEntry('spec', 'about');
 if (!about) throw new Error('Missing src/content/spec/about.md');
 const { Content } = await render(about);
-const hasImage = existsSync(join(process.cwd(), 'public/assets/images/about.webp'));
+const hasImage = existsSync(join(process.cwd(), 'public', profileVisual.image.replace(/^\//, '')));
 ---
 
 <BaseLayout title="关于赵天琦｜游戏 AI 与 AI 产品实践" description={about.data.description}>
@@ -17,7 +18,20 @@ const hasImage = existsSync(join(process.cwd(), 'public/assets/images/about.webp
   <section class="about-page section page-shell">
     <aside class="about-profile panel">
       <div class="about-profile__image">
-        {hasImage ? <img src="/assets/images/about.webp" width="1600" height="1000" alt="原创成年女性研究者在窗边整理产品笔记的插画" loading="lazy" decoding="async" /> : <span aria-hidden="true">◇</span>}
+        {
+          hasImage ? (
+            <img
+              src={profileVisual.image}
+              width={profileVisual.width}
+              height={profileVisual.height}
+              alt={profileVisual.alt}
+              loading="lazy"
+              decoding="async"
+            />
+          ) : (
+            <span aria-hidden="true">◇</span>
+          )
+        }
       </div>
       <h2>{siteConfig.name}</h2>
       <p>AI Product Explorer</p>

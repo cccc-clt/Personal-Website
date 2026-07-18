@@ -1,5 +1,6 @@
 import { defineCollection } from 'astro:content';
 import { z } from 'astro/zod';
+import { projectCoverKeys } from './config/visualAssets';
 import { localMdxLoader } from './loaders/localMdxLoader';
 
 const track = z.enum(['general', 'game', 'agent', 'auto']);
@@ -47,7 +48,7 @@ const projects = defineCollection({
     reflection: z.string(),
     nextSteps: z.array(z.string()),
     sourceNote: z.string(),
-    cover: z.string().optional(),
+    cover: z.enum(projectCoverKeys).optional(),
     gallery: z.array(z.string()).default([]),
     demoUrl: z.url().optional(),
     githubUrl: z.url().optional(),

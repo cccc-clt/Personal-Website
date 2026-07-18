@@ -2,12 +2,12 @@
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { siteConfig } from '../config/site';
-import { avatarConfig, heroAssetConfig } from '../config/visualAssets';
+import { heroAssetConfig, heroCharacterConfig } from '../config/visualAssets';
 
 const publicRoot = join(process.cwd(), 'public');
 const publicAssetExists = (assetPath: string) => existsSync(join(publicRoot, assetPath.replace(/^\//, '')));
 const hasHeroBackground = publicAssetExists(heroAssetConfig.backgroundImage);
-const hasCharacter = publicAssetExists(avatarConfig.image);
+const hasCharacter = publicAssetExists(heroCharacterConfig.image);
 const resume = siteConfig.resumes[0];
 const hasResume = publicAssetExists(resume.path);
 ---
@@ -17,7 +17,7 @@ const hasResume = publicAssetExists(resume.path);
     'home-banner',
     {
       'home-banner--fallback': !hasHeroBackground,
-      'home-banner--character-mobile-hidden': hasCharacter && avatarConfig.hideOnMobile,
+      'home-banner--character-mobile-hidden': hasCharacter && heroCharacterConfig.hideOnMobile,
     },
   ]}
   aria-labelledby="home-title"
@@ -74,16 +74,16 @@ const hasResume = publicAssetExists(resume.path);
     <div class:list={['character-stage', { 'character-stage--ready': hasCharacter }]}>
       <div class="character-stage__halo" aria-hidden="true"></div>
       <div class="character-stage__frame">
-        <span class="character-stage__index">{avatarConfig.status}</span>
+        <span class="character-stage__index">{heroCharacterConfig.status}</span>
         <div class="character-stage__core">
           {
             hasCharacter ? (
               <img
                 class="character-stage__image"
-                src={avatarConfig.image}
-                width="720"
-                height="1080"
-                alt={`${avatarConfig.name}：${avatarConfig.description}`}
+                src={heroCharacterConfig.image}
+                width={heroCharacterConfig.width}
+                height={heroCharacterConfig.height}
+                alt={heroCharacterConfig.alt}
                 loading="lazy"
                 decoding="async"
               />
@@ -93,8 +93,8 @@ const hasResume = publicAssetExists(resume.path);
           }
         </div>
         <div class="character-stage__caption">
-          <strong>{avatarConfig.name}</strong>
-          <span>{avatarConfig.description}</span>
+          <strong>{heroCharacterConfig.name}</strong>
+          <span>{heroCharacterConfig.description}</span>
         </div>
       </div>
       <span class="character-stage__spark character-stage__spark--one" aria-hidden="true"></span>

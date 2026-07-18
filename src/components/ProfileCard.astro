@@ -2,16 +2,31 @@
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { siteConfig } from '../config/site';
+import { avatarConfig } from '../config/visualAssets';
 import { careerDirections } from '../data/siteContent';
 
-const hasAvatar = existsSync(join(process.cwd(), 'public/assets/images/avatar.webp'));
+const hasAvatar = existsSync(join(process.cwd(), 'public', avatarConfig.image.replace(/^\//, '')));
 const hasResume = siteConfig.resumes.some((item) => existsSync(join(process.cwd(), 'public', item.path.replace(/^\//, ''))));
 const hasEmail = Boolean(siteConfig.email);
 ---
 
 <section class="profile-card panel">
   <div class="profile-card__avatar">
-    {hasAvatar ? <img src="/assets/images/avatar.webp" width="512" height="512" alt="本站原创成年女性看板娘头像" decoding="async" /> : <span aria-hidden="true">TQ</span>}
+    {
+      hasAvatar ? (
+        <img
+          src={avatarConfig.image}
+          width={avatarConfig.width}
+          height={avatarConfig.height}
+          alt={avatarConfig.alt}
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+        />
+      ) : (
+        <span aria-hidden="true">TQ</span>
+      )
+    }
     <i aria-hidden="true"></i>
   </div>
   <h2>{siteConfig.name}</h2>
@@ -35,7 +50,7 @@ const hasEmail = Boolean(siteConfig.email);
 
 <style>
   .profile-card { padding: 1.35rem; text-align: center; }
-  .profile-card__avatar { position: relative; display: grid; width: 92px; height: 92px; place-items: center; margin: 0 auto; border: 5px solid var(--surface-solid); border-radius: 50%; background: linear-gradient(145deg, var(--primary-soft), #f6dfe7); color: var(--primary-strong); font-family: var(--font-mono); font-weight: 800; box-shadow: 0 10px 28px rgba(63, 101, 135, 0.18); overflow: hidden; }
+  .profile-card__avatar { position: relative; display: grid; width: 92px; height: 92px; place-items: center; margin: 0 auto; border: 4px solid var(--surface-solid); border-radius: 22px; background: linear-gradient(145deg, var(--primary-soft), #f6dfe7); color: var(--primary-strong); font-family: var(--font-mono); font-weight: 800; box-shadow: 0 10px 28px rgba(63, 101, 135, 0.18); overflow: hidden; }
   .profile-card__avatar img { width: 100%; height: 100%; object-fit: cover; }
   .profile-card__avatar i { position: absolute; right: 2px; bottom: 8px; width: 12px; height: 12px; border: 2px solid white; border-radius: 50%; background: var(--mint); }
   h2 { margin: 1rem 0 0; font-size: 1.3rem; }
