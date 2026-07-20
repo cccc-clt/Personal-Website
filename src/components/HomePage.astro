@@ -9,7 +9,20 @@ import ProjectCard from './ProjectCard.astro';
 import RightSidebar from './RightSidebar.astro';
 
 const allProjects = (await getCollection('projects')).sort((a, b) => a.data.order.general - b.data.order.general);
-const projects = allProjects.filter((project) => project.data.featured).slice(0, 4);
+const homepageProjectOrder = [
+  'ai-game-content-copilot',
+  'elysia-ai-character-agent',
+  'ai-game-growth-workflow',
+  'ai-product-evaluation-workbench',
+];
+const homepageProjectRank = new Map(homepageProjectOrder.map((slug, index) => [slug, index]));
+const getProjectSlug = (project: (typeof allProjects)[number]) => project.id.replace(/\.mdx?$/, '');
+const projects = [...allProjects].sort((a, b) => {
+  const aRank = homepageProjectRank.get(getProjectSlug(a)) ?? Number.MAX_SAFE_INTEGER;
+  const bRank = homepageProjectRank.get(getProjectSlug(b)) ?? Number.MAX_SAFE_INTEGER;
+
+  return aRank === bRank ? a.data.order.general - b.data.order.general : aRank - bRank;
+});
 const projectCount = String(allProjects.length).padStart(2, '0');
 ---
 
@@ -25,9 +38,15 @@ const projectCount = String(allProjects.length).padStart(2, '0');
     <div class="welcome-card__links"><a href="/about/">进一步认识我 →</a><a href="/stack/">查看工具链 →</a></div>
   </article>
 
-  <section class="home-section panel" aria-labelledby="featured-title">
+  <section class="home-projects" aria-labelledby="featured-title">
     <header class="home-section__heading"><div><span class="eyebrow">FEATURED PROJECTS</span><h2 id="featured-title">精选项目</h2></div><a href="/projects/">全部 {projectCount} 个项目 ↗</a></header>
-    <div class="featured-grid">{projects.map((project, index) => <ProjectCard project={project} layout={index === 0 ? 'wide' : 'standard'} />)}</div>
+    <div class="home-projects__spotlight">
+      {projects.slice(0, 3).map((project, index) => <ProjectCard project={project} homepagePriority={index === 0 ? 'primary' : 'secondary'} />)}
+    </div>
+    <div class="home-projects__divider"><span>更多项目实践</span><span>04—{projectCount}</span></div>
+    <div class="home-projects__list">
+      {projects.slice(3).map((project, index) => <ProjectCard project={project} homepagePriority={index === 0 ? 'supporting' : 'compact'} />)}
+    </div>
   </section>
 
   <section class="home-section panel" aria-labelledby="method-title">
@@ -166,15 +185,50 @@ const projectCount = String(allProjects.length).padStart(2, '0');
     font-size: 0.7rem;
   }
 
-  .featured-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1rem;
-    margin-top: 1.35rem;
+  .home-projects {
+    position: relative;
+    padding: clamp(1.5rem, 3vw, 2.5rem) 0;
+    border-block: 1px solid var(--border);
   }
 
-  .featured-grid > :global(:first-child) {
+  .home-projects__spotlight {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .home-projects__spotlight > :global(:first-child) {
     grid-column: 1 / -1;
+  }
+
+  .home-projects__divider {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem 0 0.75rem;
+    margin-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  .home-projects__divider span:last-child {
+    color: var(--violet);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 600;
+  }
+
+  .home-projects__list {
+    display: grid;
+  }
+
+  .home-projects .home-section__heading > a {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
   }
 
   .practice-grid {
@@ -347,14 +401,31 @@ const projectCount = String(allProjects.length).padStart(2, '0');
     transform: translateX(5px);
   }
 
+  @media (max-width: 840px) {
+    .home-projects__spotlight {
+      grid-template-columns: 1fr;
+    }
+
+    .home-projects__spotlight > :global(:first-child) {
+      grid-column: 1;
+    }
+
+    .home-projects__spotlight {
+      gap: 1rem;
+    }
+  }
+
   @media (max-width: 680px) {
-    .featured-grid,
     .practice-grid {
       grid-template-columns: 1fr;
     }
 
-    .featured-grid > :global(:first-child) {
-      grid-column: 1;
+    .home-projects {
+      padding-block: 1.5rem;
+    }
+
+    .home-projects__divider {
+      margin-top: 1rem;
     }
 
     .home-section__heading {
