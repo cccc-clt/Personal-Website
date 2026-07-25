@@ -14,7 +14,11 @@ body {
   min-width: 320px;
   background: var(--paper);
   color: var(--ink-950);
-  font-family: var(--font-cn);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.75;
+  font-optical-sizing: auto;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }
@@ -30,7 +34,9 @@ picture {
 }
 
 button,
-input {
+input,
+select,
+textarea {
   font: inherit;
 }
 

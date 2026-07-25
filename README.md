@@ -1,10 +1,10 @@
 # 赵天琦 AI 产品作品集
 
-基于 Mizuki 布局语言重建的浅色游戏 AI 产品作品集：保留悬浮导航、Banner、三栏内容、明暗主题、Swup 页面过渡与 Pagefind 本地搜索。项目使用 Astro 7、TypeScript、MDX Content Collections、Tailwind 构建能力与组件级 CSS，可静态构建并部署到 Cloudflare Pages。
+基于 Mizuki 布局语言重建的游戏 AI 产品作品集：以深海二次元动态 Hero、三个代表项目、产品方法和职业入口组成精简首页，同时保留悬浮导航、明暗主题、Swup 页面过渡与 Pagefind 本地搜索。项目使用 Astro 7、TypeScript、MDX Content Collections、Tailwind 构建能力与组件级 CSS，可静态构建并部署到 Cloudflare Pages。
 
 ## 页面
 
-- `/`：Mizuki 三栏作品集首页
+- `/`：沉浸式 Hero 与精简作品集首页
 - `/game`：游戏体验与 AI 产品观察
 - `/moments`：真实随想的空状态与后续入口
 - `/stack`：工具链与实践记录
@@ -13,12 +13,22 @@
 - `/projects/[slug]`：MDX 案例详情
 - `/about`、`/resume`、`/credits`、`/404`
 
-首页由 `HeroBanner`、`MainGridLayout`、`ProfileCard`、`ProjectCard` 与 `RightSidebar` 组成；图片缺失时使用本地安全回退。
+首页由 `HeroBanner`、三个复用 Content Collection 数据的 `ProjectCard`、四步产品方法和职业 CTA 组成。原有 `MainGridLayout`、`ProfileCard` 与 `RightSidebar` 仍保留供其他页面或后续迭代使用，但不再挂载到首页；图片缺失时继续使用本地安全回退。
+
+## 首页体验与动效
+
+- Hero 使用唯一 H1 `TIANQI.Z`，背景为用户提供并转码的本地深海二次元 WebP；桌面端把人物留在左侧、信息区置于右侧，900px 以下改为底部信息布局并调整人物裁切中心。
+- 首次访问通过 `tianqi-home-hero-seen-v1` 会话键播放约 1.6 秒分段入场；同一会话返回首页使用快速淡入。
+- 背景图使用 16 秒 CSS 微缩放与轻微上移，光效缓慢呼吸，六个低权重 CSS 气泡提供水下层次；不引入动画或粒子库。
+- 桌面端使用 passive scroll、`requestAnimationFrame` 和 CSS 自定义变量提供文字上移淡出与背景轻微放大；移动端不注册滚动视差，`prefers-reduced-motion` 同时关闭入场、背景循环、气泡、呼吸光与滚动联动。
+- Hero 内容在无 JavaScript 时默认可见，脚本只负责选择完整、快速或静态状态。
+- 首页固定展示 `ai-game-content-copilot`、`elysia-ai-character-agent` 与 `ai-game-growth-workflow`；其余项目继续保留在 `/projects/`。
+- 当前没有已发布的 AI 随想或非草稿游戏观察，因此首页不渲染 Latest Writing，也不创建占位文章。
 
 ## 本地开发
 
 ```bash
-npm install
+npm ci
 npm run dev
 ```
 
@@ -82,11 +92,19 @@ node scripts/generate-og.mjs
 
 `public/_headers` 提供安全响应头与分层缓存；`public/_redirects` 处理兼容路由。部署时设置 `SITE_URL` 后，构建会生成 Canonical、Sitemap 与绝对社交分享链接；未设置时不会输出占位域名。
 
+## 字体与自托管
+
+- 全站正文与 UI 使用 `Inter Variable` + `Noto Sans SC Variable`，两者来自 Fontsource 5.3，并随构建产物同源托管；字体文件许可证为 OFL-1.1。
+- 首页 Hero 的 `TIANQI.Z` 复用 Inter Variable 作为 display 字体，不额外加载 Manrope。
+- Noto Sans SC 由 `unicode-range` 切分为 WOFF2 分片，浏览器只请求当前页面出现的字形；站点不预加载全部中文字体。
+- 所有字体使用 `font-display: swap`，并保留 `PingFang SC`、`Microsoft YaHei` 与通用 sans-serif 回退。
+- 等宽字体不额外下载：代码、项目编号、日期、slug 和命令优先使用设备上的 JetBrains Mono，否则回退到系统等宽字体。
+
 ## 中国大陆访问与性能
 
 - 不依赖 Google Fonts、海外图片 CDN、统计、评论、音乐或视频服务。
-- 中文与英文字体均使用本地系统字体栈。
-- 首屏背景使用 CSS 光影；角色图本地托管并提供 AVIF/WebP。
+- 中英文可变字体由构建产物自托管，加载失败时回退到本地系统字体。
+- 首屏背景使用本地 WebP 与 CSS 遮罩、光影和气泡，不请求图片 CDN、视频或 Canvas 粒子库。
 - 非首屏图片懒加载，动效遵循 `prefers-reduced-motion`。
 
 ## 中断恢复

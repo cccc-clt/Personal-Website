@@ -4,30 +4,163 @@ import { aiProductWorkbench } from '../data/siteContent';
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="AI 产品工作台｜赵天琦" description="赵天琦在 AI 产品原型、Agent 工作流、RAG、评测和发布准备中的真实工具实践。">
-  <InnerPageHero eyebrow="AI PRODUCT WORKBENCH / BUILDING STACK" title="AI 产品工作台" description="不展示技能百分比，只说明每个工具解决什么问题、进入哪个产品场景、关联什么项目，以及实践边界在哪里。" />
+<BaseLayout
+  title="AI 产品工作台｜赵天琦"
+  description="赵天琦在 AI 产品原型、Agent 工作流、RAG、评测和发布准备中的真实工具实践。"
+>
+  <InnerPageHero
+    eyebrow="AI PRODUCT WORKBENCH / BUILDING STACK"
+    title="AI 产品工作台"
+    description="不展示技能百分比，只说明每个工具解决什么问题、进入哪个产品场景、关联什么项目，以及实践边界在哪里。"
+  />
   <section class="stack-page section page-shell">
-    <div class="stack-intro panel"><span class="eyebrow">WORKFLOW</span><p>需求与场景 → Prompt / 工作流 → 轻量原型 → 测试记录 → 失败分类 → 下一轮迭代</p><small>以下工具只记录能从公开仓库、当前站点或已有本地案例确认的用途；“下一步”不等于已经实现。</small></div>
-    <div class="stack-grid">{aiProductWorkbench.map((tool, index) => <article class="tool-card panel"><header><span>{String(index + 1).padStart(2, '0')}</span><small>{tool.state}</small></header><p class="tool-card__category">{tool.category}</p><h2>{tool.name}</h2><dl><div><dt>实践内容</dt><dd>{tool.use}</dd></div><div><dt>使用场景</dt><dd>{tool.scene}</dd></div><div><dt>关联项目</dt><dd><a href={tool.projectHref}>{tool.project} →</a></dd></div><div><dt>实践边界 / 下一步</dt><dd>{tool.next}</dd></div></dl></article>)}</div>
+    <div class="stack-intro panel">
+      <span class="eyebrow">WORKFLOW</span><p>
+        需求与场景 → Prompt / 工作流 → 轻量原型 → 测试记录 → 失败分类 → 下一轮迭代
+      </p><small
+        >以下工具只记录能从公开仓库、当前站点或已有本地案例确认的用途；“下一步”不等于已经实现。</small
+      >
+    </div>
+    <div class="stack-grid">
+      {
+        aiProductWorkbench.map((tool, index) => (
+          <article class="tool-card panel">
+            <>
+              <header>
+                <>
+                  <span>{String(index + 1).padStart(2, '0')}</span>
+                  <small>{tool.state}</small>
+                </>
+              </header>
+              <p class="tool-card__category">{tool.category}</p>
+              <h2>{tool.name}</h2>
+              <dl>
+                <>
+                  <div>
+                    <>
+                      <dt>实践内容</dt>
+                      <dd>{tool.use}</dd>
+                    </>
+                  </div>
+                  <div>
+                    <>
+                      <dt>使用场景</dt>
+                      <dd>{tool.scene}</dd>
+                    </>
+                  </div>
+                  <div>
+                    <>
+                      <dt>关联项目</dt>
+                      <dd>
+                        <a href={tool.projectHref}>{tool.project} →</a>
+                      </dd>
+                    </>
+                  </div>
+                  <div>
+                    <>
+                      <dt>实践边界 / 下一步</dt>
+                      <dd>{tool.next}</dd>
+                    </>
+                  </div>
+                </>
+              </dl>
+            </>
+          </article>
+        ))
+      }
+    </div>
   </section>
 </BaseLayout>
 
 <style>
-  .stack-page { display: grid; gap: 1rem; }
-  .stack-intro { padding: 1.4rem 1.6rem; }
-  .stack-intro p { margin: 0.7rem 0 0; font-size: clamp(1rem, 2vw, 1.45rem); font-weight: 650; }
-  .stack-intro small { display: block; margin-top: .65rem; color: var(--text-muted); font-size: .68rem; line-height: 1.7; }
-  .stack-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
-  .tool-card { padding: 1.4rem; }
-  .tool-card header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.62rem; }
-  .tool-card header small { padding: 0.35rem 0.55rem; border-radius: var(--radius-pill); background: var(--primary-soft); color: var(--primary-strong); }
-  .tool-card__category { margin: 1rem 0 .3rem; color: var(--violet); font-family: var(--font-mono); font-size: .6rem; }
-  .tool-card h2 { min-height: 2.6em; margin: 0 0 1.2rem; font-size: 1.3rem; line-height: 1.3; }
-  .tool-card dl { margin: 0; }
-  .tool-card dl div { padding: 0.8rem 0; border-top: 1px solid var(--border); }
-  .tool-card dt { color: var(--text-muted); font-size: 0.62rem; }
-  .tool-card dd { margin: 0.35rem 0 0; color: var(--text-secondary); font-size: 0.75rem; line-height: 1.7; }
-  .tool-card dd a { color: var(--primary-strong); }
-  @media (max-width: 980px) { .stack-grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 620px) { .stack-grid { grid-template-columns: 1fr; } .tool-card h2 { min-height: auto; } }
+  .stack-page {
+    display: grid;
+    gap: 1rem;
+  }
+  .stack-intro {
+    padding: 1.4rem 1.6rem;
+  }
+  .stack-intro p {
+    margin: 0.7rem 0 0;
+    font-size: clamp(1rem, 2vw, 1.45rem);
+    font-weight: 600;
+  }
+  .stack-intro small {
+    display: block;
+    margin-top: 0.65rem;
+    color: var(--text-muted);
+    font-size: 0.68rem;
+    line-height: 1.7;
+  }
+  .stack-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+  .tool-card {
+    padding: 1.4rem;
+  }
+  .tool-card header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    color: var(--text-muted);
+    font-size: 0.62rem;
+    font-weight: 500;
+  }
+  .tool-card header > span {
+    font-family: var(--font-mono);
+  }
+  .tool-card header small {
+    padding: 0.35rem 0.55rem;
+    border-radius: var(--radius-pill);
+    background: var(--primary-soft);
+    color: var(--primary-strong);
+  }
+  .tool-card__category {
+    margin: 1rem 0 0.3rem;
+    color: var(--violet);
+    font-size: 0.6rem;
+    font-weight: 500;
+  }
+  .tool-card h2 {
+    min-height: 2.6em;
+    margin: 0 0 1.2rem;
+    font-size: 1.3rem;
+    line-height: 1.3;
+  }
+  .tool-card dl {
+    margin: 0;
+  }
+  .tool-card dl div {
+    padding: 0.8rem 0;
+    border-top: 1px solid var(--border);
+  }
+  .tool-card dt {
+    color: var(--text-muted);
+    font-size: 0.62rem;
+  }
+  .tool-card dd {
+    margin: 0.35rem 0 0;
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    line-height: 1.7;
+  }
+  .tool-card dd a {
+    color: var(--primary-strong);
+  }
+  @media (max-width: 980px) {
+    .stack-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 620px) {
+    .stack-grid {
+      grid-template-columns: 1fr;
+    }
+    .tool-card h2 {
+      min-height: auto;
+    }
+  }
 </style>

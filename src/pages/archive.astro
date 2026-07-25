@@ -4,32 +4,135 @@ import InnerPageHero from '../components/InnerPageHero.astro';
 import { timeline } from '../data/siteContent';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-const projects = (await getCollection('projects')).sort((a, b) => b.data.updated.valueOf() - a.data.updated.valueOf());
+const projects = (await getCollection('projects')).sort(
+  (a, b) => b.data.updated.valueOf() - a.data.updated.valueOf(),
+);
 const projectCount = String(projects.length).padStart(2, '0');
 ---
 
-<BaseLayout title="项目、学习与成长归档｜赵天琦" description="赵天琦的项目更新、学习路径与成长时间线。">
-  <InnerPageHero eyebrow="ARCHIVE / TIMELINE" title="项目、学习与成长时间线" description="只收录仓库中可以确认的时期、项目与内容更新时间；不补写无法证明的成绩或商业结果。" />
+<BaseLayout
+  title="项目、学习与成长归档｜赵天琦"
+  description="赵天琦的项目更新、学习路径与成长时间线。"
+>
+  <InnerPageHero
+    eyebrow="ARCHIVE / TIMELINE"
+    title="项目、学习与成长时间线"
+    description="只收录仓库中可以确认的时期、项目与内容更新时间；不补写无法证明的成绩或商业结果。"
+  />
   <section class="archive-page section page-shell">
     <div class="archive-grid">
-      <section class="panel archive-block"><header><span class="eyebrow">JOURNEY</span><h2>成长路径</h2></header><ol>{timeline.map((item) => <li><span class="archive-label">{item.period}</span><div><span>{item.type}</span><h3>{item.title}</h3><p>{item.text}</p></div></li>)}</ol></section>
-      <section class="panel archive-block"><header><span class="eyebrow">PROJECTS / {projectCount}</span><h2>项目归档</h2></header><ol>{projects.map((project) => { const slug = project.id.replace(/\.mdx?$/, ''); return <li><time>{project.data.period}</time><div><span>{project.data.status}</span><h3><a href={`/projects/${slug}/`}>{project.data.title}</a></h3><p>视觉代号 · {project.data.codename}｜{project.data.summary}</p></div></li>; })}</ol></section>
+      <section class="panel archive-block">
+        <header><span class="eyebrow">JOURNEY</span><h2>成长路径</h2></header><ol>
+          {
+            timeline.map((item) => (
+              <li>
+                <>
+                  <span class="archive-label">{item.period}</span>
+                  <div>
+                    <>
+                      <span>{item.type}</span>
+                      <h3>{item.title}</h3>
+                      <p>{item.text}</p>
+                    </>
+                  </div>
+                </>
+              </li>
+            ))
+          }
+        </ol>
+      </section>
+      <section class="panel archive-block">
+        <header><span class="eyebrow">PROJECTS / {projectCount}</span><h2>项目归档</h2></header><ol>
+          {
+            projects.map((project) => {
+              const slug = project.id.replace(/\.mdx?$/, '');
+              return (
+                <li>
+                  <>
+                    <time>{project.data.period}</time>
+                    <div>
+                      <>
+                        <span>{project.data.status}</span>
+                        <h3>
+                          <a href={`/projects/${slug}/`}>{project.data.title}</a>
+                        </h3>
+                        <p>
+                          视觉代号 · {project.data.codename}｜{project.data.summary}
+                        </p>
+                      </>
+                    </div>
+                  </>
+                </li>
+              );
+            })
+          }
+        </ol>
+      </section>
     </div>
   </section>
 </BaseLayout>
 
 <style>
-  .archive-page { display: grid; gap: 1rem; }
-  .archive-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
-  .archive-block { padding: clamp(1.4rem, 4vw, 2.5rem); }
-  .archive-block header { padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
-  h2 { margin: 0.45rem 0 0; font-size: clamp(1.7rem, 3vw, 2.7rem); }
-  ol { padding: 0; margin: 0; list-style: none; }
-  ol li { display: grid; grid-template-columns: 105px 1fr; gap: 1rem; padding: 1.2rem 0; border-bottom: 1px solid var(--border); }
-  time, .archive-label { color: var(--text-muted); font-family: var(--font-mono); font-size: 0.6rem; }
-  li span { color: var(--violet); font-size: 0.62rem; }
-  li h3 { margin: 0.3rem 0 0.45rem; font-size: 1rem; }
-  li p { margin: 0; color: var(--text-secondary); font-size: 0.75rem; line-height: 1.7; }
-  @media (max-width: 850px) { .archive-grid { grid-template-columns: 1fr; } }
-  @media (max-width: 520px) { ol li { grid-template-columns: 1fr; } }
+  .archive-page {
+    display: grid;
+    gap: 1rem;
+  }
+  .archive-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  .archive-block {
+    padding: clamp(1.4rem, 4vw, 2.5rem);
+  }
+  .archive-block header {
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+  h2 {
+    margin: 0.45rem 0 0;
+    font-size: clamp(1.7rem, 3vw, 2.7rem);
+  }
+  ol {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+  ol li {
+    display: grid;
+    grid-template-columns: 105px 1fr;
+    gap: 1rem;
+    padding: 1.2rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  time,
+  .archive-label {
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+  }
+  li span {
+    color: var(--violet);
+    font-size: 0.62rem;
+  }
+  li h3 {
+    margin: 0.3rem 0 0.45rem;
+    font-size: 1rem;
+  }
+  li p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    line-height: 1.7;
+  }
+  @media (max-width: 850px) {
+    .archive-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 520px) {
+    ol li {
+      grid-template-columns: 1fr;
+    }
+  }
 </style>

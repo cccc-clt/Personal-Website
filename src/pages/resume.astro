@@ -48,12 +48,18 @@ const hasEmail = Boolean(siteConfig.email);
     <article class="resume-sheet">
       <header class="resume-sheet__hero">
         <div>
-          <p class="mono en">TIANQI ZHAO</p>
+          <p class="resume-sheet__english-name">TIANQI ZHAO</p>
           <h1>{siteConfig.name}</h1>
           <p class="resume-sheet__role">AI 产品经理 / 游戏 AI / AI Agent</p>
         </div>
         <address>
-          {hasEmail ? <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a> : <span>邮箱待补充</span>}
+          {
+            hasEmail ? (
+              <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
+            ) : (
+              <span>邮箱待补充</span>
+            )
+          }
           <a href={siteConfig.github} target="_blank" rel="noreferrer">github.com/cccc-clt ↗</a>
           <span>{siteConfig.location}</span>
         </address>
@@ -128,7 +134,10 @@ const hasEmail = Boolean(siteConfig.email);
         </div>
         <div>
           <h2>教育与背景</h2>
-          <p>河南城建学院 · 交通工程专业本科生。具体时间与课程信息请以用户后续补充的正式 PDF 简历为准。</p>
+          <p>
+            河南城建学院 · 交通工程专业本科生。具体时间与课程信息请以用户后续补充的正式 PDF
+            简历为准。
+          </p>
         </div>
       </section>
 
@@ -187,23 +196,25 @@ const hasEmail = Boolean(siteConfig.email);
     border-bottom: 2px solid var(--ink-950);
   }
 
-  .resume-sheet__hero .mono {
+  .resume-sheet__english-name {
+    margin: 0;
     color: var(--ink-500);
     font-size: 0.7rem;
-    letter-spacing: 0.14em;
+    font-weight: 500;
+    letter-spacing: 0.05em;
   }
 
   .resume-sheet__hero h1 {
     margin: 0.5rem 0;
     font-size: clamp(3rem, 6vw, 5.8rem);
-    letter-spacing: -0.07em;
-    line-height: 1;
+    letter-spacing: -0.025em;
+    line-height: 1.08;
   }
 
   .resume-sheet__role {
     margin: 0;
     font-size: 1.1rem;
-    font-weight: 650;
+    font-weight: 600;
   }
 
   address {
@@ -222,7 +233,8 @@ const hasEmail = Boolean(siteConfig.email);
   .resume-section h2 {
     margin: 0 0 1.5rem;
     font-size: 1rem;
-    letter-spacing: 0.06em;
+    font-weight: 700;
+    letter-spacing: 0;
   }
 
   .resume-profile p {
@@ -300,7 +312,7 @@ const hasEmail = Boolean(siteConfig.email);
 
   .resume-item > a {
     font-size: 0.75rem;
-    font-weight: 650;
+    font-weight: 600;
   }
 
   .resume-two-columns {

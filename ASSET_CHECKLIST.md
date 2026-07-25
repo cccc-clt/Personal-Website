@@ -17,7 +17,14 @@
 - [x] `public/images/avatar/character-alt-source.png`（1086×1448；未接入页面）
 - [ ] 真正去除背景后再输出透明角色立绘
 - [x] 当前文件没有 Alpha 通道，棋盘格已经写入像素；不得用 CSS 伪装成透明背景
-- [x] Hero 继续使用 CSS 角色舞台，不使用方形头像或该备用源图
+- [x] Hero 不使用方形头像或该备用源图
+
+### 首页深海 Hero
+
+- [x] `public/images/banner/hero-bg.webp`（1672×941；首页沉浸式背景）
+- [x] 原图由用户提供，已从 PNG 正确转码为 WebP
+- [x] 图片作为装饰背景使用，姓名、岗位、价值主张和操作均保留为独立 HTML
+- [x] 桌面端保留左侧人物面部，移动端使用单独的 `object-position` 裁切策略
 
 ### 项目概念封面
 
@@ -41,7 +48,6 @@
 
 ## 尚未提供
 
-- [ ] `public/images/banner/hero-bg.webp`（Hero 背景）
 - [ ] `public/images/avatar/character.png`（真正透明的原创看板娘立绘）
 - [ ] 七个项目的真实界面或过程截图；当前 Gallery 继续与概念封面明确区分
 - [ ] `public/assets/images/404.webp`

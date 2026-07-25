@@ -11,7 +11,16 @@ categories: ['智能座舱', 'AI Agent', '产品评测']
 targetTracks: ['general', 'agent', 'auto']
 role: '产品流程 / Agent 设计 / 评测与安全'
 period: '公开仓库 · Mock 原型'
-techStack: ['Python', 'Streamlit', 'OpenAI-compatible API', 'LangChain', 'ChromaDB', 'JSON State', 'LLM-as-Judge']
+techStack:
+  [
+    'Python',
+    'Streamlit',
+    'OpenAI-compatible API',
+    'LangChain',
+    'ChromaDB',
+    'JSON State',
+    'LLM-as-Judge',
+  ]
 highlights: ['RAG 座舱问答', '8 字段意图解析', '4 类场景 Agent', '3 级安全规则']
 responsibilities:
   - '拆解座舱问答、意图理解和场景执行流程'
@@ -23,7 +32,16 @@ goal: '在不连接真实车辆的前提下，验证知识问答、意图解析�
 problem: '座舱请求同时涉及知识、车辆状态、控制意图和安全风险，单轮聊天难以表达完整产品闭环。'
 aiNeeded: '自然语言请求需要被解析成结构化意图，并结合知识、状态和安全规则决定回答、确认或拒绝。'
 solution: '在 Streamlit Mock 原型中依次读取车辆状态、解析八字段意图、调用 RAG 或场景 Agent，再由三级安全规则决定直接响应、二次确认或拒绝。'
-flow: ['接收用户请求', '读取 Mock 车辆状态', '解析结构化意图', '检索座舱知识', '执行安全分级', '确认或模拟执行', '记录反馈与评测']
+flow:
+  [
+    '接收用户请求',
+    '读取 Mock 车辆状态',
+    '解析结构化意图',
+    '检索座舱知识',
+    '执行安全分级',
+    '确认或模拟执行',
+    '记录反馈与评测',
+  ]
 aiDesign:
   - '八字段结构化意图用于承接动作、对象、参数与上下文'
   - '四类场景 Agent 组织不同座舱任务'

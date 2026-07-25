@@ -2,525 +2,692 @@
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { siteConfig } from '../config/site';
-import { profileVisual } from '../config/visualAssets';
+import { heroAssetConfig } from '../config/visualAssets';
 
 const publicRoot = join(process.cwd(), 'public');
-const publicAssetExists = (assetPath: string) =>
-  existsSync(join(publicRoot, assetPath.replace(/^\//, '')));
-const hasProfileVisual = publicAssetExists(profileVisual.image);
-const resume = siteConfig.resumes[0];
-const hasResume = publicAssetExists(resume.path);
+const hasHeroBackground = existsSync(
+  join(publicRoot, heroAssetConfig.backgroundImage.replace(/^\//, '')),
+);
 ---
 
 <section
-  class:list={['home-banner', { 'home-banner--text-only': !hasProfileVisual }]}
+  class:list={['home-hero', { 'home-hero--fallback': !hasHeroBackground }]}
   aria-labelledby="home-title"
+  data-home-hero
+  data-intro="pending"
 >
-  <div class="home-banner__atmosphere" aria-hidden="true">
-    <span></span>
-    <span></span>
-    <span></span>
+  {
+    hasHeroBackground && (
+      <div class="home-hero__background" aria-hidden="true">
+        <img
+          src={heroAssetConfig.backgroundImage}
+          width="1672"
+          height="941"
+          alt=""
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+        />
+      </div>
+    )
+  }
+
+  <div class="home-hero__shade" aria-hidden="true"></div>
+  <div class="home-hero__light" aria-hidden="true"></div>
+
+  <div class="home-hero__bubbles" aria-hidden="true">
+    <span class="bubble bubble--one"></span>
+    <span class="bubble bubble--two"></span>
+    <span class="bubble bubble--three"></span>
+    <span class="bubble bubble--four"></span>
+    <span class="bubble bubble--five"></span>
+    <span class="bubble bubble--six"></span>
   </div>
 
-  <div class="page-shell home-banner__content">
-    <div class="home-banner__copy">
-      <p class="home-banner__availability">
+  <div class="page-shell home-hero__inner">
+    <div class="home-hero__copy" data-hero-copy>
+      <p class="home-hero__availability" data-hero-step style="--intro-order: 1">
         <span aria-hidden="true"></span>
-        {siteConfig.availability}
+        OPEN TO 2027 CAMPUS RECRUITMENT
       </p>
 
-      <h1 id="home-title">
-        {siteConfig.name}
-        <span>{siteConfig.englishName}</span>
-      </h1>
+      <div class="home-hero__title-lockup" data-hero-step style="--intro-order: 0">
+        <p>{siteConfig.name}</p>
+        <h1 id="home-title">{siteConfig.englishName.toUpperCase()}</h1>
+      </div>
 
-      <p class="home-banner__role">
-        游戏 AI 产品经理 <span aria-hidden="true">·</span> AI 应用产品经理
+      <p class="home-hero__english-role" data-hero-step style="--intro-order: 2">
+        GAME AI PRODUCT MANAGER
       </p>
-      <p class="home-banner__description">
-        聚焦需求判断、Agent / RAG 工作流、人工确认与产品评测，把想法推进为可运行、可验证、可迭代的
-        AI 产品原型。
+      <p class="home-hero__role" data-hero-step style="--intro-order: 3">
+        游戏 AI 产品经理 <span aria-hidden="true">/</span> AI 应用产品经理
+      </p>
+      <p class="home-hero__description" data-hero-step style="--intro-order: 4">
+        从需求判断、Agent 工作流到产品评测，<br />
+        将 AI 想法推进为可验证、可迭代的产品原型。
       </p>
 
-      <div class="home-banner__actions" aria-label="主要行动">
-        <a class="banner-button banner-button--primary" href="/projects/">查看代表项目</a>
-        {
-          hasResume ? (
-            <a class="banner-button banner-button--secondary" href={resume.path} download>
-              下载简历
-            </a>
-          ) : (
-            <a class="banner-button banner-button--secondary" href="/resume/">
-              查看在线简历
-            </a>
-          )
-        }
-        <a class="home-banner__github" href={siteConfig.github} target="_blank" rel="noreferrer">
-          访问 GitHub <span aria-hidden="true">↗</span>
+      <div class="home-hero__actions" aria-label="主要行动" data-hero-step style="--intro-order: 5">
+        <a class="hero-button hero-button--primary" href="#featured-projects">
+          查看代表项目
+          <span aria-hidden="true">↓</span>
         </a>
+        <a class="hero-button hero-button--secondary" href="/resume/">查看在线简历</a>
       </div>
     </div>
-
-    {
-      hasProfileVisual && (
-        <figure class="character-stage">
-          <div class="character-stage__halo" aria-hidden="true" />
-          <div class="character-stage__frame">
-            <img
-              src={profileVisual.image}
-              width={profileVisual.width}
-              height={profileVisual.height}
-              alt={profileVisual.alt}
-              loading="eager"
-              fetchpriority="high"
-              decoding="async"
-            />
-          </div>
-          <span class="character-stage__star character-stage__star--one" aria-hidden="true" />
-          <span class="character-stage__star character-stage__star--two" aria-hidden="true" />
-        </figure>
-      )
-    }
   </div>
+
+  <a
+    class="home-hero__scroll"
+    href="#featured-projects"
+    aria-label="滚动查看代表项目"
+    data-hero-step
+    style="--intro-order: 6"
+  >
+    <span>SCROLL TO EXPLORE</span>
+    <i aria-hidden="true"></i>
+  </a>
 </section>
 
 <style>
-  .home-banner {
-    --hero-body: color-mix(in srgb, var(--text-main) 82%, var(--page-bg));
+  .home-hero {
+    --hero-progress: 0;
     position: relative;
+    display: grid;
+    min-height: 100vh;
     overflow: hidden;
     isolation: isolate;
     background:
-      radial-gradient(
-        ellipse at 79% 34%,
-        color-mix(in srgb, var(--violet) 21%, transparent),
-        transparent 43%
-      ),
-      radial-gradient(
-        ellipse at 12% 76%,
-        color-mix(in srgb, var(--primary) 17%, transparent),
-        transparent 42%
-      ),
-      radial-gradient(
-        ellipse at 52% 4%,
-        color-mix(in srgb, var(--pink) 12%, transparent),
-        transparent 34%
-      ),
-      var(--page-bg);
+      radial-gradient(circle at 72% 18%, rgba(85, 166, 239, 0.24), transparent 28rem),
+      linear-gradient(145deg, #071a3d, #061127 54%, #020918);
+    color: #f8fbff;
   }
 
-  .home-banner__atmosphere span {
+  @supports (min-height: 100svh) {
+    .home-hero {
+      min-height: 100svh;
+    }
+  }
+
+  @supports (min-height: 100dvh) {
+    .home-hero {
+      min-height: 100dvh;
+    }
+  }
+
+  .home-hero::after {
+    position: absolute;
+    z-index: 3;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(150, 202, 255, 0.44) 30%,
+      rgba(181, 167, 240, 0.38) 72%,
+      transparent
+    );
+    content: '';
+  }
+
+  .home-hero__background {
     position: absolute;
     z-index: 0;
+    inset: -2.5%;
+    overflow: hidden;
+    transform: scale(calc(1 + var(--hero-progress) * 0.035));
+    transform-origin: center;
+    will-change: transform;
+  }
+
+  .home-hero__background img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    animation: hero-underwater-drift 16s ease-in-out infinite alternate;
+    filter: saturate(0.88) contrast(1.03) brightness(0.9);
+    object-fit: cover;
+    object-position: 50% center;
+    will-change: transform;
+  }
+
+  .home-hero__shade {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    background:
+      linear-gradient(
+        90deg,
+        rgba(1, 7, 22, 0.12) 0%,
+        rgba(1, 7, 22, 0.18) 38%,
+        rgba(2, 9, 27, 0.66) 61%,
+        rgba(2, 8, 24, 0.93) 100%
+      ),
+      linear-gradient(
+        180deg,
+        rgba(1, 7, 20, 0.38) 0%,
+        rgba(1, 7, 20, 0.04) 34%,
+        rgba(1, 7, 20, 0.1) 64%,
+        rgba(1, 7, 20, 0.66) 100%
+      );
+  }
+
+  .home-hero__light {
+    position: absolute;
+    z-index: 2;
+    top: -18%;
+    right: -8%;
+    width: min(56vw, 820px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    animation: hero-light-breathe 7s ease-in-out infinite alternate;
+    background: radial-gradient(
+      circle,
+      rgba(142, 211, 255, 0.22),
+      rgba(106, 152, 238, 0.08) 35%,
+      transparent 68%
+    );
+    filter: blur(18px);
+    opacity: calc(0.62 - var(--hero-progress) * 0.32);
+    pointer-events: none;
+  }
+
+  .home-hero__bubbles {
+    position: absolute;
+    z-index: 2;
+    inset: 0;
+    overflow: hidden;
+    opacity: calc(0.5 - var(--hero-progress) * 0.24);
+    pointer-events: none;
+  }
+
+  .bubble {
+    position: absolute;
+    bottom: -28px;
+    width: 12px;
+    height: 12px;
+    border: 1px solid rgba(209, 236, 255, 0.62);
+    border-radius: 50%;
+    animation: hero-bubble-rise 14s linear infinite;
+    background: radial-gradient(
+      circle at 32% 28%,
+      rgba(255, 255, 255, 0.72),
+      rgba(124, 192, 244, 0.15) 36%,
+      transparent 68%
+    );
+    box-shadow:
+      inset -2px -2px 4px rgba(112, 157, 231, 0.18),
+      0 0 9px rgba(111, 182, 238, 0.14);
+  }
+
+  .bubble--one {
+    left: 5%;
+    animation-delay: -3s;
+    animation-duration: 15s;
+  }
+
+  .bubble--two {
+    left: 19%;
+    width: 7px;
+    height: 7px;
+    animation-delay: -10s;
+    animation-duration: 12s;
+  }
+
+  .bubble--three {
+    left: 46%;
+    width: 16px;
+    height: 16px;
+    animation-delay: -7s;
+    animation-duration: 17s;
+  }
+
+  .bubble--four {
+    left: 67%;
     width: 9px;
     height: 9px;
-    border: 1px solid color-mix(in srgb, var(--text-main) 28%, transparent);
-    rotate: 45deg;
-    opacity: 0.52;
+    animation-delay: -1s;
+    animation-duration: 13s;
   }
 
-  .home-banner__atmosphere span:nth-child(1) {
-    top: 19%;
-    left: 3.5%;
+  .bubble--five {
+    left: 82%;
+    width: 14px;
+    height: 14px;
+    animation-delay: -9s;
+    animation-duration: 18s;
   }
 
-  .home-banner__atmosphere span:nth-child(2) {
-    top: 16%;
-    left: 53%;
-    scale: 0.62;
+  .bubble--six {
+    left: 94%;
+    width: 6px;
+    height: 6px;
+    animation-delay: -5s;
+    animation-duration: 11s;
   }
 
-  .home-banner__atmosphere span:nth-child(3) {
-    right: 4%;
-    bottom: 18%;
-    scale: 0.78;
-  }
-
-  .home-banner__content {
+  .home-hero__inner {
     position: relative;
-    z-index: 1;
+    z-index: 4;
     display: grid;
-    grid-template-columns: minmax(0, 1.14fr) minmax(360px, 0.86fr);
-    gap: clamp(2.5rem, 6vw, 6rem);
+    grid-template-columns: minmax(0, 1fr) minmax(470px, 0.92fr);
+    gap: clamp(2rem, 6vw, 6rem);
     align-items: center;
-    min-height: clamp(580px, 47vw, 650px);
-    padding-top: clamp(8rem, 10vw, 9.5rem);
-    padding-bottom: clamp(5rem, 7vw, 6.5rem);
+    min-height: inherit;
+    padding-top: clamp(7rem, 13vh, 9rem);
+    padding-bottom: clamp(6.5rem, 12vh, 8.5rem);
   }
 
-  .home-banner--text-only .home-banner__content {
-    grid-template-columns: minmax(0, 900px);
+  .home-hero__copy {
+    grid-column: 2;
+    width: min(100%, 670px);
+    opacity: calc(1 - var(--hero-progress) * 0.68);
+    transform: translate3d(0, calc(var(--hero-progress) * -42px), 0)
+      scale(calc(1 - var(--hero-progress) * 0.016));
+    transform-origin: right center;
   }
 
-  .home-banner__copy {
-    max-width: 760px;
-  }
-
-  .home-banner__availability {
+  .home-hero__availability {
     display: flex;
     gap: 0.7rem;
     align-items: center;
     width: fit-content;
     margin: 0 0 1.35rem;
-    color: var(--hero-body);
-    font-size: 0.875rem;
-    font-weight: 650;
+    color: rgba(232, 245, 255, 0.76);
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
     line-height: 1.5;
   }
 
-  .home-banner__availability span {
+  .home-hero__availability span {
     flex: 0 0 auto;
-    width: 8px;
-    height: 8px;
+    width: 7px;
+    height: 7px;
     border-radius: 50%;
-    background: var(--mint);
-    box-shadow: 0 0 0 4px color-mix(in srgb, var(--mint) 20%, transparent);
+    background: #91e4d0;
+    box-shadow: 0 0 0 4px rgba(145, 228, 208, 0.15);
+  }
+
+  .home-hero__title-lockup > p {
+    margin: 0 0 0.5rem;
+    color: rgba(229, 241, 255, 0.72);
+    font-size: clamp(0.92rem, 1.2vw, 1.08rem);
+    font-weight: 500;
+    letter-spacing: 0;
   }
 
   h1 {
     margin: 0;
-    color: var(--text-main);
-    font-size: clamp(4rem, 6.6vw, 6rem);
-    font-weight: 760;
+    color: #ffffff;
+    font-family: var(--font-display);
+    font-size: clamp(4rem, 7vw, 6rem);
+    font-weight: 700;
     letter-spacing: -0.04em;
-    line-height: 0.98;
+    line-height: 0.88;
+    text-shadow: 0 8px 30px rgba(0, 5, 20, 0.28);
     text-wrap: balance;
   }
 
-  h1 span {
-    display: block;
-    margin-top: 0.72rem;
-    color: color-mix(in srgb, var(--text-main) 70%, var(--page-bg));
-    font-family: var(--font-en);
-    font-size: clamp(1rem, 1.55vw, 1.3rem);
-    font-weight: 650;
-    letter-spacing: 0.12em;
-    line-height: 1;
-    text-transform: uppercase;
+  .home-hero__english-role {
+    margin: 1.45rem 0 0;
+    color: #a8d8ff;
+    font-family: var(--font-sans);
+    font-size: clamp(0.72rem, 1.05vw, 0.9rem);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    line-height: 1.5;
   }
 
-  .home-banner__role {
-    margin: 1.65rem 0 0;
-    color: var(--text-main);
-    font-size: clamp(1.25rem, 2vw, 1.75rem);
-    font-weight: 720;
-    letter-spacing: -0.02em;
-    line-height: 1.35;
+  .home-hero__role {
+    margin: 0.65rem 0 0;
+    color: #f7fbff;
+    font-size: clamp(1.18rem, 1.8vw, 1.55rem);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.4;
     text-wrap: balance;
   }
 
-  .home-banner__role span {
+  .home-hero__role span {
     margin-inline: 0.18em;
-    color: var(--violet);
+    color: #b7aef4;
   }
 
-  .home-banner__description {
-    max-width: 650px;
-    margin: 0.9rem 0 0;
-    color: var(--hero-body);
+  .home-hero__description {
+    max-width: 620px;
+    margin: 0.95rem 0 0;
+    color: rgba(232, 242, 253, 0.82);
     font-size: 1rem;
-    line-height: 1.8;
+    line-height: 1.82;
+    text-shadow: 0 2px 16px rgba(0, 4, 18, 0.34);
     text-wrap: pretty;
   }
 
-  .home-banner__actions {
+  .home-hero__actions {
     display: flex;
     flex-wrap: wrap;
     gap: 0.75rem;
     align-items: center;
-    margin-top: 1.8rem;
+    margin-top: 1.75rem;
   }
 
-  .banner-button {
+  .hero-button {
     display: inline-flex;
     min-height: 50px;
+    gap: 0.65rem;
     align-items: center;
     justify-content: center;
     padding: 0.75rem 1.3rem;
     border: 1px solid transparent;
     border-radius: var(--radius-sm);
     font-size: 0.9375rem;
-    font-weight: 720;
+    font-weight: 600;
     line-height: 1.2;
     transition:
       transform 220ms var(--ease-out),
       border-color 220ms ease,
-      background-color 220ms ease,
-      color 220ms ease;
+      background-color 220ms ease;
   }
 
-  .banner-button--primary {
-    border-color: var(--text-main);
-    background: var(--text-main);
-    color: var(--surface-solid);
+  .hero-button--primary {
+    border-color: rgba(255, 255, 255, 0.88);
+    background: rgba(255, 255, 255, 0.94);
+    color: #081a39;
   }
 
-  .banner-button--secondary {
-    border-color: var(--border-strong);
-    background: color-mix(in srgb, var(--surface-solid) 72%, transparent);
-    color: var(--text-main);
+  .hero-button--secondary {
+    border-color: rgba(214, 235, 255, 0.42);
+    background: rgba(9, 25, 57, 0.34);
+    color: #f6fbff;
+    backdrop-filter: blur(7px);
   }
 
-  .banner-button:hover {
+  .hero-button:hover {
     transform: translateY(-2px);
   }
 
-  .banner-button--primary:hover {
-    border-color: color-mix(in srgb, var(--text-main) 88%, var(--primary));
-    background: color-mix(in srgb, var(--text-main) 88%, var(--primary));
+  .hero-button--primary:hover {
+    border-color: #ffffff;
+    background: #ffffff;
   }
 
-  .banner-button--secondary:hover {
-    border-color: color-mix(in srgb, var(--primary) 58%, var(--border-strong));
-    background: color-mix(in srgb, var(--primary-soft) 72%, var(--surface-solid));
+  .hero-button--secondary:hover {
+    border-color: rgba(222, 240, 255, 0.72);
+    background: rgba(30, 61, 105, 0.5);
   }
 
-  .banner-button:active {
+  .hero-button:active {
     transform: translateY(0) scale(0.98);
   }
 
-  .banner-button:focus-visible,
-  .home-banner__github:focus-visible {
-    outline: 3px solid color-mix(in srgb, var(--primary-strong) 58%, transparent);
+  .hero-button:focus-visible,
+  .home-hero__scroll:focus-visible {
+    border-radius: 8px;
+    outline: 3px solid rgba(174, 220, 255, 0.92);
     outline-offset: 4px;
   }
 
-  .home-banner__github {
-    display: inline-flex;
-    min-height: 44px;
-    gap: 0.35rem;
-    align-items: center;
-    padding-inline: 0.35rem;
-    color: var(--hero-body);
-    font-size: 0.875rem;
-    font-weight: 680;
-    text-decoration: underline;
-    text-decoration-color: color-mix(in srgb, var(--primary-strong) 42%, transparent);
-    text-decoration-thickness: 1px;
-    text-underline-offset: 0.3em;
-    transition:
-      color 180ms ease,
-      text-decoration-color 180ms ease;
-  }
-
-  .home-banner__github span {
-    transition: transform 180ms var(--ease-out);
-  }
-
-  .home-banner__github:hover {
-    color: var(--text-main);
-    text-decoration-color: var(--primary-strong);
-  }
-
-  .home-banner__github:hover span {
-    transform: translate(2px, -2px);
-  }
-
-  .character-stage {
-    position: relative;
-    width: min(100%, 540px);
-    margin: 0;
-    justify-self: end;
-  }
-
-  .character-stage__halo {
+  .home-hero__scroll {
     position: absolute;
-    z-index: -1;
-    inset: 6% -7% -5% 8%;
-    border-radius: 48% 52% 46% 54%;
-    background: radial-gradient(
-      circle at 52% 45%,
-      color-mix(in srgb, var(--surface-solid) 86%, transparent),
-      color-mix(in srgb, var(--violet) 20%, transparent) 48%,
-      transparent 72%
-    );
-    filter: blur(14px);
-    opacity: 0.9;
-  }
-
-  .character-stage__frame {
-    position: relative;
-    overflow: hidden;
-    border-radius: clamp(20px, 3vw, var(--radius-lg));
-    background: var(--surface-solid);
-    box-shadow: 0 8px 20px color-mix(in srgb, var(--text-main) 13%, transparent);
-  }
-
-  .character-stage__frame img {
-    display: block;
-    width: 100%;
-    height: auto;
-    aspect-ratio: 4 / 3;
-    object-fit: cover;
-    object-position: center;
-  }
-
-  .character-stage__star {
-    position: absolute;
-    z-index: 2;
-    width: 1px;
-    height: 28px;
-    background: color-mix(in srgb, var(--text-main) 52%, transparent);
-    pointer-events: none;
-  }
-
-  .character-stage__star::after {
-    position: absolute;
-    top: 50%;
+    z-index: 5;
+    bottom: max(1.35rem, env(safe-area-inset-bottom, 0px));
     left: 50%;
-    width: 28px;
-    height: 1px;
-    background: inherit;
-    content: '';
-    transform: translate(-50%, -50%);
+    display: grid;
+    gap: 0.55rem;
+    place-items: center;
+    color: rgba(222, 238, 252, 0.68);
+    font-family: var(--font-sans);
+    font-size: 0.58rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    transform: translateX(-50%);
   }
 
-  .character-stage__star--one {
-    top: 10%;
-    right: -2%;
+  .home-hero__scroll i {
+    width: 1px;
+    height: 24px;
+    background: linear-gradient(rgba(185, 222, 255, 0.92), transparent);
   }
 
-  .character-stage__star--two {
-    bottom: 12%;
-    left: -3%;
-    scale: 0.58;
+  [data-home-hero][data-intro='full'] [data-hero-step] {
+    animation: hero-step-enter 700ms var(--ease-out) both;
+    animation-delay: calc(var(--intro-order) * 140ms);
   }
 
-  :global(:root[data-theme='dark']) .home-banner {
-    background:
-      radial-gradient(
-        ellipse at 79% 34%,
-        color-mix(in srgb, var(--violet) 13%, transparent),
-        transparent 43%
-      ),
-      radial-gradient(
-        ellipse at 12% 76%,
-        color-mix(in srgb, var(--primary) 10%, transparent),
-        transparent 42%
-      ),
-      radial-gradient(
-        ellipse at 52% 4%,
-        color-mix(in srgb, var(--pink) 7%, transparent),
-        transparent 34%
-      ),
-      var(--page-bg);
+  [data-home-hero][data-intro='quick'] [data-hero-step] {
+    animation: hero-quick-enter 280ms var(--ease-out) both;
+  }
+
+  @keyframes hero-step-enter {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+  }
+
+  @keyframes hero-quick-enter {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+  }
+
+  @keyframes hero-underwater-drift {
+    from {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+
+    to {
+      transform: translate3d(0, -7px, 0) scale(1.035);
+    }
+  }
+
+  @keyframes hero-light-breathe {
+    from {
+      transform: scale(0.96);
+      opacity: 0.48;
+    }
+
+    to {
+      transform: scale(1.04);
+      opacity: 0.66;
+    }
+  }
+
+  @keyframes hero-bubble-rise {
+    from {
+      transform: translate3d(0, 0, 0) scale(0.84);
+      opacity: 0;
+    }
+
+    12% {
+      opacity: 0.62;
+    }
+
+    82% {
+      opacity: 0.42;
+    }
+
+    to {
+      transform: translate3d(10px, -112vh, 0) scale(1.08);
+      opacity: 0;
+    }
   }
 
   @media (max-width: 1100px) {
-    .home-banner__content {
-      grid-template-columns: minmax(0, 1.08fr) minmax(300px, 0.76fr);
-      gap: clamp(2rem, 4vw, 3.5rem);
-      min-height: 580px;
+    .home-hero__inner {
+      grid-template-columns: minmax(0, 0.78fr) minmax(450px, 1fr);
+      gap: 2.5rem;
     }
 
-    .character-stage {
-      width: min(100%, 450px);
+    h1 {
+      font-size: clamp(4rem, 7.5vw, 5.35rem);
     }
   }
 
   @media (max-width: 900px) {
-    .home-banner__content {
-      grid-template-columns: 1fr;
-      gap: 2rem;
-      min-height: auto;
-      padding-top: 7.5rem;
-      padding-bottom: 3.5rem;
+    .home-hero__background img {
+      filter: saturate(0.82) contrast(1.04) brightness(0.82);
+      object-position: 31% center;
     }
 
-    .home-banner__copy {
-      max-width: 720px;
+    .home-hero__shade {
+      background:
+        linear-gradient(
+          180deg,
+          rgba(1, 7, 22, 0.27) 0%,
+          rgba(1, 7, 22, 0.16) 32%,
+          rgba(2, 9, 27, 0.68) 58%,
+          rgba(2, 8, 24, 0.96) 100%
+        ),
+        linear-gradient(90deg, rgba(1, 7, 22, 0.3), rgba(1, 7, 22, 0.12));
     }
 
-    .character-stage {
-      width: min(100%, 680px);
-      justify-self: center;
+    .home-hero__light {
+      top: -12%;
+      right: -30%;
+      width: 88vw;
+      opacity: 0.42;
     }
 
-    .character-stage__frame img {
-      aspect-ratio: 16 / 8.6;
-      object-position: center 34%;
+    .home-hero__inner {
+      display: flex;
+      align-items: flex-end;
+      min-height: inherit;
+      padding-top: clamp(7rem, 13vh, 9rem);
+      padding-bottom: clamp(6.5rem, 10vh, 8rem);
     }
 
-    .character-stage__star--one {
-      right: 2%;
-    }
-
-    .character-stage__star--two {
-      left: 1%;
+    .home-hero__copy {
+      width: min(100%, 700px);
+      opacity: 1;
+      transform: none;
     }
   }
 
   @media (max-width: 520px) {
-    .home-banner__content {
-      gap: 1.5rem;
-      padding-top: 6.75rem;
-      padding-bottom: 3.5rem;
+    .home-hero__background {
+      inset: -1.5%;
     }
 
-    .home-banner__availability {
+    .home-hero__background img {
+      object-position: 29% center;
+    }
+
+    .home-hero__inner {
+      padding-top: 6.4rem;
+      padding-bottom: 5.8rem;
+    }
+
+    .home-hero__availability {
       margin-bottom: 1rem;
-      font-size: 0.8125rem;
+      font-size: 0.64rem;
+      letter-spacing: 0.065em;
+    }
+
+    .home-hero__title-lockup > p {
+      margin-bottom: 0.4rem;
+      font-size: 0.84rem;
     }
 
     h1 {
-      font-size: clamp(3rem, 15vw, 3.65rem);
-      line-height: 1;
+      font-size: clamp(3.2rem, 16.5vw, 4.1rem);
+      line-height: 0.9;
     }
 
-    h1 span {
+    .home-hero__english-role {
+      margin-top: 1.05rem;
+      font-size: 0.66rem;
+      letter-spacing: 0.06em;
+    }
+
+    .home-hero__role {
       margin-top: 0.55rem;
-      font-size: 0.9375rem;
+      font-size: 1.04rem;
     }
 
-    .home-banner__role {
-      margin-top: 1.25rem;
-      font-size: 1.125rem;
-    }
-
-    .home-banner__description {
+    .home-hero__description {
       margin-top: 0.75rem;
-      font-size: 0.9375rem;
-      line-height: 1.72;
+      font-size: 0.88rem;
+      line-height: 1.7;
     }
 
-    .home-banner__actions {
+    .home-hero__description br {
+      display: none;
+    }
+
+    .home-hero__actions {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0.65rem;
-      margin-top: 1.4rem;
+      grid-template-columns: 1fr;
+      gap: 0.6rem;
+      margin-top: 1.3rem;
     }
 
-    .banner-button {
-      min-width: 0;
-      padding-inline: 0.7rem;
-      font-size: 0.875rem;
-      text-align: center;
+    .hero-button {
+      width: 100%;
+      min-height: 48px;
+      padding-inline: 1rem;
+      font-size: 0.86rem;
     }
 
-    .home-banner__github {
-      grid-column: 1 / -1;
-      width: fit-content;
-      min-height: 44px;
+    .home-hero__scroll {
+      bottom: max(0.8rem, env(safe-area-inset-bottom, 0px));
     }
 
-    .character-stage__frame {
-      border-radius: 20px;
-    }
-
-    .character-stage__frame img {
-      aspect-ratio: 16 / 9;
-      object-position: center 32%;
-    }
-
-    .home-banner__atmosphere span:nth-child(2) {
+    .bubble--two,
+    .bubble--three,
+    .bubble--six {
       display: none;
     }
   }
 
+  @media (max-height: 720px) and (min-width: 901px) {
+    .home-hero__inner {
+      padding-top: 6.5rem;
+      padding-bottom: 4.8rem;
+    }
+
+    .home-hero__availability {
+      margin-bottom: 0.85rem;
+    }
+
+    .home-hero__english-role {
+      margin-top: 0.9rem;
+    }
+
+    .home-hero__description {
+      margin-top: 0.7rem;
+      line-height: 1.65;
+    }
+
+    .home-hero__actions {
+      margin-top: 1.15rem;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
-    .banner-button,
-    .home-banner__github,
-    .home-banner__github span {
+    .home-hero__background,
+    .home-hero__background img,
+    .home-hero__copy,
+    .home-hero__light,
+    .bubble,
+    [data-home-hero] [data-hero-step] {
+      animation: none;
+      transform: none;
+    }
+
+    .home-hero__copy,
+    .home-hero__light,
+    .home-hero__bubbles,
+    [data-home-hero] [data-hero-step] {
+      opacity: 1;
+    }
+
+    .hero-button {
       transition: none;
     }
   }

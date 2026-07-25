@@ -214,8 +214,24 @@ export const timeline = [
 ] as const;
 
 export const featuredProjectLinks = [
-  { type: '评测工作台', title: 'AI Product Evaluation Workbench', href: '/projects/ai-product-evaluation-workbench/' },
-  { type: '游戏 AI', title: 'AI 游戏增长投放与实验评测工作流', href: '/projects/ai-game-growth-workflow/' },
-  { type: 'Agent 评测', title: 'Mobile UIAgent Evaluation Lab', href: '/projects/mobile-uiagent-evaluation-lab/' },
-  { type: '角色 Agent', title: 'Elysia AI 角色 Agent', href: '/projects/elysia-ai-character-agent/' },
+  {
+    type: '评测工作台',
+    title: 'AI Product Evaluation Workbench',
+    href: '/projects/ai-product-evaluation-workbench/',
+  },
+  {
+    type: '游戏 AI',
+    title: 'AI 游戏增长投放与实验评测工作流',
+    href: '/projects/ai-game-growth-workflow/',
+  },
+  {
+    type: 'Agent 评测',
+    title: 'Mobile UIAgent Evaluation Lab',
+    href: '/projects/mobile-uiagent-evaluation-lab/',
+  },
+  {
+    type: '角色 Agent',
+    title: 'Elysia AI 角色 Agent',
+    href: '/projects/elysia-ai-character-agent/',
+  },
 ] as const;

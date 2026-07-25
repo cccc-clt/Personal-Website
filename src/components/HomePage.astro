@@ -1,453 +1,491 @@
 ---
 import { getCollection } from 'astro:content';
-import { abilities } from '../config/site';
-import { timeline } from '../data/siteContent';
+import { abilities, siteConfig } from '../config/site';
+import { avatarConfig } from '../config/visualAssets';
 import HeroBanner from './HeroBanner.astro';
-import MainGridLayout from './MainGridLayout.astro';
-import ProfileCard from './ProfileCard.astro';
 import ProjectCard from './ProjectCard.astro';
-import RightSidebar from './RightSidebar.astro';
 
-const allProjects = (await getCollection('projects')).sort((a, b) => a.data.order.general - b.data.order.general);
-const homepageProjectOrder = [
+const allProjects = (await getCollection('projects')).sort(
+  (a, b) => a.data.order.general - b.data.order.general,
+);
+const featuredProjectSlugs = [
   'ai-game-content-copilot',
   'elysia-ai-character-agent',
   'ai-game-growth-workflow',
-  'ai-product-evaluation-workbench',
 ];
-const homepageProjectRank = new Map(homepageProjectOrder.map((slug, index) => [slug, index]));
 const getProjectSlug = (project: (typeof allProjects)[number]) => project.id.replace(/\.mdx?$/, '');
-const projects = [...allProjects].sort((a, b) => {
-  const aRank = homepageProjectRank.get(getProjectSlug(a)) ?? Number.MAX_SAFE_INTEGER;
-  const bRank = homepageProjectRank.get(getProjectSlug(b)) ?? Number.MAX_SAFE_INTEGER;
-
-  return aRank === bRank ? a.data.order.general - b.data.order.general : aRank - bRank;
+const projectBySlug = new Map(allProjects.map((project) => [getProjectSlug(project), project]));
+const featuredProjects = featuredProjectSlugs.flatMap((slug) => {
+  const project = projectBySlug.get(slug);
+  return project ? [project] : [];
 });
 const projectCount = String(allProjects.length).padStart(2, '0');
 ---
 
 <HeroBanner />
-<MainGridLayout>
-  <ProfileCard slot="left" />
 
-  <article class="welcome-card panel">
-    <span class="eyebrow">WELCOME TO MY SPACE</span>
-    <h2>你好，我是赵天琦。</h2>
-    <p>我是一名交通工程专业本科生，目前正在向游戏 AI 与 AI 产品方向发展。</p>
-    <p>我持续实践 Prompt、Agent、RAG、模型评测和快速原型，尝试把复杂技术转化为更清楚、更可用、更容易验证的产品方案。</p>
-    <div class="welcome-card__links"><a href="/about/">进一步认识我 →</a><a href="/stack/">查看工具链 →</a></div>
-  </article>
+<div class="home-flow page-shell">
+  <section class="home-projects" id="featured-projects" aria-labelledby="featured-projects-title">
+    <header class="home-heading">
+      <div class="home-heading__index" aria-hidden="true">01</div>
+      <div>
+        <p>精选项目</p>
+        <h2 id="featured-projects-title">三个真实案例，三种 AI 产品命题</h2>
+      </div>
+      <a href="/projects/">查看全部 {projectCount} 个项目 <span aria-hidden="true">→</span></a>
+    </header>
 
-  <section class="home-projects" aria-labelledby="featured-title">
-    <header class="home-section__heading"><div><span class="eyebrow">FEATURED PROJECTS</span><h2 id="featured-title">精选项目</h2></div><a href="/projects/">全部 {projectCount} 个项目 ↗</a></header>
-    <div class="home-projects__spotlight">
-      {projects.slice(0, 3).map((project, index) => <ProjectCard project={project} homepagePriority={index === 0 ? 'primary' : 'secondary'} />)}
-    </div>
-    <div class="home-projects__divider"><span>更多项目实践</span><span>04—{projectCount}</span></div>
-    <div class="home-projects__list">
-      {projects.slice(3).map((project, index) => <ProjectCard project={project} homepagePriority={index === 0 ? 'supporting' : 'compact'} />)}
-    </div>
-  </section>
-
-  <section class="home-section panel" aria-labelledby="method-title">
-    <header class="home-section__heading"><div><span class="eyebrow">PRODUCT PRACTICE</span><h2 id="method-title">我如何推进 AI 产品</h2></div><a href="/about/">了解我的方法 ↗</a></header>
-    <div class="practice-grid">
-      {abilities.map((ability) => <article><span>{ability.index}</span><h3>{ability.title}</h3><p>{ability.description}</p></article>)}
+    <div class="home-projects__grid">
+      {
+        featuredProjects.map((project, index) => (
+          <ProjectCard project={project} homepagePriority={index === 0 ? 'primary' : 'secondary'} />
+        ))
+      }
     </div>
   </section>
 
-  <section class="home-section panel" aria-labelledby="timeline-title">
-    <header class="home-section__heading"><div><span class="eyebrow">MY TIMELINE</span><h2 id="timeline-title">项目与学习时间线</h2></div><a href="/archive/">完整归档 ↗</a></header>
-    <ol class="mini-timeline">{timeline.map((item) => <li><span class="mini-timeline__label">{item.period}</span><i aria-hidden="true"></i><div><span>{item.type}</span><h3>{item.title}</h3><p>{item.text}</p></div></li>)}</ol>
+  <section class="home-method" aria-labelledby="home-method-title">
+    <header class="home-heading">
+      <div class="home-heading__index" aria-hidden="true">02</div>
+      <div>
+        <p>产品方法</p>
+        <h2 id="home-method-title">从场景判断到评测回路</h2>
+      </div>
+      <a href="/about/">了解我的方法 <span aria-hidden="true">→</span></a>
+    </header>
+
+    <ol class="method-flow">
+      {
+        abilities.map((ability) => (
+          <li>
+            <span>{ability.index}</span>
+            <div>
+              <p>{ability.english}</p>
+              <h3>{ability.title}</h3>
+              <p>{ability.description}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
   </section>
 
-  <a class="all-projects panel" href="/projects/"><span><small>CONTINUE EXPLORING</small>查看全部作品与案例研究</span><b aria-hidden="true">→</b></a>
-
-  <RightSidebar slot="right" />
-</MainGridLayout>
+  <section class="career-cta" aria-labelledby="career-cta-title">
+    <div class="career-cta__avatar" aria-hidden="true">
+      <img
+        src={avatarConfig.image}
+        width={avatarConfig.width}
+        height={avatarConfig.height}
+        alt=""
+        loading="lazy"
+        decoding="async"
+      />
+    </div>
+    <div class="career-cta__copy">
+      <p>{siteConfig.name} · {siteConfig.englishName}</p>
+      <h2 id="career-cta-title">游戏 AI 产品经理 / AI 应用产品经理方向</h2>
+      <p>
+        交通工程本科生，持续围绕游戏 AI、角色 Agent、工作流与产品评测推进真实项目实践。
+        如果你想进一步了解我的经历与判断方式，可以从在线简历或完整介绍开始。
+      </p>
+    </div>
+    <div class="career-cta__actions" aria-label="职业信息入口">
+      <a class="career-link career-link--primary" href="/resume/">查看在线简历</a>
+      <a class="career-link" href="/about/">关于我</a>
+      <a class="career-link" href={siteConfig.github} target="_blank" rel="noreferrer">
+        GitHub <span aria-hidden="true">↗</span>
+      </a>
+    </div>
+  </section>
+</div>
 
 <style>
-  .welcome-card,
-  .home-section,
-  .all-projects {
-    position: relative;
-    overflow: hidden;
-    isolation: isolate;
-    transition:
-      border-color 240ms ease,
-      box-shadow 240ms ease,
-      transform 240ms var(--ease-out);
+  .home-flow {
+    display: grid;
+    gap: clamp(5rem, 9vw, 9rem);
+    padding-top: clamp(4.5rem, 8vw, 7rem);
+    padding-bottom: clamp(5rem, 9vw, 8rem);
   }
 
-  .welcome-card,
-  .home-section {
-    padding: clamp(1.45rem, 3vw, 2.4rem);
+  .home-projects,
+  .home-method {
+    scroll-margin-top: 7rem;
   }
 
-  .welcome-card::before {
-    position: absolute;
-    z-index: -1;
-    top: -9rem;
-    right: -7rem;
-    width: 25rem;
-    height: 25rem;
-    border-radius: 50%;
-    background: radial-gradient(circle, color-mix(in srgb, var(--violet) 17%, transparent), transparent 68%);
-    content: '';
-    pointer-events: none;
+  .home-heading {
+    display: grid;
+    grid-template-columns: 3rem minmax(0, 1fr) auto;
+    gap: clamp(1rem, 2.4vw, 2rem);
+    align-items: end;
+    padding-bottom: clamp(1.4rem, 2.8vw, 2rem);
+    border-bottom: 1px solid var(--border);
   }
 
-  .welcome-card::after {
-    position: absolute;
-    top: 1.45rem;
-    right: 1.55rem;
-    color: color-mix(in srgb, var(--violet) 54%, var(--text-muted));
-    content: '✦';
-    font-size: 1.1rem;
-    opacity: 0.55;
+  .home-heading__index {
+    color: var(--violet);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    line-height: 1.6;
   }
 
-  .welcome-card h2 {
-    max-width: 760px;
-    margin: 0.72rem 0 1.1rem;
-    font-size: clamp(1.9rem, 4vw, 3.45rem);
-    letter-spacing: -0.055em;
-    line-height: 1.08;
+  .home-heading p {
+    margin: 0 0 0.5rem;
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0;
   }
 
-  .welcome-card p {
-    max-width: 780px;
-    margin: 0 0 0.68rem;
+  .home-heading h2 {
+    max-width: 840px;
+    margin: 0;
+    font-size: clamp(2rem, 4.4vw, 4rem);
+    letter-spacing: -0.02em;
+    line-height: 1.12;
+    text-wrap: balance;
+  }
+
+  .home-heading > a {
+    display: inline-flex;
+    min-height: 44px;
+    gap: 0.5rem;
+    align-items: center;
     color: var(--text-secondary);
-    font-size: 0.9rem;
-    line-height: 1.88;
-  }
-
-  .welcome-card__links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.25rem;
-    margin-top: 1.25rem;
-    color: var(--primary-strong);
-    font-size: 0.76rem;
-    font-weight: 750;
-  }
-
-  .welcome-card__links a,
-  .home-section__heading > a {
+    font-size: 0.78rem;
+    font-weight: 600;
+    white-space: nowrap;
     transition:
       color 180ms ease,
       transform 180ms var(--ease-out);
   }
 
-  .welcome-card__links a:hover,
-  .home-section__heading > a:hover {
+  .home-heading > a:hover {
     color: var(--primary-strong);
     transform: translateX(3px);
   }
 
-  .welcome-card:hover,
-  .home-section:hover {
-    border-color: color-mix(in srgb, var(--primary) 24%, var(--border));
-    box-shadow: 0 22px 56px color-mix(in srgb, var(--text-main) 10%, transparent);
+  .home-heading > a:focus-visible,
+  .career-link:focus-visible {
+    border-radius: 8px;
+    outline: 3px solid color-mix(in srgb, var(--primary-strong) 58%, transparent);
+    outline-offset: 4px;
   }
 
-  .home-section::before {
-    position: absolute;
-    z-index: -1;
-    top: -36px;
-    right: -36px;
-    width: 105px;
-    height: 105px;
-    border: 1px solid color-mix(in srgb, var(--primary) 15%, transparent);
-    content: '';
-    rotate: 45deg;
-  }
-
-  .home-section__heading {
-    display: flex;
-    gap: 1rem;
-    align-items: end;
-    justify-content: space-between;
-    padding-bottom: 1.45rem;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .home-section__heading h2 {
-    margin: 0.45rem 0 0;
-    font-size: clamp(1.65rem, 3.5vw, 2.8rem);
-    letter-spacing: -0.05em;
-    line-height: 1.08;
-  }
-
-  .home-section__heading > a {
-    color: var(--text-muted);
-    font-size: 0.7rem;
-  }
-
-  .home-projects {
-    position: relative;
-    padding: clamp(1.5rem, 3vw, 2.5rem) 0;
-    border-block: 1px solid var(--border);
-  }
-
-  .home-projects__spotlight {
+  .home-projects__grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.5rem 1rem;
+    gap: 1rem;
     margin-top: 1.5rem;
   }
 
-  .home-projects__spotlight > :global(:first-child) {
+  .home-projects__grid > :global(:first-child) {
     grid-column: 1 / -1;
   }
 
-  .home-projects__divider {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1.5rem 0 0.75rem;
-    margin-top: 1.5rem;
-    border-top: 1px solid var(--border);
-    color: var(--text-secondary);
-    font-size: 0.75rem;
-    font-weight: 700;
-  }
-
-  .home-projects__divider span:last-child {
-    color: var(--violet);
-    font-family: var(--font-mono);
-    font-size: 0.6875rem;
-    font-weight: 600;
-  }
-
-  .home-projects__list {
+  .method-flow {
     display: grid;
-  }
-
-  .home-projects .home-section__heading > a {
-    display: inline-flex;
-    min-height: 44px;
-    align-items: center;
-  }
-
-  .practice-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1px;
-    margin-top: 1.35rem;
-    overflow: hidden;
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    background: var(--border);
-  }
-
-  .practice-grid article {
-    position: relative;
-    padding: 1.3rem;
-    background: color-mix(in srgb, var(--surface-solid) 94%, var(--primary-soft));
-    transition:
-      background 220ms ease,
-      transform 220ms var(--ease-out);
-  }
-
-  .practice-grid article::after {
-    position: absolute;
-    top: 0.9rem;
-    right: 1rem;
-    width: 7px;
-    height: 7px;
-    border: 1px solid color-mix(in srgb, var(--violet) 55%, var(--border-strong));
-    content: '';
-    opacity: 0.48;
-    rotate: 45deg;
-  }
-
-  .practice-grid article:hover {
-    z-index: 1;
-    background: color-mix(in srgb, var(--surface-solid) 82%, var(--primary-soft));
-    transform: translateY(-2px);
-  }
-
-  .practice-grid span,
-  .mini-timeline span {
-    color: var(--violet);
-    font-family: var(--font-mono);
-    font-size: 0.66rem;
-  }
-
-  .practice-grid h3,
-  .mini-timeline h3 {
-    margin: 0.65rem 0 0.5rem;
-    font-size: 1rem;
-  }
-
-  .practice-grid p,
-  .mini-timeline p {
-    margin: 0;
-    color: var(--text-secondary);
-    font-size: 0.78rem;
-    line-height: 1.75;
-  }
-
-  .mini-timeline {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     padding: 0;
-    margin: 1.05rem 0 0;
+    margin: 1.25rem 0 0;
     list-style: none;
   }
 
-  .mini-timeline li {
-    display: grid;
-    grid-template-columns: 95px 12px 1fr;
-    gap: 0.8rem;
-    padding: 1.05rem 0;
-    border-bottom: 1px solid color-mix(in srgb, var(--border) 72%, transparent);
-  }
-
-  .mini-timeline li:last-child {
-    border-bottom: 0;
-  }
-
-  .mini-timeline__label {
-    color: var(--text-muted) !important;
-    font-family: var(--font-mono);
-    font-size: 0.6rem !important;
-  }
-
-  .mini-timeline i {
+  .method-flow li {
     position: relative;
-    width: 9px;
-    height: 9px;
-    margin-top: 0.2rem;
-    border: 2px solid var(--surface-solid);
-    border-radius: 50%;
-    background: var(--primary);
-    box-shadow:
-      0 0 0 1px var(--primary),
-      0 0 16px color-mix(in srgb, var(--primary) 42%, transparent);
-  }
-
-  .mini-timeline i::after {
-    position: absolute;
-    top: 10px;
-    bottom: -84px;
-    left: 3px;
-    width: 1px;
-    background: linear-gradient(var(--border-strong), color-mix(in srgb, var(--violet) 26%, var(--border)));
-    content: '';
-  }
-
-  .mini-timeline li:last-child i::after {
-    display: none;
-  }
-
-  .all-projects {
-    display: flex;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
     gap: 1rem;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1.65rem 1.9rem;
-    background:
-      radial-gradient(circle at 87% 18%, color-mix(in srgb, var(--surface-solid) 78%, transparent), transparent 8rem),
-      linear-gradient(120deg, var(--primary-soft), color-mix(in srgb, var(--pink) 23%, var(--surface-solid)));
+    min-width: 0;
+    padding: 1.4rem clamp(1rem, 2vw, 1.5rem);
+    border-left: 1px solid var(--border);
   }
 
-  .all-projects::after {
+  .method-flow li:first-child {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .method-flow li:last-child {
+    padding-right: 0;
+  }
+
+  .method-flow li > span {
+    color: var(--violet);
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    line-height: 1.6;
+  }
+
+  .method-flow li > div > p:first-child {
+    margin: 0 0 0.55rem;
+    color: var(--text-muted);
+    font-family: var(--font-sans);
+    font-size: 0.58rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+  }
+
+  .method-flow h3 {
+    margin: 0;
+    font-size: clamp(1.05rem, 1.5vw, 1.3rem);
+    letter-spacing: -0.015em;
+  }
+
+  .method-flow li > div > p:last-child {
+    margin: 0.65rem 0 0;
+    color: var(--text-secondary);
+    font-size: 0.78rem;
+    line-height: 1.75;
+    text-wrap: pretty;
+  }
+
+  .career-cta {
+    position: relative;
+    display: grid;
+    grid-template-columns: 96px minmax(0, 1fr) auto;
+    gap: clamp(1.2rem, 3vw, 2.2rem);
+    align-items: center;
+    overflow: hidden;
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background:
+      radial-gradient(
+        circle at 90% 10%,
+        color-mix(in srgb, var(--violet) 18%, transparent),
+        transparent 15rem
+      ),
+      linear-gradient(
+        125deg,
+        color-mix(in srgb, var(--primary-soft) 64%, var(--surface-solid)),
+        color-mix(in srgb, var(--surface-solid) 92%, var(--pink))
+      );
+  }
+
+  .career-cta::after {
     position: absolute;
-    right: 5rem;
-    width: 48px;
-    height: 48px;
-    border: 1px solid color-mix(in srgb, var(--primary) 26%, transparent);
+    top: -32px;
+    right: 7%;
+    width: 72px;
+    height: 72px;
+    border: 1px solid color-mix(in srgb, var(--violet) 20%, transparent);
     content: '';
     rotate: 45deg;
-    transition: rotate 360ms var(--ease-out);
   }
 
-  .all-projects:hover {
-    border-color: color-mix(in srgb, var(--primary) 36%, var(--border));
-    box-shadow: var(--shadow-float);
-    transform: translateY(-3px);
-  }
-
-  .all-projects:hover::after {
-    rotate: 135deg;
-  }
-
-  .all-projects span {
+  .career-cta__avatar {
     position: relative;
     z-index: 1;
-    font-size: clamp(1.08rem, 2.2vw, 1.55rem);
-    font-weight: 750;
+    overflow: hidden;
+    width: 96px;
+    height: 96px;
+    border: 1px solid color-mix(in srgb, var(--surface-solid) 82%, var(--border));
+    border-radius: 28px;
+    background: var(--surface-solid);
+    box-shadow: 0 14px 32px color-mix(in srgb, var(--text-main) 10%, transparent);
   }
 
-  .all-projects small {
+  .career-cta__avatar img {
     display: block;
-    margin-bottom: 0.35rem;
-    color: var(--text-muted);
-    font-family: var(--font-mono);
-    font-size: 0.56rem;
-    font-weight: 500;
-    letter-spacing: 0.06em;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
-  .all-projects b {
+  .career-cta__copy {
     position: relative;
     z-index: 1;
-    font-size: 1.7rem;
-    transition: transform 220ms var(--ease-out);
+    min-width: 0;
   }
 
-  .all-projects:hover b {
-    transform: translateX(5px);
+  .career-cta__copy > p:first-child {
+    margin: 0 0 0.45rem;
+    color: var(--violet);
+    font-family: var(--font-sans);
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0;
   }
 
-  @media (max-width: 840px) {
-    .home-projects__spotlight {
+  .career-cta h2 {
+    margin: 0;
+    font-size: clamp(1.35rem, 2.6vw, 2.25rem);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    text-wrap: balance;
+  }
+
+  .career-cta__copy > p:last-child {
+    max-width: 720px;
+    margin: 0.7rem 0 0;
+    color: var(--text-secondary);
+    font-size: 0.82rem;
+    line-height: 1.75;
+  }
+
+  .career-cta__actions {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: flex-end;
+    max-width: 280px;
+  }
+
+  .career-link {
+    display: inline-flex;
+    min-height: 44px;
+    gap: 0.35rem;
+    align-items: center;
+    justify-content: center;
+    padding: 0.65rem 0.9rem;
+    border: 1px solid var(--border-strong);
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--surface-solid) 70%, transparent);
+    color: var(--text-main);
+    font-size: 0.76rem;
+    font-weight: 600;
+    transition:
+      transform 180ms var(--ease-out),
+      border-color 180ms ease;
+  }
+
+  .career-link--primary {
+    border-color: var(--text-main);
+    background: var(--text-main);
+    color: var(--surface-solid);
+  }
+
+  .career-link:hover {
+    border-color: color-mix(in srgb, var(--primary) 56%, var(--border-strong));
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 1020px) {
+    .method-flow {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .method-flow li:nth-child(3) {
+      padding-left: 0;
+      border-left: 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .method-flow li:nth-child(4) {
+      border-top: 1px solid var(--border);
+    }
+
+    .career-cta {
+      grid-template-columns: 88px minmax(0, 1fr);
+    }
+
+    .career-cta__avatar {
+      width: 88px;
+      height: 88px;
+    }
+
+    .career-cta__actions {
+      grid-column: 2;
+      justify-content: flex-start;
+      max-width: none;
+    }
+  }
+
+  @media (max-width: 760px) {
+    .home-flow {
+      gap: 4.75rem;
+      padding-top: 4rem;
+      padding-bottom: 5rem;
+    }
+
+    .home-heading {
+      grid-template-columns: 2rem minmax(0, 1fr);
+    }
+
+    .home-heading > a {
+      grid-column: 2;
+      width: fit-content;
+    }
+
+    .home-projects__grid {
       grid-template-columns: 1fr;
     }
 
-    .home-projects__spotlight > :global(:first-child) {
+    .home-projects__grid > :global(:first-child) {
       grid-column: 1;
     }
-
-    .home-projects__spotlight {
-      gap: 1rem;
-    }
   }
 
-  @media (max-width: 680px) {
-    .practice-grid {
+  @media (max-width: 560px) {
+    .home-heading {
+      grid-template-columns: 1fr;
+      gap: 0.4rem;
+    }
+
+    .home-heading__index {
+      margin-bottom: 0.25rem;
+    }
+
+    .home-heading > a {
+      grid-column: 1;
+      margin-top: 0.5rem;
+    }
+
+    .method-flow {
       grid-template-columns: 1fr;
     }
 
-    .home-projects {
-      padding-block: 1.5rem;
+    .method-flow li,
+    .method-flow li:first-child,
+    .method-flow li:nth-child(3),
+    .method-flow li:last-child {
+      padding: 1.15rem 0;
+      border-top: 1px solid var(--border);
+      border-left: 0;
     }
 
-    .home-projects__divider {
-      margin-top: 1rem;
+    .method-flow li:first-child {
+      border-top: 0;
     }
 
-    .home-section__heading {
+    .career-cta {
+      grid-template-columns: 68px minmax(0, 1fr);
       align-items: start;
-      flex-direction: column;
     }
 
-    .welcome-card::after,
-    .all-projects::after {
-      display: none;
+    .career-cta__avatar {
+      width: 68px;
+      height: 68px;
+      border-radius: 20px;
+    }
+
+    .career-cta__copy > p:last-child {
+      grid-column: 1 / -1;
+    }
+
+    .career-cta__actions {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      width: 100%;
+    }
+
+    .career-link--primary {
+      grid-column: 1 / -1;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .welcome-card,
-    .home-section,
-    .all-projects,
-    .practice-grid article,
-    .all-projects b,
-    .welcome-card__links a,
-    .home-section__heading > a {
+    .home-heading > a,
+    .career-link {
       transition: none;
+    }
+
+    .home-heading > a:hover,
+    .career-link:hover {
+      transform: none;
     }
   }
 </style>

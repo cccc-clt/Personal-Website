@@ -4,35 +4,188 @@ import { assetCredits } from '../data/assetCredits';
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="主题与资源署名｜赵天琦" description="本站主题来源、上游许可证、原创图片和第三方资源说明。">
-  <InnerPageHero eyebrow="CREDITS / LICENSES" title="主题、图片与第三方资源署名" description="部分个人品牌视觉与项目概念封面由生成式图像工具辅助创作；项目功能、测试过程与成果描述以项目详情和公开仓库为准。" />
+<BaseLayout
+  title="主题与资源署名｜赵天琦"
+  description="本站主题来源、上游许可证、原创图片和第三方资源说明。"
+>
+  <InnerPageHero
+    eyebrow="CREDITS / LICENSES"
+    title="主题、图片与第三方资源署名"
+    description="部分个人品牌视觉与项目概念封面由生成式图像工具辅助创作；项目功能、测试过程与成果描述以项目详情和公开仓库为准。"
+  />
   <section class="credits-page section page-shell">
-    <section class="credit-block panel"><span class="eyebrow">THEME</span><h2>Mizuki 二次开发</h2><p>本网站基于开源 Astro 主题 Mizuki 进行二次开发。本站保留并遵循 Mizuki 的 Apache License 2.0，以及其上游 Fuwari 的 MIT License。</p><div class="credit-links"><a href="https://github.com/LyraVoid/Mizuki" target="_blank" rel="noreferrer">Mizuki 官方仓库 ↗</a><a href="/LICENSE">Apache-2.0</a><a href="/LICENSE.MIT">Fuwari MIT</a></div></section>
-    <section class="credit-block panel"><span class="eyebrow">LOCAL ASSETS</span><h2>已登记的本地视觉资产</h2><div class="asset-table">{assetCredits.map((asset) => <article><code>{asset.path}</code><h3>{asset.title}</h3><dl><div><dt>作者</dt><dd>{asset.author}</dd></div><div><dt>来源</dt><dd>{asset.source}</dd></div><div><dt>授权状态</dt><dd>{asset.licenseStatus}</dd></div><div><dt>当前说明</dt><dd>{asset.attribution}</dd></div></dl></article>)}</div></section>
-    <section class="credit-block panel"><span class="eyebrow">THIRD-PARTY</span><h2>技术资源</h2><ul><li><strong>Astro</strong><span>静态站点框架</span></li><li><strong>Swup</strong><span>页面过渡</span></li><li><strong>Pagefind</strong><span>本地静态搜索</span></li><li><strong>Tailwind CSS</strong><span>Mizuki 技术体系与样式构建</span></li></ul></section>
-    <aside class="credit-policy panel"><strong>版权与真实性原则</strong><p>本站不热链 Pixiv，不使用官方游戏角色、Logo 或未授权画师作品包装个人品牌；概念封面仅承担主题表达，不代表真实运行界面、项目指标或业务结果。</p></aside>
+    <section class="credit-block panel">
+      <span class="eyebrow">THEME</span><h2>Mizuki 二次开发</h2><p>
+        本网站基于开源 Astro 主题 Mizuki 进行二次开发。本站保留并遵循 Mizuki 的 Apache License
+        2.0，以及其上游 Fuwari 的 MIT License。
+      </p><div class="credit-links">
+        <a href="https://github.com/LyraVoid/Mizuki" target="_blank" rel="noreferrer"
+          >Mizuki 官方仓库 ↗</a
+        ><a href="/LICENSE">Apache-2.0</a><a href="/LICENSE.MIT">Fuwari MIT</a>
+      </div>
+    </section>
+    <section class="credit-block panel">
+      <span class="eyebrow">LOCAL ASSETS</span><h2>已登记的本地视觉资产</h2><div
+        class="asset-table"
+      >
+        {
+          assetCredits.map((asset) => (
+            <article>
+              <>
+                <code>{asset.path}</code>
+                <h3>{asset.title}</h3>
+                <dl>
+                  <>
+                    <div>
+                      <>
+                        <dt>作者</dt>
+                        <dd>{asset.author}</dd>
+                      </>
+                    </div>
+                    <div>
+                      <>
+                        <dt>来源</dt>
+                        <dd>{asset.source}</dd>
+                      </>
+                    </div>
+                    <div>
+                      <>
+                        <dt>授权状态</dt>
+                        <dd>{asset.licenseStatus}</dd>
+                      </>
+                    </div>
+                    <div>
+                      <>
+                        <dt>当前说明</dt>
+                        <dd>{asset.attribution}</dd>
+                      </>
+                    </div>
+                  </>
+                </dl>
+              </>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+    <section class="credit-block panel">
+      <span class="eyebrow">THIRD-PARTY</span><h2>技术资源</h2><ul>
+        <li><strong>Astro</strong><span>静态站点框架</span></li><li>
+          <strong>Swup</strong><span>页面过渡</span>
+        </li><li><strong>Pagefind</strong><span>本地静态搜索</span></li><li>
+          <strong>Tailwind CSS</strong><span>Mizuki 技术体系与样式构建</span>
+        </li>
+      </ul>
+    </section>
+    <aside class="credit-policy panel">
+      <strong>版权与真实性原则</strong><p>
+        本站不热链 Pixiv，不使用官方游戏角色、Logo
+        或未授权画师作品包装个人品牌；概念封面仅承担主题表达，不代表真实运行界面、项目指标或业务结果。
+      </p>
+    </aside>
   </section>
 </BaseLayout>
 
 <style>
-  .credits-page { display: grid; gap: 1rem; }
-  .credit-block, .credit-policy { padding: clamp(1.5rem, 4vw, 3rem); }
-  .credit-block > h2 { margin: .65rem 0 1rem; font-size: clamp(1.8rem, 4vw, 3.7rem); letter-spacing: -.055em; }
-  .credit-block > p, .credit-policy p { max-width: 820px; color: var(--text-secondary); line-height: 1.85; }
-  .credit-links { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1.4rem; }
-  .credit-links a { padding: .65rem .85rem; border: 1px solid var(--border); border-radius: 11px; color: var(--primary-strong); font-size: .75rem; }
-  .asset-table { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 1.5rem; }
-  .asset-table article { padding: 1.2rem; border: 1px solid var(--border); border-radius: 14px; background: var(--surface-soft); }
-  .asset-table code { color: var(--violet); font-size: .64rem; overflow-wrap: anywhere; }
-  .asset-table h3 { margin: .75rem 0 1rem; }
-  .asset-table dl { margin: 0; }
-  .asset-table dl div { padding: .65rem 0; border-top: 1px solid var(--border); }
-  dt { color: var(--text-muted); font-size: .6rem; }
-  dd { margin: .25rem 0 0; color: var(--text-secondary); font-size: .72rem; line-height: 1.6; }
-  ul { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; padding: 0; margin: 1.5rem 0 0; background: var(--border); list-style: none; }
-  li { display: grid; gap: .35rem; padding: 1rem; background: var(--surface-solid); }
-  li span { color: var(--text-secondary); font-size: .75rem; }
-  .credit-policy { border-left: 4px solid var(--mint); }
-  .credit-policy p { margin-bottom: 0; }
-  @media (max-width: 720px) { .asset-table, ul { grid-template-columns: 1fr; } }
+  .credits-page {
+    display: grid;
+    gap: 1rem;
+  }
+  .credit-block,
+  .credit-policy {
+    padding: clamp(1.5rem, 4vw, 3rem);
+  }
+  .credit-block > h2 {
+    margin: 0.65rem 0 1rem;
+    font-size: clamp(1.8rem, 4vw, 3.7rem);
+    letter-spacing: -0.02em;
+    line-height: 1.14;
+  }
+  .credit-block > p,
+  .credit-policy p {
+    max-width: 820px;
+    color: var(--text-secondary);
+    line-height: 1.85;
+  }
+  .credit-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 1.4rem;
+  }
+  .credit-links a {
+    padding: 0.65rem 0.85rem;
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    color: var(--primary-strong);
+    font-size: 0.75rem;
+  }
+  .asset-table {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  .asset-table article {
+    padding: 1.2rem;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--surface-soft);
+  }
+  .asset-table code {
+    color: var(--violet);
+    font-size: 0.64rem;
+    overflow-wrap: anywhere;
+  }
+  .asset-table h3 {
+    margin: 0.75rem 0 1rem;
+  }
+  .asset-table dl {
+    margin: 0;
+  }
+  .asset-table dl div {
+    padding: 0.65rem 0;
+    border-top: 1px solid var(--border);
+  }
+  dt {
+    color: var(--text-muted);
+    font-size: 0.6rem;
+  }
+  dd {
+    margin: 0.25rem 0 0;
+    color: var(--text-secondary);
+    font-size: 0.72rem;
+    line-height: 1.6;
+  }
+  ul {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    padding: 0;
+    margin: 1.5rem 0 0;
+    background: var(--border);
+    list-style: none;
+  }
+  li {
+    display: grid;
+    gap: 0.35rem;
+    padding: 1rem;
+    background: var(--surface-solid);
+  }
+  li span {
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+  }
+  .credit-policy {
+    border-left: 4px solid var(--mint);
+  }
+  .credit-policy p {
+    margin-bottom: 0;
+  }
+  @media (max-width: 720px) {
+    .asset-table,
+    ul {
+      grid-template-columns: 1fr;
+    }
+  }
 </style>

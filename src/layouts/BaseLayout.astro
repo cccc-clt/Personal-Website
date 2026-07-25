@@ -4,6 +4,8 @@ import Header from '../components/Header.astro';
 import FloatingControls from '../components/FloatingControls.astro';
 import SearchOverlay from '../components/SearchOverlay.astro';
 import { siteConfig } from '../config/site';
+import '@fontsource-variable/inter/standard.css';
+import '@fontsource-variable/noto-sans-sc/wght.css';
 import '../styles/global.css';
 
 interface Props {
@@ -47,7 +49,16 @@ const structuredData = {
     {noindex && <meta name="robots" content="noindex, follow" />}
     {canonical && <link rel="canonical" href={canonical} />}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    {Astro.site && <link rel="alternate" type="application/rss+xml" title={siteConfig.siteName} href="/rss.xml" />}
+    {
+      Astro.site && (
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title={siteConfig.siteName}
+          href="/rss.xml"
+        />
+      )
+    }
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="zh_CN" />
     <meta property="og:site_name" content={siteConfig.siteName} />
@@ -63,7 +74,8 @@ const structuredData = {
     <script is:inline>
       (() => {
         const saved = localStorage.getItem('theme');
-        const dark = saved === 'dark' || (!saved && matchMedia('(prefers-color-scheme: dark)').matches);
+        const dark =
+          saved === 'dark' || (!saved && matchMedia('(prefers-color-scheme: dark)').matches);
         document.documentElement.dataset.theme = dark ? 'dark' : 'light';
       })();
     </script>
@@ -97,6 +109,15 @@ const structuredData = {
         search: (query: string) => Promise<{ results: PagefindResult[] }>;
       }
 
+      interface SwupHooks {
+        on: (event: 'page:view', handler: () => void) => void;
+      }
+
+      interface SwupInstance {
+        hooks: SwupHooks;
+      }
+
+      const browserWindow = window as typeof window & { swup?: SwupInstance };
       const getMenu = () => document.querySelector<HTMLElement>('[data-mobile-menu]');
       const getMenuButton = () => document.querySelector<HTMLButtonElement>('[data-menu-button]');
       const setMenu = (open: boolean, restore = false) => {
@@ -130,12 +151,16 @@ const structuredData = {
           localStorage.setItem('theme', next);
         }
         if (target.closest('[data-search-open]')) {
+          if (getMenuButton()?.getAttribute('aria-expanded') === 'true') setMenu(false);
           const dialog = getSearch();
           dialog?.showModal();
           dialog?.querySelector<HTMLInputElement>('input')?.focus();
         }
         if (target.closest('[data-search-close]')) closeSearch(true);
-        if (target.closest('[data-back-to-top]')) window.scrollTo({ top: 0, behavior: 'smooth' });
+        if (target.closest('[data-back-to-top]')) {
+          const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+          window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+        }
       });
 
       document.addEventListener('keydown', (event) => {
@@ -145,7 +170,9 @@ const structuredData = {
       });
 
       document.addEventListener('input', async (event) => {
-        const input = (event.target as HTMLElement).closest<HTMLInputElement>('[data-pagefind-input]');
+        const input = (event.target as HTMLElement).closest<HTMLInputElement>(
+          '[data-pagefind-input]',
+        );
         if (!input) return;
         const results = document.querySelector<HTMLElement>('[data-pagefind-results]');
         const query = input.value.trim();
@@ -163,17 +190,113 @@ const structuredData = {
           const items = await Promise.all(search.results.slice(0, 8).map((item) => item.data()));
           results.innerHTML = items.length
             ? items
-                .map((item) => `<a class="search-result" href="${item.url}"><strong>${item.meta?.title ?? '未命名页面'}</strong><span>${item.excerpt ?? ''}</span></a>`)
+                .map(
+                  (item) =>
+                    `<a class="search-result" href="${item.url}"><strong>${item.meta?.title ?? '未命名页面'}</strong><span>${item.excerpt ?? ''}</span></a>`,
+                )
                 .join('')
             : '<p class="search-empty">没有找到相关内容。</p>';
         } catch {
-          results.innerHTML = '<p class="search-empty">本地开发时搜索索引尚未生成；执行 npm run build 后即可使用。</p>';
+          results.innerHTML =
+            '<p class="search-empty">本地开发时搜索索引尚未生成；执行 npm run build 后即可使用。</p>';
         }
       });
 
-      const updateHeader = () => document.querySelector('[data-header]')?.classList.toggle('is-scrolled', window.scrollY > 24);
-      window.addEventListener('scroll', updateHeader, { passive: true });
-      updateHeader();
+      const updateChrome = () => {
+        document
+          .querySelector('[data-header]')
+          ?.classList.toggle('is-scrolled', window.scrollY > 24);
+        const backToTop = document.querySelector<HTMLButtonElement>('[data-back-to-top]');
+        if (backToTop) {
+          backToTop.hidden = window.scrollY < Math.max(480, window.innerHeight * 0.72);
+        }
+      };
+
+      const heroSessionKey = 'tianqi-home-hero-seen-v1';
+      let activeHero: HTMLElement | null = null;
+      let heroController: AbortController | null = null;
+      let heroFrame = 0;
+
+      const setupHomeHero = () => {
+        const hero = document.querySelector<HTMLElement>('[data-home-hero]');
+        if (hero === activeHero && hero?.dataset.intro !== 'pending') return;
+
+        heroController?.abort();
+        if (heroFrame) cancelAnimationFrame(heroFrame);
+        heroFrame = 0;
+        activeHero = hero;
+        if (!hero) return;
+
+        const controller = new AbortController();
+        const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const mobileLayout = matchMedia('(max-width: 900px)').matches;
+        heroController = controller;
+
+        let intro: 'full' | 'quick' | 'static' = 'static';
+        if (!reduceMotion) {
+          try {
+            const hasSeenHero = sessionStorage.getItem(heroSessionKey) === 'true';
+            intro = hasSeenHero ? 'quick' : 'full';
+            if (!hasSeenHero) sessionStorage.setItem(heroSessionKey, 'true');
+          } catch {
+            intro = 'static';
+          }
+        }
+        hero.dataset.intro = intro;
+
+        if (reduceMotion || mobileLayout) {
+          hero.style.setProperty('--hero-progress', '0');
+          return;
+        }
+
+        const updateHeroProgress = () => {
+          const travel = Math.max(hero.offsetHeight * 0.78, 1);
+          const progress = Math.min(Math.max(window.scrollY / travel, 0), 1);
+          hero.style.setProperty('--hero-progress', progress.toFixed(3));
+          heroFrame = 0;
+        };
+
+        const requestHeroUpdate = () => {
+          if (heroFrame) return;
+          heroFrame = requestAnimationFrame(updateHeroProgress);
+        };
+
+        window.addEventListener('scroll', requestHeroUpdate, {
+          passive: true,
+          signal: controller.signal,
+        });
+        window.addEventListener('resize', requestHeroUpdate, {
+          passive: true,
+          signal: controller.signal,
+        });
+        controller.signal.addEventListener(
+          'abort',
+          () => {
+            if (heroFrame) cancelAnimationFrame(heroFrame);
+            heroFrame = 0;
+          },
+          { once: true },
+        );
+        updateHeroProgress();
+      };
+
+      let hasSwupHeroHook = false;
+      const installSwupHeroHook = () => {
+        if (hasSwupHeroHook || !browserWindow.swup) return;
+        hasSwupHeroHook = true;
+        browserWindow.swup.hooks.on('page:view', () => {
+          setMenu(false);
+          closeSearch();
+          setupHomeHero();
+          updateChrome();
+        });
+      };
+
+      window.addEventListener('scroll', updateChrome, { passive: true });
+      setupHomeHero();
+      updateChrome();
+      if (browserWindow.swup) installSwupHeroHook();
+      else document.addEventListener('swup:enable', installSwupHeroHook, { once: true });
     </script>
   </body>
 </html>

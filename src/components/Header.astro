@@ -8,15 +8,19 @@ const isActive = (href: string) => (href === '/' ? pathname === '/' : pathname.s
 <header id="site-header" class="site-header" data-header>
   <div class="site-header__inner page-shell">
     <a class="site-brand" href="/" aria-label={`${siteConfig.name}个人网站首页`}>
-      <span class="site-brand__petal" aria-hidden="true">◇</span>
-      <span><strong>{siteConfig.englishName}</strong><small>GAME AI · PERSONAL BLOG</small></span>
+      <span class="site-brand__petal" aria-hidden="true">◆</span>
+      <span>
+        <strong>{siteConfig.englishName}</strong>
+        <small>GAME AI · PERSONAL BLOG</small>
+      </span>
     </a>
 
     <nav class="desktop-nav" aria-label="主要导航">
       {
         siteConfig.nav.map((item) => (
           <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
-            <span>{item.label}</span><small>{item.subtitle}</small>
+            <span>{item.label}</span>
+            <small>{item.subtitle}</small>
           </a>
         ))
       }
@@ -26,13 +30,34 @@ const isActive = (href: string) => (href === '/' ? pathname === '/' : pathname.s
       <button class="icon-button" type="button" data-search-open aria-label="搜索网站">
         <span aria-hidden="true">⌕</span>
       </button>
-      <button class="icon-button theme-toggle" type="button" data-theme-toggle aria-label="切换明暗主题">
-        <span class="theme-toggle__sun" aria-hidden="true">☼</span><span class="theme-toggle__moon" aria-hidden="true">☾</span>
+      <button
+        class="icon-button theme-toggle"
+        type="button"
+        data-theme-toggle
+        aria-label="切换明暗主题"
+      >
+        <span class="theme-toggle__sun" aria-hidden="true">☼</span>
+        <span class="theme-toggle__moon" aria-hidden="true">☾</span>
       </button>
-      <a class="header-github" href={siteConfig.github} target="_blank" rel="noreferrer" aria-label="访问 GitHub">GitHub ↗</a>
-      <a class="header-resume" href="/resume/">下载简历</a>
-      <button class="menu-button" type="button" aria-label="打开导航" aria-controls="mobile-menu" aria-expanded="false" data-menu-button>
-        <span></span><span></span>
+      <a
+        class="header-github"
+        href={siteConfig.github}
+        target="_blank"
+        rel="noreferrer"
+        aria-label="访问 GitHub"
+      >
+        GitHub ↗
+      </a>
+      <button
+        class="menu-button"
+        type="button"
+        aria-label="打开导航"
+        aria-controls="mobile-menu"
+        aria-expanded="false"
+        data-menu-button
+      >
+        <span></span>
+        <span></span>
       </button>
     </div>
   </div>
@@ -42,13 +67,29 @@ const isActive = (href: string) => (href === '/' ? pathname === '/' : pathname.s
       {
         siteConfig.nav.map((item, index) => (
           <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
-            <span>{String(index + 1).padStart(2, '0')}</span><strong>{item.label}</strong><small>{item.subtitle}</small>
+            <span>{String(index + 1).padStart(2, '0')}</span>
+            <strong>{item.label}</strong>
+            <small>{item.subtitle}</small>
           </a>
         ))
       }
-      <a href="/stack/"><span>07</span><strong>工具链</strong><small>BUILDING STACK</small></a>
-      <a href="/archive/"><span>08</span><strong>归档</strong><small>ARCHIVE</small></a>
     </nav>
-    <p>{siteConfig.availability}</p>
+
+    <div class="mobile-menu__footer">
+      <div class="mobile-menu__utilities" aria-label="辅助操作">
+        <button type="button" data-search-open>
+          <span aria-hidden="true">⌕</span>
+          搜索
+        </button>
+        <button type="button" data-theme-toggle>
+          <span aria-hidden="true">◐</span>
+          主题
+        </button>
+        <a href={siteConfig.github} target="_blank" rel="noreferrer">
+          GitHub <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+      <p>{siteConfig.availability}</p>
+    </div>
   </div>
 </header>

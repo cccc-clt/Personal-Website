@@ -17,9 +17,10 @@
   --border-strong: rgba(87, 108, 132, 0.22);
   --shadow-soft: 0 18px 50px rgba(73, 91, 113, 0.12);
   --shadow-float: 0 20px 55px rgba(57, 76, 101, 0.18);
-  --font-cn: 'PingFang SC', 'HarmonyOS Sans SC', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif;
-  --font-en: 'Segoe UI', Arial, sans-serif;
-  --font-mono: 'JetBrains Mono', 'SFMono-Regular', Consolas, 'Segoe UI', Arial, sans-serif;
+  --font-sans:
+    'Inter Variable', 'Noto Sans SC Variable', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-display: 'Inter Variable', 'Noto Sans SC Variable', 'PingFang SC', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;
   --radius-xs: 8px;
   --radius-sm: 14px;
   --radius-md: 22px;

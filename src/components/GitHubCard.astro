@@ -1,5 +1,9 @@
 ---
-interface Props { url: string; title: string; description?: string; }
+interface Props {
+  url: string;
+  title: string;
+  description?: string;
+}
 const { url, title, description = '查看项目仓库、说明与最新代码。' } = Astro.props;
 const repo = url.replace('https://github.com/', '');
 ---
@@ -11,11 +15,48 @@ const repo = url.replace('https://github.com/', '');
 </a>
 
 <style>
-  .github-card { display: grid; grid-template-columns: 44px 1fr auto; gap: 1rem; align-items: center; padding: 1rem; border: 1px solid var(--border); border-radius: 15px; background: var(--surface-soft); }
-  .github-card:hover { border-color: var(--primary); transform: translateY(-2px); }
-  .github-card__icon { display: grid; width: 44px; height: 44px; place-items: center; border-radius: 13px; background: var(--text-main); color: var(--surface-solid); }
-  small, strong, p { display: block; }
-  small { color: var(--text-muted); font-family: var(--font-mono); font-size: 0.55rem; letter-spacing: 0.08em; }
-  strong { margin-top: 0.25rem; }
-  p { margin: 0.25rem 0 0; color: var(--text-secondary); font-size: 0.72rem; }
+  .github-card {
+    display: grid;
+    grid-template-columns: 44px 1fr auto;
+    gap: 1rem;
+    align-items: center;
+    padding: 1rem;
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    background: var(--surface-soft);
+  }
+  .github-card:hover {
+    border-color: var(--primary);
+    transform: translateY(-2px);
+  }
+  .github-card__icon {
+    display: grid;
+    width: 44px;
+    height: 44px;
+    place-items: center;
+    border-radius: 13px;
+    background: var(--text-main);
+    color: var(--surface-solid);
+  }
+  small,
+  strong,
+  p {
+    display: block;
+  }
+  small {
+    color: var(--text-muted);
+    font-size: 0.55rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+  }
+  strong {
+    margin-top: 0.25rem;
+    font-family: var(--font-mono);
+    font-weight: 600;
+  }
+  p {
+    margin: 0.25rem 0 0;
+    color: var(--text-secondary);
+    font-size: 0.72rem;
+  }
 </style>

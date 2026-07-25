@@ -4,25 +4,63 @@ import InnerPageHero from '../../components/InnerPageHero.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
-const projects = (await getCollection('projects')).sort((a, b) => a.data.order.general - b.data.order.general);
+const projects = (await getCollection('projects')).sort(
+  (a, b) => a.data.order.general - b.data.order.general,
+);
 const publicRepositoryCount = projects.filter((project) => project.data.githubUrl).length;
 const localCaseCount = projects.length - publicRepositoryCount;
 const projectCount = String(projects.length).padStart(2, '0');
-const filters = [{ key: 'all', label: '全部项目' }, { key: 'game', label: '游戏 AI' }, { key: 'agent', label: 'AI Agent' }, { key: 'auto', label: '智能汽车' }] as const;
+const filters = [
+  { key: 'all', label: '全部项目' },
+  { key: 'game', label: '游戏 AI' },
+  { key: 'agent', label: 'AI Agent' },
+  { key: 'auto', label: '智能汽车' },
+] as const;
 ---
 
-<BaseLayout title="项目｜赵天琦游戏 AI 产品作品集" description="七个真实 AI 产品案例，从用户问题、产品目标、技术方案与评测证据呈现游戏 AI 和 Agent 产品能力。">
-  <InnerPageHero eyebrow={`PROJECTS / ${projectCount} CASE STUDIES`} title="七个真实项目，呈现从需求到评测的产品闭环。" description="每个案例保留真实名称，并说明项目定位、用户问题、产品目标、我的职责、技术方案和当前状态；视觉代号只作副标题。">
-    <div class="project-filters" role="group" aria-label="按方向筛选项目" data-project-filters>{filters.map((filter) => <button type="button" data-filter={filter.key} aria-pressed={filter.key === 'all' ? 'true' : 'false'}>{filter.label}</button>)}</div>
+<BaseLayout
+  title="项目｜赵天琦游戏 AI 产品作品集"
+  description="七个真实 AI 产品案例，从用户问题、产品目标、技术方案与评测证据呈现游戏 AI 和 Agent 产品能力。"
+>
+  <InnerPageHero
+    eyebrow={`PROJECTS / ${projectCount} CASE STUDIES`}
+    title="七个真实项目，呈现从需求到评测的产品闭环。"
+    description="每个案例保留真实名称，并说明项目定位、用户问题、产品目标、我的职责、技术方案和当前状态；视觉代号只作副标题。"
+  >
+    <div class="project-filters" role="group" aria-label="按方向筛选项目" data-project-filters>
+      {
+        filters.map((filter) => (
+          <button
+            type="button"
+            data-filter={filter.key}
+            aria-pressed={filter.key === 'all' ? 'true' : 'false'}
+          >
+            {filter.label}
+          </button>
+        ))
+      }
+    </div>
   </InnerPageHero>
   <section class="project-index section page-shell" aria-live="polite">
     <aside class="project-source panel" aria-label="项目来源说明">
       <div><strong>{projects.length}</strong><span>个项目案例</span></div>
       <div><strong>{publicRepositoryCount}</strong><span>个公开 GitHub 仓库已核验</span></div>
       <div><strong>{localCaseCount}</strong><span>个本地案例未公开仓库</span></div>
-      <p>GitHub 项目依据公开仓库 README 校对；未公开案例不提供虚构仓库链接，也不对外宣称无法验证的运行结果。</p>
+      <p>
+        GitHub 项目依据公开仓库 README
+        校对；未公开案例不提供虚构仓库链接，也不对外宣称无法验证的运行结果。
+      </p>
     </aside>
-    <div class="project-index__grid" data-project-grid>{projects.map((project, index) => <ProjectCard project={project} layout={index === 0 || index === 4 ? 'wide' : 'standard'} />)}</div>
+    <div class="project-index__grid" data-project-grid>
+      {
+        projects.map((project, index) => (
+          <ProjectCard
+            project={project}
+            layout={index === 0 || index === 4 ? 'wide' : 'standard'}
+          />
+        ))
+      }
+    </div>
     <p class="sr-only" data-filter-status>当前展示全部 {projects.length} 个项目</p>
   </section>
 </BaseLayout>
@@ -35,12 +73,20 @@ const filters = [{ key: 'all', label: '全部项目' }, { key: 'game', label: '�
     const cards = Array.from(document.querySelectorAll<HTMLElement>('[data-project-card]'));
     const status = document.querySelector<HTMLElement>('[data-filter-status]');
     group.addEventListener('click', (event) => {
-      const button = (event.target as HTMLElement).closest<HTMLButtonElement>('button[data-filter]');
+      const button = (event.target as HTMLElement).closest<HTMLButtonElement>(
+        'button[data-filter]',
+      );
       if (!button) return;
       const filter = button.dataset.filter ?? 'all';
-      group.querySelectorAll('button').forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
+      group
+        .querySelectorAll('button')
+        .forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
       let visible = 0;
-      cards.forEach((card) => { const matches = filter === 'all' || (card.dataset.tracks ?? '').split(' ').includes(filter); card.hidden = !matches; if (matches) visible += 1; });
+      cards.forEach((card) => {
+        const matches = filter === 'all' || (card.dataset.tracks ?? '').split(' ').includes(filter);
+        card.hidden = !matches;
+        if (matches) visible += 1;
+      });
       if (status) status.textContent = `当前展示 ${visible} 个项目`;
     });
   };
@@ -49,18 +95,87 @@ const filters = [{ key: 'all', label: '全部项目' }, { key: 'game', label: '�
 </script>
 
 <style>
-  .project-filters { display: flex; flex-wrap: wrap; gap: .55rem; margin-top: 2rem; }
-  .project-filters button { padding: .64rem .9rem; border: 1px solid rgba(255,255,255,.55); border-radius: var(--radius-pill); background: rgba(255,255,255,.45); color: var(--text-secondary); cursor: pointer; }
-  .project-filters button[aria-pressed='true'] { border-color: var(--text-main); background: var(--text-main); color: var(--surface-solid); }
-  .project-source { display: grid; grid-template-columns: repeat(3, minmax(120px, .45fr)) minmax(260px, 1.65fr); gap: 1px; margin-bottom: 1rem; overflow: hidden; }
-  .project-source > div, .project-source > p { padding: 1.15rem; margin: 0; background: var(--surface-solid); }
-  .project-source > div { display: grid; align-content: center; gap: .2rem; }
-  .project-source strong { color: var(--primary-strong); font-family: var(--font-mono); font-size: 1.35rem; }
-  .project-source span { color: var(--text-muted); font-size: .65rem; line-height: 1.5; }
-  .project-source p { color: var(--text-secondary); font-size: .75rem; line-height: 1.75; }
-  .project-index__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
-  .project-index__grid > :global(.project-card--wide) { grid-column: 1 / -1; }
-  .project-index__grid > :global([hidden]) { display: none; }
-  @media (max-width: 900px) { .project-source { grid-template-columns: repeat(3, 1fr); } .project-source > p { grid-column: 1 / -1; } }
-  @media (max-width: 700px) { .project-source, .project-index__grid { grid-template-columns: 1fr; } .project-source > p { grid-column: 1; } .project-index__grid > :global(.project-card--wide) { grid-column: 1; } }
+  .project-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    margin-top: 2rem;
+  }
+  .project-filters button {
+    padding: 0.64rem 0.9rem;
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    border-radius: var(--radius-pill);
+    background: rgba(255, 255, 255, 0.45);
+    color: var(--text-secondary);
+    cursor: pointer;
+  }
+  .project-filters button[aria-pressed='true'] {
+    border-color: var(--text-main);
+    background: var(--text-main);
+    color: var(--surface-solid);
+  }
+  .project-source {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(120px, 0.45fr)) minmax(260px, 1.65fr);
+    gap: 1px;
+    margin-bottom: 1rem;
+    overflow: hidden;
+  }
+  .project-source > div,
+  .project-source > p {
+    padding: 1.15rem;
+    margin: 0;
+    background: var(--surface-solid);
+  }
+  .project-source > div {
+    display: grid;
+    align-content: center;
+    gap: 0.2rem;
+  }
+  .project-source strong {
+    color: var(--primary-strong);
+    font-family: var(--font-mono);
+    font-size: 1.35rem;
+  }
+  .project-source span {
+    color: var(--text-muted);
+    font-size: 0.65rem;
+    line-height: 1.5;
+  }
+  .project-source p {
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    line-height: 1.75;
+  }
+  .project-index__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+  .project-index__grid > :global(.project-card--wide) {
+    grid-column: 1 / -1;
+  }
+  .project-index__grid > :global([hidden]) {
+    display: none;
+  }
+  @media (max-width: 900px) {
+    .project-source {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .project-source > p {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (max-width: 700px) {
+    .project-source,
+    .project-index__grid {
+      grid-template-columns: 1fr;
+    }
+    .project-source > p {
+      grid-column: 1;
+    }
+    .project-index__grid > :global(.project-card--wide) {
+      grid-column: 1;
+    }
+  }
 </style>

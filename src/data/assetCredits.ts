@@ -12,6 +12,15 @@ const personalPortfolioLicense = '用户授权用于个人作品集展示';
 
 export const assetCredits: AssetCredit[] = [
   {
+    path: '/images/banner/hero-bg.webp',
+    title: '深海二次元首页开屏背景',
+    author: '用户提供',
+    source: '用户提供的本地视觉素材',
+    licenseStatus: personalPortfolioLicense,
+    attributionRequired: false,
+    attribution: '用于首页 Hero 背景；页面文字与操作保持独立 HTML 信息层。',
+  },
+  {
     path: '/images/avatar/tianqi-avatar.webp',
     title: 'Tianqi.Z 原创二次元头像',
     author: '用户提供',
@@ -54,7 +63,8 @@ export const assetCredits: AssetCredit[] = [
     source: 'AI 辅助生成概念插图',
     licenseStatus: personalPortfolioLicense,
     attributionRequired: false,
-    attribution: '用于表达模型对比、评测标准、测试记录与产品迭代主题；图中的评分、雷达图、图表和数字均不是实际评测结果或项目指标。',
+    attribution:
+      '用于表达模型对比、评测标准、测试记录与产品迭代主题；图中的评分、雷达图、图表和数字均不是实际评测结果或项目指标。',
   },
   {
     path: '/images/projects/mobile-uiagent-lab.webp',

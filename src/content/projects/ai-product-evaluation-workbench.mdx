@@ -11,7 +11,8 @@ categories: ['AI 产品评测', 'LLM', 'RAG']
 targetTracks: ['general', 'game', 'agent', 'auto']
 role: '产品设计 / 评测体系 / 原型开发'
 period: '公开仓库 · 持续迭代'
-techStack: ['Python', 'Streamlit', 'SQLite', 'OpenAI-compatible API', 'ChromaDB', 'Pandas', 'Plotly']
+techStack:
+  ['Python', 'Streamlit', 'SQLite', 'OpenAI-compatible API', 'ChromaDB', 'Pandas', 'Plotly']
 highlights: ['Prompt 实验台', '多模型对比', 'RAG 文档评测', '反馈与优化看板']
 responsibilities:
   - '拆解 Prompt、模型与样本之间的实验关系'
@@ -23,16 +24,27 @@ goal: '让一次模型判断能够回到实验输入、模型输出、人工评�
 problem: '普通对话界面难以同时保留实验条件、横向结果与人工判断，零散试用也不利于复盘。'
 aiNeeded: '大模型输出会受到 Prompt、模型与上下文影响，需要用结构化实验和人工复核整理能力边界。'
 solution: '在 Streamlit 工作台中固定场景、Prompt、模型与样本条件，串联输出留存、人工评分、RAG 问题标注、反馈分析和下一轮优化记录。'
-flow: ['选择评测场景', '配置 Prompt 与模型', '提交样本', '保留模型输出', '人工评分或标注', '查看对比与问题分布', '记录下一步优化']
+flow:
+  [
+    '选择评测场景',
+    '配置 Prompt 与模型',
+    '提交样本',
+    '保留模型输出',
+    '人工评分或标注',
+    '查看对比与问题分布',
+    '记录下一步优化',
+  ]
 aiDesign:
   - '支持 OpenAI-compatible API，模型连接与业务评测数据分开配置'
   - 'Prompt 实验保留输入、输出和人工评分'
   - '多模型对比记录延迟、Token 与成本字段，供同条件观察'
   - 'RAG 评测通过问题标签和人工判断暴露检索或回答缺陷'
 humanCheckpoints: ['确认样本是否代表目标场景', '复核主观评分', '决定是否采纳优化建议']
-edgeCases: ['模型连接失败', '结构化输出不完整', 'RAG 未命中有效证据', '演示数据被误当成真实业务结果']
+edgeCases:
+  ['模型连接失败', '结构化输出不完整', 'RAG 未命中有效证据', '演示数据被误当成真实业务结果']
 safety: ['演示数据仅用于展示流程', '自动建议不替代人工结论', '敏感业务数据不进入公开演示']
-evaluationMetrics: ['人工评分', '模型平均分', 'RAG 问题标签分布', '测试样本数量', '响应时间记录', 'Token 与成本记录']
+evaluationMetrics:
+  ['人工评分', '模型平均分', 'RAG 问题标签分布', '测试样本数量', '响应时间记录', 'Token 与成本记录']
 failures: ['平均分掩盖单类失败', '样本不足却形成泛化结论', '模型或 Prompt 条件变化后仍直接比较']
 iterations:
   - stage: 'CURRENT_REPOSITORY'

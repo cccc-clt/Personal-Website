@@ -15,8 +15,8 @@ public/images/
 ## 首页与角色
 
 - `avatar/character.png`：原创看板娘立绘，建议保留透明背景。
-- `banner/hero-bg.webp`：首页 Hero 背景，建议使用横向构图。
-- 两个文件均为可选资源；缺失时继续使用现有 CSS 与文字回退，不会输出破图。
+- `banner/hero-bg.webp`：首页 Hero 深海二次元背景，1672×941，由用户提供的 PNG 转码为真正的 WebP。
+- `avatar/character.png` 仍为可选资源；Hero 背景缺失时使用 CSS 深蓝渐变与文字回退，不会输出破图。
 - 看板娘资源在移动端按照 `avatarConfig.hideOnMobile` 的策略隐藏。
 
 ## 项目封面

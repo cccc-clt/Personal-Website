@@ -11,7 +11,16 @@ categories: ['角色 Agent', '长期记忆', '陪伴体验']
 targetTracks: ['general', 'game', 'agent']
 role: '产品设计 / 记忆机制 / Agent 评测'
 period: '公开仓库 · Fan-made 原型'
-techStack: ['Python', 'Streamlit', 'SQLite', 'JSON Fallback', 'OpenAI-compatible API', 'edge-tts', 'Optional GPT-SoVITS']
+techStack:
+  [
+    'Python',
+    'Streamlit',
+    'SQLite',
+    'JSON Fallback',
+    'OpenAI-compatible API',
+    'edge-tts',
+    'Optional GPT-SoVITS',
+  ]
 highlights: ['长期记忆', '待确认记忆', '陪伴场景', '角色一致性评测']
 responsibilities:
   - '设计记忆写入、待确认和用户管理流程'
@@ -23,7 +32,16 @@ goal: '验证角色陪伴中长期记忆、用户控制、语音降级和一致�
 problem: '角色 Agent 容易出现记忆误写、设定漂移和过度拟人化，语音资源也涉及额外的合规边界。'
 aiNeeded: '模型负责自然语言互动和记忆候选提取，但记忆确认、角色边界和风险提示需要产品机制约束。'
 solution: '用 SQLite 或 JSON 保存会话，把模型提取的信息先放入待确认记忆，再由用户决定保存或拒绝；陪伴场景、可选语音和一致性评测均保留降级与人工控制。'
-flow: ['进入陪伴场景', '进行文本对话', '提取记忆候选', '用户确认或拒绝记忆', '写入长期记忆', '可选生成语音', '查看一致性与使用记录']
+flow:
+  [
+    '进入陪伴场景',
+    '进行文本对话',
+    '提取记忆候选',
+    '用户确认或拒绝记忆',
+    '写入长期记忆',
+    '可选生成语音',
+    '查看一致性与使用记录',
+  ]
 aiDesign:
   - 'OpenAI-compatible API 承接对话，模型配置由本地环境提供'
   - '记忆候选先进入待确认区，不自动永久写入'
@@ -31,7 +49,13 @@ aiDesign:
   - '语音提供方为可选能力，缺失时保持文本体验'
 humanCheckpoints: ['确认或删除记忆', '复核角色设定边界', '决定是否启用本地语音资源']
 edgeCases: ['模型虚构共同经历', '不应保存的隐私被提取', '语音服务不可用', '长期对话后角色语气漂移']
-safety: ['用户保留记忆控制权', '不把 Agent 描述为现实关系替代品', '仓库不包含官方美术、音频、模型权重或角色资产', '非商业同人 Demo，与米哈游或 HoYoverse 无隶属关系']
+safety:
+  [
+    '用户保留记忆控制权',
+    '不把 Agent 描述为现实关系替代品',
+    '仓库不包含官方美术、音频、模型权重或角色资产',
+    '非商业同人 Demo，与米哈游或 HoYoverse 无隶属关系',
+  ]
 evaluationMetrics: ['角色一致性', '记忆引用正确性', '记忆确认可控性', '回复边界', '语音失败降级']
 failures: ['未经确认写入长期记忆', '把模型推断当成用户事实', '语音失败阻断文本对话']
 iterations:

@@ -24,47 +24,47 @@ colors:
   dark-text-secondary: '#B3BDCB'
 typography:
   display:
-    fontFamily: 'PingFang SC, HarmonyOS Sans SC, Noto Sans CJK SC, Microsoft YaHei, sans-serif'
+    fontFamily: 'Inter Variable, Noto Sans SC Variable, PingFang SC, sans-serif'
     fontSize: '96px'
     fontWeight: 700
-    lineHeight: 0.98
+    lineHeight: 1
     letterSpacing: '-0.04em'
   headline-large:
-    fontFamily: 'PingFang SC, HarmonyOS Sans SC, Noto Sans CJK SC, Microsoft YaHei, sans-serif'
+    fontFamily: 'Inter Variable, Noto Sans SC Variable, PingFang SC, Microsoft YaHei, sans-serif'
     fontSize: '56px'
-    fontWeight: 650
-    lineHeight: 1.05
-    letterSpacing: '-0.035em'
-  headline-medium:
-    fontFamily: 'PingFang SC, HarmonyOS Sans SC, Noto Sans CJK SC, Microsoft YaHei, sans-serif'
-    fontSize: '36px'
-    fontWeight: 650
-    lineHeight: 1.12
+    fontWeight: 700
+    lineHeight: 1.1
     letterSpacing: '-0.025em'
+  headline-medium:
+    fontFamily: 'Inter Variable, Noto Sans SC Variable, PingFang SC, Microsoft YaHei, sans-serif'
+    fontSize: '36px'
+    fontWeight: 700
+    lineHeight: 1.14
+    letterSpacing: '-0.02em'
   body-large:
-    fontFamily: 'PingFang SC, HarmonyOS Sans SC, Noto Sans CJK SC, Microsoft YaHei, sans-serif'
+    fontFamily: 'Inter Variable, Noto Sans SC Variable, PingFang SC, Microsoft YaHei, sans-serif'
     fontSize: '18px'
     fontWeight: 400
-    lineHeight: 1.8
+    lineHeight: 1.75
     letterSpacing: '0em'
   body-medium:
-    fontFamily: 'PingFang SC, HarmonyOS Sans SC, Noto Sans CJK SC, Microsoft YaHei, sans-serif'
+    fontFamily: 'Inter Variable, Noto Sans SC Variable, PingFang SC, Microsoft YaHei, sans-serif'
     fontSize: '16px'
     fontWeight: 400
     lineHeight: 1.75
     letterSpacing: '0em'
   body-small:
-    fontFamily: 'PingFang SC, HarmonyOS Sans SC, Noto Sans CJK SC, Microsoft YaHei, sans-serif'
+    fontFamily: 'Inter Variable, Noto Sans SC Variable, PingFang SC, Microsoft YaHei, sans-serif'
     fontSize: '13px'
     fontWeight: 400
     lineHeight: 1.7
     letterSpacing: '0em'
   label:
-    fontFamily: 'JetBrains Mono, SFMono-Regular, Consolas, Segoe UI, Arial, sans-serif'
-    fontSize: '11px'
-    fontWeight: 650
+    fontFamily: 'Inter Variable, Noto Sans SC Variable, PingFang SC, Microsoft YaHei, sans-serif'
+    fontSize: '12px'
+    fontWeight: 600
     lineHeight: 1.5
-    letterSpacing: '0.08em'
+    letterSpacing: '0.06em'
 rounded:
   xs: '8px'
   sm: '14px'
@@ -137,7 +137,7 @@ components:
 
 ### 当前实现基线与规范化方向
 
-当前实现已经形成稳定的蓝白浅紫身份、三栏 Mizuki 首页、原创角色资产、七张统一项目封面、明暗主题与本地字体策略。代码中仍存在较多通用 `.panel` 玻璃容器、重复 eyebrow、22–32px 大圆角、宽软阴影、装饰网格和过紧标题字距。本阶段不改动这些页面；本文件将它们记录为兼容现状，而不是鼓励新界面继续复制。
+当前实现已经形成稳定的蓝白浅紫身份、深海二次元动态 Hero、三个代表项目的线性首页、原创角色资产、七张统一项目封面、明暗主题与自托管可变字体策略。Hero 使用用户提供的横向深海图，通过深蓝遮罩、少量气泡和克制光效营造游戏启动界面感；首页正文仍保持明亮、开放的招聘作品集阅读环境。首页已经移除三栏信息墙、重复侧栏和大部分通用 `.panel` 容器；原有三栏组件仍作为兼容代码保留，但不再代表首页的默认结构。其他内页中尚存的重复 eyebrow、22–32px 大圆角与宽软阴影属于兼容现状，不鼓励新界面继续复制。
 
 后续新增或重做界面时，优先使用内容分组、留白、分隔线、图片与排版建立层级；玻璃、光效、自由形状和大圆角只在品牌首屏、悬浮导航、搜索浮层或角色舞台中有明确用途时使用。
 
@@ -183,30 +183,33 @@ components:
 
 ### 字体家族
 
-- 中文与主体 UI：`PingFang SC`、`HarmonyOS Sans SC`、`Noto Sans CJK SC`、`Microsoft YaHei` 的本地系统字体栈。
-- 英文与品牌名：`Segoe UI`、Arial、sans-serif。
-- 技术标签与元数据：优先 `JetBrains Mono`，回退到 `SFMono-Regular`、Consolas 和系统无衬线字体。
-- 不请求 Google Fonts 或海外字体 CDN，保证中国大陆访问速度与静态部署可靠性。
-- 等宽字体只用于状态、时间、项目编号、技术短标签和真实数据字段，不用它把整页伪装成终端。
+- `--font-sans`：`Inter Variable`、`Noto Sans SC Variable`、`PingFang SC`、`Microsoft YaHei`、sans-serif。正文、中文标题、导航、按钮、项目卡、普通英文副标题、状态和技术栈统一使用该栈。
+- `--font-display`：`Inter Variable`、`Noto Sans SC Variable`、`PingFang SC`、sans-serif。只用于首页 Hero 的 `TIANQI.Z` 和后续确有品牌职责的大型纯英文标题。
+- `--font-mono`：`JetBrains Mono`、`ui-monospace`、`SFMono-Regular`、Consolas、monospace。只用于代码、命令、版本、日期、slug、项目编号和真实技术参数；普通元数据、状态和英文标签不用等宽字体。
+- Inter Variable 与 Noto Sans SC Variable 通过 Fontsource 5.3 自托管，字体文件使用 OFL-1.1；构建后由站点同源提供，不请求 Google Fonts 或海外字体 CDN。
+- 字体采用 `font-display: swap`。Noto Sans SC 使用 `unicode-range` 分片且不预加载全部中文字体；字体不可用时立即回退到系统字体。
+- 不自托管 JetBrains Mono。设备未安装时使用系统等宽字体，避免为少量编号和代码增加首屏负担。
 
 ### 字号层级
 
-| 层级              | 建议范围                       | 字重 / 行高         | 用途                           |
-| ----------------- | ------------------------------ | ------------------- | ------------------------------ |
-| Hero / Display    | `clamp(3rem, 6vw, 6rem)`       | 650–760 / 0.98–1.05 | 首页姓名和最重要的单一页面标题 |
-| Page title        | `clamp(2.5rem, 5.5vw, 5.6rem)` | 650–700 / 1.04–1.08 | 内页 Hero 与项目标题           |
-| Section title     | `clamp(1.8rem, 4vw, 3.7rem)`   | 620–700 / 1.08–1.16 | 章节核心标题                   |
-| Card / Item title | `1.15–1.55rem`                 | 650–750 / 1.25–1.4  | 项目名、工具名和列表条目       |
-| Lead              | `1.05–1.35rem`                 | 400–600 / 1.75–1.85 | 页面简介和核心判断             |
-| Body              | `1rem`                         | 400 / 1.75–1.95     | 长文正文和主要说明             |
-| Supporting        | `0.8125–0.9rem`                | 400–600 / 1.65–1.8  | 项目摘要和辅助说明             |
-| Metadata          | `0.6875–0.75rem`               | 500–650 / 1.5–1.7   | 时间、状态、编号和非关键标签   |
+| 层级              | 建议范围                       | 字重 / 行高         | 用途                     |
+| ----------------- | ------------------------------ | ------------------- | ------------------------ |
+| Hero / Display    | `clamp(3rem, 6vw, 6rem)`       | 700 / 1–1.08        | 首页英文品牌名           |
+| Page title        | `clamp(2.5rem, 5.5vw, 5.6rem)` | 700 / 1.08–1.12     | 内页 Hero 与项目标题     |
+| Section title     | `clamp(1.8rem, 4vw, 3.7rem)`   | 700 / 1.12–1.2      | 章节核心标题             |
+| Card / Item title | `1.15–1.55rem`                 | 600 / 1.3–1.4       | 项目名、工具名和列表条目 |
+| Lead              | `1.05–1.35rem`                 | 400–600 / 1.75      | 页面简介和核心判断       |
+| Body              | `1rem`                         | 400 / 1.7–1.8       | 长文正文和主要说明       |
+| Supporting        | `0.8125–0.9rem`                | 400–500 / 1.65–1.75 | 项目摘要和辅助说明       |
+| Metadata          | `0.6875–0.75rem`               | 500–600 / 1.5–1.7   | 状态、编号和非关键标签   |
 
 ### 排版规则
 
 - 标题使用 `text-wrap: balance`，正文使用 `text-wrap: pretty`。
 - 长文行长控制在 65–75ch，项目详情主阅读区不因宽屏无限扩张。
-- Display 最大字号不超过 6rem，字距不得紧于 `-0.04em`。当前代码中 `-0.055em` 至 `-0.075em` 属兼容现状，未来修改时逐步收敛，不继续复制。
+- 全站主要字重只使用 400、500、600、700：正文 400，导航与元数据 500，按钮、正文强调和卡片标题 600，重要页面标题 700。禁止新增 620、650、680、750 等非标准中间值。
+- 中文正文不增加字间距；中文标题控制在 `-0.01em` 至 `-0.025em`。大型纯英文标题可使用 `-0.03em` 至 `-0.05em`，短全大写标签控制在 `0.05em` 至 `0.07em`。
+- `.eyebrow` 使用无衬线字体、0.75rem、600、`0.06em`；只有编号、代码或真实参数语义的标签才能使用等宽字体。
 - 中文正文避免大段全大写英文插入；英文只承担品牌名、技术专有名词和必要元数据。
 - 小型全大写标签不能出现在每一个章节标题上方。一个页面最多保留一套有明确作用的品牌 kicker；真实流程编号和项目案例章节编号不受此限制。
 - 关键正文不小于 16px；13px 只用于短辅助说明，11–12px 只用于非关键元数据。
@@ -221,17 +224,16 @@ components:
 - 长文阅读宽度目标为 `760px`；案例页允许侧边来源信息与正文并列，但正文段落仍控制行长。
 - Section 垂直间距使用 `clamp(4.5rem, 8vw, 8rem)`，相邻相关元素内部使用更紧凑的 8–32px 节奏。
 
-### 首页栅格
+### 首页主结构
 
-当前 Mizuki 首页在宽屏使用三栏：
+当前首页使用单一纵向叙事：
 
-- 左栏：`minmax(214px, 0.66fr)`，个人资料与求职状态。
-- 中栏：`minmax(0, 2.36fr)`，欢迎信息、精选项目、方法与时间线。
-- 右栏：`minmax(208px, 0.66fr)`，方向、实践快照、工具和快捷项目。
-- 栏间距：`1.15rem`。
-- 左右侧栏在宽屏可 sticky，但不能遮挡页头或成为独立滚动容器。
+1. `100vh → 100svh → 100dvh` 渐进回退的深海动态 Hero。
+2. 固定读取三个真实项目的精选项目区，第一张跨双列，其余两张并列。
+3. 从需求与场景到评测与迭代的四步产品方法。
+4. 仅包含在线简历、About 与 GitHub 的职业 CTA。
 
-1180px 以下右栏移至主栅格下方；760px 以下全部转换为单栏，sticky 失效。未来迭代应优先减少右栏信息重复，而不是继续压缩中栏。
+首页不挂载 `MainGridLayout`、`ProfileCard` 或 `RightSidebar`，不重复展示求职状态、工具云、时间线和项目快捷入口。760px 以下项目区变为单列；560px 以下方法流和职业操作转为窄屏列表。原有三栏组件及数据继续保留，不影响独立页面。
 
 ### 内页与案例页
 
@@ -274,11 +276,11 @@ components:
 - Header 悬浮但保持轻薄，默认透明度低，滚动后提高实体感以保障可读性。
 - 桌面导航优先显示中文主标签；英文副标签只作辅助，不与中文争夺注意力。
 - 900px 以下使用移动菜单；菜单必须可键盘关闭、支持 Escape、显示当前页并锁定背景滚动。
-- Header 中始终保留搜索、主题与简历的明确路径，但小屏可以通过菜单重新组织，不能全部隐藏。
+- Header 中始终保留搜索与主题操作；在线简历作为一级导航保留，不再额外重复下载按钮。390px 以下搜索与主题仍可直接操作，GitHub 在移动菜单辅助区提供。
 
 ### 卡片与内容面
 
-- 项目卡是必要卡片：包含概念封面、真实项目名、状态、视觉代号、摘要、标签和详情入口。
+- 项目卡是必要卡片：包含概念封面、真实项目名、状态、视觉代号、摘要和详情入口。首页精选卡额外显示个人职责与核心能力，不展示日期或标签堆叠；项目索引可继续显示筛选所需标签。
 - 资料卡、搜索结果和工具条目只有在边界有助于扫描时使用卡片；普通文章章节、方法说明和时间线优先使用开放布局与分隔线。
 - 禁止卡片套卡片。若卡片内部需要分组，使用标题、间距、细分隔线或浅色区块。
 - 项目卡 Hover 只允许轻微上移、封面缩放和边界变化；内容本身在无 Hover 时必须完整可读。
@@ -314,20 +316,21 @@ components:
 
 ### 正式品牌与项目资产映射
 
-| 路径                                                    | 当前用途                    | 比例 / 尺寸    | 使用边界                                         |
-| ------------------------------------------------------- | --------------------------- | -------------- | ------------------------------------------------ |
-| `/images/avatar/tianqi-avatar.webp`                     | 首页 ProfileCard 二次元头像 | 1:1，640×640   | 个人品牌头像，不替代 HTML 姓名、身份和求职状态   |
-| `/images/avatar/tianqi-profile-card.webp`               | About 个人名片插图          | 4:3，1200×900  | 图片内文字不作为唯一信息来源                     |
-| `/images/avatar/character-alt-source.png`               | 未接入的备用角色源图        | 1086×1448      | 无 Alpha，棋盘格已写入像素；去背前不能当透明立绘 |
-| `/images/projects/game-growth-workflow.webp`            | 游戏增长工作流概念封面      | 16:9，1672×941 | 示意数字不是真实指标，正文不得引用               |
-| `/images/projects/ai-product-evaluation-workbench.webp` | 产品评测工作台概念封面      | 16:9，1672×941 | 评分、图表和数字仅为视觉概念                     |
-| `/images/projects/mobile-uiagent-lab.webp`              | Mobile UIAgent 概念封面     | 16:9，1672×941 | 不代表真实设备界面或实测结果                     |
-| `/images/projects/automate-car-copilot.webp`            | 智能座舱 Copilot 概念封面   | 16:9，1672×941 | 不代表真实车辆、真实控制或量产界面               |
-| `/images/projects/game-content-copilot.webp`            | 游戏内容 Copilot 概念封面   | 16:9，1672×941 | 表达内容生产主题，不代表正式游戏资产             |
-| `/images/projects/pdf-learning-assistant.webp`          | PDF 学习助手概念封面        | 16:9，1672×941 | 不把画面中的文档或图表当作项目证据               |
-| `/images/projects/elysia-character-agent.webp`          | 角色陪伴应用概念封面        | 16:9，1672×941 | 非官方角色资产，不暗示米哈游或 HoYoverse 授权    |
+| 路径                                                    | 当前用途                  | 比例 / 尺寸    | 使用边界                                         |
+| ------------------------------------------------------- | ------------------------- | -------------- | ------------------------------------------------ |
+| `/images/avatar/tianqi-avatar.webp`                     | 首页职业 CTA 与资料头像   | 1:1，640×640   | 个人品牌头像，不替代 HTML 姓名、身份和求职状态   |
+| `/images/banner/hero-bg.webp`                           | 首页深海 Hero 背景        | 16:9，1672×941 | 用户提供；人物面部保留在安全裁切区，纯装饰空 Alt |
+| `/images/avatar/tianqi-profile-card.webp`               | About 个人名片插图        | 4:3，1200×900  | 图片内文字不作为唯一信息源                       |
+| `/images/avatar/character-alt-source.png`               | 未接入的备用角色源图      | 1086×1448      | 无 Alpha，棋盘格已写入像素；去背前不能当透明立绘 |
+| `/images/projects/game-growth-workflow.webp`            | 游戏增长工作流概念封面    | 16:9，1672×941 | 示意数字不是真实指标，正文不得引用               |
+| `/images/projects/ai-product-evaluation-workbench.webp` | 产品评测工作台概念封面    | 16:9，1672×941 | 评分、图表和数字仅为视觉概念                     |
+| `/images/projects/mobile-uiagent-lab.webp`              | Mobile UIAgent 概念封面   | 16:9，1672×941 | 不代表真实设备界面或实测结果                     |
+| `/images/projects/automate-car-copilot.webp`            | 智能座舱 Copilot 概念封面 | 16:9，1672×941 | 不代表真实车辆、真实控制或量产界面               |
+| `/images/projects/game-content-copilot.webp`            | 游戏内容 Copilot 概念封面 | 16:9，1672×941 | 表达内容生产主题，不代表正式游戏资产             |
+| `/images/projects/pdf-learning-assistant.webp`          | PDF 学习助手概念封面      | 16:9，1672×941 | 不把画面中的文档或图表当作项目证据               |
+| `/images/projects/elysia-character-agent.webp`          | 角色陪伴应用概念封面      | 16:9，1672×941 | 非官方角色资产，不暗示米哈游或 HoYoverse 授权    |
 
-PNG 头像与名片是发布备用副本，不是新的视觉角色。`/images/og/` 下四张 WebP 为脚本生成的社交分享卡，不计入页面内容图。当前 Hero 背景 `/images/banner/hero-bg.webp`、透明看板娘 `/images/avatar/character.png`、项目真实截图与 404 插图尚未提供。
+PNG 头像与名片是发布备用副本，不是新的视觉角色。`/images/og/` 下四张 WebP 为脚本生成的社交分享卡，不计入页面内容图。透明看板娘 `/images/avatar/character.png`、项目真实截图与 404 插图尚未提供。
 
 ### 图片构图与裁切
 
@@ -349,9 +352,12 @@ PNG 头像与名片是发布备用副本，不是新的视觉角色。`/images/o
 ### 当前动效语言
 
 - Swup 页面切换使用约 180–220ms 的淡出与 3px 纵向位移。
-- 内容 reveal 使用约 720ms 的 ease-out 上移，并在同一列表内允许 100ms 级轻量 stagger。
-- Hero 角色舞台包含缓慢漂浮、光晕呼吸和星光闪烁；按钮和项目卡 Hover 使用 2–3px 位移和轻微图片缩放。
-- `prefers-reduced-motion: reduce` 时将动画和过渡缩短到近乎即时，并移除 Hero 循环动画。
+- Hero 首次进入用约 1.6 秒完成品牌名、定位、价值主张、CTA 与滚动提示的 ease-out 分段入场；同一标签页返回首页只做约 280ms 快速淡入。
+- 深海背景使用约 16 秒的 `scale(1 → 1.035)` 与 `translateY(0 → -7px)` 往返微动，右上光斑低幅呼吸，六个 CSS 气泡以不同周期缓慢上升。
+- 首次状态使用会话键 `tianqi-home-hero-seen-v1`。内容在无 JavaScript 时默认可见；存储不可用时直接使用静态状态。
+- 900px 以上桌面端使用 passive scroll、`requestAnimationFrame` 和单一 CSS 进度变量提供文字上移淡出、背景轻微放大与光效淡出，不拦截滚轮或触摸。
+- 移动端不注册 Hero 滚动视差并减少气泡数量；`prefers-reduced-motion: reduce` 直接显示静态 Hero，同时关闭背景循环、气泡、呼吸光、入场和滚动联动。
+- 按钮和项目卡 Hover 使用 2–3px 位移、边界变化和轻微图片缩放。
 
 ### 规范
 
@@ -367,21 +373,21 @@ PNG 头像与名片是发布备用副本，不是新的视觉角色。`/images/o
 
 ### 主要断点
 
-| 断点        | 主要变化                                                     |
-| ----------- | ------------------------------------------------------------ |
-| `1180px`    | 首页右侧栏下移；桌面导航压缩英文副标签                       |
-| `1080px`    | Hero 角色舞台与两栏比例收缩                                  |
-| `980px`     | 三列工具网格改为两列                                         |
-| `900px`     | 桌面导航切换移动菜单；About 与案例页侧栏改为普通单栏内容     |
-| `760px`     | 首页三栏、普通 Hero 和案例 Hero 转为单栏；非必要内页装饰隐藏 |
-| `700–620px` | 项目、方法、指标、工具和图片网格逐步归一列                   |
-| `520px`     | 标题、按钮组、列表表头和简历模块针对窄屏重排                 |
+| 断点        | 主要变化                                                   |
+| ----------- | ---------------------------------------------------------- |
+| `1180px`    | 桌面导航压缩英文副标签并隐藏低权重 GitHub 文字入口         |
+| `1100px`    | Hero 右侧文字区收缩，保持左侧人物面部安全区                |
+| `980px`     | 三列工具网格改为两列                                       |
+| `900px`     | 桌面导航切换移动菜单；Hero 改为底部文字布局并停止滚动视差  |
+| `760px`     | 首页项目区、普通 Hero 和案例 Hero 转为单栏；非必要装饰隐藏 |
+| `700–620px` | 项目、方法、指标、工具和图片网格逐步归一列                 |
+| `560–520px` | 方法流、职业 CTA、标题和按钮组针对窄屏重排                 |
 
 断点服务于内容，不要求所有组件机械共享同一数值。新增组件优先测试 1440、1024、768、390 和 320px，再根据真实溢出选择断点。
 
 ### 桌面端
 
-- 保留主内容宽度和侧栏辨识度，但中栏始终是视觉与阅读中心。
+- 首页使用开放主内容宽度与单一阅读轴；内页侧栏仍须让主阅读区保持视觉中心。
 - 首屏角色舞台的宽度不得超过文字主区，也不得遮挡导航、姓名、方向和 CTA。
 - Sticky 元素的 top offset 与固定 Header 保持至少 16px 安全距离。
 - 宽屏不通过增加卡片列数填满空间；长文、项目封面和留白可以承担宽度。
@@ -389,7 +395,7 @@ PNG 头像与名片是发布备用副本，不是新的视觉角色。`/images/o
 ### 移动端
 
 - 最小支持宽度为 320px；正文、按钮、标签和标题不得水平溢出。
-- 内容顺序以招聘判断为准，不简单复制桌面左右栏顺序。个人定位和项目优先，辅助工具与归档靠后。
+- 内容顺序以招聘判断为准：个人定位、代表项目、产品方法和职业入口依次出现；辅助工具与归档只保留在独立页面。
 - 按钮和筛选项允许换行，触控目标至少 44px；不要求精确点击小型文字或图标。
 - 多列数据、流程和对比在窄屏转换为可读列表，不依赖横向滚动查看核心信息。
 - `hideOnMobile` 只适用于非必要角色立绘或复杂装饰，不适用于身份、项目封面和真实性说明。
@@ -416,7 +422,7 @@ PNG 头像与名片是发布备用副本，不是新的视觉角色。`/images/o
 - 禁止渐变文字、装饰性 CSS 网格背景、重复斜线纹理、扫描线、终端窗口、神经网络线条和无功能电路图。
 - 禁止每个 section 都使用小号全大写 tracked eyebrow；编号只用于真实流程、顺序、时间线和案例章节。
 - 禁止普通卡片与输入使用 24–40px 大圆角；禁止粗侧边强调条；禁止边框与 16px 以上宽软阴影同时作为装饰。
-- 禁止无意义粒子、浮动数据面板、鼠标跟随光晕和持续高亮动画。星光只作为少量品牌标点。
+- 禁止与画面语义无关的粒子、浮动数据面板、鼠标跟随光晕和持续高亮动画。深海 Hero 可使用少量低对比度气泡补充水下纵深，其他页面的星光仍只作为品牌标点。
 - 禁止用通用机器人、AI 大脑、芯片、火箭、魔法棒或闪电图标代替真实项目内容。
 - 禁止把二次元角色铺满所有页面、压住正文或重复用同一角色姿势制造“丰富度”。
 - 禁止使用官方角色、游戏 Logo、未经授权画师素材或无法说明来源的截图。
@@ -429,4 +435,4 @@ PNG 头像与名片是发布备用副本，不是新的视觉角色。`/images/o
 - 若后续修改 `src/styles/tokens.css`、全局字体、页面宽度、主要断点、卡片语言或图片资产映射，应同步更新本文件。
 - 任何视觉变化不得改变 Astro、Mizuki、Swup、Pagefind、静态输出和 Cloudflare Pages 部署边界，除非用户另行明确授权。
 - 任何新增项目内容和图片先核验真实性、来源、授权与用途，再进入页面和 `/credits`。
-- 当前阶段只建立文档，不据此自动修改现有页面、组件、样式、内容或图片。
+- 首页结构、动效边界或响应式策略变化时，应同时更新 README、本文件与 `CODEX_PROGRESS.md` 的验证记录。

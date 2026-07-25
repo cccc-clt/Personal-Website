@@ -16,7 +16,7 @@ import SectionIntro from './SectionIntro.astro';
           <li class:list={[`abilities__item`, `abilities__item--${index + 1}`]}>
             <span class="abilities__number mono">{ability.index}</span>
             <div>
-              <span class="abilities__english mono">{ability.english}</span>
+              <span class="abilities__english">{ability.english}</span>
               <h3>{ability.title}</h3>
               <p>{ability.description}</p>
             </div>
@@ -81,13 +81,14 @@ import SectionIntro from './SectionIntro.astro';
   .abilities__english {
     color: var(--ink-500);
     font-size: 0.66rem;
-    letter-spacing: 0.1em;
+    font-weight: 500;
+    letter-spacing: 0.05em;
   }
 
   h3 {
     margin: 1.2rem 0 0.9rem;
     font-size: clamp(1.8rem, 3vw, 3.2rem);
-    letter-spacing: -0.05em;
+    letter-spacing: -0.02em;
   }
 
   p {
