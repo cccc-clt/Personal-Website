@@ -2,180 +2,231 @@
 import { getCollection } from 'astro:content';
 import InnerPageHero from '../../components/InnerPageHero.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
+import { projectFilterLabels } from '../../config/site';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import type { ProjectFilter } from '../../types/project';
 
 const projects = (await getCollection('projects')).sort(
   (a, b) => a.data.order.general - b.data.order.general,
 );
-const publicRepositoryCount = projects.filter((project) => project.data.githubUrl).length;
-const localCaseCount = projects.length - publicRepositoryCount;
-const projectCount = String(projects.length).padStart(2, '0');
-const filters = [
-  { key: 'all', label: '全部项目' },
-  { key: 'game', label: '游戏 AI' },
-  { key: 'agent', label: 'AI Agent' },
-  { key: 'auto', label: '智能汽车' },
-] as const;
+const filters = Object.entries(projectFilterLabels) as [ProjectFilter, string][];
+const counts = Object.fromEntries(
+  filters.map(([filter]) => [
+    filter,
+    projects.filter((project) => project.data.filters.includes(filter)).length,
+  ]),
+);
 ---
 
 <BaseLayout
-  title="项目｜赵天琦游戏 AI 产品作品集"
-  description="七个真实 AI 产品案例，从用户问题、产品目标、技术方案与评测证据呈现游戏 AI 和 Agent 产品能力。"
+  title="项目｜赵天琦 AI 产品作品集"
+  description="赵天琦的游戏 AI、Agent、产品评测与工作流项目，展示真实问题、职责、产出、失败边界与证据来源。"
 >
   <InnerPageHero
-    eyebrow={`PROJECTS / ${projectCount} CASE STUDIES`}
-    title="七个真实项目，呈现从需求到评测的产品闭环。"
-    description="每个案例保留真实名称，并说明项目定位、用户问题、产品目标、我的职责、技术方案和当前状态；视觉代号只作副标题。"
-  >
-    <div class="project-filters" role="group" aria-label="按方向筛选项目" data-project-filters>
+    eyebrow="项目案例"
+    title="看问题、方案和证据，不只看一张封面。"
+    description="这里的每个案例都说明用户问题、AI 必要性、人工节点、当前产出与仍未验证的边界。概念图会明确标注，不代替真实运行证据。"
+  />
+
+  <section class="projects-page page-shell" aria-labelledby="projects-list-title">
+    <div class="projects-toolbar">
+      <div>
+        <h2 id="projects-list-title">全部项目</h2>
+        <p><span data-visible-count>{projects.length}</span> / {projects.length} 个案例</p>
+      </div>
+      <div class="projects-filters" aria-label="按项目类型筛选">
+        <button type="button" data-project-filter="all" aria-pressed="true">
+          全部 <span>{projects.length}</span>
+        </button>
+        {
+          filters.map(([filter, label]) => (
+            <button type="button" data-project-filter={filter} aria-pressed="false">
+              {label} <span>{counts[filter]}</span>
+            </button>
+          ))
+        }
+      </div>
+    </div>
+
+    <div class="projects-grid" data-project-grid>
       {
-        filters.map((filter) => (
-          <button
-            type="button"
-            data-filter={filter.key}
-            aria-pressed={filter.key === 'all' ? 'true' : 'false'}
-          >
-            {filter.label}
-          </button>
+        projects.map((project) => (
+          <div data-project-item data-project-filters={project.data.filters.join(' ')}>
+            <ProjectCard project={project} />
+          </div>
         ))
       }
     </div>
-  </InnerPageHero>
-  <section class="project-index section page-shell" aria-live="polite">
-    <aside class="project-source panel" aria-label="项目来源说明">
-      <div><strong>{projects.length}</strong><span>个项目案例</span></div>
-      <div><strong>{publicRepositoryCount}</strong><span>个公开 GitHub 仓库已核验</span></div>
-      <div><strong>{localCaseCount}</strong><span>个本地案例未公开仓库</span></div>
-      <p>
-        GitHub 项目依据公开仓库 README
-        校对；未公开案例不提供虚构仓库链接，也不对外宣称无法验证的运行结果。
-      </p>
-    </aside>
-    <div class="project-index__grid" data-project-grid>
-      {
-        projects.map((project, index) => (
-          <ProjectCard
-            project={project}
-            layout={index === 0 || index === 4 ? 'wide' : 'standard'}
-          />
-        ))
-      }
+
+    <div class="projects-empty" data-project-empty hidden>
+      <h3>这个筛选下暂时没有项目</h3>
+      <p>你可以返回“全部”，或从研究页面了解我的方法和判断方式。</p>
+      <div>
+        <button class="button" type="button" data-project-filter="all">查看全部项目</button>
+        <a class="text-link" href="/research/">前往研究</a>
+      </div>
     </div>
-    <p class="sr-only" data-filter-status>当前展示全部 {projects.length} 个项目</p>
   </section>
 </BaseLayout>
 
 <script>
-  const initFilters = () => {
-    const group = document.querySelector<HTMLElement>('[data-project-filters]');
-    if (!group || group.dataset.ready) return;
-    group.dataset.ready = 'true';
-    const cards = Array.from(document.querySelectorAll<HTMLElement>('[data-project-card]'));
-    const status = document.querySelector<HTMLElement>('[data-filter-status]');
-    group.addEventListener('click', (event) => {
-      const button = (event.target as HTMLElement).closest<HTMLButtonElement>(
-        'button[data-filter]',
-      );
-      if (!button) return;
-      const filter = button.dataset.filter ?? 'all';
-      group
-        .querySelectorAll('button')
-        .forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
-      let visible = 0;
-      cards.forEach((card) => {
-        const matches = filter === 'all' || (card.dataset.tracks ?? '').split(' ').includes(filter);
-        card.hidden = !matches;
-        if (matches) visible += 1;
-      });
-      if (status) status.textContent = `当前展示 ${visible} 个项目`;
+  const filterKeys = ['game-ai', 'agent', 'evaluation', 'workflow'];
+
+  const applyProjectFilter = (requested: string, updateHistory = false) => {
+    const filter = filterKeys.includes(requested) ? requested : 'all';
+    const items = document.querySelectorAll<HTMLElement>('[data-project-item]');
+    if (!items.length) return;
+
+    let visible = 0;
+    items.forEach((item) => {
+      const matches =
+        filter === 'all' || (item.dataset.projectFilters ?? '').split(' ').includes(filter);
+      item.hidden = !matches;
+      if (matches) visible += 1;
     });
+
+    document.querySelectorAll<HTMLButtonElement>('[data-project-filter]').forEach((button) => {
+      button.setAttribute('aria-pressed', String(button.dataset.projectFilter === filter));
+    });
+    const count = document.querySelector<HTMLElement>('[data-visible-count]');
+    if (count) count.textContent = String(visible);
+    const empty = document.querySelector<HTMLElement>('[data-project-empty]');
+    if (empty) empty.hidden = visible > 0;
+
+    if (updateHistory) {
+      const url = new URL(location.href);
+      if (filter === 'all') url.searchParams.delete('filter');
+      else url.searchParams.set('filter', filter);
+      history.pushState({ filter }, '', url);
+    }
   };
-  initFilters();
-  document.addEventListener('swup:contentReplaced', initFilters);
+
+  const applyProjectFilterFromUrl = () => {
+    applyProjectFilter(new URL(location.href).searchParams.get('filter') ?? 'all');
+  };
+
+  document.addEventListener('click', (event) => {
+    const button = (event.target as HTMLElement).closest<HTMLButtonElement>(
+      '[data-project-filter]',
+    );
+    if (!button || !document.querySelector('[data-project-grid]')) return;
+    applyProjectFilter(button.dataset.projectFilter ?? 'all', true);
+  });
+  addEventListener('popstate', applyProjectFilterFromUrl);
+  applyProjectFilterFromUrl();
 </script>
 
 <style>
-  .project-filters {
+  .projects-page {
+    padding-block: clamp(4rem, 8vw, 8rem);
+  }
+
+  .projects-toolbar {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-bottom: 3rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-strong);
+  }
+
+  .projects-toolbar h2 {
+    margin: 0;
+    font-size: clamp(1.7rem, 3vw, 2.8rem);
+  }
+
+  .projects-toolbar p {
+    margin: 0.45rem 0 0;
+    color: var(--text-muted);
+    font-size: 0.78rem;
+  }
+
+  .projects-filters {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.55rem;
-    margin-top: 2rem;
+    gap: 0.45rem;
+    justify-content: flex-end;
   }
-  .project-filters button {
-    padding: 0.64rem 0.9rem;
-    border: 1px solid rgba(255, 255, 255, 0.55);
-    border-radius: var(--radius-pill);
-    background: rgba(255, 255, 255, 0.45);
+
+  .projects-filters button {
+    min-height: 42px;
+    padding: 0.55rem 0.8rem;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: transparent;
     color: var(--text-secondary);
     cursor: pointer;
+    font-size: 0.78rem;
+    font-weight: 580;
   }
-  .project-filters button[aria-pressed='true'] {
-    border-color: var(--text-main);
-    background: var(--text-main);
-    color: var(--surface-solid);
-  }
-  .project-source {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(120px, 0.45fr)) minmax(260px, 1.65fr);
-    gap: 1px;
-    margin-bottom: 1rem;
-    overflow: hidden;
-  }
-  .project-source > div,
-  .project-source > p {
-    padding: 1.15rem;
-    margin: 0;
-    background: var(--surface-solid);
-  }
-  .project-source > div {
-    display: grid;
-    align-content: center;
-    gap: 0.2rem;
-  }
-  .project-source strong {
-    color: var(--primary-strong);
-    font-family: var(--font-mono);
-    font-size: 1.35rem;
-  }
-  .project-source span {
+
+  .projects-filters button span {
+    margin-left: 0.3rem;
     color: var(--text-muted);
-    font-size: 0.65rem;
-    line-height: 1.5;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
   }
-  .project-source p {
-    color: var(--text-secondary);
-    font-size: 0.75rem;
-    line-height: 1.75;
+
+  .projects-filters button:hover,
+  .projects-filters button[aria-pressed='true'] {
+    border-color: var(--primary);
+    background: var(--primary-soft);
+    color: var(--primary-strong);
   }
-  .project-index__grid {
+
+  .projects-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1rem;
+    gap: 1.25rem;
+    align-items: start;
   }
-  .project-index__grid > :global(.project-card--wide) {
-    grid-column: 1 / -1;
-  }
-  .project-index__grid > :global([hidden]) {
+
+  [data-project-item][hidden] {
     display: none;
   }
-  @media (max-width: 900px) {
-    .project-source {
-      grid-template-columns: repeat(3, 1fr);
+
+  .projects-empty {
+    padding: clamp(3rem, 8vw, 7rem) 0;
+    text-align: center;
+  }
+
+  .projects-empty[hidden] {
+    display: none;
+  }
+
+  .projects-empty h3 {
+    margin: 0;
+    font-size: clamp(1.7rem, 4vw, 3rem);
+  }
+
+  .projects-empty p {
+    margin: 0.8rem 0 1.5rem;
+    color: var(--text-secondary);
+  }
+
+  .projects-empty > div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+  }
+
+  @media (max-width: 800px) {
+    .projects-toolbar {
+      align-items: start;
+      flex-direction: column;
     }
-    .project-source > p {
-      grid-column: 1 / -1;
+
+    .projects-filters {
+      justify-content: flex-start;
     }
   }
-  @media (max-width: 700px) {
-    .project-source,
-    .project-index__grid {
+
+  @media (max-width: 680px) {
+    .projects-grid {
       grid-template-columns: 1fr;
-    }
-    .project-source > p {
-      grid-column: 1;
-    }
-    .project-index__grid > :global(.project-card--wide) {
-      grid-column: 1;
     }
   }
 </style>

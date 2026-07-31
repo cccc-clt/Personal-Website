@@ -1,7 +1,8 @@
 ---
 import { getCollection } from 'astro:content';
-import { abilities, siteConfig } from '../config/site';
+import { abilities, productWorkflow, researchCategoryLabels, siteConfig } from '../config/site';
 import { avatarConfig } from '../config/visualAssets';
+import { estimateReadingMinutes, formatDate } from '../utils/content';
 import HeroBanner from './HeroBanner.astro';
 import ProjectCard from './ProjectCard.astro';
 
@@ -10,16 +11,19 @@ const allProjects = (await getCollection('projects')).sort(
 );
 const featuredProjectSlugs = [
   'ai-game-content-copilot',
+  'ai-product-evaluation-workbench',
   'elysia-ai-character-agent',
-  'ai-game-growth-workflow',
+  'mobile-uiagent-evaluation-lab',
 ];
-const getProjectSlug = (project: (typeof allProjects)[number]) => project.id.replace(/\.mdx?$/, '');
-const projectBySlug = new Map(allProjects.map((project) => [getProjectSlug(project), project]));
+const projectBySlug = new Map(allProjects.map((project) => [project.id, project]));
 const featuredProjects = featuredProjectSlugs.flatMap((slug) => {
   const project = projectBySlug.get(slug);
   return project ? [project] : [];
 });
-const projectCount = String(allProjects.length).padStart(2, '0');
+const research = (await getCollection('research'))
+  .filter((entry) => !entry.data.draft)
+  .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+const featuredResearch = research.find((entry) => entry.data.featured) ?? research[0];
 ---
 
 <HeroBanner />
@@ -27,74 +31,104 @@ const projectCount = String(allProjects.length).padStart(2, '0');
 <div class="home-flow page-shell">
   <section class="home-projects" id="featured-projects" aria-labelledby="featured-projects-title">
     <header class="home-heading">
-      <div class="home-heading__index" aria-hidden="true">01</div>
       <div>
         <p>精选项目</p>
-        <h2 id="featured-projects-title">三个真实案例，三种 AI 产品命题</h2>
+        <h2 id="featured-projects-title">四个案例，回答四类 AI 产品问题</h2>
       </div>
-      <a href="/projects/">查看全部 {projectCount} 个项目 <span aria-hidden="true">→</span></a>
+      <a class="text-link" href="/projects/">查看全部 {allProjects.length} 个项目</a>
     </header>
-
     <div class="home-projects__grid">
-      {
-        featuredProjects.map((project, index) => (
-          <ProjectCard project={project} homepagePriority={index === 0 ? 'primary' : 'secondary'} />
-        ))
-      }
+      {featuredProjects.map((project) => <ProjectCard project={project} mode="featured" />)}
     </div>
   </section>
 
   <section class="home-method" aria-labelledby="home-method-title">
     <header class="home-heading">
-      <div class="home-heading__index" aria-hidden="true">02</div>
       <div>
         <p>产品方法</p>
-        <h2 id="home-method-title">从场景判断到评测回路</h2>
+        <h2 id="home-method-title">能力不是标签，而是一条可复盘的工作流</h2>
       </div>
-      <a href="/about/">了解我的方法 <span aria-hidden="true">→</span></a>
+      <a class="text-link" href="/about/">了解判断方式</a>
     </header>
-
-    <ol class="method-flow">
-      {
-        abilities.map((ability) => (
-          <li>
-            <span>{ability.index}</span>
-            <div>
-              <p>{ability.english}</p>
+    <div class="home-method__layout">
+      <div class="home-method__abilities">
+        {
+          abilities.map((ability) => (
+            <article>
               <h3>{ability.title}</h3>
               <p>{ability.description}</p>
-            </div>
-          </li>
-        ))
-      }
-    </ol>
+            </article>
+          ))
+        }
+      </div>
+      <ol class="home-method__flow" aria-label="七步产品工作流">
+        {
+          productWorkflow.map((step, index) => (
+            <li>
+              <span>{String(index + 1).padStart(2, '0')}</span>
+              <strong>{step}</strong>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
   </section>
 
-  <section class="career-cta" aria-labelledby="career-cta-title">
-    <div class="career-cta__avatar" aria-hidden="true">
+  {
+    featuredResearch && (
+      <section class="home-research" aria-labelledby="home-research-title">
+        <div class="home-research__context">
+          <p>Research</p>
+          <span>将项目中的判断、方法和失败边界整理为可继续讨论的研究记录。</span>
+        </div>
+        <article>
+          <div class="home-research__meta">
+            <span>{researchCategoryLabels[featuredResearch.data.category]}</span>
+            <span>{formatDate(featuredResearch.data.publishedAt)}</span>
+            <span>{estimateReadingMinutes(featuredResearch.body)} 分钟阅读</span>
+          </div>
+          <h2 id="home-research-title">{featuredResearch.data.title}</h2>
+          <p>{featuredResearch.data.summary}</p>
+          <a class="text-link" href={`/research/${featuredResearch.id}/`}>
+            阅读方法文章
+          </a>
+        </article>
+      </section>
+    )
+  }
+
+  <section class="home-about" aria-labelledby="home-about-title">
+    <div class="home-about__portrait">
       <img
         src={avatarConfig.image}
         width={avatarConfig.width}
         height={avatarConfig.height}
-        alt=""
+        alt="赵天琦个人网站的原创二次元头像"
         loading="lazy"
         decoding="async"
       />
     </div>
-    <div class="career-cta__copy">
-      <p>{siteConfig.name} · {siteConfig.englishName}</p>
-      <h2 id="career-cta-title">游戏 AI 产品经理 / AI 应用产品经理方向</h2>
+    <div>
+      <p>关于赵天琦</p>
+      <h2 id="home-about-title">从复杂系统出发，走向面向真实任务的 AI 产品。</h2>
       <p>
-        交通工程本科生，持续围绕游戏 AI、角色 Agent、工作流与产品评测推进真实项目实践。
-        如果你想进一步了解我的经历与判断方式，可以从在线简历或完整介绍开始。
+        交通工程训练了我理解参与者、约束、路径和反馈；AI
+        产品实践让我把这些方法用于场景判断、原型、Agent
+        工作流与评测。网站只呈现仓库和已有材料能够核验的事实。
       </p>
+      <a class="text-link" href="/about/">阅读完整介绍</a>
     </div>
-    <div class="career-cta__actions" aria-label="职业信息入口">
-      <a class="career-link career-link--primary" href="/resume/">查看在线简历</a>
-      <a class="career-link" href="/about/">关于我</a>
-      <a class="career-link" href={siteConfig.github} target="_blank" rel="noreferrer">
-        GitHub <span aria-hidden="true">↗</span>
-      </a>
+  </section>
+
+  <section class="career-cta" aria-labelledby="career-cta-title">
+    <div>
+      <p>{siteConfig.availability}</p>
+      <h2 id="career-cta-title">如果你在寻找会把 AI 想法推进到验证回路的人，可以从这里继续。</h2>
+    </div>
+    <div class="career-cta__actions">
+      <a class="button button--primary" href="/resume/">查看在线简历</a>
+      <a class="button" href="/projects/">浏览全部项目</a>
+      <a class="text-link" href={siteConfig.github} target="_blank" rel="noreferrer">GitHub</a>
     </div>
   </section>
 </div>
@@ -102,390 +136,323 @@ const projectCount = String(allProjects.length).padStart(2, '0');
 <style>
   .home-flow {
     display: grid;
-    gap: clamp(5rem, 9vw, 9rem);
-    padding-top: clamp(4.5rem, 8vw, 7rem);
-    padding-bottom: clamp(5rem, 9vw, 8rem);
+    gap: clamp(6rem, 12vw, 11rem);
+    padding-block: clamp(5rem, 9vw, 8rem) clamp(6rem, 12vw, 11rem);
   }
 
-  .home-projects,
-  .home-method {
+  section {
     scroll-margin-top: 7rem;
   }
 
   .home-heading {
-    display: grid;
-    grid-template-columns: 3rem minmax(0, 1fr) auto;
-    gap: clamp(1rem, 2.4vw, 2rem);
+    display: flex;
     align-items: end;
-    padding-bottom: clamp(1.4rem, 2.8vw, 2rem);
-    border-bottom: 1px solid var(--border);
+    justify-content: space-between;
+    gap: 2rem;
+    margin-bottom: clamp(2.5rem, 5vw, 4.5rem);
   }
 
-  .home-heading__index {
-    color: var(--violet);
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    line-height: 1.6;
-  }
-
-  .home-heading p {
-    margin: 0 0 0.5rem;
-    color: var(--text-muted);
-    font-size: 0.78rem;
-    font-weight: 500;
-    letter-spacing: 0;
+  .home-heading p,
+  .home-research__context > p,
+  .home-about > div:last-child > p:first-child,
+  .career-cta > div:first-child > p {
+    margin: 0 0 0.7rem;
+    color: var(--primary-strong);
+    font-size: 0.82rem;
+    font-weight: 620;
   }
 
   .home-heading h2 {
-    max-width: 840px;
+    max-width: 18ch;
     margin: 0;
-    font-size: clamp(2rem, 4.4vw, 4rem);
-    letter-spacing: -0.02em;
+    font-size: clamp(2.2rem, 4.7vw, 4.6rem);
+    letter-spacing: -0.035em;
     line-height: 1.12;
-    text-wrap: balance;
-  }
-
-  .home-heading > a {
-    display: inline-flex;
-    min-height: 44px;
-    gap: 0.5rem;
-    align-items: center;
-    color: var(--text-secondary);
-    font-size: 0.78rem;
-    font-weight: 600;
-    white-space: nowrap;
-    transition:
-      color 180ms ease,
-      transform 180ms var(--ease-out);
-  }
-
-  .home-heading > a:hover {
-    color: var(--primary-strong);
-    transform: translateX(3px);
-  }
-
-  .home-heading > a:focus-visible,
-  .career-link:focus-visible {
-    border-radius: 8px;
-    outline: 3px solid color-mix(in srgb, var(--primary-strong) 58%, transparent);
-    outline-offset: 4px;
   }
 
   .home-projects__grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1rem;
-    margin-top: 1.5rem;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1.25rem;
+    align-items: start;
   }
 
-  .home-projects__grid > :global(:first-child) {
-    grid-column: 1 / -1;
+  .home-projects__grid > :global(:nth-child(1)),
+  .home-projects__grid > :global(:nth-child(4)) {
+    grid-column: span 7;
   }
 
-  .method-flow {
+  .home-projects__grid > :global(:nth-child(2)),
+  .home-projects__grid > :global(:nth-child(3)) {
+    grid-column: span 5;
+  }
+
+  .home-projects__grid > :global(:nth-child(2)) {
+    margin-top: 5rem;
+  }
+
+  .home-projects__grid > :global(:nth-child(4)) {
+    margin-top: -3rem;
+  }
+
+  .home-method__layout {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    padding: 0;
-    margin: 1.25rem 0 0;
-    list-style: none;
+    grid-template-columns: minmax(0, 0.82fr) minmax(340px, 0.58fr);
+    gap: clamp(3rem, 8vw, 8rem);
   }
 
-  .method-flow li {
-    position: relative;
+  .home-method__abilities {
     display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
-    gap: 1rem;
-    min-width: 0;
-    padding: 1.4rem clamp(1rem, 2vw, 1.5rem);
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--border-strong);
+  }
+
+  .home-method__abilities article {
+    min-height: 190px;
+    padding: 1.5rem 1.5rem 2.2rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .home-method__abilities article:nth-child(odd) {
+    padding-right: 2.5rem;
+  }
+
+  .home-method__abilities article:nth-child(even) {
+    padding-left: 2.5rem;
     border-left: 1px solid var(--border);
   }
 
-  .method-flow li:first-child {
-    padding-left: 0;
-    border-left: 0;
-  }
-
-  .method-flow li:last-child {
-    padding-right: 0;
-  }
-
-  .method-flow li > span {
-    color: var(--violet);
-    font-family: var(--font-mono);
-    font-size: 0.66rem;
-    line-height: 1.6;
-  }
-
-  .method-flow li > div > p:first-child {
-    margin: 0 0 0.55rem;
-    color: var(--text-muted);
-    font-family: var(--font-sans);
-    font-size: 0.58rem;
-    font-weight: 500;
-    letter-spacing: 0.04em;
-  }
-
-  .method-flow h3 {
+  .home-method__abilities h3 {
     margin: 0;
-    font-size: clamp(1.05rem, 1.5vw, 1.3rem);
-    letter-spacing: -0.015em;
+    font-size: 1.35rem;
   }
 
-  .method-flow li > div > p:last-child {
-    margin: 0.65rem 0 0;
+  .home-method__abilities p {
+    margin: 0.8rem 0 0;
     color: var(--text-secondary);
-    font-size: 0.78rem;
     line-height: 1.75;
-    text-wrap: pretty;
   }
 
-  .career-cta {
-    position: relative;
+  .home-method__flow {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: method;
+  }
+
+  .home-method__flow li {
     display: grid;
-    grid-template-columns: 96px minmax(0, 1fr) auto;
-    gap: clamp(1.2rem, 3vw, 2.2rem);
+    grid-template-columns: 3.2rem 1fr;
+    gap: 1rem;
     align-items: center;
-    overflow: hidden;
-    padding: clamp(1.5rem, 4vw, 2.5rem);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    background:
-      radial-gradient(
-        circle at 90% 10%,
-        color-mix(in srgb, var(--violet) 18%, transparent),
-        transparent 15rem
-      ),
-      linear-gradient(
-        125deg,
-        color-mix(in srgb, var(--primary-soft) 64%, var(--surface-solid)),
-        color-mix(in srgb, var(--surface-solid) 92%, var(--pink))
-      );
+    padding: 0.95rem 0;
+    border-bottom: 1px solid var(--border);
   }
 
-  .career-cta::after {
-    position: absolute;
-    top: -32px;
-    right: 7%;
-    width: 72px;
-    height: 72px;
-    border: 1px solid color-mix(in srgb, var(--violet) 20%, transparent);
-    content: '';
-    rotate: 45deg;
+  .home-method__flow span {
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
   }
 
-  .career-cta__avatar {
-    position: relative;
-    z-index: 1;
-    overflow: hidden;
-    width: 96px;
-    height: 96px;
-    border: 1px solid color-mix(in srgb, var(--surface-solid) 82%, var(--border));
-    border-radius: 28px;
-    background: var(--surface-solid);
-    box-shadow: 0 14px 32px color-mix(in srgb, var(--text-main) 10%, transparent);
+  .home-method__flow strong {
+    font-size: 1rem;
   }
 
-  .career-cta__avatar img {
+  .home-research {
+    display: grid;
+    grid-template-columns: minmax(180px, 0.32fr) minmax(0, 1fr);
+    gap: clamp(3rem, 8vw, 9rem);
+    padding: clamp(2rem, 5vw, 4.5rem) 0;
+    border-top: 1px solid var(--border-strong);
+    border-bottom: 1px solid var(--border-strong);
+  }
+
+  .home-research__context span {
     display: block;
+    max-width: 26ch;
+    color: var(--text-secondary);
+    font-size: 0.84rem;
+    line-height: 1.7;
+  }
+
+  .home-research article {
+    max-width: 850px;
+  }
+
+  .home-research__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem 1.2rem;
+    color: var(--text-muted);
+    font-size: 0.74rem;
+  }
+
+  .home-research h2 {
+    margin: 1.2rem 0 0;
+    font-size: clamp(2.1rem, 4vw, 4rem);
+    letter-spacing: -0.03em;
+    line-height: 1.18;
+  }
+
+  .home-research article > p {
+    max-width: 65ch;
+    margin: 1rem 0 1.5rem;
+    color: var(--text-secondary);
+    line-height: 1.8;
+  }
+
+  .home-about {
+    display: grid;
+    grid-template-columns: minmax(240px, 0.52fr) minmax(0, 1fr);
+    gap: clamp(3rem, 8vw, 8rem);
+    align-items: center;
+  }
+
+  .home-about__portrait {
+    width: min(100%, 440px);
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border-radius: 16px 16px 6rem 16px;
+    background: var(--surface-tint);
+  }
+
+  .home-about__portrait img {
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
 
-  .career-cta__copy {
-    position: relative;
-    z-index: 1;
-    min-width: 0;
+  .home-about h2 {
+    max-width: 16ch;
+    margin: 0;
+    font-size: clamp(2.3rem, 4.7vw, 4.6rem);
+    letter-spacing: -0.035em;
+    line-height: 1.12;
   }
 
-  .career-cta__copy > p:first-child {
-    margin: 0 0 0.45rem;
-    color: var(--violet);
-    font-family: var(--font-sans);
-    font-size: 0.68rem;
-    font-weight: 500;
-    letter-spacing: 0;
+  .home-about > div:last-child > p:nth-of-type(2) {
+    max-width: 64ch;
+    margin: 1.25rem 0 1.6rem;
+    color: var(--text-secondary);
+    line-height: 1.85;
+  }
+
+  .career-cta {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: clamp(2rem, 7vw, 7rem);
+    align-items: end;
+    padding: clamp(2rem, 5vw, 4.5rem);
+    border-radius: var(--radius-md);
+    background: var(--text-main);
+    color: #f5f8fa;
   }
 
   .career-cta h2 {
+    max-width: 21ch;
     margin: 0;
-    font-size: clamp(1.35rem, 2.6vw, 2.25rem);
-    letter-spacing: -0.02em;
-    line-height: 1.2;
-    text-wrap: balance;
+    font-size: clamp(2rem, 4.2vw, 4rem);
+    letter-spacing: -0.032em;
+    line-height: 1.14;
   }
 
-  .career-cta__copy > p:last-child {
-    max-width: 720px;
-    margin: 0.7rem 0 0;
-    color: var(--text-secondary);
-    font-size: 0.82rem;
-    line-height: 1.75;
+  .career-cta > div:first-child > p {
+    color: #b8cad4;
   }
 
   .career-cta__actions {
-    position: relative;
-    z-index: 1;
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
-    justify-content: flex-end;
-    max-width: 280px;
-  }
-
-  .career-link {
-    display: inline-flex;
-    min-height: 44px;
-    gap: 0.35rem;
+    gap: 0.65rem;
     align-items: center;
-    justify-content: center;
-    padding: 0.65rem 0.9rem;
-    border: 1px solid var(--border-strong);
-    border-radius: 12px;
-    background: color-mix(in srgb, var(--surface-solid) 70%, transparent);
-    color: var(--text-main);
-    font-size: 0.76rem;
-    font-weight: 600;
-    transition:
-      transform 180ms var(--ease-out),
-      border-color 180ms ease;
+    justify-content: flex-end;
   }
 
-  .career-link--primary {
-    border-color: var(--text-main);
-    background: var(--text-main);
-    color: var(--surface-solid);
+  .career-cta .button {
+    border-color: rgba(255, 255, 255, 0.28);
+    background: transparent;
+    color: #fff;
   }
 
-  .career-link:hover {
-    border-color: color-mix(in srgb, var(--primary) 56%, var(--border-strong));
-    transform: translateY(-2px);
+  .career-cta .button--primary {
+    border-color: #fff;
+    background: #fff;
+    color: #17202d;
   }
 
-  @media (max-width: 1020px) {
-    .method-flow {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+  .career-cta .text-link {
+    padding-inline: 0.7rem;
+    color: #d6e3e9;
+  }
+
+  @media (max-width: 920px) {
+    .home-projects__grid > :global(*) {
+      grid-column: span 6 !important;
+      margin-top: 0 !important;
     }
 
-    .method-flow li:nth-child(3) {
-      padding-left: 0;
-      border-left: 0;
-      border-top: 1px solid var(--border);
-    }
-
-    .method-flow li:nth-child(4) {
-      border-top: 1px solid var(--border);
-    }
-
+    .home-method__layout,
     .career-cta {
-      grid-template-columns: 88px minmax(0, 1fr);
-    }
-
-    .career-cta__avatar {
-      width: 88px;
-      height: 88px;
+      grid-template-columns: 1fr;
     }
 
     .career-cta__actions {
-      grid-column: 2;
       justify-content: flex-start;
-      max-width: none;
     }
   }
 
-  @media (max-width: 760px) {
-    .home-flow {
-      gap: 4.75rem;
-      padding-top: 4rem;
-      padding-bottom: 5rem;
-    }
-
+  @media (max-width: 720px) {
     .home-heading {
-      grid-template-columns: 2rem minmax(0, 1fr);
-    }
-
-    .home-heading > a {
-      grid-column: 2;
-      width: fit-content;
+      align-items: start;
+      flex-direction: column;
     }
 
     .home-projects__grid {
+      display: grid;
       grid-template-columns: 1fr;
     }
 
-    .home-projects__grid > :global(:first-child) {
-      grid-column: 1;
-    }
-  }
-
-  @media (max-width: 560px) {
-    .home-heading {
-      grid-template-columns: 1fr;
-      gap: 0.4rem;
+    .home-projects__grid > :global(*) {
+      grid-column: 1 !important;
     }
 
-    .home-heading__index {
-      margin-bottom: 0.25rem;
-    }
-
-    .home-heading > a {
-      grid-column: 1;
-      margin-top: 0.5rem;
-    }
-
-    .method-flow {
+    .home-method__abilities,
+    .home-research,
+    .home-about {
       grid-template-columns: 1fr;
     }
 
-    .method-flow li,
-    .method-flow li:first-child,
-    .method-flow li:nth-child(3),
-    .method-flow li:last-child {
-      padding: 1.15rem 0;
-      border-top: 1px solid var(--border);
+    .home-method__abilities article:nth-child(n) {
+      min-height: 0;
+      padding: 1.4rem 0;
       border-left: 0;
     }
 
-    .method-flow li:first-child {
-      border-top: 0;
+    .home-research {
+      gap: 2rem;
     }
 
-    .career-cta {
-      grid-template-columns: 68px minmax(0, 1fr);
-      align-items: start;
-    }
-
-    .career-cta__avatar {
-      width: 68px;
-      height: 68px;
-      border-radius: 20px;
-    }
-
-    .career-cta__copy > p:last-child {
-      grid-column: 1 / -1;
-    }
-
-    .career-cta__actions {
-      grid-column: 1 / -1;
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      width: 100%;
-    }
-
-    .career-link--primary {
-      grid-column: 1 / -1;
+    .home-about__portrait {
+      aspect-ratio: 16 / 10;
+      border-radius: var(--radius-md);
     }
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .home-heading > a,
-    .career-link {
-      transition: none;
+  @media (max-width: 520px) {
+    .career-cta {
+      padding: 1.5rem;
     }
 
-    .home-heading > a:hover,
-    .career-link:hover {
-      transform: none;
+    .career-cta__actions {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .career-cta__actions > * {
+      width: 100%;
+      justify-content: center;
     }
   }
 </style>

@@ -1,693 +1,249 @@
 ---
-import { existsSync } from 'node:fs';
-import { join } from 'node:path';
 import { siteConfig } from '../config/site';
 import { heroAssetConfig } from '../config/visualAssets';
-
-const publicRoot = join(process.cwd(), 'public');
-const hasHeroBackground = existsSync(
-  join(publicRoot, heroAssetConfig.backgroundImage.replace(/^\//, '')),
-);
 ---
 
-<section
-  class:list={['home-hero', { 'home-hero--fallback': !hasHeroBackground }]}
-  aria-labelledby="home-title"
-  data-home-hero
-  data-intro="pending"
->
-  {
-    hasHeroBackground && (
-      <div class="home-hero__background" aria-hidden="true">
+<section class="home-hero" aria-labelledby="home-title">
+  <div class="page-shell home-hero__grid">
+    <div class="home-hero__copy" data-reveal>
+      <p class="home-hero__status">
+        <span aria-hidden="true"></span>
+        {siteConfig.availability}
+      </p>
+      <p class="home-hero__name">{siteConfig.name} · {siteConfig.englishName}</p>
+      <h1 id="home-title">我在做能被验证的<br />游戏 AI 产品。</h1>
+      <p class="home-hero__role">游戏 AI 产品经理 / AI 应用产品经理方向</p>
+      <p class="home-hero__description">
+        从真实用户任务出发，把需求判断、Agent
+        工作流、人工节点与产品评测推进为可运行、可回看、可迭代的原型。
+      </p>
+      <div class="home-hero__actions" aria-label="主要行动">
+        <a class="button button--primary" href="#featured-projects">查看精选项目</a>
+        <a class="text-link" href="/resume/">阅读在线简历</a>
+      </div>
+    </div>
+
+    <figure class="home-hero__visual" data-reveal="2">
+      <div>
         <img
           src={heroAssetConfig.backgroundImage}
           width="1672"
           height="941"
-          alt=""
+          alt="蓝色深海中的原创幻想角色品牌插图"
           loading="eager"
           fetchpriority="high"
           decoding="async"
         />
       </div>
-    )
-  }
-
-  <div class="home-hero__shade" aria-hidden="true"></div>
-  <div class="home-hero__light" aria-hidden="true"></div>
-
-  <div class="home-hero__bubbles" aria-hidden="true">
-    <span class="bubble bubble--one"></span>
-    <span class="bubble bubble--two"></span>
-    <span class="bubble bubble--three"></span>
-    <span class="bubble bubble--four"></span>
-    <span class="bubble bubble--five"></span>
-    <span class="bubble bubble--six"></span>
+      <figcaption>
+        <span>品牌插图</span>
+        深海角色图仅用于个人品牌表达，不是项目运行界面或结果证据。
+      </figcaption>
+    </figure>
   </div>
-
-  <div class="page-shell home-hero__inner">
-    <div class="home-hero__copy" data-hero-copy>
-      <p class="home-hero__availability" data-hero-step style="--intro-order: 1">
-        <span aria-hidden="true"></span>
-        OPEN TO 2027 CAMPUS RECRUITMENT
-      </p>
-
-      <div class="home-hero__title-lockup" data-hero-step style="--intro-order: 0">
-        <p>{siteConfig.name}</p>
-        <h1 id="home-title">{siteConfig.englishName.toUpperCase()}</h1>
-      </div>
-
-      <p class="home-hero__english-role" data-hero-step style="--intro-order: 2">
-        GAME AI PRODUCT MANAGER
-      </p>
-      <p class="home-hero__role" data-hero-step style="--intro-order: 3">
-        游戏 AI 产品经理 <span aria-hidden="true">/</span> AI 应用产品经理
-      </p>
-      <p class="home-hero__description" data-hero-step style="--intro-order: 4">
-        从需求判断、Agent 工作流到产品评测，<br />
-        将 AI 想法推进为可验证、可迭代的产品原型。
-      </p>
-
-      <div class="home-hero__actions" aria-label="主要行动" data-hero-step style="--intro-order: 5">
-        <a class="hero-button hero-button--primary" href="#featured-projects">
-          查看代表项目
-          <span aria-hidden="true">↓</span>
-        </a>
-        <a class="hero-button hero-button--secondary" href="/resume/">查看在线简历</a>
-      </div>
-    </div>
-  </div>
-
-  <a
-    class="home-hero__scroll"
-    href="#featured-projects"
-    aria-label="滚动查看代表项目"
-    data-hero-step
-    style="--intro-order: 6"
-  >
-    <span>SCROLL TO EXPLORE</span>
-    <i aria-hidden="true"></i>
-  </a>
 </section>
 
 <style>
   .home-hero {
-    --hero-progress: 0;
-    position: relative;
+    padding: clamp(8.5rem, 15vw, 12rem) 0 clamp(4rem, 8vw, 7rem);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .home-hero__grid {
     display: grid;
-    min-height: 100vh;
-    overflow: hidden;
-    isolation: isolate;
-    background:
-      radial-gradient(circle at 72% 18%, rgba(85, 166, 239, 0.24), transparent 28rem),
-      linear-gradient(145deg, #071a3d, #061127 54%, #020918);
-    color: #f8fbff;
-  }
-
-  @supports (min-height: 100svh) {
-    .home-hero {
-      min-height: 100svh;
-    }
-  }
-
-  @supports (min-height: 100dvh) {
-    .home-hero {
-      min-height: 100dvh;
-    }
-  }
-
-  .home-hero::after {
-    position: absolute;
-    z-index: 3;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    height: 1px;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(150, 202, 255, 0.44) 30%,
-      rgba(181, 167, 240, 0.38) 72%,
-      transparent
-    );
-    content: '';
-  }
-
-  .home-hero__background {
-    position: absolute;
-    z-index: 0;
-    inset: -2.5%;
-    overflow: hidden;
-    transform: scale(calc(1 + var(--hero-progress) * 0.035));
-    transform-origin: center;
-    will-change: transform;
-  }
-
-  .home-hero__background img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    animation: hero-underwater-drift 16s ease-in-out infinite alternate;
-    filter: saturate(0.88) contrast(1.03) brightness(0.9);
-    object-fit: cover;
-    object-position: 50% center;
-    will-change: transform;
-  }
-
-  .home-hero__shade {
-    position: absolute;
-    z-index: 1;
-    inset: 0;
-    background:
-      linear-gradient(
-        90deg,
-        rgba(1, 7, 22, 0.12) 0%,
-        rgba(1, 7, 22, 0.18) 38%,
-        rgba(2, 9, 27, 0.66) 61%,
-        rgba(2, 8, 24, 0.93) 100%
-      ),
-      linear-gradient(
-        180deg,
-        rgba(1, 7, 20, 0.38) 0%,
-        rgba(1, 7, 20, 0.04) 34%,
-        rgba(1, 7, 20, 0.1) 64%,
-        rgba(1, 7, 20, 0.66) 100%
-      );
-  }
-
-  .home-hero__light {
-    position: absolute;
-    z-index: 2;
-    top: -18%;
-    right: -8%;
-    width: min(56vw, 820px);
-    aspect-ratio: 1;
-    border-radius: 50%;
-    animation: hero-light-breathe 7s ease-in-out infinite alternate;
-    background: radial-gradient(
-      circle,
-      rgba(142, 211, 255, 0.22),
-      rgba(106, 152, 238, 0.08) 35%,
-      transparent 68%
-    );
-    filter: blur(18px);
-    opacity: calc(0.62 - var(--hero-progress) * 0.32);
-    pointer-events: none;
-  }
-
-  .home-hero__bubbles {
-    position: absolute;
-    z-index: 2;
-    inset: 0;
-    overflow: hidden;
-    opacity: calc(0.5 - var(--hero-progress) * 0.24);
-    pointer-events: none;
-  }
-
-  .bubble {
-    position: absolute;
-    bottom: -28px;
-    width: 12px;
-    height: 12px;
-    border: 1px solid rgba(209, 236, 255, 0.62);
-    border-radius: 50%;
-    animation: hero-bubble-rise 14s linear infinite;
-    background: radial-gradient(
-      circle at 32% 28%,
-      rgba(255, 255, 255, 0.72),
-      rgba(124, 192, 244, 0.15) 36%,
-      transparent 68%
-    );
-    box-shadow:
-      inset -2px -2px 4px rgba(112, 157, 231, 0.18),
-      0 0 9px rgba(111, 182, 238, 0.14);
-  }
-
-  .bubble--one {
-    left: 5%;
-    animation-delay: -3s;
-    animation-duration: 15s;
-  }
-
-  .bubble--two {
-    left: 19%;
-    width: 7px;
-    height: 7px;
-    animation-delay: -10s;
-    animation-duration: 12s;
-  }
-
-  .bubble--three {
-    left: 46%;
-    width: 16px;
-    height: 16px;
-    animation-delay: -7s;
-    animation-duration: 17s;
-  }
-
-  .bubble--four {
-    left: 67%;
-    width: 9px;
-    height: 9px;
-    animation-delay: -1s;
-    animation-duration: 13s;
-  }
-
-  .bubble--five {
-    left: 82%;
-    width: 14px;
-    height: 14px;
-    animation-delay: -9s;
-    animation-duration: 18s;
-  }
-
-  .bubble--six {
-    left: 94%;
-    width: 6px;
-    height: 6px;
-    animation-delay: -5s;
-    animation-duration: 11s;
-  }
-
-  .home-hero__inner {
-    position: relative;
-    z-index: 4;
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(470px, 0.92fr);
-    gap: clamp(2rem, 6vw, 6rem);
+    grid-template-columns: minmax(0, 1.05fr) minmax(360px, 0.75fr);
+    gap: clamp(3rem, 8vw, 8rem);
     align-items: center;
-    min-height: inherit;
-    padding-top: clamp(7rem, 13vh, 9rem);
-    padding-bottom: clamp(6.5rem, 12vh, 8.5rem);
   }
 
   .home-hero__copy {
-    grid-column: 2;
-    width: min(100%, 670px);
-    opacity: calc(1 - var(--hero-progress) * 0.68);
-    transform: translate3d(0, calc(var(--hero-progress) * -42px), 0)
-      scale(calc(1 - var(--hero-progress) * 0.016));
-    transform-origin: right center;
+    max-width: 780px;
   }
 
-  .home-hero__availability {
-    display: flex;
-    gap: 0.7rem;
+  .home-hero__status {
+    display: inline-flex;
     align-items: center;
-    width: fit-content;
-    margin: 0 0 1.35rem;
-    color: rgba(232, 245, 255, 0.76);
-    font-family: var(--font-sans);
-    font-size: 0.72rem;
-    font-weight: 500;
-    letter-spacing: 0.06em;
-    line-height: 1.5;
+    gap: 0.65rem;
+    margin: 0 0 2.2rem;
+    color: var(--text-secondary);
+    font-size: 0.82rem;
+    font-weight: 560;
   }
 
-  .home-hero__availability span {
-    flex: 0 0 auto;
-    width: 7px;
-    height: 7px;
+  .home-hero__status span {
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
-    background: #91e4d0;
-    box-shadow: 0 0 0 4px rgba(145, 228, 208, 0.15);
+    background: var(--mint);
+    box-shadow: 0 0 0 5px color-mix(in srgb, var(--mint) 14%, transparent);
   }
 
-  .home-hero__title-lockup > p {
-    margin: 0 0 0.5rem;
-    color: rgba(229, 241, 255, 0.72);
-    font-size: clamp(0.92rem, 1.2vw, 1.08rem);
-    font-weight: 500;
-    letter-spacing: 0;
+  .home-hero__name {
+    margin: 0 0 0.8rem;
+    color: var(--primary-strong);
+    font-size: 1rem;
+    font-weight: 620;
   }
 
   h1 {
     margin: 0;
-    color: #ffffff;
-    font-family: var(--font-display);
-    font-size: clamp(4rem, 7vw, 6rem);
-    font-weight: 700;
+    font-size: clamp(3.25rem, 6.8vw, 6rem);
+    font-weight: 690;
     letter-spacing: -0.04em;
-    line-height: 0.88;
-    text-shadow: 0 8px 30px rgba(0, 5, 20, 0.28);
-    text-wrap: balance;
-  }
-
-  .home-hero__english-role {
-    margin: 1.45rem 0 0;
-    color: #a8d8ff;
-    font-family: var(--font-sans);
-    font-size: clamp(0.72rem, 1.05vw, 0.9rem);
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    line-height: 1.5;
+    line-height: 1.03;
   }
 
   .home-hero__role {
-    margin: 0.65rem 0 0;
-    color: #f7fbff;
-    font-size: clamp(1.18rem, 1.8vw, 1.55rem);
-    font-weight: 600;
-    letter-spacing: -0.01em;
-    line-height: 1.4;
-    text-wrap: balance;
-  }
-
-  .home-hero__role span {
-    margin-inline: 0.18em;
-    color: #b7aef4;
+    margin: 1.6rem 0 0;
+    color: var(--text-main);
+    font-size: clamp(1.08rem, 1.8vw, 1.45rem);
+    font-weight: 620;
   }
 
   .home-hero__description {
-    max-width: 620px;
-    margin: 0.95rem 0 0;
-    color: rgba(232, 242, 253, 0.82);
-    font-size: 1rem;
-    line-height: 1.82;
-    text-shadow: 0 2px 16px rgba(0, 4, 18, 0.34);
-    text-wrap: pretty;
+    max-width: 62ch;
+    margin: 0.9rem 0 0;
+    color: var(--text-secondary);
+    font-size: 1.02rem;
+    line-height: 1.85;
   }
 
   .home-hero__actions {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.75rem;
+    gap: 1rem 1.4rem;
     align-items: center;
-    margin-top: 1.75rem;
+    margin-top: 2rem;
   }
 
-  .hero-button {
-    display: inline-flex;
-    min-height: 50px;
-    gap: 0.65rem;
-    align-items: center;
-    justify-content: center;
-    padding: 0.75rem 1.3rem;
-    border: 1px solid transparent;
-    border-radius: var(--radius-sm);
-    font-size: 0.9375rem;
-    font-weight: 600;
-    line-height: 1.2;
-    transition:
-      transform 220ms var(--ease-out),
-      border-color 220ms ease,
-      background-color 220ms ease;
+  .home-hero__visual {
+    width: min(100%, 540px);
+    margin: 0;
+    justify-self: end;
   }
 
-  .hero-button--primary {
-    border-color: rgba(255, 255, 255, 0.88);
-    background: rgba(255, 255, 255, 0.94);
-    color: #081a39;
+  .home-hero__visual > div {
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border-radius: 16px 16px 5rem 16px;
+    background: var(--surface-tint);
   }
 
-  .hero-button--secondary {
-    border-color: rgba(214, 235, 255, 0.42);
-    background: rgba(9, 25, 57, 0.34);
-    color: #f6fbff;
-    backdrop-filter: blur(7px);
+  .home-hero__visual img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 38% center;
+    transition: transform 600ms var(--ease-out);
   }
 
-  .hero-button:hover {
-    transform: translateY(-2px);
+  .home-hero__visual:hover img {
+    transform: scale(1.018) translateY(-3px);
   }
 
-  .hero-button--primary:hover {
-    border-color: #ffffff;
-    background: #ffffff;
-  }
-
-  .hero-button--secondary:hover {
-    border-color: rgba(222, 240, 255, 0.72);
-    background: rgba(30, 61, 105, 0.5);
-  }
-
-  .hero-button:active {
-    transform: translateY(0) scale(0.98);
-  }
-
-  .hero-button:focus-visible,
-  .home-hero__scroll:focus-visible {
-    border-radius: 8px;
-    outline: 3px solid rgba(174, 220, 255, 0.92);
-    outline-offset: 4px;
-  }
-
-  .home-hero__scroll {
-    position: absolute;
-    z-index: 5;
-    bottom: max(1.35rem, env(safe-area-inset-bottom, 0px));
-    left: 50%;
+  figcaption {
     display: grid;
-    gap: 0.55rem;
-    place-items: center;
-    color: rgba(222, 238, 252, 0.68);
-    font-family: var(--font-sans);
-    font-size: 0.58rem;
-    font-weight: 500;
-    letter-spacing: 0.06em;
-    transform: translateX(-50%);
+    grid-template-columns: auto 1fr;
+    gap: 0.8rem;
+    margin-top: 0.9rem;
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    line-height: 1.6;
   }
 
-  .home-hero__scroll i {
-    width: 1px;
-    height: 24px;
-    background: linear-gradient(rgba(185, 222, 255, 0.92), transparent);
+  figcaption span {
+    color: var(--text-main);
+    font-weight: 620;
   }
 
-  [data-home-hero][data-intro='full'] [data-hero-step] {
-    animation: hero-step-enter 700ms var(--ease-out) both;
-    animation-delay: calc(var(--intro-order) * 140ms);
-  }
-
-  [data-home-hero][data-intro='quick'] [data-hero-step] {
-    animation: hero-quick-enter 280ms var(--ease-out) both;
-  }
-
-  @keyframes hero-step-enter {
-    from {
-      opacity: 0;
-      transform: translateY(18px);
-    }
-  }
-
-  @keyframes hero-quick-enter {
-    from {
-      opacity: 0;
-      transform: translateY(6px);
-    }
-  }
-
-  @keyframes hero-underwater-drift {
-    from {
-      transform: translate3d(0, 0, 0) scale(1);
+  @media (max-height: 780px) and (min-width: 901px) {
+    .home-hero {
+      padding: 7.5rem 0 3.5rem;
     }
 
-    to {
-      transform: translate3d(0, -7px, 0) scale(1.035);
-    }
-  }
-
-  @keyframes hero-light-breathe {
-    from {
-      transform: scale(0.96);
-      opacity: 0.48;
+    .home-hero__grid {
+      gap: clamp(3rem, 6vw, 6rem);
     }
 
-    to {
-      transform: scale(1.04);
-      opacity: 0.66;
-    }
-  }
-
-  @keyframes hero-bubble-rise {
-    from {
-      transform: translate3d(0, 0, 0) scale(0.84);
-      opacity: 0;
-    }
-
-    12% {
-      opacity: 0.62;
-    }
-
-    82% {
-      opacity: 0.42;
-    }
-
-    to {
-      transform: translate3d(10px, -112vh, 0) scale(1.08);
-      opacity: 0;
-    }
-  }
-
-  @media (max-width: 1100px) {
-    .home-hero__inner {
-      grid-template-columns: minmax(0, 0.78fr) minmax(450px, 1fr);
-      gap: 2.5rem;
+    .home-hero__status {
+      margin-bottom: 1.25rem;
     }
 
     h1 {
-      font-size: clamp(4rem, 7.5vw, 5.35rem);
+      font-size: clamp(3.2rem, 5.5vw, 4.8rem);
+    }
+
+    .home-hero__role {
+      margin-top: 1rem;
+    }
+
+    .home-hero__description {
+      line-height: 1.7;
+    }
+
+    .home-hero__actions {
+      margin-top: 1.25rem;
+    }
+
+    .home-hero__visual {
+      width: min(100%, 440px);
     }
   }
 
   @media (max-width: 900px) {
-    .home-hero__background img {
-      filter: saturate(0.82) contrast(1.04) brightness(0.82);
-      object-position: 31% center;
+    .home-hero__grid {
+      grid-template-columns: 1fr;
     }
 
-    .home-hero__shade {
-      background:
-        linear-gradient(
-          180deg,
-          rgba(1, 7, 22, 0.27) 0%,
-          rgba(1, 7, 22, 0.16) 32%,
-          rgba(2, 9, 27, 0.68) 58%,
-          rgba(2, 8, 24, 0.96) 100%
-        ),
-        linear-gradient(90deg, rgba(1, 7, 22, 0.3), rgba(1, 7, 22, 0.12));
+    .home-hero__visual {
+      width: min(100%, 680px);
+      justify-self: start;
     }
 
-    .home-hero__light {
-      top: -12%;
-      right: -30%;
-      width: 88vw;
-      opacity: 0.42;
+    .home-hero__visual > div {
+      aspect-ratio: 16 / 9;
+      border-radius: 16px;
     }
 
-    .home-hero__inner {
-      display: flex;
-      align-items: flex-end;
-      min-height: inherit;
-      padding-top: clamp(7rem, 13vh, 9rem);
-      padding-bottom: clamp(6.5rem, 10vh, 8rem);
-    }
-
-    .home-hero__copy {
-      width: min(100%, 700px);
-      opacity: 1;
-      transform: none;
+    .home-hero__visual img {
+      object-position: center 44%;
     }
   }
 
   @media (max-width: 520px) {
-    .home-hero__background {
-      inset: -1.5%;
+    .home-hero {
+      padding-top: 7.3rem;
     }
 
-    .home-hero__background img {
-      object-position: 29% center;
-    }
-
-    .home-hero__inner {
-      padding-top: 6.4rem;
-      padding-bottom: 5.8rem;
-    }
-
-    .home-hero__availability {
-      margin-bottom: 1rem;
-      font-size: 0.64rem;
-      letter-spacing: 0.065em;
-    }
-
-    .home-hero__title-lockup > p {
-      margin-bottom: 0.4rem;
-      font-size: 0.84rem;
-    }
-
-    h1 {
-      font-size: clamp(3.2rem, 16.5vw, 4.1rem);
-      line-height: 0.9;
-    }
-
-    .home-hero__english-role {
-      margin-top: 1.05rem;
-      font-size: 0.66rem;
-      letter-spacing: 0.06em;
-    }
-
-    .home-hero__role {
-      margin-top: 0.55rem;
-      font-size: 1.04rem;
-    }
-
-    .home-hero__description {
-      margin-top: 0.75rem;
-      font-size: 0.88rem;
-      line-height: 1.7;
-    }
-
-    .home-hero__description br {
+    h1 br {
       display: none;
     }
 
-    .home-hero__actions {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 0.6rem;
-      margin-top: 1.3rem;
+    .home-hero__status {
+      margin-bottom: 1.5rem;
     }
 
-    .hero-button {
+    .home-hero__actions {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .home-hero__actions .button,
+    .home-hero__actions .text-link {
       width: 100%;
-      min-height: 48px;
-      padding-inline: 1rem;
-      font-size: 0.86rem;
+      justify-content: center;
     }
 
-    .home-hero__scroll {
-      bottom: max(0.8rem, env(safe-area-inset-bottom, 0px));
-    }
-
-    .bubble--two,
-    .bubble--three,
-    .bubble--six {
-      display: none;
-    }
-  }
-
-  @media (max-height: 720px) and (min-width: 901px) {
-    .home-hero__inner {
-      padding-top: 6.5rem;
-      padding-bottom: 4.8rem;
-    }
-
-    .home-hero__availability {
-      margin-bottom: 0.85rem;
-    }
-
-    .home-hero__english-role {
-      margin-top: 0.9rem;
-    }
-
-    .home-hero__description {
-      margin-top: 0.7rem;
-      line-height: 1.65;
-    }
-
-    .home-hero__actions {
-      margin-top: 1.15rem;
+    figcaption {
+      grid-template-columns: 1fr;
+      gap: 0.2rem;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .home-hero__background,
-    .home-hero__background img,
-    .home-hero__copy,
-    .home-hero__light,
-    .bubble,
-    [data-home-hero] [data-hero-step] {
-      animation: none;
+    .home-hero__visual img,
+    .home-hero__visual:hover img {
       transform: none;
-    }
-
-    .home-hero__copy,
-    .home-hero__light,
-    .home-hero__bubbles,
-    [data-home-hero] [data-hero-step] {
-      opacity: 1;
-    }
-
-    .hero-button {
       transition: none;
     }
   }

@@ -4,6 +4,15 @@ import { projectCoverKeys } from './config/visualAssets';
 import { localMdxLoader } from './loaders/localMdxLoader';
 
 const track = z.enum(['general', 'game', 'agent', 'auto']);
+const projectFilter = z.enum(['game-ai', 'agent', 'evaluation', 'workflow']);
+const researchCategory = z.enum([
+  'game-research',
+  'player-insight',
+  'ai-opportunity',
+  'agent-evaluation',
+  'product-method',
+  'learning-notes',
+]);
 
 const projects = defineCollection({
   loader: localMdxLoader('./src/content/projects'),
@@ -18,6 +27,7 @@ const projects = defineCollection({
     status: z.enum(['LIVE', 'TESTED', 'ITERATING', 'ARCHIVED']),
     categories: z.array(z.string()),
     targetTracks: z.array(track),
+    filters: z.array(projectFilter),
     role: z.string(),
     period: z.string(),
     techStack: z.array(z.string()),
@@ -28,6 +38,7 @@ const projects = defineCollection({
     problem: z.string(),
     aiNeeded: z.string(),
     solution: z.string(),
+    outcome: z.string(),
     flow: z.array(z.string()),
     aiDesign: z.array(z.string()),
     humanCheckpoints: z.array(z.string()),
@@ -64,6 +75,23 @@ const projects = defineCollection({
   }),
 });
 
+const research = defineCollection({
+  loader: localMdxLoader('./src/content/research'),
+  schema: z.object({
+    title: z.string(),
+    summary: z.string(),
+    category: researchCategory,
+    tags: z.array(z.string()),
+    publishedAt: z.coerce.date(),
+    updatedAt: z.coerce.date(),
+    draft: z.boolean().default(false),
+    featured: z.boolean().default(false),
+    relatedProjects: z.array(z.string()).default([]),
+    cover: z.string().optional(),
+    sourceNote: z.string().optional(),
+  }),
+});
+
 const spec = defineCollection({
   loader: localMdxLoader('./src/content/spec'),
   schema: z.object({
@@ -87,4 +115,4 @@ const game = defineCollection({
   }),
 });
 
-export const collections = { projects, spec, game };
+export const collections = { projects, research, spec, game };

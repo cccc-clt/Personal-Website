@@ -9,6 +9,7 @@ updated: 2026-07-17
 status: 'ITERATING'
 categories: ['RAG', '学习工具', '知识问答']
 targetTracks: ['general', 'agent']
+filters: ['workflow']
 role: '产品设计 / RAG 流程 / 原型开发'
 period: '公开仓库 · 可运行原型'
 techStack: ['Python', 'Streamlit', 'pypdf', 'OpenAI Python SDK', 'LangChain', 'ChromaDB']
@@ -23,6 +24,7 @@ goal: '降低长文档进入成本，同时保留回答与原文证据之间的�
 problem: '长 PDF 阅读成本高，普通模型总结难以追溯来源，后续追问也容易离开文档内容。'
 aiNeeded: '大模型可用于总结和回答，但必须结合文档检索结果，并对缺少证据的情况保持克制。'
 solution: '用 pypdf 提取文本，经 LangChain 切分并写入 ChromaDB；产品侧把结构化总结、检索问答和来源片段组织成可回到原文核查的学习路径。'
+outcome: '当前公开仓库提供可本地运行的 PDF 总结与 RAG 问答原型，仅支持可提取文本的 PDF。'
 flow:
   [
     '上传文本型 PDF',

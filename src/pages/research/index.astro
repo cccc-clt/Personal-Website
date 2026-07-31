@@ -1,0 +1,301 @@
+---
+import { getCollection } from 'astro:content';
+import InnerPageHero from '../../components/InnerPageHero.astro';
+import { researchCategoryLabels } from '../../config/site';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { estimateReadingMinutes, formatDate } from '../../utils/content';
+
+const articles = (await getCollection('research'))
+  .filter((entry) => !entry.data.draft)
+  .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+const categories = Object.entries(researchCategoryLabels);
+const counts = Object.fromEntries(
+  categories.map(([category]) => [
+    category,
+    articles.filter((article) => article.data.category === category).length,
+  ]),
+);
+---
+
+<BaseLayout
+  title="研究｜赵天琦的游戏 AI 与产品方法"
+  description="赵天琦关于游戏 AI、Agent 评测、玩家问题与 AI 产品机会判断的研究记录。"
+>
+  <InnerPageHero
+    eyebrow="研究与方法"
+    title="把判断过程写下来，才能继续验证。"
+    description="研究内容区分真实观察、产品假设与待验证证据。草稿不会生成路由，也不会进入首页、搜索或 RSS。"
+  />
+
+  <section class="research-page page-shell" aria-labelledby="research-list-title">
+    <div class="research-toolbar">
+      <div>
+        <h2 id="research-list-title">已发布文章</h2>
+        <p><span data-research-count>{articles.length}</span> / {articles.length} 篇</p>
+      </div>
+      <div class="research-filters" aria-label="按研究分类筛选">
+        <button type="button" data-research-filter="all" aria-pressed="true">
+          全部 <span>{articles.length}</span>
+        </button>
+        {
+          categories.map(([category, label]) => (
+            <button type="button" data-research-filter={category} aria-pressed="false">
+              {label} <span>{counts[category]}</span>
+            </button>
+          ))
+        }
+      </div>
+    </div>
+
+    <div class="research-list" data-research-list>
+      {
+        articles.map((article) => (
+          <article data-research-item data-research-category={article.data.category}>
+            <div class="research-list__meta">
+              <span>{researchCategoryLabels[article.data.category]}</span>
+              <span>{formatDate(article.data.publishedAt)}</span>
+              <span>{estimateReadingMinutes(article.body)} 分钟</span>
+            </div>
+            <div>
+              <h3>
+                <a href={`/research/${article.id}/`}>{article.data.title}</a>
+              </h3>
+              <p>{article.data.summary}</p>
+              <div class="chip-row">
+                {article.data.tags.map((tag) => (
+                  <span class="chip">{tag}</span>
+                ))}
+              </div>
+            </div>
+            <a
+              class="research-list__link"
+              href={`/research/${article.id}/`}
+              aria-label={`阅读：${article.data.title}`}
+            >
+              →
+            </a>
+          </article>
+        ))
+      }
+    </div>
+
+    <div class="research-empty" data-research-empty hidden>
+      <h3>这个分类还没有已发布文章</h3>
+      <p>相关旧栏目已合并到 Research；内容只有完成真实性检查后才会发布。</p>
+      <button class="button" type="button" data-research-filter="all">查看全部文章</button>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const researchCategories = [
+    'game-research',
+    'player-insight',
+    'ai-opportunity',
+    'agent-evaluation',
+    'product-method',
+    'learning-notes',
+  ];
+
+  const applyResearchFilter = (requested: string, updateHistory = false) => {
+    const category = researchCategories.includes(requested) ? requested : 'all';
+    const items = document.querySelectorAll<HTMLElement>('[data-research-item]');
+    if (!items.length) return;
+    let visible = 0;
+    items.forEach((item) => {
+      const matches = category === 'all' || item.dataset.researchCategory === category;
+      item.hidden = !matches;
+      if (matches) visible += 1;
+    });
+    document.querySelectorAll<HTMLButtonElement>('[data-research-filter]').forEach((button) => {
+      button.setAttribute('aria-pressed', String(button.dataset.researchFilter === category));
+    });
+    const count = document.querySelector<HTMLElement>('[data-research-count]');
+    if (count) count.textContent = String(visible);
+    const empty = document.querySelector<HTMLElement>('[data-research-empty]');
+    if (empty) empty.hidden = visible > 0;
+
+    if (updateHistory) {
+      const url = new URL(location.href);
+      if (category === 'all') url.searchParams.delete('category');
+      else url.searchParams.set('category', category);
+      history.pushState({ category }, '', url);
+    }
+  };
+
+  const applyResearchFilterFromUrl = () => {
+    applyResearchFilter(new URL(location.href).searchParams.get('category') ?? 'all');
+  };
+
+  document.addEventListener('click', (event) => {
+    const button = (event.target as HTMLElement).closest<HTMLButtonElement>(
+      '[data-research-filter]',
+    );
+    if (!button || !document.querySelector('[data-research-list]')) return;
+    applyResearchFilter(button.dataset.researchFilter ?? 'all', true);
+  });
+  addEventListener('popstate', applyResearchFilterFromUrl);
+  applyResearchFilterFromUrl();
+</script>
+
+<style>
+  .research-page {
+    padding-block: clamp(4rem, 8vw, 8rem);
+  }
+
+  .research-toolbar {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-strong);
+  }
+
+  .research-toolbar h2 {
+    margin: 0;
+    font-size: clamp(1.7rem, 3vw, 2.8rem);
+  }
+
+  .research-toolbar p {
+    margin: 0.45rem 0 0;
+    color: var(--text-muted);
+    font-size: 0.78rem;
+  }
+
+  .research-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    justify-content: flex-end;
+  }
+
+  .research-filters button {
+    min-height: 42px;
+    padding: 0.55rem 0.8rem;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 0.76rem;
+    font-weight: 580;
+  }
+
+  .research-filters button span {
+    margin-left: 0.25rem;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+  }
+
+  .research-filters button:hover,
+  .research-filters button[aria-pressed='true'] {
+    border-color: var(--primary);
+    background: var(--primary-soft);
+    color: var(--primary-strong);
+  }
+
+  .research-list article {
+    display: grid;
+    grid-template-columns: 170px minmax(0, 1fr) 42px;
+    gap: clamp(1.5rem, 5vw, 5rem);
+    align-items: start;
+    padding: clamp(2rem, 5vw, 4rem) 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .research-list article[hidden] {
+    display: none;
+  }
+
+  .research-list__meta {
+    display: grid;
+    gap: 0.35rem;
+    color: var(--text-muted);
+    font-size: 0.72rem;
+  }
+
+  .research-list__meta span:first-child {
+    color: var(--primary-strong);
+    font-weight: 620;
+  }
+
+  .research-list h3 {
+    max-width: 24ch;
+    margin: 0;
+    font-size: clamp(1.7rem, 3.4vw, 3.2rem);
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+  }
+
+  .research-list h3 a:hover {
+    color: var(--primary-strong);
+  }
+
+  .research-list article > div:nth-child(2) > p {
+    max-width: 65ch;
+    margin: 1rem 0 1.3rem;
+    color: var(--text-secondary);
+    line-height: 1.8;
+  }
+
+  .research-list__link {
+    display: grid;
+    width: 42px;
+    height: 42px;
+    place-items: center;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--primary-strong);
+  }
+
+  .research-list__link:hover {
+    border-color: var(--primary);
+    background: var(--primary-soft);
+  }
+
+  .research-empty {
+    padding: clamp(4rem, 9vw, 8rem) 0;
+    text-align: center;
+  }
+
+  .research-empty[hidden] {
+    display: none;
+  }
+
+  .research-empty h3 {
+    margin: 0;
+    font-size: clamp(1.7rem, 4vw, 3rem);
+  }
+
+  .research-empty p {
+    margin: 0.8rem auto 1.5rem;
+    color: var(--text-secondary);
+  }
+
+  @media (max-width: 900px) {
+    .research-toolbar {
+      align-items: start;
+      flex-direction: column;
+    }
+
+    .research-filters {
+      justify-content: flex-start;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .research-list article {
+      grid-template-columns: 1fr auto;
+      gap: 1.2rem;
+    }
+
+    .research-list__meta {
+      grid-column: 1 / -1;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1rem;
+    }
+  }
+</style>

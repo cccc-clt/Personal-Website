@@ -9,6 +9,7 @@ updated: 2026-07-17
 status: 'ITERATING'
 categories: ['角色 Agent', '长期记忆', '陪伴体验']
 targetTracks: ['general', 'game', 'agent']
+filters: ['game-ai', 'agent', 'evaluation']
 role: '产品设计 / 记忆机制 / Agent 评测'
 period: '公开仓库 · Fan-made 原型'
 techStack:
@@ -32,6 +33,7 @@ goal: '验证角色陪伴中长期记忆、用户控制、语音降级和一致�
 problem: '角色 Agent 容易出现记忆误写、设定漂移和过度拟人化，语音资源也涉及额外的合规边界。'
 aiNeeded: '模型负责自然语言互动和记忆候选提取，但记忆确认、角色边界和风险提示需要产品机制约束。'
 solution: '用 SQLite 或 JSON 保存会话，把模型提取的信息先放入待确认记忆，再由用户决定保存或拒绝；陪伴场景、可选语音和一致性评测均保留降级与人工控制。'
+outcome: '当前公开仓库提供非商业同人角色陪伴原型，覆盖记忆确认、场景、可选语音和一致性评测，不含官方角色资产。'
 flow:
   [
     '进入陪伴场景',

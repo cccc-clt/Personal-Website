@@ -1,577 +1,730 @@
 ---
-import { getCollection, render, type CollectionEntry } from 'astro:content';
-import GitHubCard from '../../components/GitHubCard.astro';
+import { getCollection, render } from 'astro:content';
 import ImageGallery from '../../components/ImageGallery.astro';
 import ProjectCover from '../../components/ProjectCover.astro';
 import StatusBadge from '../../components/StatusBadge.astro';
-import { siteConfig } from '../../config/site';
+import { projectCovers } from '../../config/visualAssets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
 export async function getStaticPaths() {
   const projects = await getCollection('projects');
   return projects.map((project) => ({
-    params: { slug: project.id.replace(/\.mdx?$/, '') },
+    params: { slug: project.id },
     props: { project },
   }));
 }
 
-interface Props {
-  project: CollectionEntry<'projects'>;
-}
 const { project } = Astro.props;
-const slug = project.id.replace(/\.mdx?$/, '');
 const { Content } = await render(project);
-const updated = project.data.updated.toLocaleDateString('zh-CN', {
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric',
-});
+const projects = (await getCollection('projects')).sort(
+  (a, b) => a.data.order.general - b.data.order.general,
+);
+const currentIndex = projects.findIndex((entry) => entry.id === project.id);
+const nextProject = projects[(currentIndex + 1) % projects.length];
+const coverConfig = project.data.cover ? projectCovers[project.data.cover] : undefined;
+const coverImage = coverConfig?.image ?? '/images/og/og-general.webp';
+const sourceLinks = [
+  project.data.demoUrl && { label: '在线 Demo', href: project.data.demoUrl },
+  project.data.githubUrl && { label: 'GitHub 仓库', href: project.data.githubUrl },
+  project.data.documentUrl && { label: '项目文档', href: project.data.documentUrl },
+  project.data.videoUrl && { label: '演示视频', href: project.data.videoUrl },
+].filter((link): link is { label: string; href: string } => Boolean(link));
 const structuredData = {
-  '@context': 'https://schema.org',
   '@type': 'CreativeWork',
   name: project.data.title,
-  alternateName: project.data.codename,
-  description: project.data.description,
-  author: {
-    '@type': 'Person',
-    name: siteConfig.name,
-    ...(Astro.site ? { url: Astro.site.toString() } : {}),
-  },
-  ...(Astro.site ? { url: new URL(`/projects/${slug}/`, Astro.site).toString() } : {}),
-  keywords: project.data.categories,
+  alternateName: project.data.englishTitle,
+  abstract: project.data.description,
+  dateModified: project.data.updated.toISOString(),
+  creator: { '@id': Astro.site ? new URL('/#person', Astro.site).toString() : '#person' },
+  keywords: project.data.categories.join(', '),
+  ...(Astro.site ? { url: new URL(Astro.url.pathname, Astro.site).toString() } : {}),
+  ...(Astro.site && coverImage ? { image: new URL(coverImage, Astro.site).toString() } : {}),
+  ...(project.data.githubUrl ? { sameAs: project.data.githubUrl } : {}),
 };
 ---
 
-<BaseLayout title={`${project.data.title}｜赵天琦`} description={project.data.description}>
-  <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+<BaseLayout
+  title={`${project.data.title}｜赵天琦项目案例`}
+  description={project.data.description}
+  image={coverImage}
+  structuredData={structuredData}
+>
   <article class="case-page">
-    <header class="case-hero">
-      <div class="page-shell case-hero__grid">
+    <header class="case-hero page-shell">
+      <div class="case-hero__meta">
+        <a href="/projects/">← 返回项目</a>
         <div>
-          <div class="case-hero__meta">
-            <StatusBadge status={project.data.status} /><span class="case-project-index"
-              >{project.data.index}</span
-            ><span>内容校对 · <time>{updated}</time></span>
-          </div>
-          <h1>{project.data.title}</h1>
-          <p class="case-hero__codename">视觉代号 · {project.data.codename}</p>
-          <p class="case-hero__summary">{project.data.summary}</p>
-          <div class="chip-row">
-            {project.data.categories.slice(0, 3).map((item) => <span class="chip">{item}</span>)}
-          </div>
+          <span>{project.data.period}</span>
+          <StatusBadge status={project.data.status} />
         </div>
+      </div>
+      <div class="case-hero__title">
+        <div>
+          <p>{project.data.codename} · {project.data.index}</p>
+          <h1>{project.data.title}</h1>
+          <p>{project.data.description}</p>
+        </div>
+        {
+          sourceLinks.length > 0 && (
+            <div class="case-hero__actions" aria-label="项目真实链接">
+              {sourceLinks.map((link, index) => (
+                <a
+                  class:list={['button', { 'button--primary': index === 0 }]}
+                  href={link.href}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {link.label} ↗
+                </a>
+              ))}
+            </div>
+          )
+        }
+      </div>
+      <figure class="case-hero__cover">
         <ProjectCover
-          slug={slug}
+          slug={project.id}
           title={project.data.title}
           index={project.data.index}
           cover={project.data.cover}
-          compact
         />
-      </div>
+        <figcaption>
+          <strong>概念图 · 非运行截图</strong>
+          {coverConfig?.alt ?? `${project.data.title} 概念封面`}
+        </figcaption>
+      </figure>
     </header>
 
-    <div class="case-layout page-shell section">
-      <aside class="case-sidebar panel">
-        <div class="case-source"><span>内容来源</span><p>{project.data.sourceNote}</p></div>
-        <dl>
-          <div><dt>我的角色</dt><dd>{project.data.role}</dd></div><div>
-            <dt>当前状态</dt><dd>{project.data.period}</dd>
-          </div><div><dt>目标用户</dt><dd>{project.data.targetUser}</dd></div><div>
-            <dt>技术方案与工具</dt><dd>{project.data.techStack.join(' · ')}</dd>
-          </div>
-        </dl>
+    <section class="case-summary page-shell" aria-label="项目摘要">
+      <dl>
+        <div><dt>用户问题</dt><dd>{project.data.problem}</dd></div>
+        <div><dt>产品方案</dt><dd>{project.data.solution}</dd></div>
+        <div><dt>我的职责</dt><dd>{project.data.role}</dd></div>
+        <div><dt>真实产出</dt><dd>{project.data.outcome}</dd></div>
+      </dl>
+    </section>
+
+    <div class="case-layout page-shell">
+      <aside class="case-toc" aria-label="案例目录">
+        <p>本案例</p>
         <nav>
-          <a href="/projects/">← 返回全部项目</a>{
-            project.data.githubUrl && (
-              <a href={project.data.githubUrl} target="_blank" rel="noreferrer">
-                GitHub ↗
-              </a>
-            )
-          }
+          <a href="#background">背景与目标</a>
+          <a href="#ai-necessity">AI 必要性</a>
+          <a href="#human-checkpoints">人工节点</a>
+          <a href="#product-flow">产品流程</a>
+          <a href="#prototype-evidence">原型证据</a>
+          <a href="#evaluation">评测方法</a>
+          <a href="#failure-boundaries">失败边界</a>
+          <a href="#iterations">迭代记录</a>
+          <a href="#reflection">反思与来源</a>
         </nav>
       </aside>
 
-      <div class="case-content panel">
-        <section>
-          <span class="case-index">01 / PROJECT OVERVIEW</span><h2>
-            项目定位、用户问题与产品目标
-          </h2><div class="callout callout--note">
-            <strong>项目定位</strong><p>{project.data.description}</p>
-          </div><div class="case-columns">
-            <div><h3>目标用户与使用场景</h3><p>{project.data.targetUser}</p></div><div>
-              <h3>用户问题</h3><p>{project.data.problem}</p>
-            </div><div><h3>为什么需要 AI</h3><p>{project.data.aiNeeded}</p></div><div>
-              <h3>产品目标</h3><p>{project.data.goal}</p>
-            </div>
+      <div class="case-content">
+        <section class="case-section" id="background">
+          <header><span>背景与目标</span><h2>先确定为谁解决什么问题</h2></header>
+          <dl class="case-definition">
+            <div><dt>目标用户</dt><dd>{project.data.targetUser}</dd></div>
+            <div><dt>产品目标</dt><dd>{project.data.goal}</dd></div>
+            <div><dt>当前状态</dt><dd>{project.data.period}</dd></div>
+          </dl>
+          <div>
+            <h3>我的工作</h3>
+            <ul>{project.data.responsibilities.map((item) => <li>{item}</li>)}</ul>
           </div>
         </section>
-        <section>
-          <span class="case-index">02 / MY ROLE</span><h2>我的职责</h2><ol class="number-list">
-            {
-              project.data.responsibilities.map((item, index) => (
-                <li>
-                  <>
-                    <span>{String(index + 1).padStart(2, '0')}</span>
-                    <p>{item}</p>
-                  </>
-                </li>
-              ))
-            }
-          </ol>
+
+        <section class="case-section" id="ai-necessity">
+          <header><span>AI 必要性</span><h2>模型进入哪一步，为什么</h2></header>
+          <p class="case-lede">{project.data.aiNeeded}</p>
+          <ul class="case-list">{project.data.aiDesign.map((item) => <li>{item}</li>)}</ul>
         </section>
-        <section>
-          <span class="case-index">03 / PRODUCT SOLUTION</span><h2>产品方案与技术工作流</h2><div
-            class="callout callout--tip"
-          >
-            <strong>核心产品决策</strong><p>{project.data.solution}</p>
-          </div><ol class="flow-list">
-            {
-              project.data.flow.map((item, index) => (
-                <li>
-                  <>
-                    <span>{String(index + 1).padStart(2, '0')}</span>
-                    <strong>{item}</strong>
-                  </>
-                </li>
-              ))
-            }
-          </ol>
-        </section>
-        <section>
-          <span class="case-index">04 / AI DESIGN</span><h2>Prompt、RAG 与 Agent 技术方案</h2><ul
-            class="plain-list"
-          >
-            {project.data.aiDesign.map((item) => <li>{item}</li>)}
-          </ul><h3>人工确认节点</h3><div class="chip-row">
-            {project.data.humanCheckpoints.map((item) => <span class="chip">{item}</span>)}
-          </div>
-        </section>
-        <section>
-          <span class="case-index">05 / EVALUATION</span><h2>测试方法与 Evaluation focus</h2><p
-            class="section-note"
-          >
-            以下内容是项目中记录或计划观察的评测维度，用于指导验证与迭代，不代表已经取得对应结果。
-          </p><div class="metric-grid">
-            {
-              project.data.evaluationMetrics.map((item, index) => (
-                <div>
-                  <>
-                    <span>E{String(index + 1).padStart(2, '0')}</span>
-                    <p>{item}</p>
-                  </>
-                </div>
-              ))
-            }
-          </div>
-        </section>
-        <section>
-          <span class="case-index">06 / FAILURE</span><h2>失败案例、边界与风险</h2><div
-            class="callout callout--warning"
-          >
-            <strong>模型边界与风险</strong><p>{project.data.safety.join('；')}</p>
-          </div><div class="case-columns">
+
+        <section class="case-section" id="human-checkpoints">
+          <header><span>人工节点</span><h2>哪些判断不能交给模型</h2></header>
+          <div class="case-split">
             <div>
-              <h3>失败类型</h3><ul>{project.data.failures.map((item) => <li>{item}</li>)}</ul>
-            </div><div>
-              <h3>异常与边缘场景</h3><ul>
-                {project.data.edgeCases.map((item) => <li>{item}</li>)}
-              </ul>
+              <h3>必须由人确认</h3>
+              <ul>{project.data.humanCheckpoints.map((item) => <li>{item}</li>)}</ul>
+            </div>
+            <div>
+              <h3>安全与使用边界</h3>
+              <ul>{project.data.safety.map((item) => <li>{item}</li>)}</ul>
             </div>
           </div>
         </section>
-        <section>
-          <span class="case-index">07 / ITERATION</span><h2>迭代记录</h2><div
-            class="iteration-list"
-          >
+
+        <section class="case-section" id="product-flow">
+          <header><span>产品流程</span><h2>从输入到反馈的完整路径</h2></header>
+          <ol class="case-flow">
             {
-              project.data.iterations.map((item) => (
+              project.data.flow.map((step, index) => (
+                <li>
+                  <span>{String(index + 1).padStart(2, '0')}</span>
+                  <strong>{step}</strong>
+                </li>
+              ))
+            }
+          </ol>
+        </section>
+
+        <section class="case-section" id="prototype-evidence">
+          <header><span>原型证据</span><h2>现有材料与缺失状态</h2></header>
+          <ImageGallery
+            images={project.data.gallery}
+            title={project.data.title}
+            slug={project.id}
+            index={project.data.index}
+            cover={project.data.cover}
+          />
+        </section>
+
+        <section class="case-section" id="evaluation">
+          <header><span>评测方法</span><h2>用什么观察产品是否更可靠</h2></header>
+          <ul class="case-metrics">
+            {project.data.evaluationMetrics.map((metric) => <li>{metric}</li>)}
+          </ul>
+          <h3>当前重点</h3>
+          <p>{project.data.outcome}</p>
+        </section>
+
+        <section class="case-section" id="failure-boundaries">
+          <header><span>失败边界</span><h2>明确哪些情况不算成功</h2></header>
+          <div class="case-split">
+            <div>
+              <h3>已识别失败</h3>
+              <ul>{project.data.failures.map((item) => <li>{item}</li>)}</ul>
+            </div>
+            <div>
+              <h3>异常场景</h3>
+              <ul>{project.data.edgeCases.map((item) => <li>{item}</li>)}</ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="case-section" id="iterations">
+          <header><span>迭代记录</span><h2>从问题回到下一轮行动</h2></header>
+          <div class="case-iterations">
+            {
+              project.data.iterations.map((iteration) => (
                 <article>
-                  <>
-                    <small>{item.stage}</small>
-                    <h3>{item.problem}</h3>
-                    <dl>
+                  <div>
+                    <span>{iteration.stage}</span>
+                    <h3>{iteration.problem}</h3>
+                  </div>
+                  <dl>
+                    <div>
                       <>
-                        <div>
-                          <>
-                            <dt>分析</dt>
-                            <dd>{item.analysis}</dd>
-                          </>
-                        </div>
-                        <div>
-                          <>
-                            <dt>改动</dt>
-                            <dd>{item.change}</dd>
-                          </>
-                        </div>
-                        <div>
-                          <>
-                            <dt>结果</dt>
-                            <dd>{item.result}</dd>
-                          </>
-                        </div>
-                        <div>
-                          <>
-                            <dt>下一步</dt>
-                            <dd>{item.next}</dd>
-                          </>
-                        </div>
+                        <dt>判断</dt>
+                        <dd>{iteration.analysis}</dd>
                       </>
-                    </dl>
-                  </>
+                    </div>
+                    <div>
+                      <>
+                        <dt>调整</dt>
+                        <dd>{iteration.change}</dd>
+                      </>
+                    </div>
+                    <div>
+                      <>
+                        <dt>结果</dt>
+                        <dd>{iteration.result}</dd>
+                      </>
+                    </div>
+                    <div>
+                      <>
+                        <dt>下一步</dt>
+                        <dd>{iteration.next}</dd>
+                      </>
+                    </div>
+                  </dl>
                 </article>
               ))
             }
           </div>
         </section>
-        <section>
-          <span class="case-index">08 / PRODUCT NOTES</span><h2>产品思考与下一步</h2><blockquote>
-            {project.data.reflection}
-          </blockquote><ul class="plain-list">
-            {project.data.nextSteps.map((item) => <li>{item}</li>)}
-          </ul><div class="mdx-content prose"><Content /></div>
+
+        <section class="case-section" id="reflection">
+          <header><span>反思与来源</span><h2>我从这个项目留下什么判断</h2></header>
+          <blockquote>{project.data.reflection}</blockquote>
+          <h3>后续计划</h3>
+          <ul>{project.data.nextSteps.map((item) => <li>{item}</li>)}</ul>
+          <div class="case-source">
+            <strong>来源说明</strong>
+            <p>{project.data.sourceNote}</p>
+          </div>
+          <div class="prose case-mdx"><Content /></div>
         </section>
-        {
-          project.data.githubUrl && (
-            <GitHubCard
-              url={project.data.githubUrl}
-              title={project.data.title}
-              description={project.data.description}
-            />
-          )
-        }
       </div>
     </div>
-    <div class="page-shell">
-      <ImageGallery
-        images={project.data.gallery}
-        title={project.data.title}
-        slug={slug}
-        index={project.data.index}
-      />
-    </div>
+
+    <nav class="next-case page-shell" aria-label="下一个项目">
+      <span>下一个项目</span>
+      <a href={`/projects/${nextProject.id}/`}>
+        <strong>{nextProject.data.title}</strong>
+        <span aria-hidden="true">→</span>
+      </a>
+    </nav>
   </article>
 </BaseLayout>
 
 <style>
   .case-hero {
-    padding: 9.5rem 0 4rem;
-    background: linear-gradient(
-      145deg,
-      var(--primary-soft),
-      color-mix(in srgb, var(--pink) 22%, var(--page-bg))
-    );
+    padding-top: clamp(8rem, 14vw, 11rem);
   }
-  .case-hero__grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1.25fr) minmax(330px, 0.75fr);
-    gap: clamp(2rem, 6vw, 6rem);
-    align-items: center;
-  }
+
   .case-hero__meta {
     display: flex;
-    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 1.2rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 0.78rem;
+  }
+
+  .case-hero__meta > div {
+    display: flex;
     align-items: center;
     gap: 0.8rem;
-    color: var(--text-muted);
-    font-size: 0.62rem;
-    font-weight: 500;
   }
-  .case-project-index,
-  .case-hero__meta time {
-    font-family: var(--font-mono);
-  }
-  .case-hero__codename {
-    margin: 0.55rem 0 0;
-    color: var(--violet);
-  }
-  .case-hero h1 {
-    max-width: 950px;
-    margin: 0;
-    font-size: clamp(2.6rem, 6vw, 6rem);
-    font-weight: 700;
-    letter-spacing: -0.025em;
-    line-height: 1.08;
-  }
-  .case-hero__summary {
-    max-width: 760px;
-    margin: 1.2rem 0;
-    color: var(--text-secondary);
-    font-size: 1rem;
-    line-height: 1.75;
-  }
-  .case-hero :global(.project-cover) {
-    width: 100%;
-    min-width: 0;
-    min-height: 0;
-  }
-  .case-layout {
+
+  .case-hero__title {
     display: grid;
-    grid-template-columns: minmax(220px, 0.65fr) minmax(0, 2fr);
-    gap: 1rem;
-    align-items: start;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 2rem;
+    align-items: end;
+    padding-block: clamp(2.5rem, 6vw, 5rem);
   }
-  .case-sidebar {
-    position: sticky;
-    top: 96px;
-    padding: 1.25rem;
+
+  .case-hero__title > div:first-child {
+    max-width: 980px;
   }
-  .case-source {
-    padding: 0.9rem;
-    margin-bottom: 0.4rem;
-    border-radius: 12px;
-    background: var(--primary-soft);
-  }
-  .case-source span {
+
+  .case-hero__title > div:first-child > p:first-child {
+    margin: 0 0 0.8rem;
     color: var(--primary-strong);
-    font-size: 0.58rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
+    font-size: 0.8rem;
+    font-weight: 620;
   }
-  .case-source p {
-    margin: 0.4rem 0 0;
+
+  h1 {
+    max-width: 17ch;
+    margin: 0;
+    font-size: clamp(2.7rem, 6.4vw, 6rem);
+    letter-spacing: -0.04em;
+    line-height: 1.05;
+  }
+
+  .case-hero__title > div:first-child > p:last-child {
+    max-width: 68ch;
+    margin: 1.2rem 0 0;
     color: var(--text-secondary);
-    font-size: 0.7rem;
-    line-height: 1.7;
+    font-size: clamp(1rem, 1.4vw, 1.18rem);
+    line-height: 1.8;
   }
-  .case-sidebar dl {
+
+  .case-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    justify-content: flex-end;
+  }
+
+  .case-hero__cover {
     margin: 0;
   }
-  .case-sidebar dl div {
-    padding: 0.9rem 0;
-    border-top: 1px solid var(--border);
+
+  .case-hero__cover :global(.project-cover) {
+    border-radius: var(--radius-md);
   }
-  .case-sidebar dt {
+
+  .case-hero__cover figcaption {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    margin-top: 0.7rem;
     color: var(--text-muted);
-    font-size: 0.63rem;
-  }
-  .case-sidebar dd {
-    margin: 0.35rem 0 0;
-    color: var(--text-secondary);
-    font-size: 0.76rem;
-    line-height: 1.7;
-  }
-  .case-sidebar nav {
-    display: grid;
-    gap: 0.5rem;
-    margin-top: 1rem;
-  }
-  .case-sidebar nav a {
-    padding: 0.7rem;
-    border: 1px solid var(--border);
-    border-radius: 11px;
-    color: var(--primary-strong);
     font-size: 0.72rem;
-    text-align: center;
   }
-  .case-content {
-    padding: clamp(1.5rem, 5vw, 4rem);
+
+  .case-hero__cover strong {
+    color: var(--text-main);
   }
-  .case-content > section {
-    padding: 1rem 0 4rem;
+
+  .case-summary {
+    padding-block: clamp(3rem, 7vw, 6rem);
+  }
+
+  .case-summary dl {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 0;
+    border-top: 1px solid var(--border-strong);
+  }
+
+  .case-summary dl > div {
+    display: grid;
+    grid-template-columns: 7rem 1fr;
+    gap: 1rem;
+    padding: 1.4rem 1.5rem 1.5rem 0;
     border-bottom: 1px solid var(--border);
   }
-  .case-content > section:last-of-type {
-    border-bottom: 0;
+
+  .case-summary dl > div:nth-child(even) {
+    padding-left: 1.5rem;
+    border-left: 1px solid var(--border);
   }
-  .case-index {
+
+  .case-summary dt {
     color: var(--text-muted);
-    font-family: var(--font-mono);
-    font-size: 0.64rem;
-    letter-spacing: 0.05em;
+    font-size: 0.74rem;
   }
-  .case-content h2 {
-    margin: 0.65rem 0 1.8rem;
-    font-size: clamp(1.8rem, 4vw, 3.6rem);
-    font-weight: 700;
-    letter-spacing: -0.02em;
+
+  .case-summary dd {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.88rem;
+    line-height: 1.72;
+  }
+
+  .case-layout {
+    display: grid;
+    grid-template-columns: 190px minmax(0, 1fr);
+    gap: clamp(3rem, 8vw, 8rem);
+    align-items: start;
+    padding-bottom: clamp(5rem, 10vw, 10rem);
+  }
+
+  .case-toc {
+    position: sticky;
+    top: 7rem;
+  }
+
+  .case-toc > p {
+    margin: 0 0 0.8rem;
+    color: var(--text-main);
+    font-size: 0.78rem;
+    font-weight: 620;
+  }
+
+  .case-toc nav {
+    display: grid;
+  }
+
+  .case-toc a {
+    padding: 0.55rem 0;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 0.74rem;
+  }
+
+  .case-toc a:hover {
+    color: var(--primary-strong);
+  }
+
+  .case-content {
+    width: min(100%, 920px);
+  }
+
+  .case-section {
+    scroll-margin-top: 7rem;
+    padding: clamp(3.5rem, 8vw, 7rem) 0;
+    border-top: 1px solid var(--border-strong);
+  }
+
+  .case-section:first-child {
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .case-section > header {
+    margin-bottom: 2rem;
+  }
+
+  .case-section > header span {
+    color: var(--primary-strong);
+    font-size: 0.78rem;
+    font-weight: 620;
+  }
+
+  .case-section h2 {
+    max-width: 18ch;
+    margin: 0.5rem 0 0;
+    font-size: clamp(2rem, 4vw, 3.8rem);
+    letter-spacing: -0.032em;
     line-height: 1.14;
   }
-  .case-content h3 {
-    margin: 1.4rem 0 0.7rem;
+
+  .case-section h3 {
+    margin: 2rem 0 0.8rem;
+    font-size: 1.1rem;
   }
-  .case-content p,
-  .case-content li,
-  .case-content dd {
+
+  .case-section p,
+  .case-section li,
+  .case-section dd {
     color: var(--text-secondary);
     line-height: 1.8;
   }
-  .section-note {
-    max-width: 720px;
-    margin: -1rem 0 1.4rem;
-    font-size: 0.78rem;
+
+  .case-section ul {
+    padding-left: 1.2rem;
   }
-  .case-columns {
+
+  .case-lede {
+    max-width: 65ch;
+    font-size: clamp(1.05rem, 1.5vw, 1.24rem);
+  }
+
+  .case-list {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    gap: 0.65rem;
+    margin-top: 1.5rem;
+  }
+
+  .case-definition {
+    display: grid;
+    gap: 0;
+    margin: 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .case-definition div {
+    display: grid;
+    grid-template-columns: 8rem 1fr;
     gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border);
   }
-  .case-columns > div {
-    padding: 1.1rem;
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    background: var(--surface-soft);
+
+  .case-definition dt {
+    color: var(--text-muted);
+    font-size: 0.76rem;
   }
-  .case-columns p {
+
+  .case-definition dd {
     margin: 0;
-    font-size: 0.8rem;
   }
-  .callout {
-    margin: 0 0 1.5rem;
-    padding: 1rem 1.2rem;
-    border-left: 4px solid var(--primary);
-    border-radius: 0 13px 13px 0;
-    background: var(--primary-soft);
+
+  .case-split {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2.5rem;
   }
-  .callout--tip {
-    border-color: var(--mint);
-    background: color-mix(in srgb, var(--mint) 13%, transparent);
+
+  .case-split > div {
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
   }
-  .callout--warning {
-    border-color: var(--pink);
-    background: color-mix(in srgb, var(--pink) 15%, transparent);
+
+  .case-split h3 {
+    margin-top: 0;
   }
-  .callout p {
-    margin: 0.35rem 0 0;
-    font-size: 0.8rem;
-  }
-  .number-list,
-  .flow-list,
-  .plain-list {
+
+  .case-flow {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+    margin: 0;
     padding: 0;
-    margin: 0;
+    border-top: 1px solid var(--border);
     list-style: none;
   }
-  .number-list li {
+
+  .case-flow li {
     display: grid;
-    grid-template-columns: 40px 1fr;
+    grid-template-columns: 3rem 1fr;
     gap: 0.8rem;
-    padding: 1rem 0;
+    padding: 1.1rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .case-flow li:nth-child(even) {
+    padding-left: 1.2rem;
+    border-left: 1px solid var(--border);
+  }
+
+  .case-flow span {
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+  }
+
+  .case-flow strong {
+    color: var(--text-main);
+  }
+
+  .case-metrics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    padding: 0 !important;
+    list-style: none;
+  }
+
+  .case-metrics li {
+    padding: 0.55rem 0.72rem;
+    border-radius: 8px;
+    background: var(--surface-soft);
+    font-size: 0.78rem;
+  }
+
+  .case-iterations {
+    display: grid;
+    gap: 3rem;
+  }
+
+  .case-iterations article {
+    display: grid;
+    grid-template-columns: minmax(180px, 0.45fr) minmax(0, 1fr);
+    gap: 2rem;
+    padding-top: 1.4rem;
     border-top: 1px solid var(--border);
   }
-  .number-list span,
-  .flow-list span,
-  .metric-grid span {
-    color: var(--primary);
+
+  .case-iterations article > div span {
+    color: var(--text-muted);
     font-family: var(--font-mono);
-    font-size: 0.65rem;
+    font-size: 0.68rem;
   }
-  .number-list p {
+
+  .case-iterations article h3 {
+    margin-top: 0.6rem;
+  }
+
+  .case-iterations dl {
+    display: grid;
+    gap: 0;
     margin: 0;
   }
-  .flow-list {
+
+  .case-iterations dl div {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1px;
-    background: var(--border);
-  }
-  .flow-list li {
-    min-height: 110px;
-    padding: 1rem;
-    background: var(--surface-solid);
-  }
-  .flow-list span {
-    display: block;
-    margin-bottom: 1.2rem;
-  }
-  .plain-list li {
-    position: relative;
-    padding: 0.8rem 0 0.8rem 1.2rem;
-    border-top: 1px solid var(--border);
-  }
-  .plain-list li::before {
-    position: absolute;
-    top: 1.45rem;
-    left: 0;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--violet);
-    content: '';
-  }
-  .metric-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1px;
-    background: var(--border);
-  }
-  .metric-grid div {
-    padding: 1rem;
-    background: var(--surface-solid);
-  }
-  .metric-grid p {
-    margin: 0.8rem 0 0;
-    font-size: 0.76rem;
-  }
-  .iteration-list {
-    display: grid;
+    grid-template-columns: 5rem 1fr;
     gap: 1rem;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid var(--border);
   }
-  .iteration-list article {
-    padding: 1.2rem;
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    background: var(--surface-soft);
-  }
-  .iteration-list small {
-    color: var(--violet);
-    font-family: var(--font-mono);
-  }
-  .iteration-list dl {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.8rem;
-  }
-  .iteration-list dl div {
-    padding-top: 0.8rem;
-    border-top: 1px solid var(--border);
-  }
-  .iteration-list dt {
+
+  .case-iterations dt {
     color: var(--text-muted);
-    font-size: 0.62rem;
+    font-size: 0.74rem;
   }
-  .iteration-list dd {
-    margin: 0.3rem 0 0;
-    font-size: 0.76rem;
+
+  .case-iterations dd {
+    margin: 0;
   }
+
   blockquote {
-    margin: 0 0 1.5rem;
-    padding: 1.2rem;
-    border-radius: 15px;
-    background: linear-gradient(
-      120deg,
-      var(--primary-soft),
-      color-mix(in srgb, var(--pink) 18%, var(--surface-solid))
-    );
-    font-size: clamp(1rem, 2vw, 1.35rem);
+    margin: 0;
+    padding: 1.5rem;
+    border-radius: var(--radius-sm);
+    background: var(--primary-soft);
+    color: var(--text-main);
+    font-size: clamp(1.05rem, 1.8vw, 1.35rem);
     font-weight: 600;
     line-height: 1.75;
   }
-  .mdx-content {
+
+  .case-source {
+    margin-top: 2.5rem;
+    padding: 1.2rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+  }
+
+  .case-source strong {
+    font-size: 0.78rem;
+  }
+
+  .case-source p {
+    margin: 0.45rem 0 0;
+    font-size: 0.82rem;
+  }
+
+  .case-mdx {
     margin-top: 2rem;
     padding-top: 2rem;
-    border-top: 1px dashed var(--border-strong);
+    border-top: 1px solid var(--border);
   }
-  .mdx-content :global(h2) {
-    font-size: 1.6rem;
+
+  .next-case {
+    display: grid;
+    grid-template-columns: 190px minmax(0, 1fr);
+    gap: clamp(3rem, 8vw, 8rem);
+    align-items: baseline;
+    padding-block: clamp(3rem, 7vw, 6rem);
+    border-top: 1px solid var(--border-strong);
   }
-  .case-content > :global(.github-card) {
-    margin-top: 2rem;
+
+  .next-case > span {
+    color: var(--text-muted);
+    font-size: 0.76rem;
   }
+
+  .next-case a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    font-size: clamp(1.5rem, 3vw, 3rem);
+  }
+
+  .next-case a > span {
+    color: var(--primary-strong);
+  }
+
   @media (max-width: 900px) {
-    .case-hero__grid,
-    .case-layout {
+    .case-hero__title,
+    .case-layout,
+    .next-case {
       grid-template-columns: 1fr;
     }
-    .case-sidebar {
+
+    .case-hero__actions {
+      justify-content: flex-start;
+    }
+
+    .case-toc {
       position: static;
+      overflow-x: auto;
+    }
+
+    .case-toc nav {
+      display: flex;
+      min-width: max-content;
+      gap: 1rem;
+    }
+
+    .case-toc a {
+      border-bottom-color: var(--border-strong);
     }
   }
-  @media (max-width: 650px) {
-    .case-columns,
-    .flow-list,
-    .metric-grid,
-    .iteration-list dl {
+
+  @media (max-width: 680px) {
+    .case-summary dl,
+    .case-split,
+    .case-flow {
       grid-template-columns: 1fr;
+    }
+
+    .case-summary dl > div:nth-child(n),
+    .case-flow li:nth-child(n) {
+      padding-inline: 0;
+      border-left: 0;
+    }
+
+    .case-summary dl > div,
+    .case-definition div {
+      grid-template-columns: 1fr;
+      gap: 0.3rem;
+    }
+
+    .case-iterations article {
+      grid-template-columns: 1fr;
+      gap: 1rem;
     }
   }
 </style>

@@ -1,9 +1,10 @@
 export const siteConfig = {
   name: '赵天琦',
   englishName: 'Tianqi.Z',
-  siteName: '赵天琦 · 游戏 AI 产品作品集',
-  title: '赵天琦｜游戏 AI 与 AI 产品实践',
-  description: '聚焦游戏 AI、AI Agent、Prompt 工程、RAG 与 AI 产品评测的个人网站。',
+  siteName: '赵天琦 · AI 产品作品集',
+  title: '赵天琦｜游戏 AI、Agent 与产品评测作品集',
+  description:
+    '赵天琦的 AI 产品作品集，聚焦游戏 AI、AI Agent、产品评测与从真实问题到验证回路的产品实践。',
   github: 'https://github.com/cccc-clt',
   email: '',
   location: '中国 · 河南',
@@ -12,12 +13,11 @@ export const siteConfig = {
   availability: '开放 AI 产品实习与 2027 秋招机会',
   signature: '在现实与幻想之间，寻找 AI 产品的下一种可能。',
   nav: [
-    { label: '首页', subtitle: 'HOME', href: '/' },
-    { label: '项目', subtitle: 'PROJECTS', href: '/projects/' },
-    { label: '游戏观察', subtitle: 'GAME NOTES', href: '/game/' },
-    { label: 'AI 随想', subtitle: 'MOMENTS', href: '/moments/' },
-    { label: '关于我', subtitle: 'PROFILE', href: '/about/' },
-    { label: '在线简历', subtitle: 'RESUME', href: '/resume/' },
+    { label: '首页', href: '/' },
+    { label: '项目', href: '/projects/' },
+    { label: '研究', href: '/research/' },
+    { label: '关于', href: '/about/' },
+    { label: '简历', href: '/resume/' },
   ],
   resumes: [
     { label: '通用 AI 产品简历', path: '/resume/resume-general.pdf' },
@@ -43,27 +43,45 @@ export const siteConfig = {
 
 export const abilities = [
   {
-    index: '01',
     title: '需求与场景',
-    english: 'PRODUCT FRAMING',
     description: '从用户任务、业务约束和风险边界出发，判断 AI 是否真的必要。',
   },
   {
-    index: '02',
     title: 'Agent 工作流',
-    english: 'AGENT WORKFLOW',
     description: '拆解输入、规划、工具调用、人工确认、异常恢复与反馈回流。',
   },
   {
-    index: '03',
     title: 'Prompt 与原型',
-    english: 'PROMPT & PROTOTYPE',
     description: '用结构化 Prompt 与轻量原型快速验证交互、能力和数据契约。',
   },
   {
-    index: '04',
     title: '评测与迭代',
-    english: 'EVALUATION LOOP',
     description: '把稳定性、体验、成本和失败类型放进同一套产品决策框架。',
   },
 ] as const;
+
+export const productWorkflow = [
+  '确认真实问题',
+  '拆解用户任务',
+  '判断 AI 必要性',
+  '设计人工节点',
+  '搭建最小原型',
+  '记录评测与失败',
+  '回到产品边界迭代',
+] as const;
+
+export const projectFilterLabels = {
+  'game-ai': '游戏 AI',
+  agent: 'Agent',
+  evaluation: '产品评测',
+  workflow: '工作流',
+} as const;
+
+export const researchCategoryLabels = {
+  'game-research': '游戏研究',
+  'player-insight': '玩家洞察',
+  'ai-opportunity': 'AI 机会',
+  'agent-evaluation': 'Agent 评测',
+  'product-method': '产品方法',
+  'learning-notes': '学习记录',
+} as const;

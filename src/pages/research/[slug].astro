@@ -1,0 +1,449 @@
+---
+import { getCollection, render } from 'astro:content';
+import { researchCategoryLabels } from '../../config/site';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { estimateReadingMinutes, formatDate } from '../../utils/content';
+
+export async function getStaticPaths() {
+  const articles = (await getCollection('research')).filter((entry) => !entry.data.draft);
+  return articles.map((article) => ({
+    params: { slug: article.id },
+    props: { article },
+  }));
+}
+
+const { article } = Astro.props;
+const { Content, headings } = await render(article);
+const projects = await getCollection('projects');
+const relatedProjects = article.data.relatedProjects.flatMap((slug) => {
+  const project = projects.find((entry) => entry.id === slug);
+  return project ? [project] : [];
+});
+const tocHeadings = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
+const readingMinutes = estimateReadingMinutes(article.body);
+const structuredData = {
+  '@type': 'Article',
+  headline: article.data.title,
+  description: article.data.summary,
+  datePublished: article.data.publishedAt.toISOString(),
+  dateModified: article.data.updatedAt.toISOString(),
+  inLanguage: 'zh-CN',
+  author: { '@id': Astro.site ? new URL('/#person', Astro.site).toString() : '#person' },
+  publisher: { '@id': Astro.site ? new URL('/#person', Astro.site).toString() : '#person' },
+  keywords: article.data.tags.join(', '),
+  ...(Astro.site ? { mainEntityOfPage: new URL(Astro.url.pathname, Astro.site).toString() } : {}),
+};
+---
+
+<BaseLayout
+  title={`${article.data.title}｜赵天琦研究`}
+  description={article.data.summary}
+  image={article.data.cover}
+  pageType="article"
+  publishedTime={article.data.publishedAt}
+  modifiedTime={article.data.updatedAt}
+  structuredData={structuredData}
+>
+  <article class="research-article" id="article-top">
+    <header class="article-hero page-shell">
+      <a href="/research/">← 返回研究</a>
+      <div class="article-hero__layout">
+        <div class="article-hero__meta">
+          <span>{researchCategoryLabels[article.data.category]}</span>
+          <span>{formatDate(article.data.publishedAt)}</span>
+          <span>{readingMinutes} 分钟阅读</span>
+        </div>
+        <div>
+          <h1>{article.data.title}</h1>
+          <p>{article.data.summary}</p>
+          <div class="chip-row">
+            {article.data.tags.map((tag) => <span class="chip">{tag}</span>)}
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="article-layout page-shell">
+      <aside class="article-toc" data-pagefind-ignore>
+        <p>目录</p>
+        <nav aria-label="文章目录">
+          {
+            tocHeadings.map((heading) => (
+              <a class:list={[{ 'is-subheading': heading.depth === 3 }]} href={`#${heading.slug}`}>
+                {heading.text}
+              </a>
+            ))
+          }
+        </nav>
+      </aside>
+
+      <div class="article-main">
+        <div class="article-content prose" data-article-content><Content /></div>
+        {
+          article.data.sourceNote && (
+            <aside class="article-source">
+              <strong>来源与真实性说明</strong>
+              <p>{article.data.sourceNote}</p>
+            </aside>
+          )
+        }
+        <footer class="article-footer">
+          <div>
+            <span>首次发布：{formatDate(article.data.publishedAt)}</span>
+            <span>最后更新：{formatDate(article.data.updatedAt)}</span>
+          </div>
+          <a href="#article-top">返回顶部 ↑</a>
+        </footer>
+      </div>
+    </div>
+
+    {
+      relatedProjects.length > 0 && (
+        <section class="article-related page-shell" aria-labelledby="related-projects-title">
+          <div>
+            <p>相关阅读</p>
+            <h2 id="related-projects-title">把方法放回项目证据中</h2>
+          </div>
+          <div>
+            {relatedProjects.map((project) => (
+              <a href={`/projects/${project.id}/`}>
+                <span>{project.data.categories[0]}</span>
+                <strong>{project.data.title}</strong>
+                <p>{project.data.outcome}</p>
+              </a>
+            ))}
+          </div>
+        </section>
+      )
+    }
+  </article>
+</BaseLayout>
+
+<script>
+  const setupArticleCode = () => {
+    document.querySelectorAll<HTMLElement>('[data-article-content] pre').forEach((pre) => {
+      if (pre.querySelector('[data-copy-code]')) return;
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.dataset.copyCode = '';
+      button.textContent = '复制';
+      button.setAttribute('aria-label', '复制代码');
+      pre.append(button);
+    });
+  };
+
+  document.addEventListener('click', async (event) => {
+    const button = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-copy-code]');
+    if (!button) return;
+    const code = button.parentElement?.querySelector('code')?.textContent ?? '';
+    try {
+      await navigator.clipboard.writeText(code);
+      button.textContent = '已复制';
+      setTimeout(() => {
+        button.textContent = '复制';
+      }, 1600);
+    } catch {
+      button.textContent = '复制失败';
+    }
+  });
+
+  setupArticleCode();
+</script>
+
+<style>
+  .article-hero {
+    padding-top: clamp(8rem, 14vw, 11rem);
+    padding-bottom: clamp(4rem, 8vw, 7rem);
+  }
+
+  .article-hero > a {
+    color: var(--text-muted);
+    font-size: 0.78rem;
+  }
+
+  .article-hero__layout {
+    display: grid;
+    grid-template-columns: 190px minmax(0, 1fr);
+    gap: clamp(3rem, 8vw, 8rem);
+    align-items: start;
+    margin-top: clamp(2.5rem, 6vw, 5rem);
+  }
+
+  .article-hero__meta {
+    display: grid;
+    gap: 0.45rem;
+    padding-top: 0.8rem;
+    color: var(--text-muted);
+    font-size: 0.74rem;
+  }
+
+  .article-hero__meta span:first-child {
+    color: var(--primary-strong);
+    font-weight: 620;
+  }
+
+  h1 {
+    max-width: 18ch;
+    margin: 0;
+    font-size: clamp(2.7rem, 6.2vw, 5.8rem);
+    letter-spacing: -0.038em;
+    line-height: 1.08;
+  }
+
+  .article-hero__layout > div:last-child > p {
+    max-width: 65ch;
+    margin: 1.4rem 0 1.5rem;
+    color: var(--text-secondary);
+    font-size: clamp(1rem, 1.5vw, 1.2rem);
+    line-height: 1.82;
+  }
+
+  .article-layout {
+    display: grid;
+    grid-template-columns: 190px minmax(0, 1fr);
+    gap: clamp(3rem, 8vw, 8rem);
+    align-items: start;
+    padding-block: clamp(4rem, 8vw, 7rem);
+    border-top: 1px solid var(--border-strong);
+  }
+
+  .article-toc {
+    position: sticky;
+    top: 7rem;
+  }
+
+  .article-toc > p {
+    margin: 0 0 0.7rem;
+    font-size: 0.78rem;
+    font-weight: 620;
+  }
+
+  .article-toc nav {
+    display: grid;
+  }
+
+  .article-toc a {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    line-height: 1.5;
+  }
+
+  .article-toc a.is-subheading {
+    padding-left: 0.8rem;
+  }
+
+  .article-toc a:hover {
+    color: var(--primary-strong);
+  }
+
+  .article-main {
+    width: min(100%, var(--reading));
+  }
+
+  .article-content :global(h2) {
+    scroll-margin-top: 7rem;
+    margin: 4.5rem 0 1.2rem;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    letter-spacing: -0.025em;
+    line-height: 1.2;
+  }
+
+  .article-content :global(h2:first-child) {
+    margin-top: 0;
+  }
+
+  .article-content :global(h3) {
+    scroll-margin-top: 7rem;
+    margin: 2.8rem 0 0.8rem;
+    font-size: 1.3rem;
+  }
+
+  .article-content :global(p),
+  .article-content :global(li) {
+    color: var(--text-secondary);
+  }
+
+  .article-content :global(blockquote) {
+    margin: 2rem 0;
+    padding: 1.3rem 1.4rem;
+    border-radius: var(--radius-sm);
+    background: var(--primary-soft);
+    color: var(--text-main);
+  }
+
+  .article-content :global(blockquote p) {
+    margin: 0;
+    color: var(--text-main);
+  }
+
+  .article-content :global(table) {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .article-content :global(pre) {
+    position: relative;
+    padding: 1.2rem;
+    border-radius: var(--radius-sm);
+    background: var(--night);
+    color: #edf3f5;
+  }
+
+  .article-content :global([data-copy-code]) {
+    position: absolute;
+    top: 0.7rem;
+    right: 0.7rem;
+    min-height: 34px;
+    padding: 0.35rem 0.6rem;
+    border-radius: 7px;
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    cursor: pointer;
+    font-size: 0.68rem;
+  }
+
+  .article-source {
+    margin-top: 4rem;
+    padding: 1.2rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+  }
+
+  .article-source strong {
+    font-size: 0.78rem;
+  }
+
+  .article-source p {
+    margin: 0.45rem 0 0;
+    color: var(--text-secondary);
+    font-size: 0.82rem;
+    line-height: 1.75;
+  }
+
+  .article-footer {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 0.74rem;
+  }
+
+  .article-footer > div {
+    display: grid;
+    gap: 0.25rem;
+  }
+
+  .article-footer a {
+    color: var(--primary-strong);
+    font-weight: 620;
+  }
+
+  .article-related {
+    display: grid;
+    grid-template-columns: minmax(190px, 0.35fr) minmax(0, 1fr);
+    gap: clamp(3rem, 8vw, 8rem);
+    padding-block: clamp(4rem, 9vw, 8rem);
+    border-top: 1px solid var(--border-strong);
+  }
+
+  .article-related > div:first-child p {
+    margin: 0 0 0.6rem;
+    color: var(--primary-strong);
+    font-size: 0.78rem;
+    font-weight: 620;
+  }
+
+  .article-related h2 {
+    margin: 0;
+    font-size: clamp(1.8rem, 3.5vw, 3.2rem);
+    letter-spacing: -0.03em;
+  }
+
+  .article-related > div:last-child {
+    display: grid;
+  }
+
+  .article-related a {
+    display: grid;
+    grid-template-columns: 120px minmax(180px, 0.7fr) minmax(0, 1fr);
+    gap: 1.5rem;
+    padding: 1.2rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .article-related a > span {
+    color: var(--text-muted);
+    font-size: 0.72rem;
+  }
+
+  .article-related a > strong {
+    line-height: 1.5;
+  }
+
+  .article-related a > p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.78rem;
+    line-height: 1.7;
+  }
+
+  .article-related a:hover strong {
+    color: var(--primary-strong);
+  }
+
+  @media (max-width: 900px) {
+    .article-hero__layout,
+    .article-layout,
+    .article-related {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .article-hero__meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1rem;
+    }
+
+    .article-toc {
+      position: static;
+      min-width: 0;
+      max-width: 100%;
+      overflow-x: auto;
+    }
+
+    .article-toc nav {
+      display: flex;
+      min-width: max-content;
+      gap: 1rem;
+    }
+
+    .article-toc a {
+      padding-left: 0 !important;
+    }
+
+    .article-main {
+      min-width: 0;
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 680px) {
+    .article-related a {
+      grid-template-columns: 1fr;
+      gap: 0.35rem;
+    }
+
+    .article-footer {
+      align-items: start;
+      flex-direction: column;
+    }
+  }
+</style>

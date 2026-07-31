@@ -13,12 +13,12 @@ const personalPortfolioLicense = '用户授权用于个人作品集展示';
 export const assetCredits: AssetCredit[] = [
   {
     path: '/images/banner/hero-bg.webp',
-    title: '深海二次元首页开屏背景',
+    title: '深海角色品牌插图',
     author: '用户提供',
     source: '用户提供的本地视觉素材',
     licenseStatus: personalPortfolioLicense,
     attributionRequired: false,
-    attribution: '用于首页 Hero 背景；页面文字与操作保持独立 HTML 信息层。',
+    attribution: '缩放后用于首页右侧品牌视觉，并明确标注为概念插图；不作为项目证据。',
   },
   {
     path: '/images/avatar/tianqi-avatar.webp',

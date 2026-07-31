@@ -2,62 +2,66 @@
 
 ## 项目定位
 
-这是赵天琦的 AI 产品经理个人网站，用于展示真实项目、产品方法、技术工具链和后续公开内容。
-
-网站基于 Astro 和 Mizuki 内容体系构建，采用静态输出，通过 MDX 管理项目与说明内容，并使用 Pagefind 提供站内搜索。
-
-## 当前目标
-
-- 保持浅色、柔和的二次元博客视觉
-- 用真实项目材料展示 AI 产品设计与评测能力
-- 维持可构建、可降级、可继续维护的静态站点
-- 不使用虚构指标、经历、项目能力或外部链接
+这是赵天琦面向 2027 届秋招的 AI 产品作品集，主要服务游戏 AI、AI 应用、Agent 与产品评测方向的招聘阅读。主信息架构是首页、项目、研究、关于与简历。
 
 ## 核心领域概念
 
 ### Project
 
-可展示的产品实践或案例。公开项目内容应以对应 GitHub 仓库和 README 为事实依据。
+具备明确用户问题、产品目标、本人职责、AI 设计、人工节点、评测方法、失败边界和证据来源的案例。
+
+### Public repository project
+
+存在可核验公开 GitHub 仓库的项目。页面可以链接仓库，但只能描述仓库能够证明的能力。
 
 ### Local case
 
-已有真实材料但暂时没有公开 GitHub 仓库的案例。必须明确标注来源边界，不得伪造仓库链接或运行结果。
+只有本地案例材料、没有公开仓库的项目。必须明确标注仓库未公开，不生成虚构链接或运行指标。
 
-### Visual codename
+### Project outcome
 
-项目的视觉代号，只能作为副标题。真实项目名称始终是页面主体。
+项目当前真实产出。它描述现有仓库、原型或案例材料已经具备什么，不把后续计划写成结果。
 
-### Evaluation focus
+### Project filter
 
-项目计划记录或关注的评测维度，不等于已经取得的结果。
+项目的招聘阅读分类：`game-ai`、`agent`、`evaluation`、`workflow`。一个项目可以属于多个筛选。
 
-### Game record
+### Research
 
-基于真实体验填写的游戏观察记录。没有真实内容时保持空状态。
+将项目方法、真实观察、产品假设和待验证证据整理为文章的内容集合。草稿不会生成路由、搜索或 RSS 条目。
 
-### Asset fallback
+### Research category
 
-Banner、头像、项目截图或看板娘资源缺失时使用的安全降级，不能出现破图。
+`game-research`、`player-insight`、`ai-opportunity`、`agent-evaluation`、`product-method`、`learning-notes`。
+
+### Concept image
+
+承担品牌或主题表达的插图，不代表真实运行界面、评测结果或业务指标。页面必须就近标注。
+
+### Evaluation loop
+
+保留任务、样本、模型、Prompt、运行条件、原始输出、人工判断、失败类型和下一轮行动的产品验证回路。
 
 ## 内容边界
 
-- 项目事实优先依据公开仓库、README 和用户提供的真实材料
-- 不虚构用户量、转化率、延迟、覆盖率、效果提升或从业年限
-- 不下载或热链未经确认的远程图片
-- Markdown 正文和项目说明使用简体中文
-- 代码、类型、组件和文件名使用英文
+- 身份统一为赵天琦 / Tianqi.Z。
+- 不补写项目数据、用户量、转化率、游戏成绩、实习经历或商业结果。
+- 不生成不存在的邮箱、正式域名、简历 PDF、截图、仓库或外部链接。
+- 模型输出与 Mock 数据不能包装为真实业务结果。
+- Research 方法文章不能包装为已经完成的用户研究。
 
 ## 技术边界
 
-- 保留现有 Astro 架构
-- 保留 MDX 内容集合
-- 保留 Swup、主题切换和 Pagefind
-- 未经明确要求，不修改首页结构和现有视觉效果
+- 保留 Astro 7、MDX Content Collections、Swup、Pagefind、Tailwind 4 和静态输出。
+- `SITE_URL` 是 canonical、sitemap、robots 与绝对 RSS 的唯一站点地址来源。
+- Cloudflare 与 Netlify 均只发布 `dist`；Node.js 要求为 22。
+- 不新增动画或 UI 依赖。
 
 ## 质量检查
 
-修改代码或内容后，根据影响范围执行：
+主要命令是 `npm run validate`。发布前还需要：
 
-- `npm run lint`
-- `npm run check`
-- `npm run build`
+- 无 `SITE_URL` 与临时 `SITE_URL` 双构建
+- 内部链接、本地图片、空 `href` 和重定向审计
+- 7 个目标宽度的视觉检查
+- 键盘、主题、Reduced Motion、Dialog、筛选、搜索与 Swup 历史测试

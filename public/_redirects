@@ -1,5 +1,9 @@
 /resume.pdf /resume/ 302
-/agent /projects/?track=agent 301
-/agent/ /projects/?track=agent 301
-/auto /projects/?track=auto 301
-/auto/ /projects/?track=auto 301
+/game /research/?category=game-research 301
+/game/ /research/?category=game-research 301
+/moments /research/?category=learning-notes 301
+/moments/ /research/?category=learning-notes 301
+/agent /projects/?filter=agent 301
+/agent/ /projects/?filter=agent 301
+/auto /projects/automate-ai-car-copilot/ 301
+/auto/ /projects/automate-ai-car-copilot/ 301

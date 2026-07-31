@@ -7,19 +7,20 @@ export async function GET(context) {
     return new globalThis.Response(null, { status: 204 });
   }
 
-  const projects = (await getCollection('projects')).sort(
-    (a, b) => b.data.updated.valueOf() - a.data.updated.valueOf(),
-  );
+  const articles = (await getCollection('research'))
+    .filter((article) => !article.data.draft)
+    .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+
   return rss({
-    title: siteConfig.siteName,
-    description: siteConfig.description,
+    title: `${siteConfig.name}的研究记录`,
+    description: '游戏 AI、Agent 评测与 AI 产品机会判断的研究文章。',
     site: context.site,
-    items: projects.map((project) => ({
-      title: project.data.title,
-      description: project.data.description,
-      pubDate: project.data.updated,
-      link: `/projects/${project.id.replace(/\.mdx?$/, '')}/`,
-      categories: project.data.categories,
+    items: articles.map((article) => ({
+      title: article.data.title,
+      description: article.data.summary,
+      pubDate: article.data.publishedAt,
+      link: `/research/${article.id}/`,
+      categories: [article.data.category, ...article.data.tags],
     })),
     customData: '<language>zh-CN</language>',
   });

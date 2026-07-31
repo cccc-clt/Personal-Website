@@ -1,4 +1,5 @@
-.container {
+.container,
+.page-shell {
   width: var(--container);
   margin-inline: auto;
 }
@@ -21,13 +22,13 @@
 
 .skip-link {
   position: fixed;
-  z-index: 100;
+  z-index: var(--z-toast);
   top: 12px;
   left: 12px;
   padding: 0.75rem 1rem;
   border-radius: var(--radius-sm);
-  background: var(--ink-950);
-  color: white;
+  background: var(--text-main);
+  color: var(--surface-solid);
   translate: 0 -150%;
 }
 
@@ -37,32 +38,42 @@
 
 .button {
   display: inline-flex;
-  min-height: 50px;
+  min-height: 48px;
   align-items: center;
   justify-content: center;
-  gap: 0.65rem;
-  padding: 0.75rem 1.2rem;
-  border: 1px solid var(--line-strong);
-  border-radius: var(--radius-pill);
-  background: rgba(255, 255, 255, 0.68);
-  color: var(--ink-950);
-  font-weight: 600;
+  gap: 0.6rem;
+  padding: 0.72rem 1.15rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  background: var(--surface-solid);
+  color: var(--text-main);
+  font-size: 0.92rem;
+  font-weight: 620;
   transition:
-    translate 260ms var(--ease-out),
-    box-shadow 260ms var(--ease-out),
-    background-color 260ms ease;
+    translate 220ms var(--ease-out),
+    background-color 220ms ease,
+    border-color 220ms ease;
 }
 
 .button:hover {
-  box-shadow: 0 12px 30px rgba(76, 91, 143, 0.14);
+  border-color: var(--primary);
+  background: var(--primary-soft);
   translate: 0 -2px;
 }
 
+.button:active {
+  translate: 0 1px;
+}
+
 .button--primary {
-  border-color: var(--track-accent, var(--iris));
-  background: var(--track-accent, var(--iris));
-  box-shadow: 0 14px 28px color-mix(in srgb, var(--track-accent, var(--iris)) 28%, transparent);
-  color: white;
+  border-color: var(--primary-strong);
+  background: var(--primary-strong);
+  color: #fff;
+}
+
+.button--primary:hover {
+  border-color: var(--text-main);
+  background: var(--text-main);
 }
 
 .button--quiet {
@@ -73,20 +84,21 @@
 .text-link {
   display: inline-flex;
   align-items: center;
-  gap: 0.55rem;
-  font-weight: 600;
+  gap: 0.45rem;
+  color: var(--primary-strong);
+  font-weight: 620;
 }
 
 .text-link::after {
-  content: '↗';
+  content: '→';
   transition: translate 220ms var(--ease-out);
 }
 
 .text-link:hover::after {
-  translate: 3px -3px;
+  translate: 4px 0;
 }
 
 .divider {
   height: 1px;
-  background: var(--line);
+  background: var(--border);
 }

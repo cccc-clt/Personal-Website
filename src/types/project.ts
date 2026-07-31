@@ -2,6 +2,7 @@ import type { CollectionEntry } from 'astro:content';
 
 export type ProjectStatus = 'LIVE' | 'TESTED' | 'ITERATING' | 'ARCHIVED';
 export type TargetTrack = 'general' | 'game' | 'agent' | 'auto';
+export type ProjectFilter = 'game-ai' | 'agent' | 'evaluation' | 'workflow';
 export type ProjectEntry = CollectionEntry<'projects'>;
 
 export interface AssetCredit {

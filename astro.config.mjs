@@ -11,6 +11,12 @@ export default defineConfig({
   site,
   output: 'static',
   trailingSlash: 'always',
+  redirects: {
+    '/game': '/research/?category=game-research',
+    '/moments': '/research/?category=learning-notes',
+    '/agent': '/projects/?filter=agent',
+    '/auto': '/projects/automate-ai-car-copilot/',
+  },
   integrations: [
     mdx(),
     swup({

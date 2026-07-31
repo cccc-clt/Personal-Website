@@ -9,6 +9,7 @@ updated: 2026-07-17
 status: 'ITERATING'
 categories: ['智能座舱', 'AI Agent', '产品评测']
 targetTracks: ['general', 'agent', 'auto']
+filters: ['agent', 'evaluation', 'workflow']
 role: '产品流程 / Agent 设计 / 评测与安全'
 period: '公开仓库 · Mock 原型'
 techStack:
@@ -32,6 +33,7 @@ goal: '在不连接真实车辆的前提下，验证知识问答、意图解析�
 problem: '座舱请求同时涉及知识、车辆状态、控制意图和安全风险，单轮聊天难以表达完整产品闭环。'
 aiNeeded: '自然语言请求需要被解析成结构化意图，并结合知识、状态和安全规则决定回答、确认或拒绝。'
 solution: '在 Streamlit Mock 原型中依次读取车辆状态、解析八字段意图、调用 RAG 或场景 Agent，再由三级安全规则决定直接响应、二次确认或拒绝。'
+outcome: '当前公开仓库提供智能座舱 Copilot Mock 原型，覆盖知识问答、意图解析、场景编排与安全确认，不连接真实车辆。'
 flow:
   [
     '接收用户请求',

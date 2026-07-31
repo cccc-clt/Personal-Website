@@ -5,13 +5,13 @@ const pathname = Astro.url.pathname;
 const isActive = (href: string) => (href === '/' ? pathname === '/' : pathname.startsWith(href));
 ---
 
-<header id="site-header" class="site-header" data-header>
+<header class="site-header" data-header>
   <div class="site-header__inner page-shell">
     <a class="site-brand" href="/" aria-label={`${siteConfig.name}个人网站首页`}>
-      <span class="site-brand__petal" aria-hidden="true">◆</span>
+      <span class="site-brand__mark" aria-hidden="true">TZ</span>
       <span>
         <strong>{siteConfig.englishName}</strong>
-        <small>GAME AI · PERSONAL BLOG</small>
+        <small>AI PRODUCT PORTFOLIO</small>
       </span>
     </a>
 
@@ -19,8 +19,7 @@ const isActive = (href: string) => (href === '/' ? pathname === '/' : pathname.s
       {
         siteConfig.nav.map((item) => (
           <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
-            <span>{item.label}</span>
-            <small>{item.subtitle}</small>
+            {item.label}
           </a>
         ))
       }
@@ -44,7 +43,7 @@ const isActive = (href: string) => (href === '/' ? pathname === '/' : pathname.s
         href={siteConfig.github}
         target="_blank"
         rel="noreferrer"
-        aria-label="访问 GitHub"
+        aria-label="访问赵天琦的 GitHub"
       >
         GitHub ↗
       </a>
@@ -65,29 +64,19 @@ const isActive = (href: string) => (href === '/' ? pathname === '/' : pathname.s
   <div class="mobile-menu" id="mobile-menu" aria-hidden="true" data-mobile-menu>
     <nav aria-label="移动端导航">
       {
-        siteConfig.nav.map((item, index) => (
+        siteConfig.nav.map((item) => (
           <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
-            <span>{String(index + 1).padStart(2, '0')}</span>
             <strong>{item.label}</strong>
-            <small>{item.subtitle}</small>
+            <small>{item.href}</small>
           </a>
         ))
       }
     </nav>
-
     <div class="mobile-menu__footer">
       <div class="mobile-menu__utilities" aria-label="辅助操作">
-        <button type="button" data-search-open>
-          <span aria-hidden="true">⌕</span>
-          搜索
-        </button>
-        <button type="button" data-theme-toggle>
-          <span aria-hidden="true">◐</span>
-          主题
-        </button>
-        <a href={siteConfig.github} target="_blank" rel="noreferrer">
-          GitHub <span aria-hidden="true">↗</span>
-        </a>
+        <button type="button" data-search-open><span aria-hidden="true">⌕</span>搜索</button>
+        <button type="button" data-theme-toggle><span aria-hidden="true">◐</span>主题</button>
+        <a href={siteConfig.github} target="_blank" rel="noreferrer">GitHub ↗</a>
       </div>
       <p>{siteConfig.availability}</p>
     </div>

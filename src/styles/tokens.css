@@ -1,39 +1,45 @@
 :root {
   color-scheme: light;
-  --page-bg: #edf3f8;
-  --surface: rgba(255, 255, 255, 0.88);
+  --page-bg: #f2f5f7;
+  --surface: #ffffff;
   --surface-solid: #ffffff;
-  --surface-soft: #f5f8fb;
-  --text-main: #202431;
-  --text-secondary: #667080;
-  --text-muted: #8a94a3;
-  --primary: #60a5e8;
-  --primary-strong: #3a86c8;
-  --primary-soft: #dceeff;
-  --violet: #9a8bd8;
-  --pink: #e9a6bd;
-  --mint: #83d8c2;
-  --border: rgba(87, 108, 132, 0.12);
-  --border-strong: rgba(87, 108, 132, 0.22);
-  --shadow-soft: 0 18px 50px rgba(73, 91, 113, 0.12);
-  --shadow-float: 0 20px 55px rgba(57, 76, 101, 0.18);
+  --surface-soft: #e9eef2;
+  --surface-tint: #dfeaf0;
+  --text-main: #17202d;
+  --text-secondary: #475667;
+  --text-muted: #697888;
+  --primary: #4d7895;
+  --primary-strong: #285a7a;
+  --primary-soft: #dce9ef;
+  --violet: #77729a;
+  --pink: #bd817c;
+  --mint: #4e8375;
+  --border: rgba(44, 64, 82, 0.14);
+  --border-strong: rgba(44, 64, 82, 0.28);
+  --shadow-soft: 0 8px 24px rgba(41, 59, 74, 0.08);
+  --shadow-float: 0 8px 28px rgba(27, 42, 55, 0.16);
   --font-sans:
-    'Inter Variable', 'Noto Sans SC Variable', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  --font-display: 'Inter Variable', 'Noto Sans SC Variable', 'PingFang SC', sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;
+    'Noto Sans SC Variable', 'Inter Variable', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-display:
+    'Noto Sans SC Variable', 'Inter Variable', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-mono: 'Cascadia Mono', 'SFMono-Regular', Consolas, monospace;
   --radius-xs: 8px;
-  --radius-sm: 14px;
-  --radius-md: 22px;
-  --radius-lg: 32px;
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 16px;
   --radius-pill: 999px;
-  --page-width: 1480px;
-  --container: min(var(--page-width), calc(100vw - 48px));
-  --reading: 760px;
+  --page-width: 1320px;
+  --container: min(var(--page-width), calc(100vw - 64px));
+  --reading: 70ch;
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --z-sticky: 40;
+  --z-dialog-backdrop: 70;
+  --z-dialog: 80;
+  --z-toast: 90;
 
-  /* Compatibility aliases for the existing project case-study components. */
+  /* Compatibility aliases for existing case-study and secondary-page components. */
   --ink-950: var(--text-main);
-  --ink-800: #343b49;
+  --ink-800: #2c3948;
   --ink-650: var(--text-secondary);
   --ink-500: var(--text-muted);
   --line: var(--border);
@@ -41,44 +47,45 @@
   --paper: var(--page-bg);
   --paper-deep: var(--primary-soft);
   --white: var(--surface-solid);
-  --sky: #91c9ef;
+  --sky: #82a9bd;
   --sky-deep: var(--primary-strong);
   --iris: var(--violet);
-  --violet-mist: #e8e2fb;
-  --rose-mist: #f7e0e8;
-  --gold: #e3bd72;
-  --night: #202737;
-  --night-soft: #2a3347;
-  --success: #2c8973;
-  --warning: #a86b3e;
+  --violet-mist: #e6e4ed;
+  --rose-mist: #efe2e1;
+  --gold: #a77d4f;
+  --night: #17202d;
+  --night-soft: #253343;
+  --success: #397466;
+  --warning: #8b5c39;
 }
 
 :root[data-theme='dark'] {
   color-scheme: dark;
-  --page-bg: #181d27;
-  --surface: rgba(38, 45, 59, 0.9);
-  --surface-solid: #252c3a;
-  --surface-soft: #202632;
-  --text-main: #edf2f7;
-  --text-secondary: #b3bdcb;
-  --text-muted: #8793a5;
-  --primary: #7db8ec;
-  --primary-strong: #9bcaf2;
-  --primary-soft: #263b50;
-  --violet: #b1a5e5;
-  --pink: #e3a9bb;
-  --mint: #82d2be;
-  --border: rgba(205, 218, 237, 0.1);
-  --border-strong: rgba(205, 218, 237, 0.2);
-  --shadow-soft: 0 18px 50px rgba(0, 0, 0, 0.2);
-  --shadow-float: 0 20px 55px rgba(0, 0, 0, 0.32);
-  --ink-800: #dbe2ec;
-  --night: #111620;
-  --night-soft: #1a2130;
+  --page-bg: #141a21;
+  --surface: #1e2630;
+  --surface-solid: #1e2630;
+  --surface-soft: #26313d;
+  --surface-tint: #263944;
+  --text-main: #eff4f6;
+  --text-secondary: #b9c4cc;
+  --text-muted: #95a5b1;
+  --primary: #8db3c7;
+  --primary-strong: #b0cfdd;
+  --primary-soft: #263e4b;
+  --violet: #aaa5c5;
+  --pink: #d2a09b;
+  --mint: #82b7a8;
+  --border: rgba(215, 229, 237, 0.12);
+  --border-strong: rgba(215, 229, 237, 0.25);
+  --shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.18);
+  --shadow-float: 0 8px 28px rgba(0, 0, 0, 0.28);
+  --ink-800: #d6e0e5;
+  --night: #0d1218;
+  --night-soft: #151d26;
 }
 
 @media (max-width: 700px) {
   :root {
-    --container: min(100% - 28px, var(--page-width));
+    --container: min(100% - 32px, var(--page-width));
   }
 }

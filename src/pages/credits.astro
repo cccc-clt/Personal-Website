@@ -9,25 +9,23 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   description="本站主题来源、上游许可证、原创图片和第三方资源说明。"
 >
   <InnerPageHero
-    eyebrow="CREDITS / LICENSES"
-    title="主题、图片与第三方资源署名"
+    eyebrow="资源说明"
+    title="主题许可、图片来源与真实性边界"
     description="部分个人品牌视觉与项目概念封面由生成式图像工具辅助创作；项目功能、测试过程与成果描述以项目详情和公开仓库为准。"
   />
   <section class="credits-page section page-shell">
-    <section class="credit-block panel">
-      <span class="eyebrow">THEME</span><h2>Mizuki 二次开发</h2><p>
-        本网站基于开源 Astro 主题 Mizuki 进行二次开发。本站保留并遵循 Mizuki 的 Apache License
+    <section class="credit-block">
+      <span class="eyebrow">主题许可</span><h2>保留原主题许可证</h2><p>
+        网站已完成独立信息架构与视觉改版；仓库仍保留早期来源 Mizuki 的 Apache License
         2.0，以及其上游 Fuwari 的 MIT License。
       </p><div class="credit-links">
         <a href="https://github.com/LyraVoid/Mizuki" target="_blank" rel="noreferrer"
           >Mizuki 官方仓库 ↗</a
-        ><a href="/LICENSE">Apache-2.0</a><a href="/LICENSE.MIT">Fuwari MIT</a>
+        ><span>Apache-2.0</span><span>Fuwari MIT</span>
       </div>
     </section>
-    <section class="credit-block panel">
-      <span class="eyebrow">LOCAL ASSETS</span><h2>已登记的本地视觉资产</h2><div
-        class="asset-table"
-      >
+    <section class="credit-block">
+      <span class="eyebrow">本地资产</span><h2>已登记的本地视觉资产</h2><div class="asset-table">
         {
           assetCredits.map((asset) => (
             <article>
@@ -68,8 +66,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         }
       </div>
     </section>
-    <section class="credit-block panel">
-      <span class="eyebrow">THIRD-PARTY</span><h2>技术资源</h2><ul>
+    <section class="credit-block">
+      <span class="eyebrow">技术资源</span><h2>当前工程依赖</h2><ul>
         <li><strong>Astro</strong><span>静态站点框架</span></li><li>
           <strong>Swup</strong><span>页面过渡</span>
         </li><li><strong>Pagefind</strong><span>本地静态搜索</span></li><li>
@@ -77,7 +75,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         </li>
       </ul>
     </section>
-    <aside class="credit-policy panel">
+    <aside class="credit-policy">
       <strong>版权与真实性原则</strong><p>
         本站不热链 Pixiv，不使用官方游戏角色、Logo
         或未授权画师作品包装个人品牌；概念封面仅承担主题表达，不代表真实运行界面、项目指标或业务结果。
@@ -89,11 +87,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 <style>
   .credits-page {
     display: grid;
-    gap: 1rem;
+    gap: clamp(3rem, 7vw, 6rem);
   }
   .credit-block,
   .credit-policy {
-    padding: clamp(1.5rem, 4vw, 3rem);
+    padding: clamp(1.5rem, 4vw, 3rem) 0;
+    border-top: 1px solid var(--border-strong);
   }
   .credit-block > h2 {
     margin: 0.65rem 0 1rem;
@@ -113,12 +112,18 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     gap: 0.6rem;
     margin-top: 1.4rem;
   }
-  .credit-links a {
+  .credit-links a,
+  .credit-links span {
     padding: 0.65rem 0.85rem;
     border: 1px solid var(--border);
     border-radius: 11px;
-    color: var(--primary-strong);
     font-size: 0.75rem;
+  }
+  .credit-links a {
+    color: var(--primary-strong);
+  }
+  .credit-links span {
+    color: var(--text-muted);
   }
   .asset-table {
     display: grid;
@@ -177,7 +182,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     font-size: 0.75rem;
   }
   .credit-policy {
-    border-left: 4px solid var(--mint);
+    padding: 1.4rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--primary-soft);
   }
   .credit-policy p {
     margin-bottom: 0;

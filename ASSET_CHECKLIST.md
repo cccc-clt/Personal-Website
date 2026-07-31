@@ -19,12 +19,14 @@
 - [x] 当前文件没有 Alpha 通道，棋盘格已经写入像素；不得用 CSS 伪装成透明背景
 - [x] Hero 不使用方形头像或该备用源图
 
-### 首页深海 Hero
+### 首页深海品牌插图
 
-- [x] `public/images/banner/hero-bg.webp`（1672×941；首页沉浸式背景）
+- [x] `public/images/banner/hero-bg.webp`（1672×941；已优化为 172KB 左右）
 - [x] 原图由用户提供，已从 PNG 正确转码为 WebP
-- [x] 图片作为装饰背景使用，姓名、岗位、价值主张和操作均保留为独立 HTML
-- [x] 桌面端保留左侧人物面部，移动端使用单独的 `object-position` 裁切策略
+- [x] 图片缩放为首页右侧局部品牌视觉，不再作为深色全屏开场
+- [x] 页面就近标注“品牌插图 · 非项目运行截图”
+- [x] 姓名、岗位、价值主张和操作均保留为独立 HTML
+- [x] 已删除重复且未引用的 `public/images/hero/underwater-opening.*`
 
 ### 项目概念封面
 
@@ -45,12 +47,13 @@
 - [x] AI Product Evaluation Workbench 使用独立图片，不重复其他项目封面
 - [x] 已删除 AI Product Evaluation Workbench 专用 CSS 占位封面
 - [x] 图片路径缺失时回退到通用 CSS 视觉或文字，不输出空 `src`
+- [x] Gallery 只接受真实截图；缺失时显示诚实状态，不重复概念图冒充证据
 
 ## 尚未提供
 
 - [ ] `public/images/avatar/character.png`（真正透明的原创看板娘立绘）
 - [ ] 七个项目的真实界面或过程截图；当前 Gallery 继续与概念封面明确区分
-- [ ] `public/assets/images/404.webp`
+- [ ] 新的 404 插图（当前可继续使用已存在的本地插图或文字降级）
 - [ ] 三份正式简历 PDF
 - [ ] 真实邮箱与正式域名
 

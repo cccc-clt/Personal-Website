@@ -154,3 +154,28 @@
 - Mizuki 迁移前检查点：`634f4ef`
 - 首页重建提交：`a6fe16c`
 - 当前开发分支：`main`
+
+## 完整改版（2026-07-31）
+
+- 主导航收敛为首页、项目、研究、关于、简历；搜索、主题和 GitHub 保留为全局工具。
+- 首页改为浅色招聘阅读路径，包含 4 个精选项目、4 项能力、7 步工作流、Research、关于摘要和求职 CTA。
+- 深海图缩为右侧品牌插图并明确标注“非项目运行截图”；删除全屏等待、气泡粒子、滚动视差和 Hero 会话状态。
+- 7 个项目新增 `filters` 与可核验 `outcome`；项目索引支持 URL 筛选、计数、前进后退和无结果状态。
+- 项目详情统一为问题、方案、职责、产出、AI 必要性、人工节点、产品流程、原型证据、评测、失败边界、迭代、反思、来源和下一个项目。
+- 新增 Research 内容集合、列表、文章详情与首篇产品方法文章；草稿自动排除路由、首页、搜索和 RSS。
+- `/game/`、`/moments/`、`/agent/`、`/auto/` 已更新重定向。
+- 增加 Person、WebSite、CreativeWork、Article 结构化数据，并按 `SITE_URL` 条件生成 canonical、sitemap、robots 与 RSS。
+- 保留 Cloudflare 配置，增加 Netlify `npm run build` / `dist` 与 Node 22 配置。
+- 删除 11 个无引用组件、旧 `character.css`、重复 `HeroOpening.astro` 与两个约 2.18MB 的重复深海资源。
+- 设计规范改为冷中性浅色、8–16px 圆角、约 70ch 正文与开放排版；深色主题继续支持。
+
+### 最终验证
+
+- `npm run validate`：通过；Prettier、ESLint、Astro check、静态构建与 Pagefind 全部完成。
+- Astro check：38 个文件，0 errors / 0 warnings / 0 hints。
+- Astro build：生成 17 个页面；Pagefind 索引 17 个页面、1276 个词。
+- 无 `SITE_URL` 与临时 `SITE_URL=https://portfolio.example` 两种构建均通过；已核对 canonical、sitemap、robots、RSS 与结构化数据的条件输出。
+- 生成站点链接审计：21 份 HTML，0 个空 `href/src`，0 个缺失内部目标。
+- 浏览器响应式审计：1440、1280、1024、768、430、390、360px 下检查首页、项目列表、项目详情、研究文章、About、Resume 与 404，无横向溢出、标题裁切或损坏图片。
+- 浏览器交互审计：项目筛选与历史返回、研究分类空状态、移动菜单与 Escape、搜索焦点与 Escape、浅色/深色主题、Swup 历史返回、旧路由重定向均通过；控制台无 error / warning。
+- 额外复验：1280×720 首屏 CTA 保持可见；430px Research 目录只在自身横向滚动，不再撑宽页面。
