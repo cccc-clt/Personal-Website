@@ -12,8 +12,8 @@ export async function GET(context) {
     .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
 
   return rss({
-    title: `${siteConfig.name}的研究记录`,
-    description: '游戏 AI、Agent 评测与 AI 产品机会判断的研究文章。',
+    title: `${siteConfig.name}的研究与随想`,
+    description: '游戏观察、玩家洞察、AI 产品机会、Agent 评测与产品方法文章。',
     site: context.site,
     items: articles.map((article) => ({
       title: article.data.title,

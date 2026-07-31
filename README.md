@@ -4,16 +4,15 @@
 
 ## 信息架构
 
-- `/`：求职定位、4 个精选项目、4 项能力、Research、关于摘要和求职入口
-- `/projects/`：支持 `?filter=game-ai|agent|evaluation|workflow` 的项目索引
+- `/`：求职定位、3 个精选项目、4 项能力、3 个研究与随想入口、关于摘要和求职入口
+- `/projects/`：项目内容门户，支持 `?filter=`、`?source=` 与 `?status=` 的组合筛选
 - `/projects/[slug]/`：统一案例结构与证据边界
-- `/research/`：支持 `?category=` 的研究索引
+- `/research/`：合并后的“研究与随想”内容门户，支持 `?category=` 与 `?archive=`
 - `/research/[slug]/`：文章目录、阅读时间、来源说明与关联项目
-- `/research/?category=learning-notes`：主导航“随想”对应的学习记录分类，不单独虚构内容
 - `/about/`、`/resume/`、`/404.html`：主要说明页面
 - `/stack/`、`/archive/`、`/credits/`：次级资料页面
 
-旧 `/game/`、`/moments/`、`/agent/` 与 `/auto/` 已重定向到对应 Research 分类、项目筛选或具体案例。
+旧 `/game/`、`/moments/`、`/agent/` 与 `/auto/` 已重定向到对应研究分类、统一研究入口、项目筛选或具体案例。`/moments/` 直接兼容到 `/research/`，不再维护第二套内容入口。
 
 ## 视觉语言
 
@@ -66,6 +65,8 @@ Remove-Item Env:SITE_URL
 - `outcome`：只描述当前仓库或案例材料能够证明的真实产出
 - `sourceNote`：说明证据来源、Mock、Local case 或缺失状态
 - `gallery`：只放真实界面或过程截图；概念图不能写入 Gallery 冒充截图
+- `homepageFeatured`、`homepageOrder`：显式控制首页三个精选项目
+- `homepageSummary`：可选的首页两行短摘要
 
 ## 编辑 Research
 
@@ -73,11 +74,11 @@ Remove-Item Env:SITE_URL
 
 - `title`、`summary`、`category`、`tags`
 - `publishedAt`、`updatedAt`
-- `draft`、`featured`
+- `draft`、`featured`、`homepageFeatured`、`homepageOrder`
 - `relatedProjects`
 - 可选 `cover` 与 `sourceNote`
 
-阅读时间由正文自动计算。`draft: true` 的内容不生成路由，不进入首页、搜索或 RSS。
+阅读时间由正文自动计算。`draft: true` 的内容不生成路由，不进入首页、搜索、RSS 或 sitemap。首页可以展示明确标注为“整理中”的选题卡，但这类卡片没有文章链接、日期或阅读时间，并通过 `data-pagefind-ignore` 排除搜索索引。
 
 ## 图片与简历
 

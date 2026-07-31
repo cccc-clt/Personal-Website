@@ -2,15 +2,8 @@
 import { siteConfig } from '../config/site';
 
 const pathname = Astro.url.pathname;
-const currentCategory = Astro.url.searchParams.get('category');
 const isActive = (href: string) => {
   if (href === '/') return pathname === '/';
-  if (href.includes('category=learning-notes')) {
-    return pathname.startsWith('/research/') && currentCategory === 'learning-notes';
-  }
-  if (href === '/research/') {
-    return pathname.startsWith('/research/') && currentCategory !== 'learning-notes';
-  }
   return pathname.startsWith(href);
 };
 ---

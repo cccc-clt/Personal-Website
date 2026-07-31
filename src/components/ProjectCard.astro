@@ -12,6 +12,11 @@ const { project, mode = 'index' } = Astro.props;
 const slug = project.id.replace(/\.mdx?$/, '');
 const projectUrl = `/projects/${slug}/`;
 const primaryType = projectFilterLabels[project.data.filters[0]];
+const tags = [...new Set([primaryType, ...project.data.categories])].slice(0, 3);
+const summary =
+  mode === 'featured' && project.data.homepageSummary
+    ? project.data.homepageSummary
+    : project.data.summary;
 ---
 
 <article class:list={['project-card', `project-card--${mode}`, 'reveal']}>
@@ -27,17 +32,13 @@ const primaryType = projectFilterLabels[project.data.filters[0]];
       <figcaption>概念图</figcaption>
     </figure>
     <div class="project-card__body">
-      <span class="project-card__type">{primaryType}</span>
+      <div class="chip-row" aria-label="项目标签">
+        {tags.map((tag) => <span class="chip">{tag}</span>)}
+      </div>
       <h3>{project.data.title}</h3>
-      <p>{project.data.summary}</p>
+      <p>{summary}</p>
       <div class="project-card__footer">
-        <div class="chip-row" aria-label="项目标签">
-          {
-            project.data.categories
-              .slice(0, 3)
-              .map((category) => <span class="chip">{category}</span>)
-          }
-        </div>
+        <span class="project-card__meta">{project.data.period}</span>
         <span class="project-card__action">查看案例 <span aria-hidden="true">→</span></span>
       </div>
     </div>
@@ -47,6 +48,7 @@ const primaryType = projectFilterLabels[project.data.filters[0]];
 <style>
   .project-card {
     min-width: 0;
+    height: 100%;
   }
 
   .project-card__link {
@@ -93,23 +95,21 @@ const primaryType = projectFilterLabels[project.data.filters[0]];
     padding: clamp(1.35rem, 3vw, 1.85rem);
   }
 
-  .project-card__type {
-    color: var(--accent-hover);
-    font-size: 0.78rem;
-    font-weight: 600;
-  }
-
   h3 {
-    margin: 0.6rem 0 0;
+    margin: 1rem 0 0;
     font-size: clamp(1.45rem, 2.3vw, 1.8rem);
     letter-spacing: -0.015em;
     line-height: 1.28;
   }
 
   .project-card__body > p {
+    display: -webkit-box;
     margin: 0.75rem 0 0;
+    overflow: hidden;
     color: var(--text-secondary);
     line-height: 1.72;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
   }
 
   .project-card__footer {
@@ -126,6 +126,15 @@ const primaryType = projectFilterLabels[project.data.filters[0]];
     color: var(--accent-hover);
     font-size: 0.8rem;
     font-weight: 600;
+  }
+
+  .project-card__meta {
+    min-width: 0;
+    overflow: hidden;
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .project-card__action span {

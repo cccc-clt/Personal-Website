@@ -194,3 +194,14 @@
 - 浏览器检查：1280×720、约 547px 与 319px 边界宽度下，首页、项目列表、项目详情、研究列表、文章、About、Resume 和 404 无内容横向溢出；项目 URL 筛选、历史返回、移动菜单和主题切换通过，控制台无页面运行时错误。
 - 无 `SITE_URL` 与临时 `SITE_URL=https://portfolio.example` 两种构建均通过；canonical、sitemap、robots、RSS、Person、WebSite、CreativeWork 与 Article 结构化数据均已核对。
 - 最终产物审计：21 份 HTML，0 个空 `href/src`，0 个缺失内部目标；RSS 只含已发布 Research，不含项目页。临时测试域名已从最终 `dist` 恢复移除。
+
+## 内容门户与首页三卡精修（2026-07-31）
+
+- 首页精选项目改为显式 `homepageFeatured` / `homepageOrder` 控制，只展示内容 Copilot、爱莉希雅角色陪伴和游戏增长评测工作流，一行三张等宽卡。
+- 首页“研究与随想”展示两个明确标注“整理中 · 尚未发布”的选题与一篇真实已发布方法文章；整理中卡片无链接、无日期、无阅读时间，并排除 Pagefind。
+- 主导航合并为“研究与随想”；`/moments/` 兼容跳转到 `/research/`，RSS 和内容计数仍只使用已发布 Research Collection。
+- `/projects/` 改为推荐项目、两列案例和真实分类/来源/阶段筛选组成的内容门户；筛选支持 URL、组合状态与浏览器历史。
+- `/research/` 改为推荐阅读、两列文章和真实分类/年月归档组成的内容门户；当前只有一篇已发布文章，不使用整理中选题补足推荐数量。
+- 两个门户的搜索均复用全局 Pagefind；1100px 以下改为可展开筛选，700px 以下卡片单列。
+- `npm run validate` 通过：43 个 Astro 文件 0 errors / 0 warnings / 0 hints，生成 17 个页面，Pagefind 索引 17 页、1241 个词。
+- 浏览器验证项目组合筛选、URL 历史返回、研究空状态、Pagefind 搜索、整理中选题搜索隔离及 `/moments/` 跳转；1440、1280、1024、768、430、390、360px 均无横向溢出。

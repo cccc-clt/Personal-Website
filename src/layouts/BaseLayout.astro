@@ -190,6 +190,23 @@ const jsonLd = {
         }
       });
 
+      document.addEventListener('submit', (event) => {
+        const form = (event.target as HTMLElement).closest<HTMLFormElement>(
+          '[data-archive-search-form]',
+        );
+        if (!form) return;
+        event.preventDefault();
+        const query = form.querySelector<HTMLInputElement>('[data-archive-search-input]')?.value;
+        const dialog = getSearch();
+        const input = dialog?.querySelector<HTMLInputElement>('[data-pagefind-input]');
+        if (!dialog || !input) return;
+        setMenu(false);
+        dialog.showModal();
+        input.value = query?.trim() ?? '';
+        input.focus();
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+      });
+
       document.addEventListener('keydown', (event) => {
         if (event.key !== 'Escape') return;
         if (getMenuButton()?.getAttribute('aria-expanded') === 'true') setMenu(false, true);
@@ -233,6 +250,17 @@ const jsonLd = {
         document.querySelector('[data-header]')?.classList.toggle('is-scrolled', scrollY > 18);
         const backToTop = document.querySelector<HTMLButtonElement>('[data-back-to-top]');
         if (backToTop) backToTop.hidden = scrollY < Math.max(480, innerHeight * 0.72);
+      };
+
+      const syncPortalFilters = () => {
+        const mode = matchMedia('(min-width: 1101px)').matches ? 'desktop' : 'compact';
+        document
+          .querySelectorAll<HTMLDetailsElement>('[data-portal-filters]')
+          .forEach((details) => {
+            if (details.dataset.portalMode === mode) return;
+            details.open = mode === 'desktop';
+            details.dataset.portalMode = mode;
+          });
       };
 
       let revealObserver: IntersectionObserver | undefined;
@@ -282,6 +310,7 @@ const jsonLd = {
         setMenu(false);
         closeSearch();
         updateChrome();
+        syncPortalFilters();
         setupReveals();
       };
 
@@ -293,7 +322,9 @@ const jsonLd = {
       };
 
       addEventListener('scroll', updateChrome, { passive: true });
+      addEventListener('resize', syncPortalFilters, { passive: true });
       updateChrome();
+      syncPortalFilters();
       setupReveals();
       if (browserWindow.swup) installSwupHook();
       else document.addEventListener('swup:enable', installSwupHook, { once: true });

@@ -13,7 +13,7 @@ export default defineConfig({
   trailingSlash: 'always',
   redirects: {
     '/game': '/research/?category=game-research',
-    '/moments': '/research/?category=learning-notes',
+    '/moments': '/research/',
     '/agent': '/projects/?filter=agent',
     '/auto': '/projects/automate-ai-car-copilot/',
   },
