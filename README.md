@@ -4,15 +4,24 @@
 
 ## 信息架构
 
-- `/`：求职定位、4 个精选项目、能力与 7 步工作流、Research、关于摘要和求职入口
+- `/`：求职定位、4 个精选项目、4 项能力、Research、关于摘要和求职入口
 - `/projects/`：支持 `?filter=game-ai|agent|evaluation|workflow` 的项目索引
 - `/projects/[slug]/`：统一案例结构与证据边界
 - `/research/`：支持 `?category=` 的研究索引
 - `/research/[slug]/`：文章目录、阅读时间、来源说明与关联项目
+- `/research/?category=learning-notes`：主导航“随想”对应的学习记录分类，不单独虚构内容
 - `/about/`、`/resume/`、`/404.html`：主要说明页面
 - `/stack/`、`/archive/`、`/credits/`：次级资料页面
 
 旧 `/game/`、`/moments/`、`/agent/` 与 `/auto/` 已重定向到对应 Research 分类、项目筛选或具体案例。
+
+## 视觉语言
+
+- 默认使用暖米白背景、白色内容卡、深墨文字和少量橙色强调。
+- 展示标题优先使用系统宋体，正文使用苹方、微软雅黑或本地 Noto Sans SC。
+- 首页深海角色图收敛为局部品牌插图，项目封面继续明确标注为概念图。
+- 动效只保留一次性入场、轻量图片缩放和控件反馈；Reduced Motion 下全部内容直接可见。
+- 移动端以 20px 页面边距、单列内容和全视口导航为基线。
 
 ## 技术栈
 

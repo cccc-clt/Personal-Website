@@ -45,7 +45,7 @@ const structuredData = {
   structuredData={structuredData}
 >
   <article class="research-article" id="article-top">
-    <header class="article-hero page-shell">
+    <header class="article-hero page-shell reveal">
       <a href="/research/">← 返回研究</a>
       <div class="article-hero__layout">
         <div class="article-hero__meta">
@@ -64,7 +64,7 @@ const structuredData = {
     </header>
 
     <div class="article-layout page-shell">
-      <aside class="article-toc" data-pagefind-ignore>
+      <aside class="article-toc reveal" data-pagefind-ignore>
         <p>目录</p>
         <nav aria-label="文章目录">
           {
@@ -77,7 +77,7 @@ const structuredData = {
         </nav>
       </aside>
 
-      <div class="article-main">
+      <div class="article-main reveal">
         <div class="article-content prose" data-article-content><Content /></div>
         {
           article.data.sourceNote && (
@@ -99,7 +99,7 @@ const structuredData = {
 
     {
       relatedProjects.length > 0 && (
-        <section class="article-related page-shell" aria-labelledby="related-projects-title">
+        <section class="article-related page-shell reveal" aria-labelledby="related-projects-title">
           <div>
             <p>相关阅读</p>
             <h2 id="related-projects-title">把方法放回项目证据中</h2>
@@ -178,16 +178,16 @@ const structuredData = {
   }
 
   .article-hero__meta span:first-child {
-    color: var(--primary-strong);
-    font-weight: 620;
+    color: var(--accent-hover);
+    font-weight: 600;
   }
 
   h1 {
     max-width: 18ch;
     margin: 0;
-    font-size: clamp(2.7rem, 6.2vw, 5.8rem);
-    letter-spacing: -0.038em;
-    line-height: 1.08;
+    font-size: clamp(3rem, 5.6vw, 4.25rem);
+    letter-spacing: -0.025em;
+    line-height: 1.12;
   }
 
   .article-hero__layout > div:last-child > p {
@@ -215,7 +215,7 @@ const structuredData = {
   .article-toc > p {
     margin: 0 0 0.7rem;
     font-size: 0.78rem;
-    font-weight: 620;
+    font-weight: 600;
   }
 
   .article-toc nav {
@@ -235,7 +235,7 @@ const structuredData = {
   }
 
   .article-toc a:hover {
-    color: var(--primary-strong);
+    color: var(--accent-hover);
   }
 
   .article-main {
@@ -245,8 +245,8 @@ const structuredData = {
   .article-content :global(h2) {
     scroll-margin-top: 7rem;
     margin: 4.5rem 0 1.2rem;
-    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
-    letter-spacing: -0.025em;
+    font-size: clamp(1.9rem, 3.5vw, 2.65rem);
+    letter-spacing: -0.018em;
     line-height: 1.2;
   }
 
@@ -269,7 +269,7 @@ const structuredData = {
     margin: 2rem 0;
     padding: 1.3rem 1.4rem;
     border-radius: var(--radius-sm);
-    background: var(--primary-soft);
+    background: var(--accent-soft);
     color: var(--text-main);
   }
 
@@ -342,8 +342,8 @@ const structuredData = {
   }
 
   .article-footer a {
-    color: var(--primary-strong);
-    font-weight: 620;
+    color: var(--accent-hover);
+    font-weight: 600;
   }
 
   .article-related {
@@ -356,15 +356,15 @@ const structuredData = {
 
   .article-related > div:first-child p {
     margin: 0 0 0.6rem;
-    color: var(--primary-strong);
-    font-size: 0.78rem;
-    font-weight: 620;
+    color: var(--accent-hover);
+    font-size: 0.84rem;
+    font-weight: 600;
   }
 
   .article-related h2 {
     margin: 0;
-    font-size: clamp(1.8rem, 3.5vw, 3.2rem);
-    letter-spacing: -0.03em;
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    letter-spacing: -0.018em;
   }
 
   .article-related > div:last-child {
@@ -396,7 +396,7 @@ const structuredData = {
   }
 
   .article-related a:hover strong {
-    color: var(--primary-strong);
+    color: var(--accent-hover);
   }
 
   @media (max-width: 900px) {
@@ -436,6 +436,11 @@ const structuredData = {
   }
 
   @media (max-width: 680px) {
+    h1 {
+      font-size: clamp(2.15rem, 11vw, 2.65rem);
+      line-height: 1.14;
+    }
+
     .article-related a {
       grid-template-columns: 1fr;
       gap: 0.35rem;

@@ -11,16 +11,7 @@ interface Props {
   compact?: boolean;
 }
 
-const { slug, title, index = 'CASE', cover, compact = false } = Astro.props;
-const variantMap: Record<string, string> = {
-  'mobile-uiagent-evaluation-lab': 'tap',
-  'ai-game-growth-workflow': 'growth',
-  'automate-ai-car-copilot': 'cockpit',
-  'ai-game-content-copilot': 'branch',
-  'ai-pdf-learning-assistant': 'documents',
-  'elysia-ai-character-agent': 'memory',
-};
-const variant = variantMap[slug] ?? 'generic';
+const { title, cover, compact = false } = Astro.props;
 const coverConfig = cover ? projectCovers[cover] : undefined;
 const coverCandidates = [coverConfig?.image, coverConfig?.fallback].filter(
   (source): source is string => Boolean(source),
@@ -28,24 +19,15 @@ const coverCandidates = [coverConfig?.image, coverConfig?.fallback].filter(
 const coverPath = coverCandidates.find((source) =>
   existsSync(join(process.cwd(), 'public', source.replace(/^\//, ''))),
 );
-const hasImageCover = Boolean(coverPath);
 ---
 
 <div
-  class:list={[
-    'project-cover',
-    `project-cover--${variant}`,
-    {
-      'project-cover--compact': compact,
-      'project-cover--image': hasImageCover,
-      'project-cover--metrics-overlay': hasImageCover && coverConfig?.overlay === 'metrics',
-    },
-  ]}
+  class:list={['project-cover', { 'project-cover--compact': compact }]}
   role="img"
   aria-label={coverConfig?.alt ?? `${title} 概念封面`}
 >
   {
-    hasImageCover && coverPath && (
+    coverPath ? (
       <img
         class="project-cover__image"
         src={coverPath}
@@ -56,348 +38,69 @@ const hasImageCover = Boolean(coverPath);
         decoding="async"
         style={`object-position: ${coverConfig?.position ?? 'center'};`}
       />
+    ) : (
+      <span class="project-cover__fallback" aria-hidden="true" />
     )
   }
-  <div class="project-cover__wash"></div>
-  <div class="project-cover__stage" aria-hidden="true">
-    <span></span><span></span><span></span><span></span><span></span><span></span>
-  </div>
-  <div class="project-cover__meta">
-    <span class="mono">{index}</span>
-    <span class="project-cover__seal">TQ / AI</span>
-  </div>
+  <span class="project-cover__wash" aria-hidden="true"></span>
 </div>
 
 <style>
   .project-cover {
     position: relative;
-    aspect-ratio: 16 / 9;
-    min-height: 0;
+    aspect-ratio: 16 / 10;
     overflow: hidden;
-    border-radius: var(--radius-lg);
-    background: #eaf4ff;
+    border-radius: inherit;
+    background: var(--accent-soft);
     isolation: isolate;
   }
 
-  .project-cover--compact {
-    min-height: 0;
-  }
-
-  .project-cover__image {
-    position: absolute;
-    z-index: 0;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    transition: transform 300ms var(--ease-out);
-  }
-
+  .project-cover__image,
+  .project-cover__fallback,
   .project-cover__wash {
     position: absolute;
     inset: 0;
-    background:
-      radial-gradient(circle at 75% 18%, rgba(255, 255, 255, 0.9), transparent 20%),
-      radial-gradient(circle at 18% 80%, rgba(250, 207, 219, 0.42), transparent 28%),
-      linear-gradient(135deg, rgba(132, 210, 255, 0.44), rgba(224, 216, 255, 0.68));
   }
 
-  .project-cover--image .project-cover__wash {
-    z-index: 2;
+  .project-cover__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(0.82) contrast(0.96) brightness(1.03);
+    transition:
+      transform 300ms var(--ease-out),
+      filter 300ms ease;
+  }
+
+  .project-cover__fallback {
+    background:
+      radial-gradient(
+        circle at 78% 22%,
+        color-mix(in srgb, var(--purple) 12%, transparent),
+        transparent 32%
+      ),
+      linear-gradient(145deg, var(--surface-warm), var(--accent-soft));
+  }
+
+  .project-cover__wash {
     background: linear-gradient(
       180deg,
-      transparent 52%,
-      rgba(255, 255, 255, 0.08) 72%,
-      rgba(248, 250, 255, 0.48)
+      transparent 58%,
+      color-mix(in srgb, var(--surface-warm) 34%, transparent)
     );
+    pointer-events: none;
   }
 
-  .project-cover--metrics-overlay .project-cover__wash {
-    background:
-      linear-gradient(90deg, rgba(245, 248, 255, 0.22), transparent 54%),
-      linear-gradient(
-        180deg,
-        transparent 42%,
-        rgba(255, 255, 255, 0.12) 68%,
-        rgba(248, 250, 255, 0.54)
-      );
+  :global(.project-card__link:hover) .project-cover__image {
+    filter: saturate(0.9) contrast(0.98) brightness(1.02);
+    transform: scale(1.025);
   }
 
-  .project-cover--image .project-cover__stage {
-    display: none;
-  }
-
-  .project-cover__stage,
-  .project-cover__stage span {
-    position: absolute;
-  }
-
-  .project-cover__stage {
-    inset: 12%;
-  }
-
-  .project-cover__stage span {
-    display: block;
-  }
-
-  .project-cover__meta {
-    position: absolute;
-    z-index: 3;
-    right: 24px;
-    bottom: 22px;
-    left: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    color: rgba(31, 40, 77, 0.62);
-    font-size: 0.68rem;
-    font-weight: 500;
-    letter-spacing: 0.05em;
-  }
-
-  .project-cover--image .project-cover__meta {
-    color: rgba(39, 49, 78, 0.78);
-    text-shadow: 0 2px 12px rgba(255, 255, 255, 0.62);
-  }
-
-  .project-cover__seal {
-    padding: 0.45rem 0.65rem;
-    border: 1px solid rgba(255, 255, 255, 0.64);
-    border-radius: var(--radius-pill);
-    background: rgba(255, 255, 255, 0.36);
-    backdrop-filter: blur(10px);
-    font-family: var(--font-mono);
-  }
-
-  .project-cover--tap .project-cover__wash {
-    background: linear-gradient(145deg, #f0faff, #dfe6ff 60%, #f5e3ea);
-  }
-
-  .project-cover--tap .project-cover__stage {
-    inset: 10% 21% 12%;
-    border: 1px solid rgba(67, 89, 162, 0.2);
-    border-radius: 42px;
-    background: rgba(255, 255, 255, 0.43);
-    box-shadow: var(--shadow-soft);
-  }
-
-  .project-cover--tap .project-cover__stage span {
-    width: 24px;
-    height: 24px;
-    border: 5px solid rgba(96, 132, 233, 0.7);
-    border-radius: 50%;
-    box-shadow: 0 0 0 13px rgba(101, 154, 240, 0.12);
-  }
-
-  .project-cover--tap .project-cover__stage span:nth-child(1) {
-    top: 18%;
-    left: 20%;
-  }
-  .project-cover--tap .project-cover__stage span:nth-child(2) {
-    top: 38%;
-    left: 63%;
-  }
-  .project-cover--tap .project-cover__stage span:nth-child(3) {
-    top: 67%;
-    left: 35%;
-  }
-  .project-cover--tap .project-cover__stage span:nth-child(n + 4) {
-    display: none;
-  }
-
-  .project-cover--growth .project-cover__wash {
-    background: linear-gradient(140deg, #eefbff, #dce9ff 47%, #f6e4e0);
-  }
-
-  .project-cover--growth .project-cover__stage span {
-    bottom: 18%;
-    width: 12%;
-    border-radius: 14px 14px 4px 4px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(110, 143, 224, 0.46));
-    box-shadow: var(--shadow-float);
-  }
-
-  .project-cover--growth .project-cover__stage span:nth-child(1) {
-    left: 9%;
-    height: 20%;
-  }
-  .project-cover--growth .project-cover__stage span:nth-child(2) {
-    left: 26%;
-    height: 32%;
-  }
-  .project-cover--growth .project-cover__stage span:nth-child(3) {
-    left: 43%;
-    height: 48%;
-  }
-  .project-cover--growth .project-cover__stage span:nth-child(4) {
-    left: 60%;
-    height: 63%;
-  }
-  .project-cover--growth .project-cover__stage span:nth-child(5) {
-    left: 77%;
-    height: 78%;
-    background: linear-gradient(#ffe8d4, #d88e76);
-  }
-  .project-cover--growth .project-cover__stage span:nth-child(6) {
-    display: none;
-  }
-
-  .project-cover--cockpit .project-cover__wash {
-    background:
-      radial-gradient(circle at 50% 100%, rgba(119, 164, 211, 0.32), transparent 36%),
-      linear-gradient(145deg, #e7f6ff, #dfe9fa 52%, #eee8fb);
-  }
-
-  .project-cover--cockpit .project-cover__stage {
-    inset: 27% 15% 5%;
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    border-bottom: 0;
-    border-radius: 50% 50% 0 0;
-  }
-
-  .project-cover--cockpit .project-cover__stage span {
-    top: 50%;
-    left: 50%;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    border: 3px solid rgba(255, 255, 255, 0.72);
-    background: #87b7de;
-  }
-
-  .project-cover--cockpit .project-cover__stage span:nth-child(2) {
-    transform: translate(-150px, 40px);
-  }
-  .project-cover--cockpit .project-cover__stage span:nth-child(3) {
-    transform: translate(140px, 10px);
-  }
-  .project-cover--cockpit .project-cover__stage span:nth-child(n + 4) {
-    display: none;
-  }
-
-  .project-cover--branch .project-cover__wash {
-    background: linear-gradient(150deg, #fff7f2, #f1dde4 45%, #dddffd);
-  }
-
-  .project-cover--branch .project-cover__stage span {
-    top: 48%;
-    left: 46%;
-    width: 42%;
-    height: 1px;
-    transform-origin: left;
-    background: rgba(77, 91, 156, 0.36);
-  }
-
-  .project-cover--branch .project-cover__stage span::after {
-    position: absolute;
-    top: -13px;
-    right: 0;
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.8);
-    box-shadow: var(--shadow-float);
-    content: '';
-  }
-
-  .project-cover--branch .project-cover__stage span:nth-child(1) {
-    rotate: -48deg;
-  }
-  .project-cover--branch .project-cover__stage span:nth-child(2) {
-    rotate: -18deg;
-  }
-  .project-cover--branch .project-cover__stage span:nth-child(3) {
-    rotate: 18deg;
-  }
-  .project-cover--branch .project-cover__stage span:nth-child(4) {
-    rotate: 48deg;
-  }
-  .project-cover--branch .project-cover__stage span:nth-child(n + 5) {
-    display: none;
-  }
-
-  .project-cover--documents .project-cover__wash {
-    background: linear-gradient(135deg, #eefaff, #dcecff 50%, #e8e4ff);
-  }
-
-  .project-cover--documents .project-cover__stage span {
-    inset: 10% 22%;
-    border: 1px solid rgba(77, 104, 169, 0.18);
-    border-radius: 18px;
-    background: rgba(255, 255, 255, 0.72);
-    box-shadow: 18px 24px 38px rgba(75, 91, 148, 0.16);
-  }
-
-  .project-cover--documents .project-cover__stage span:nth-child(1) {
-    transform: translate(-18%, 18%) rotate(-11deg);
-  }
-  .project-cover--documents .project-cover__stage span:nth-child(2) {
-    transform: translate(0, 5%) rotate(3deg);
-  }
-  .project-cover--documents .project-cover__stage span:nth-child(3) {
-    transform: translate(18%, -8%) rotate(11deg);
-    background: rgba(206, 224, 255, 0.86);
-  }
-  .project-cover--documents .project-cover__stage span:nth-child(n + 4) {
-    display: none;
-  }
-
-  .project-cover--memory .project-cover__wash {
-    background: radial-gradient(
-      circle at 50% 50%,
-      #fff 0 5%,
-      #d7ecff 6% 19%,
-      #dcdcfb 20% 39%,
-      #f2dfe7 40% 55%,
-      #eef7ff 56%
-    );
-  }
-
-  .project-cover--memory .project-cover__stage span {
-    inset: 10%;
-    border: 1px solid rgba(81, 99, 171, 0.3);
-    border-radius: 50%;
-  }
-
-  .project-cover--memory .project-cover__stage span:nth-child(2) {
-    inset: 20%;
-    border-style: dashed;
-    rotate: 25deg;
-  }
-  .project-cover--memory .project-cover__stage span:nth-child(3) {
-    inset: 32%;
-    rotate: -20deg;
-  }
-  .project-cover--memory .project-cover__stage span:nth-child(n + 4) {
-    display: none;
-  }
-
-  :global(:root[data-theme='dark']) .project-cover--image .project-cover__wash {
-    background: linear-gradient(
-      180deg,
-      transparent 50%,
-      rgba(29, 32, 58, 0.08) 68%,
-      rgba(30, 35, 62, 0.5)
-    );
-  }
-
-  :global(:root[data-theme='dark']) .project-cover--metrics-overlay .project-cover__wash {
-    background:
-      linear-gradient(90deg, rgba(43, 48, 82, 0.22), transparent 56%),
-      linear-gradient(180deg, transparent 40%, rgba(34, 38, 68, 0.12) 66%, rgba(30, 35, 62, 0.56));
-  }
-
-  :global(:root[data-theme='dark']) .project-cover--image .project-cover__meta {
-    color: rgba(255, 255, 255, 0.88);
-    text-shadow: 0 2px 12px rgba(17, 20, 37, 0.62);
-  }
-
-  @media (max-width: 640px) {
-    .project-cover,
-    .project-cover--compact {
-      min-height: 0;
-      border-radius: var(--radius-md);
+  @media (prefers-reduced-motion: reduce) {
+    .project-cover__image,
+    :global(.project-card__link:hover) .project-cover__image {
+      transition: none;
+      transform: none;
     }
   }
 </style>

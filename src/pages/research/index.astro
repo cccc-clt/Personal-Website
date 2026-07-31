@@ -1,9 +1,9 @@
 ---
 import { getCollection } from 'astro:content';
+import ArticleCard from '../../components/ArticleCard.astro';
 import InnerPageHero from '../../components/InnerPageHero.astro';
 import { researchCategoryLabels } from '../../config/site';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { estimateReadingMinutes, formatDate } from '../../utils/content';
 
 const articles = (await getCollection('research'))
   .filter((entry) => !entry.data.draft)
@@ -28,7 +28,7 @@ const counts = Object.fromEntries(
   />
 
   <section class="research-page page-shell" aria-labelledby="research-list-title">
-    <div class="research-toolbar">
+    <div class="research-toolbar reveal">
       <div>
         <h2 id="research-list-title">已发布文章</h2>
         <p><span data-research-count>{articles.length}</span> / {articles.length} 篇</p>
@@ -47,34 +47,12 @@ const counts = Object.fromEntries(
       </div>
     </div>
 
-    <div class="research-list" data-research-list>
+    <div class="research-list" data-research-list data-reveal-group>
       {
         articles.map((article) => (
-          <article data-research-item data-research-category={article.data.category}>
-            <div class="research-list__meta">
-              <span>{researchCategoryLabels[article.data.category]}</span>
-              <span>{formatDate(article.data.publishedAt)}</span>
-              <span>{estimateReadingMinutes(article.body)} 分钟</span>
-            </div>
-            <div>
-              <h3>
-                <a href={`/research/${article.id}/`}>{article.data.title}</a>
-              </h3>
-              <p>{article.data.summary}</p>
-              <div class="chip-row">
-                {article.data.tags.map((tag) => (
-                  <span class="chip">{tag}</span>
-                ))}
-              </div>
-            </div>
-            <a
-              class="research-list__link"
-              href={`/research/${article.id}/`}
-              aria-label={`阅读：${article.data.title}`}
-            >
-              →
-            </a>
-          </article>
+          <div data-research-item data-research-category={article.data.category}>
+            <ArticleCard article={article} />
+          </div>
         ))
       }
     </div>
@@ -140,7 +118,7 @@ const counts = Object.fromEntries(
 
 <style>
   .research-page {
-    padding-block: clamp(4rem, 8vw, 8rem);
+    padding-block: clamp(4.5rem, 8vw, 7.5rem);
   }
 
   .research-toolbar {
@@ -148,13 +126,14 @@ const counts = Object.fromEntries(
     align-items: end;
     justify-content: space-between;
     gap: 2rem;
-    padding-bottom: 1.5rem;
+    margin-bottom: 3.5rem;
+    padding-bottom: 1.75rem;
     border-bottom: 1px solid var(--border-strong);
   }
 
   .research-toolbar h2 {
     margin: 0;
-    font-size: clamp(1.7rem, 3vw, 2.8rem);
+    font-size: clamp(2rem, 3vw, 2.65rem);
   }
 
   .research-toolbar p {
@@ -174,85 +153,39 @@ const counts = Object.fromEntries(
     min-height: 42px;
     padding: 0.55rem 0.8rem;
     border: 1px solid var(--border);
-    border-radius: 9px;
-    background: transparent;
+    border-radius: var(--radius-pill);
+    background: var(--surface-warm);
     color: var(--text-secondary);
     cursor: pointer;
     font-size: 0.76rem;
-    font-weight: 580;
+    font-weight: 500;
   }
 
   .research-filters button span {
     margin-left: 0.25rem;
     color: var(--text-muted);
-    font-family: var(--font-mono);
     font-size: 0.66rem;
   }
 
   .research-filters button:hover,
   .research-filters button[aria-pressed='true'] {
-    border-color: var(--primary);
-    background: var(--primary-soft);
-    color: var(--primary-strong);
+    border-color: color-mix(in srgb, var(--accent) 36%, var(--border));
+    background: var(--accent-soft);
+    color: var(--accent-hover);
   }
 
-  .research-list article {
+  .research-list {
     display: grid;
-    grid-template-columns: 170px minmax(0, 1fr) 42px;
-    gap: clamp(1.5rem, 5vw, 5rem);
-    align-items: start;
-    padding: clamp(2rem, 5vw, 4rem) 0;
-    border-bottom: 1px solid var(--border);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr));
+    gap: 1.5rem;
   }
 
-  .research-list article[hidden] {
+  .research-list > :only-child {
+    max-width: 780px;
+  }
+
+  [data-research-item][hidden] {
     display: none;
-  }
-
-  .research-list__meta {
-    display: grid;
-    gap: 0.35rem;
-    color: var(--text-muted);
-    font-size: 0.72rem;
-  }
-
-  .research-list__meta span:first-child {
-    color: var(--primary-strong);
-    font-weight: 620;
-  }
-
-  .research-list h3 {
-    max-width: 24ch;
-    margin: 0;
-    font-size: clamp(1.7rem, 3.4vw, 3.2rem);
-    letter-spacing: -0.03em;
-    line-height: 1.2;
-  }
-
-  .research-list h3 a:hover {
-    color: var(--primary-strong);
-  }
-
-  .research-list article > div:nth-child(2) > p {
-    max-width: 65ch;
-    margin: 1rem 0 1.3rem;
-    color: var(--text-secondary);
-    line-height: 1.8;
-  }
-
-  .research-list__link {
-    display: grid;
-    width: 42px;
-    height: 42px;
-    place-items: center;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    color: var(--primary-strong);
-  }
-
-  .research-list__link:hover {
-    border-color: var(--primary);
-    background: var(--primary-soft);
   }
 
   .research-empty {
@@ -282,20 +215,6 @@ const counts = Object.fromEntries(
 
     .research-filters {
       justify-content: flex-start;
-    }
-  }
-
-  @media (max-width: 720px) {
-    .research-list article {
-      grid-template-columns: 1fr auto;
-      gap: 1.2rem;
-    }
-
-    .research-list__meta {
-      grid-column: 1 / -1;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem 1rem;
     }
   }
 </style>

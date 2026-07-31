@@ -1,47 +1,22 @@
-@keyframes drift {
-  0%,
-  100% {
-    transform: translate3d(0, 0, 0) rotate(-1deg);
-  }
-  50% {
-    transform: translate3d(0, -12px, 0) rotate(1deg);
-  }
-}
-
-@keyframes breathe {
-  0%,
-  100% {
-    opacity: 0.45;
-    scale: 0.96;
-  }
-  50% {
-    opacity: 0.72;
-    scale: 1.04;
-  }
-}
-
-@keyframes rise {
-  from {
-    opacity: 0;
-    transform: translateY(18px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.reveal {
+  opacity: 1;
+  filter: none;
+  transform: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  [data-reveal] {
-    animation: rise 720ms var(--ease-out) both;
+  html.reveal-ready .reveal {
+    transition:
+      opacity 700ms var(--ease-out),
+      transform 700ms var(--ease-out),
+      filter 700ms var(--ease-out);
+    transition-delay: var(--reveal-delay, 0ms);
   }
 
-  [data-reveal='2'] {
-    animation-delay: 100ms;
-  }
-
-  [data-reveal='3'] {
-    animation-delay: 200ms;
+  html.reveal-ready .reveal:not(.is-visible) {
+    opacity: 0;
+    filter: blur(3px);
+    transform: translateY(28px);
   }
 }
 
@@ -53,5 +28,12 @@
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+
+  .reveal {
+    opacity: 1 !important;
+    filter: none !important;
+    transform: none !important;
   }
 }

@@ -10,7 +10,7 @@ const repo = url.replace('https://github.com/', '');
 
 <a class="github-card" href={url} target="_blank" rel="noreferrer">
   <span class="github-card__icon" aria-hidden="true">⌘</span>
-  <span><small>GITHUB REPOSITORY</small><strong>{repo || title}</strong><p>{description}</p></span>
+  <span><small>GitHub 仓库</small><strong>{repo || title}</strong><p>{description}</p></span>
   <b aria-hidden="true">↗</b>
 </a>
 
@@ -23,11 +23,16 @@ const repo = url.replace('https://github.com/', '');
     padding: 1rem;
     border: 1px solid var(--border);
     border-radius: 15px;
-    background: var(--surface-soft);
+    background: var(--surface-solid);
+    transition:
+      transform var(--duration-fast) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out),
+      box-shadow var(--duration-fast) var(--ease-out);
   }
   .github-card:hover {
     border-color: var(--primary);
     transform: translateY(-2px);
+    box-shadow: var(--shadow-soft);
   }
   .github-card__icon {
     display: grid;
@@ -51,7 +56,6 @@ const repo = url.replace('https://github.com/', '');
   }
   strong {
     margin-top: 0.25rem;
-    font-family: var(--font-mono);
     font-weight: 600;
   }
   p {

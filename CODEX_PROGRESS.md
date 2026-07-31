@@ -179,3 +179,18 @@
 - 浏览器响应式审计：1440、1280、1024、768、430、390、360px 下检查首页、项目列表、项目详情、研究文章、About、Resume 与 404，无横向溢出、标题裁切或损坏图片。
 - 浏览器交互审计：项目筛选与历史返回、研究分类空状态、移动菜单与 Escape、搜索焦点与 Escape、浅色/深色主题、Swup 历史返回、旧路由重定向均通过；控制台无 error / warning。
 - 额外复验：1280×720 首屏 CTA 保持可见；430px Research 目录只在自身横向滚动，不再撑宽页面。
+
+## 暖色编辑式视觉校正（2026-07-31）
+
+- 全站由冷色科技感校正为“暖色个人博客 × 清晰作品集 × 克制游戏 AI 个性”：页面 `#f7f4ef`、白色内容面、深墨文字、橙色重点，紫色只作兼容语义色。
+- 标题改用系统宋体栈，正文改用苹方、微软雅黑与本地 Noto Sans SC；展示标题上限收敛到约 68px。
+- Header 增加“随想”入口并保持首页、项目、研究、关于、简历、搜索、主题与 GitHub；移动菜单改为 Header 下方完整视口高度，打开时锁定页面滚动。
+- 首页 Hero 收敛为姓名、岗位、求职状态、短价值说明和三个真实行动；深海图只作为右侧局部品牌插图。
+- 首页固定展示 4 个精选项目；新增精简 `ProjectCard`、`ArticleCard` 与 `InfoCard`，移除列表卡中的状态、职责、结果与装饰编号过载。
+- 研究卡、项目详情、Research、About、Resume、404、Archive、Stack 与 Credits 已统一到暖色、开放、低阴影的视觉语言。
+- 全站入场统一为一次性 Intersection Observer：28px 位移、约 700ms、组内 90ms 递增；Reduced Motion 与无 JavaScript 时内容直接可见。
+- 浏览器验收发现并修复：首页横向研究卡的封面宽高比挤压文本、移动菜单因 Header 模糊背景只剩 124px 高、极窄屏 1px 溢出、长文章标题六行换行，以及无 404 素材时的大面积空装饰占位。
+- `npm run validate`：Prettier、ESLint、Astro check、静态构建与 Pagefind 全部通过；40 个 Astro 文件 0 errors / 0 warnings / 0 hints，生成 17 个页面并索引 1242 个词。
+- 浏览器检查：1280×720、约 547px 与 319px 边界宽度下，首页、项目列表、项目详情、研究列表、文章、About、Resume 和 404 无内容横向溢出；项目 URL 筛选、历史返回、移动菜单和主题切换通过，控制台无页面运行时错误。
+- 无 `SITE_URL` 与临时 `SITE_URL=https://portfolio.example` 两种构建均通过；canonical、sitemap、robots、RSS、Person、WebSite、CreativeWork 与 Article 结构化数据均已核对。
+- 最终产物审计：21 份 HTML，0 个空 `href/src`，0 个缺失内部目标；RSS 只含已发布 Research，不含项目页。临时测试域名已从最终 `dist` 恢复移除。

@@ -1,7 +1,7 @@
 ---
+import { projectFilterLabels } from '../config/site';
 import type { ProjectEntry } from '../types/project';
 import ProjectCover from './ProjectCover.astro';
-import StatusBadge from './StatusBadge.astro';
 
 interface Props {
   project: ProjectEntry;
@@ -11,9 +11,10 @@ interface Props {
 const { project, mode = 'index' } = Astro.props;
 const slug = project.id.replace(/\.mdx?$/, '');
 const projectUrl = `/projects/${slug}/`;
+const primaryType = projectFilterLabels[project.data.filters[0]];
 ---
 
-<article class:list={['project-card', `project-card--${mode}`]}>
+<article class:list={['project-card', `project-card--${mode}`, 'reveal']}>
   <a class="project-card__link" href={projectUrl} aria-label={`查看项目：${project.data.title}`}>
     <figure class="project-card__visual">
       <ProjectCover
@@ -23,29 +24,21 @@ const projectUrl = `/projects/${slug}/`;
         cover={project.data.cover}
         compact
       />
-      <figcaption>概念图 · 非运行截图</figcaption>
+      <figcaption>概念图</figcaption>
     </figure>
     <div class="project-card__body">
-      <div class="project-card__meta">
-        <span>{project.data.period}</span>
-        <StatusBadge status={project.data.status} />
-      </div>
+      <span class="project-card__type">{primaryType}</span>
       <h3>{project.data.title}</h3>
-      <p class="project-card__summary">{project.data.summary}</p>
-      <dl class="project-card__facts">
-        <div><dt>用户问题</dt><dd>{project.data.problem}</dd></div>
-        <div><dt>我的职责</dt><dd>{project.data.role}</dd></div>
-        <div><dt>真实产出</dt><dd>{project.data.outcome}</dd></div>
-      </dl>
+      <p>{project.data.summary}</p>
       <div class="project-card__footer">
-        <div class="chip-row">
+        <div class="chip-row" aria-label="项目标签">
           {
             project.data.categories
               .slice(0, 3)
               .map((category) => <span class="chip">{category}</span>)
           }
         </div>
-        <span class="project-card__action">阅读案例 <span aria-hidden="true">→</span></span>
+        <span class="project-card__action">查看案例 <span aria-hidden="true">→</span></span>
       </div>
     </div>
   </a>
@@ -60,85 +53,63 @@ const projectUrl = `/projects/${slug}/`;
     display: grid;
     height: 100%;
     overflow: hidden;
-    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-card);
     background: var(--surface-solid);
     transition:
-      translate 260ms var(--ease-out),
-      box-shadow 260ms ease;
+      translate 300ms var(--ease-out),
+      border-color 300ms ease,
+      box-shadow 300ms ease;
   }
 
   .project-card__link:hover {
-    box-shadow: var(--shadow-soft);
+    border-color: transparent;
+    box-shadow: var(--shadow-md);
     translate: 0 -4px;
   }
 
   .project-card__visual {
+    position: relative;
     margin: 0;
-  }
-
-  .project-card__visual :global(.project-cover) {
-    border-radius: 0;
+    border-radius: var(--radius-card) var(--radius-card) 0 0;
   }
 
   .project-card__visual figcaption {
-    padding: 0.45rem 1rem 0;
-    color: var(--text-muted);
+    position: absolute;
+    right: 0.9rem;
+    bottom: 0.8rem;
+    padding: 0.28rem 0.5rem;
+    border-radius: var(--radius-pill);
+    background: color-mix(in srgb, var(--surface-warm) 88%, transparent);
+    color: var(--text-secondary);
     font-size: 0.68rem;
+    backdrop-filter: blur(8px);
   }
 
   .project-card__body {
     display: flex;
     min-width: 0;
     flex-direction: column;
-    padding: 1.25rem clamp(1rem, 3vw, 1.55rem) 1.45rem;
+    padding: clamp(1.35rem, 3vw, 1.85rem);
   }
 
-  .project-card__meta {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    color: var(--text-muted);
-    font-size: 0.72rem;
+  .project-card__type {
+    color: var(--accent-hover);
+    font-size: 0.78rem;
+    font-weight: 600;
   }
 
   h3 {
-    margin: 1rem 0 0;
-    font-size: clamp(1.35rem, 2.4vw, 2rem);
-    letter-spacing: -0.025em;
-    line-height: 1.2;
+    margin: 0.6rem 0 0;
+    font-size: clamp(1.45rem, 2.3vw, 1.8rem);
+    letter-spacing: -0.015em;
+    line-height: 1.28;
   }
 
-  .project-card__summary {
-    margin: 0.65rem 0 0;
+  .project-card__body > p {
+    margin: 0.75rem 0 0;
     color: var(--text-secondary);
-    line-height: 1.75;
-  }
-
-  .project-card__facts {
-    display: grid;
-    gap: 0.75rem;
-    margin: 1.3rem 0 0;
-    padding-top: 1rem;
-    border-top: 1px solid var(--border);
-  }
-
-  .project-card__facts div {
-    display: grid;
-    grid-template-columns: 5rem 1fr;
-    gap: 0.75rem;
-  }
-
-  dt {
-    color: var(--text-muted);
-    font-size: 0.72rem;
-  }
-
-  dd {
-    margin: 0;
-    color: var(--text-secondary);
-    font-size: 0.78rem;
-    line-height: 1.65;
+    line-height: 1.72;
   }
 
   .project-card__footer {
@@ -147,39 +118,26 @@ const projectUrl = `/projects/${slug}/`;
     justify-content: space-between;
     gap: 1rem;
     margin-top: auto;
-    padding-top: 1.4rem;
+    padding-top: 1.5rem;
   }
 
   .project-card__action {
     flex: 0 0 auto;
-    color: var(--primary-strong);
-    font-size: 0.78rem;
-    font-weight: 620;
+    color: var(--accent-hover);
+    font-size: 0.8rem;
+    font-weight: 600;
   }
 
   .project-card__action span {
     display: inline-block;
-    transition: translate 220ms var(--ease-out);
+    transition: translate 280ms var(--ease-out);
   }
 
   .project-card__link:hover .project-card__action span {
     translate: 4px 0;
   }
 
-  .project-card--featured .project-card__facts div:first-child {
-    display: none;
-  }
-
-  .project-card--featured .project-card__facts {
-    grid-template-columns: 1fr;
-  }
-
   @media (max-width: 520px) {
-    .project-card__facts div {
-      grid-template-columns: 1fr;
-      gap: 0.2rem;
-    }
-
     .project-card__footer {
       align-items: start;
       flex-direction: column;

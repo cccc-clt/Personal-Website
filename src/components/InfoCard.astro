@@ -1,0 +1,65 @@
+---
+interface Props {
+  label: string;
+  title: string;
+  description: string;
+}
+
+const { label, title, description } = Astro.props;
+---
+
+<article class="info-card reveal">
+  <span>{label}</span>
+  <h3>{title}</h3>
+  <p>{description}</p>
+</article>
+
+<style>
+  .info-card {
+    min-height: 230px;
+    padding: clamp(1.75rem, 3vw, 2rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--surface-warm);
+    transition:
+      translate 300ms var(--ease-out),
+      border-color 300ms ease,
+      background-color 300ms ease;
+  }
+
+  .info-card:hover {
+    border-color: color-mix(in srgb, var(--accent) 30%, var(--border));
+    background: var(--surface-solid);
+    translate: 0 -4px;
+  }
+
+  .info-card > span {
+    display: inline-flex;
+    padding: 0.32rem 0.58rem;
+    border-radius: var(--radius-pill);
+    background: var(--accent-soft);
+    color: var(--accent-hover);
+    font-size: 0.72rem;
+    font-weight: 600;
+  }
+
+  h3 {
+    margin: 1.35rem 0 0;
+    font-size: clamp(1.4rem, 2.4vw, 1.75rem);
+    letter-spacing: -0.012em;
+  }
+
+  p {
+    margin: 0.85rem 0 0;
+    color: var(--text-secondary);
+    line-height: 1.75;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .info-card,
+    .info-card:hover {
+      transition: none;
+      translate: none;
+    }
+  }
+</style>

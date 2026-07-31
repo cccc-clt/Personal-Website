@@ -1,0 +1,176 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { researchCategoryLabels } from '../config/site';
+import { heroAssetConfig } from '../config/visualAssets';
+import { estimateReadingMinutes, formatDate } from '../utils/content';
+
+interface Props {
+  article: CollectionEntry<'research'>;
+  headingLevel?: 'h2' | 'h3';
+}
+
+const { article, headingLevel = 'h3' } = Astro.props;
+const Heading = headingLevel;
+const articleUrl = `/research/${article.id}/`;
+const cover = article.data.cover ?? heroAssetConfig.backgroundImage;
+const usesBrandVisual = !article.data.cover;
+---
+
+<article class="article-card reveal">
+  <a class="article-card__link" href={articleUrl} aria-label={`阅读：${article.data.title}`}>
+    <figure>
+      <img
+        src={cover}
+        width="1672"
+        height="941"
+        alt={usesBrandVisual ? '蓝色深海幻想角色品牌插图' : article.data.title}
+        loading="lazy"
+        decoding="async"
+      />
+      {usesBrandVisual && <figcaption>品牌插图 · 非研究证据</figcaption>}
+    </figure>
+    <div class="article-card__body">
+      <div class="article-card__tags" aria-label="文章标签">
+        {article.data.tags.slice(0, 3).map((tag) => <span>{tag}</span>)}
+      </div>
+      <Heading>{article.data.title}</Heading>
+      <p>{article.data.summary}</p>
+      <div class="article-card__meta">
+        <span>{researchCategoryLabels[article.data.category]}</span>
+        <span>{formatDate(article.data.publishedAt)}</span>
+        <span>{estimateReadingMinutes(article.body)} 分钟阅读</span>
+      </div>
+    </div>
+  </a>
+</article>
+
+<style>
+  .article-card {
+    min-width: 0;
+  }
+
+  .article-card__link {
+    display: grid;
+    height: 100%;
+    overflow: hidden;
+    border-radius: var(--radius-card);
+    background: var(--surface-solid);
+    box-shadow: var(--shadow-sm);
+    transition:
+      translate 300ms var(--ease-out),
+      box-shadow 300ms ease;
+  }
+
+  .article-card__link:hover {
+    box-shadow: var(--shadow-md);
+    translate: 0 -4px;
+  }
+
+  figure {
+    position: relative;
+    aspect-ratio: 16 / 8.5;
+    margin: 0;
+    overflow: hidden;
+    background: var(--accent-soft);
+  }
+
+  figure::after {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      transparent 52%,
+      color-mix(in srgb, var(--surface-warm) 28%, transparent)
+    );
+    content: '';
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 42%;
+    filter: saturate(0.68) brightness(1.07);
+    transition: transform 300ms var(--ease-out);
+  }
+
+  figcaption {
+    position: absolute;
+    z-index: 1;
+    right: 0.9rem;
+    bottom: 0.8rem;
+    padding: 0.28rem 0.5rem;
+    border-radius: var(--radius-pill);
+    background: color-mix(in srgb, var(--surface-warm) 88%, transparent);
+    color: var(--text-secondary);
+    font-size: 0.68rem;
+    backdrop-filter: blur(8px);
+  }
+
+  .article-card__link:hover img {
+    transform: scale(1.025);
+  }
+
+  .article-card__body {
+    display: flex;
+    flex-direction: column;
+    padding: clamp(1.5rem, 3vw, 2rem);
+  }
+
+  .article-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .article-card__tags span {
+    padding: 0.3rem 0.56rem;
+    border-radius: var(--radius-pill);
+    background: var(--accent-soft);
+    color: var(--accent-hover);
+    font-size: 0.72rem;
+  }
+
+  h2,
+  h3 {
+    margin: 1rem 0 0;
+    font-size: clamp(1.6rem, 3vw, 2.25rem);
+    letter-spacing: -0.015em;
+    line-height: 1.28;
+  }
+
+  .article-card__body > p {
+    display: -webkit-box;
+    margin: 0.85rem 0 0;
+    overflow: hidden;
+    color: var(--text-secondary);
+    line-height: 1.72;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .article-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem 1rem;
+    margin-top: auto;
+    padding-top: 1.5rem;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+  }
+
+  .article-card__meta span:first-child {
+    color: var(--accent-hover);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .article-card__link,
+    .article-card__link:hover,
+    img,
+    .article-card__link:hover img {
+      transition: none;
+      transform: none;
+      translate: none;
+    }
+  }
+</style>

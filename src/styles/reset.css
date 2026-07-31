@@ -11,13 +11,13 @@ html {
 
 body {
   margin: 0;
-  min-width: 320px;
+  min-width: 0;
   background: var(--paper);
   color: var(--ink-950);
   font-family: var(--font-sans);
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 400;
-  line-height: 1.75;
+  line-height: 1.7;
   font-optical-sizing: auto;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -55,10 +55,10 @@ button {
 }
 
 :focus-visible {
-  outline: 3px solid rgba(82, 126, 242, 0.55);
+  outline: 3px solid color-mix(in srgb, var(--accent) 55%, transparent);
   outline-offset: 4px;
 }
 
 ::selection {
-  background: rgba(129, 154, 255, 0.28);
+  background: color-mix(in srgb, var(--accent) 24%, transparent);
 }

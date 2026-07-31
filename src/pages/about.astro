@@ -2,6 +2,7 @@
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { getEntry, render } from 'astro:content';
+import InfoCard from '../components/InfoCard.astro';
 import InnerPageHero from '../components/InnerPageHero.astro';
 import { abilities, productWorkflow, siteConfig } from '../config/site';
 import { profileVisual } from '../config/visualAssets';
@@ -11,6 +12,7 @@ const about = await getEntry('spec', 'about');
 if (!about) throw new Error('Missing src/content/spec/about.md');
 const { Content } = await render(about);
 const hasImage = existsSync(join(process.cwd(), 'public', profileVisual.image.replace(/^\//, '')));
+const abilityLabels = ['问题定义', '工作流设计', '原型验证', '评测回路'];
 ---
 
 <BaseLayout title="关于赵天琦｜游戏 AI 与 AI 产品实践" description={about.data.description}>
@@ -21,7 +23,7 @@ const hasImage = existsSync(join(process.cwd(), 'public', profileVisual.image.re
   />
 
   <section class="about-page page-shell">
-    <aside class="about-profile">
+    <aside class="about-profile reveal">
       <figure>
         {
           hasImage ? (
@@ -41,7 +43,7 @@ const hasImage = existsSync(join(process.cwd(), 'public', profileVisual.image.re
       </figure>
       <div>
         <h2>{siteConfig.name}</h2>
-        <p>AI Product Explorer</p>
+        <p>游戏 AI 产品经理方向</p>
         <dl>
           <div><dt>方向</dt><dd>游戏 AI 产品 / AI 应用产品 / AI Agent</dd></div>
           <div><dt>状态</dt><dd>{siteConfig.availability}</dd></div>
@@ -56,26 +58,27 @@ const hasImage = existsSync(join(process.cwd(), 'public', profileVisual.image.re
       </div>
     </aside>
 
-    <article class="about-content prose"><Content /></article>
+    <article class="about-content prose reveal"><Content /></article>
   </section>
 
   <section class="about-method page-shell" aria-labelledby="about-method-title">
-    <header>
+    <header class="reveal">
       <p>工作方式</p>
       <h2 id="about-method-title">四项能力，落在同一条七步验证路径上</h2>
     </header>
     <div class="about-method__layout">
-      <div class="about-method__abilities">
+      <div class="about-method__abilities" data-reveal-group>
         {
-          abilities.map((ability) => (
-            <article>
-              <h3>{ability.title}</h3>
-              <p>{ability.description}</p>
-            </article>
+          abilities.map((ability, index) => (
+            <InfoCard
+              label={abilityLabels[index]}
+              title={ability.title}
+              description={ability.description}
+            />
           ))
         }
       </div>
-      <ol>
+      <ol class="reveal">
         {
           productWorkflow.map((step, index) => (
             <li>
@@ -97,7 +100,7 @@ const hasImage = existsSync(join(process.cwd(), 'public', profileVisual.image.re
     grid-template-columns: minmax(250px, 0.55fr) minmax(0, 1.25fr);
     gap: clamp(3rem, 8vw, 8rem);
     align-items: start;
-    padding-block: clamp(4rem, 9vw, 8rem);
+    padding-block: clamp(4.5rem, 8vw, 7.5rem);
   }
 
   .about-profile {
@@ -116,9 +119,11 @@ const hasImage = existsSync(join(process.cwd(), 'public', profileVisual.image.re
     place-items: center;
     overflow: hidden;
     border-radius: var(--radius-md);
-    background: var(--surface-tint);
-    color: var(--primary-strong);
+    background: var(--accent-soft);
+    color: var(--accent-hover);
     object-fit: cover;
+    filter: saturate(0.78) brightness(1.03);
+    box-shadow: var(--shadow-sm);
   }
 
   .about-profile figcaption {
@@ -169,7 +174,7 @@ const hasImage = existsSync(join(process.cwd(), 'public', profileVisual.image.re
     gap: 0.5rem 1rem;
     color: var(--primary-strong);
     font-size: 0.78rem;
-    font-weight: 620;
+    font-weight: 600;
   }
 
   .about-content {
@@ -179,7 +184,7 @@ const hasImage = existsSync(join(process.cwd(), 'public', profileVisual.image.re
   .about-content :global(h2) {
     margin: 4.5rem 0 1.1rem;
     font-size: clamp(1.8rem, 3.5vw, 2.9rem);
-    letter-spacing: -0.028em;
+    letter-spacing: -0.018em;
     line-height: 1.2;
   }
 
@@ -196,7 +201,7 @@ const hasImage = existsSync(join(process.cwd(), 'public', profileVisual.image.re
     margin: 2rem 0;
     padding: 1.3rem;
     border-radius: var(--radius-sm);
-    background: var(--primary-soft);
+    background: var(--accent-soft);
   }
 
   .about-content :global(blockquote p) {
@@ -205,23 +210,23 @@ const hasImage = existsSync(join(process.cwd(), 'public', profileVisual.image.re
   }
 
   .about-method {
-    padding-block: clamp(4rem, 9vw, 8rem);
+    padding-block: clamp(4.5rem, 8vw, 7.5rem);
     border-top: 1px solid var(--border-strong);
   }
 
   .about-method header p {
     margin: 0 0 0.6rem;
-    color: var(--primary-strong);
-    font-size: 0.78rem;
-    font-weight: 620;
+    color: var(--accent-hover);
+    font-size: 0.84rem;
+    font-weight: 600;
   }
 
   .about-method header h2 {
     max-width: 18ch;
     margin: 0;
-    font-size: clamp(2.1rem, 4.5vw, 4.4rem);
-    letter-spacing: -0.034em;
-    line-height: 1.12;
+    font-size: clamp(2.3rem, 4vw, 3rem);
+    letter-spacing: -0.018em;
+    line-height: 1.18;
   }
 
   .about-method__layout {
@@ -233,28 +238,8 @@ const hasImage = existsSync(join(process.cwd(), 'public', profileVisual.image.re
 
   .about-method__abilities {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    border-top: 1px solid var(--border);
-  }
-
-  .about-method__abilities article {
-    padding: 1.4rem 1.5rem 2rem 0;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .about-method__abilities article:nth-child(even) {
-    padding-left: 1.5rem;
-    border-left: 1px solid var(--border);
-  }
-
-  .about-method__abilities h3 {
-    margin: 0;
-  }
-
-  .about-method__abilities p {
-    margin: 0.7rem 0 0;
-    color: var(--text-secondary);
-    line-height: 1.75;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.2rem;
   }
 
   .about-method ol {
@@ -274,8 +259,7 @@ const hasImage = existsSync(join(process.cwd(), 'public', profileVisual.image.re
 
   .about-method li span {
     color: var(--text-muted);
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
+    font-size: 0.76rem;
   }
 
   @media (max-width: 900px) {
@@ -296,11 +280,6 @@ const hasImage = existsSync(join(process.cwd(), 'public', profileVisual.image.re
     .about-profile,
     .about-method__abilities {
       grid-template-columns: 1fr;
-    }
-
-    .about-method__abilities article:nth-child(n) {
-      padding-inline: 0;
-      border-left: 0;
     }
   }
 </style>

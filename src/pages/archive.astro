@@ -15,14 +15,14 @@ const projectCount = String(projects.length).padStart(2, '0');
   description="赵天琦的项目更新、学习路径与成长时间线。"
 >
   <InnerPageHero
-    eyebrow="ARCHIVE / TIMELINE"
+    eyebrow="内容归档"
     title="项目、学习与成长时间线"
     description="只收录仓库中可以确认的时期、项目与内容更新时间；不补写无法证明的成绩或商业结果。"
   />
   <section class="archive-page section page-shell">
     <div class="archive-grid">
-      <section class="panel archive-block">
-        <header><span class="eyebrow">JOURNEY</span><h2>成长路径</h2></header><ol>
+      <section class="archive-block reveal">
+        <header><span class="eyebrow">成长记录</span><h2>成长路径</h2></header><ol>
           {
             timeline.map((item) => (
               <li>
@@ -41,8 +41,8 @@ const projectCount = String(projects.length).padStart(2, '0');
           }
         </ol>
       </section>
-      <section class="panel archive-block">
-        <header><span class="eyebrow">PROJECTS / {projectCount}</span><h2>项目归档</h2></header><ol>
+      <section class="archive-block reveal">
+        <header><span class="eyebrow">项目 · {projectCount}</span><h2>项目归档</h2></header><ol>
           {
             projects.map((project) => {
               const slug = project.id.replace(/\.mdx?$/, '');
@@ -56,9 +56,7 @@ const projectCount = String(projects.length).padStart(2, '0');
                         <h3>
                           <a href={`/projects/${slug}/`}>{project.data.title}</a>
                         </h3>
-                        <p>
-                          视觉代号 · {project.data.codename}｜{project.data.summary}
-                        </p>
+                        <p>{project.data.summary}</p>
                       </>
                     </div>
                   </>
@@ -75,7 +73,7 @@ const projectCount = String(projects.length).padStart(2, '0');
 <style>
   .archive-page {
     display: grid;
-    gap: 1rem;
+    gap: clamp(2.5rem, 6vw, 6rem);
   }
   .archive-grid {
     display: grid;
@@ -83,7 +81,8 @@ const projectCount = String(projects.length).padStart(2, '0');
     gap: 1rem;
   }
   .archive-block {
-    padding: clamp(1.4rem, 4vw, 2.5rem);
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-strong);
   }
   .archive-block header {
     padding-bottom: 1rem;
@@ -108,16 +107,15 @@ const projectCount = String(projects.length).padStart(2, '0');
   time,
   .archive-label {
     color: var(--text-muted);
-    font-family: var(--font-mono);
-    font-size: 0.6rem;
+    font-size: 0.72rem;
   }
   li span {
-    color: var(--violet);
-    font-size: 0.62rem;
+    color: var(--primary-strong);
+    font-size: 0.7rem;
   }
   li h3 {
     margin: 0.3rem 0 0.45rem;
-    font-size: 1rem;
+    font-size: 1.2rem;
   }
   li p {
     margin: 0;

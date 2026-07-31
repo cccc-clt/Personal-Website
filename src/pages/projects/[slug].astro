@@ -3,6 +3,7 @@ import { getCollection, render } from 'astro:content';
 import ImageGallery from '../../components/ImageGallery.astro';
 import ProjectCover from '../../components/ProjectCover.astro';
 import StatusBadge from '../../components/StatusBadge.astro';
+import { projectFilterLabels } from '../../config/site';
 import { projectCovers } from '../../config/visualAssets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
@@ -58,9 +59,16 @@ const structuredData = {
           <StatusBadge status={project.data.status} />
         </div>
       </div>
-      <div class="case-hero__title">
+      <div class="case-hero__title reveal">
         <div>
-          <p>{project.data.codename} · {project.data.index}</p>
+          <p>
+            {
+              project.data.filters
+                .slice(0, 2)
+                .map((filter) => projectFilterLabels[filter])
+                .join(' · ')
+            }
+          </p>
           <h1>{project.data.title}</h1>
           <p>{project.data.description}</p>
         </div>
@@ -81,7 +89,7 @@ const structuredData = {
           )
         }
       </div>
-      <figure class="case-hero__cover">
+      <figure class="case-hero__cover reveal">
         <ProjectCover
           slug={project.id}
           title={project.data.title}
@@ -95,7 +103,7 @@ const structuredData = {
       </figure>
     </header>
 
-    <section class="case-summary page-shell" aria-label="项目摘要">
+    <section class="case-summary page-shell reveal" aria-label="项目摘要">
       <dl>
         <div><dt>用户问题</dt><dd>{project.data.problem}</dd></div>
         <div><dt>产品方案</dt><dd>{project.data.solution}</dd></div>
@@ -121,7 +129,7 @@ const structuredData = {
       </aside>
 
       <div class="case-content">
-        <section class="case-section" id="background">
+        <section class="case-section reveal" id="background">
           <header><span>背景与目标</span><h2>先确定为谁解决什么问题</h2></header>
           <dl class="case-definition">
             <div><dt>目标用户</dt><dd>{project.data.targetUser}</dd></div>
@@ -134,13 +142,13 @@ const structuredData = {
           </div>
         </section>
 
-        <section class="case-section" id="ai-necessity">
+        <section class="case-section reveal" id="ai-necessity">
           <header><span>AI 必要性</span><h2>模型进入哪一步，为什么</h2></header>
           <p class="case-lede">{project.data.aiNeeded}</p>
           <ul class="case-list">{project.data.aiDesign.map((item) => <li>{item}</li>)}</ul>
         </section>
 
-        <section class="case-section" id="human-checkpoints">
+        <section class="case-section reveal" id="human-checkpoints">
           <header><span>人工节点</span><h2>哪些判断不能交给模型</h2></header>
           <div class="case-split">
             <div>
@@ -154,7 +162,7 @@ const structuredData = {
           </div>
         </section>
 
-        <section class="case-section" id="product-flow">
+        <section class="case-section reveal" id="product-flow">
           <header><span>产品流程</span><h2>从输入到反馈的完整路径</h2></header>
           <ol class="case-flow">
             {
@@ -168,7 +176,7 @@ const structuredData = {
           </ol>
         </section>
 
-        <section class="case-section" id="prototype-evidence">
+        <section class="case-section reveal" id="prototype-evidence">
           <header><span>原型证据</span><h2>现有材料与缺失状态</h2></header>
           <ImageGallery
             images={project.data.gallery}
@@ -179,7 +187,7 @@ const structuredData = {
           />
         </section>
 
-        <section class="case-section" id="evaluation">
+        <section class="case-section reveal" id="evaluation">
           <header><span>评测方法</span><h2>用什么观察产品是否更可靠</h2></header>
           <ul class="case-metrics">
             {project.data.evaluationMetrics.map((metric) => <li>{metric}</li>)}
@@ -188,7 +196,7 @@ const structuredData = {
           <p>{project.data.outcome}</p>
         </section>
 
-        <section class="case-section" id="failure-boundaries">
+        <section class="case-section reveal" id="failure-boundaries">
           <header><span>失败边界</span><h2>明确哪些情况不算成功</h2></header>
           <div class="case-split">
             <div>
@@ -202,7 +210,7 @@ const structuredData = {
           </div>
         </section>
 
-        <section class="case-section" id="iterations">
+        <section class="case-section reveal" id="iterations">
           <header><span>迭代记录</span><h2>从问题回到下一轮行动</h2></header>
           <div class="case-iterations">
             {
@@ -244,7 +252,7 @@ const structuredData = {
           </div>
         </section>
 
-        <section class="case-section" id="reflection">
+        <section class="case-section reveal" id="reflection">
           <header><span>反思与来源</span><h2>我从这个项目留下什么判断</h2></header>
           <blockquote>{project.data.reflection}</blockquote>
           <h3>后续计划</h3>
@@ -258,7 +266,7 @@ const structuredData = {
       </div>
     </div>
 
-    <nav class="next-case page-shell" aria-label="下一个项目">
+    <nav class="next-case page-shell reveal" aria-label="下一个项目">
       <span>下一个项目</span>
       <a href={`/projects/${nextProject.id}/`}>
         <strong>{nextProject.data.title}</strong>
@@ -304,17 +312,18 @@ const structuredData = {
 
   .case-hero__title > div:first-child > p:first-child {
     margin: 0 0 0.8rem;
-    color: var(--primary-strong);
-    font-size: 0.8rem;
-    font-weight: 620;
+    color: var(--accent-hover);
+    font-size: 0.82rem;
+    font-weight: 600;
   }
 
   h1 {
     max-width: 17ch;
     margin: 0;
-    font-size: clamp(2.7rem, 6.4vw, 6rem);
-    letter-spacing: -0.04em;
-    line-height: 1.05;
+    overflow-wrap: anywhere;
+    font-size: clamp(3rem, 5.6vw, 4.25rem);
+    letter-spacing: -0.025em;
+    line-height: 1.12;
   }
 
   .case-hero__title > div:first-child > p:last-child {
@@ -337,7 +346,7 @@ const structuredData = {
   }
 
   .case-hero__cover :global(.project-cover) {
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-card);
   }
 
   .case-hero__cover figcaption {
@@ -406,7 +415,7 @@ const structuredData = {
     margin: 0 0 0.8rem;
     color: var(--text-main);
     font-size: 0.78rem;
-    font-weight: 620;
+    font-weight: 600;
   }
 
   .case-toc nav {
@@ -421,11 +430,11 @@ const structuredData = {
   }
 
   .case-toc a:hover {
-    color: var(--primary-strong);
+    color: var(--accent-hover);
   }
 
   .case-content {
-    width: min(100%, 920px);
+    width: min(100%, 820px);
   }
 
   .case-section {
@@ -444,17 +453,17 @@ const structuredData = {
   }
 
   .case-section > header span {
-    color: var(--primary-strong);
-    font-size: 0.78rem;
-    font-weight: 620;
+    color: var(--accent-hover);
+    font-size: 0.82rem;
+    font-weight: 600;
   }
 
   .case-section h2 {
     max-width: 18ch;
     margin: 0.5rem 0 0;
-    font-size: clamp(2rem, 4vw, 3.8rem);
-    letter-spacing: -0.032em;
-    line-height: 1.14;
+    font-size: clamp(2.15rem, 3.8vw, 3rem);
+    letter-spacing: -0.018em;
+    line-height: 1.18;
   }
 
   .case-section h3 {
@@ -548,8 +557,7 @@ const structuredData = {
 
   .case-flow span {
     color: var(--text-muted);
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
+    font-size: 0.76rem;
   }
 
   .case-flow strong {
@@ -586,8 +594,7 @@ const structuredData = {
 
   .case-iterations article > div span {
     color: var(--text-muted);
-    font-family: var(--font-mono);
-    font-size: 0.68rem;
+    font-size: 0.74rem;
   }
 
   .case-iterations article h3 {
@@ -621,7 +628,7 @@ const structuredData = {
     margin: 0;
     padding: 1.5rem;
     border-radius: var(--radius-sm);
-    background: var(--primary-soft);
+    background: var(--accent-soft);
     color: var(--text-main);
     font-size: clamp(1.05rem, 1.8vw, 1.35rem);
     font-weight: 600;
@@ -673,7 +680,7 @@ const structuredData = {
   }
 
   .next-case a > span {
-    color: var(--primary-strong);
+    color: var(--accent-hover);
   }
 
   @media (max-width: 900px) {

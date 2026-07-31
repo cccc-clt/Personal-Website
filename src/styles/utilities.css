@@ -27,7 +27,7 @@
   left: 12px;
   padding: 0.75rem 1rem;
   border-radius: var(--radius-sm);
-  background: var(--text-main);
+  background: var(--text-primary);
   color: var(--surface-solid);
   translate: 0 -150%;
 }
@@ -42,22 +42,24 @@
   align-items: center;
   justify-content: center;
   gap: 0.6rem;
-  padding: 0.72rem 1.15rem;
+  padding: 0.72rem 1.2rem;
   border: 1px solid var(--border-strong);
   border-radius: 10px;
   background: var(--surface-solid);
-  color: var(--text-main);
+  color: var(--text-primary);
   font-size: 0.92rem;
-  font-weight: 620;
+  font-weight: 600;
   transition:
-    translate 220ms var(--ease-out),
-    background-color 220ms ease,
-    border-color 220ms ease;
+    translate 280ms var(--ease-out),
+    background-color 280ms ease,
+    border-color 280ms ease,
+    color 280ms ease;
 }
 
 .button:hover {
-  border-color: var(--primary);
-  background: var(--primary-soft);
+  border-color: color-mix(in srgb, var(--accent) 42%, var(--border-strong));
+  background: var(--surface-warm);
+  color: var(--accent-hover);
   translate: 0 -2px;
 }
 
@@ -66,14 +68,15 @@
 }
 
 .button--primary {
-  border-color: var(--primary-strong);
-  background: var(--primary-strong);
-  color: #fff;
+  border-color: var(--text-primary);
+  background: var(--text-primary);
+  color: var(--surface-solid);
 }
 
 .button--primary:hover {
-  border-color: var(--text-main);
-  background: var(--text-main);
+  border-color: var(--accent-hover);
+  background: var(--accent-hover);
+  color: #fff;
 }
 
 .button--quiet {
@@ -82,16 +85,34 @@
 }
 
 .text-link {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  color: var(--primary-strong);
-  font-weight: 620;
+  color: var(--accent-hover);
+  font-weight: 600;
+}
+
+.text-link::before {
+  position: absolute;
+  right: 1.4rem;
+  bottom: -0.16rem;
+  left: 0;
+  height: 1px;
+  background: currentColor;
+  content: '';
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 280ms var(--ease-out);
 }
 
 .text-link::after {
   content: '→';
-  transition: translate 220ms var(--ease-out);
+  transition: translate 280ms var(--ease-out);
+}
+
+.text-link:hover::before {
+  transform: scaleX(1);
 }
 
 .text-link:hover::after {

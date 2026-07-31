@@ -5,25 +5,27 @@ import { heroAssetConfig } from '../config/visualAssets';
 
 <section class="home-hero" aria-labelledby="home-title">
   <div class="page-shell home-hero__grid">
-    <div class="home-hero__copy" data-reveal>
+    <div class="home-hero__copy reveal">
       <p class="home-hero__status">
         <span aria-hidden="true"></span>
         {siteConfig.availability}
       </p>
-      <p class="home-hero__name">{siteConfig.name} · {siteConfig.englishName}</p>
-      <h1 id="home-title">我在做能被验证的<br />游戏 AI 产品。</h1>
-      <p class="home-hero__role">游戏 AI 产品经理 / AI 应用产品经理方向</p>
+      <p class="home-hero__name">{siteConfig.name}</p>
+      <h1 id="home-title">游戏 AI 产品经理</h1>
       <p class="home-hero__description">
-        从真实用户任务出发，把需求判断、Agent
-        工作流、人工节点与产品评测推进为可运行、可回看、可迭代的原型。
+        从真实用户任务出发，把需求判断、Agent 工作流、人工节点与产品评测，
+        推进为可运行、可回看、可迭代的原型。
       </p>
       <div class="home-hero__actions" aria-label="主要行动">
-        <a class="button button--primary" href="#featured-projects">查看精选项目</a>
-        <a class="text-link" href="/resume/">阅读在线简历</a>
+        <a class="button button--primary" href="#featured-projects">查看项目</a>
+        <a class="button" href="/resume/">在线简历</a>
+        <a class="home-hero__github" href={siteConfig.github} target="_blank" rel="noreferrer">
+          GitHub <span aria-hidden="true">↗</span>
+        </a>
       </div>
     </div>
 
-    <figure class="home-hero__visual" data-reveal="2">
+    <figure class="home-hero__visual reveal">
       <div>
         <img
           src={heroAssetConfig.backgroundImage}
@@ -36,7 +38,7 @@ import { heroAssetConfig } from '../config/visualAssets';
         />
       </div>
       <figcaption>
-        <span>品牌插图</span>
+        <span>个人视觉</span>
         深海角色图仅用于个人品牌表达，不是项目运行界面或结果证据。
       </figcaption>
     </figure>
@@ -45,19 +47,18 @@ import { heroAssetConfig } from '../config/visualAssets';
 
 <style>
   .home-hero {
-    padding: clamp(8.5rem, 15vw, 12rem) 0 clamp(4rem, 8vw, 7rem);
-    border-bottom: 1px solid var(--border);
+    padding: clamp(9rem, 13vw, 11rem) 0 clamp(6rem, 9vw, 8rem);
   }
 
   .home-hero__grid {
     display: grid;
-    grid-template-columns: minmax(0, 1.05fr) minmax(360px, 0.75fr);
-    gap: clamp(3rem, 8vw, 8rem);
+    grid-template-columns: minmax(0, 0.92fr) minmax(390px, 0.78fr);
+    gap: clamp(4rem, 8vw, 8rem);
     align-items: center;
   }
 
   .home-hero__copy {
-    max-width: 780px;
+    max-width: 690px;
   }
 
   .home-hero__status {
@@ -65,104 +66,133 @@ import { heroAssetConfig } from '../config/visualAssets';
     align-items: center;
     gap: 0.65rem;
     margin: 0 0 2.2rem;
-    color: var(--text-secondary);
-    font-size: 0.82rem;
-    font-weight: 560;
+    color: var(--accent-hover);
+    font-size: 0.84rem;
+    font-weight: 600;
   }
 
   .home-hero__status span {
-    width: 8px;
-    height: 8px;
+    width: 7px;
+    height: 7px;
     border-radius: 50%;
-    background: var(--mint);
-    box-shadow: 0 0 0 5px color-mix(in srgb, var(--mint) 14%, transparent);
+    background: var(--accent);
   }
 
   .home-hero__name {
     margin: 0 0 0.8rem;
-    color: var(--primary-strong);
+    color: var(--text-secondary);
     font-size: 1rem;
-    font-weight: 620;
+    font-weight: 600;
   }
 
   h1 {
+    max-width: 11ch;
     margin: 0;
-    font-size: clamp(3.25rem, 6.8vw, 6rem);
-    font-weight: 690;
-    letter-spacing: -0.04em;
-    line-height: 1.03;
-  }
-
-  .home-hero__role {
-    margin: 1.6rem 0 0;
-    color: var(--text-main);
-    font-size: clamp(1.08rem, 1.8vw, 1.45rem);
-    font-weight: 620;
+    font-size: clamp(3.5rem, 5.8vw, 4.25rem);
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
   }
 
   .home-hero__description {
-    max-width: 62ch;
-    margin: 0.9rem 0 0;
+    max-width: 34rem;
+    margin: 1.6rem 0 0;
     color: var(--text-secondary);
-    font-size: 1.02rem;
-    line-height: 1.85;
+    font-size: clamp(1.03rem, 1.45vw, 1.15rem);
+    line-height: 1.82;
   }
 
   .home-hero__actions {
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem 1.4rem;
+    gap: 0.8rem 1.1rem;
     align-items: center;
     margin-top: 2rem;
   }
 
+  .home-hero__github {
+    position: relative;
+    display: inline-flex;
+    min-height: 48px;
+    align-items: center;
+    gap: 0.35rem;
+    padding-inline: 0.35rem;
+    color: var(--text-secondary);
+    font-size: 0.88rem;
+    font-weight: 600;
+  }
+
+  .home-hero__github::after {
+    position: absolute;
+    right: 0.35rem;
+    bottom: 0.6rem;
+    left: 0.35rem;
+    height: 1px;
+    background: var(--accent);
+    content: '';
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 280ms var(--ease-out);
+  }
+
+  .home-hero__github:hover {
+    color: var(--accent-hover);
+  }
+
+  .home-hero__github:hover::after {
+    transform: scaleX(1);
+  }
+
   .home-hero__visual {
-    width: min(100%, 540px);
+    width: min(100%, 520px);
     margin: 0;
     justify-self: end;
   }
 
   .home-hero__visual > div {
-    aspect-ratio: 4 / 5;
+    aspect-ratio: 4 / 3;
+    padding: 0.75rem;
     overflow: hidden;
-    border-radius: 16px 16px 5rem 16px;
-    background: var(--surface-tint);
+    border-radius: var(--radius-md);
+    background: var(--surface-solid);
+    box-shadow: var(--shadow-sm);
   }
 
   .home-hero__visual img {
     width: 100%;
     height: 100%;
+    border-radius: 9px;
     object-fit: cover;
-    object-position: 38% center;
-    transition: transform 600ms var(--ease-out);
+    object-position: 44% center;
+    filter: saturate(0.66) contrast(0.94) brightness(1.08);
+    transition:
+      transform 300ms var(--ease-out),
+      filter 300ms ease;
   }
 
   .home-hero__visual:hover img {
-    transform: scale(1.018) translateY(-3px);
+    filter: saturate(0.74) contrast(0.96) brightness(1.05);
+    transform: scale(1.025);
   }
 
   figcaption {
     display: grid;
     grid-template-columns: auto 1fr;
     gap: 0.8rem;
-    margin-top: 0.9rem;
+    margin-top: 0.85rem;
     color: var(--text-muted);
     font-size: 0.72rem;
     line-height: 1.6;
   }
 
   figcaption span {
-    color: var(--text-main);
-    font-weight: 620;
+    color: var(--text-secondary);
+    font-weight: 600;
   }
 
   @media (max-height: 780px) and (min-width: 901px) {
     .home-hero {
-      padding: 7.5rem 0 3.5rem;
-    }
-
-    .home-hero__grid {
-      gap: clamp(3rem, 6vw, 6rem);
+      padding: 6.6rem 0 3.4rem;
     }
 
     .home-hero__status {
@@ -170,53 +200,46 @@ import { heroAssetConfig } from '../config/visualAssets';
     }
 
     h1 {
-      font-size: clamp(3.2rem, 5.5vw, 4.8rem);
-    }
-
-    .home-hero__role {
-      margin-top: 1rem;
+      font-size: clamp(3rem, 5vw, 3.75rem);
     }
 
     .home-hero__description {
+      margin-top: 1.1rem;
       line-height: 1.7;
     }
 
     .home-hero__actions {
-      margin-top: 1.25rem;
+      margin-top: 1.3rem;
     }
 
     .home-hero__visual {
-      width: min(100%, 440px);
+      width: min(100%, 460px);
     }
   }
 
   @media (max-width: 900px) {
+    .home-hero {
+      padding-top: 8.5rem;
+    }
+
     .home-hero__grid {
       grid-template-columns: 1fr;
+      gap: 4rem;
     }
 
     .home-hero__visual {
-      width: min(100%, 680px);
+      width: min(100%, 720px);
       justify-self: start;
     }
 
     .home-hero__visual > div {
       aspect-ratio: 16 / 9;
-      border-radius: 16px;
-    }
-
-    .home-hero__visual img {
-      object-position: center 44%;
     }
   }
 
   @media (max-width: 520px) {
     .home-hero {
-      padding-top: 7.3rem;
-    }
-
-    h1 br {
-      display: none;
+      padding: 7.5rem 0 4.5rem;
     }
 
     .home-hero__status {
@@ -229,9 +252,14 @@ import { heroAssetConfig } from '../config/visualAssets';
     }
 
     .home-hero__actions .button,
-    .home-hero__actions .text-link {
+    .home-hero__github {
       width: 100%;
       justify-content: center;
+    }
+
+    .home-hero__github::after {
+      right: 35%;
+      left: 35%;
     }
 
     figcaption {
@@ -242,9 +270,10 @@ import { heroAssetConfig } from '../config/visualAssets';
 
   @media (prefers-reduced-motion: reduce) {
     .home-hero__visual img,
-    .home-hero__visual:hover img {
-      transform: none;
+    .home-hero__visual:hover img,
+    .home-hero__github::after {
       transition: none;
+      transform: none;
     }
   }
 </style>

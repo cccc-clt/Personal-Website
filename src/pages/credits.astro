@@ -14,7 +14,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     description="部分个人品牌视觉与项目概念封面由生成式图像工具辅助创作；项目功能、测试过程与成果描述以项目详情和公开仓库为准。"
   />
   <section class="credits-page section page-shell">
-    <section class="credit-block">
+    <section class="credit-block reveal">
       <span class="eyebrow">主题许可</span><h2>保留原主题许可证</h2><p>
         网站已完成独立信息架构与视觉改版；仓库仍保留早期来源 Mizuki 的 Apache License
         2.0，以及其上游 Fuwari 的 MIT License。
@@ -24,7 +24,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         ><span>Apache-2.0</span><span>Fuwari MIT</span>
       </div>
     </section>
-    <section class="credit-block">
+    <section class="credit-block reveal">
       <span class="eyebrow">本地资产</span><h2>已登记的本地视觉资产</h2><div class="asset-table">
         {
           assetCredits.map((asset) => (
@@ -66,7 +66,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         }
       </div>
     </section>
-    <section class="credit-block">
+    <section class="credit-block reveal">
       <span class="eyebrow">技术资源</span><h2>当前工程依赖</h2><ul>
         <li><strong>Astro</strong><span>静态站点框架</span></li><li>
           <strong>Swup</strong><span>页面过渡</span>
@@ -75,7 +75,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         </li>
       </ul>
     </section>
-    <aside class="credit-policy">
+    <aside class="credit-policy reveal">
       <strong>版权与真实性原则</strong><p>
         本站不热链 Pixiv，不使用官方游戏角色、Logo
         或未授权画师作品包装个人品牌；概念封面仅承担主题表达，不代表真实运行界面、项目指标或业务结果。
@@ -135,10 +135,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     padding: 1.2rem;
     border: 1px solid var(--border);
     border-radius: 14px;
-    background: var(--surface-soft);
+    background: var(--surface-solid);
   }
   .asset-table code {
-    color: var(--violet);
+    color: var(--primary-strong);
     font-size: 0.64rem;
     overflow-wrap: anywhere;
   }

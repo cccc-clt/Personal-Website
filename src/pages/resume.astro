@@ -20,7 +20,7 @@ const hasEmail = Boolean(siteConfig.email);
   description="赵天琦的在线简历：AI 产品、Agent、游戏 AI、Prompt、RAG 与产品评测实践。"
 >
   <div class="resume-page container">
-    <header class="resume-actions" data-no-print>
+    <header class="resume-actions reveal" data-no-print>
       <div>
         <span class="eyebrow">在线简历 · 2027 届</span>
         <p>可打印为黑白 A4；PDF 文件存在时自动显示下载按钮。</p>
@@ -45,10 +45,10 @@ const hasEmail = Boolean(siteConfig.email);
       </div>
     </header>
 
-    <article class="resume-sheet">
+    <article class="resume-sheet reveal">
       <header class="resume-sheet__hero">
         <div>
-          <p class="resume-sheet__english-name">TIANQI ZHAO</p>
+          <p class="resume-sheet__english-name">Tianqi Zhao</p>
           <h1>{siteConfig.name}</h1>
           <p class="resume-sheet__role">AI 产品经理 / 游戏 AI / AI Agent</p>
         </div>
@@ -101,10 +101,7 @@ const hasEmail = Boolean(siteConfig.email);
                 <article class="resume-item">
                   <div class="resume-item__title">
                     <div>
-                      <>
-                        <span class="mono">{project.data.index}</span>
-                        <h3>{project.data.title}</h3>
-                      </>
+                      <h3>{project.data.title}</h3>
                     </div>
                     <span>{project.data.period}</span>
                   </div>
@@ -183,7 +180,9 @@ const hasEmail = Boolean(siteConfig.email);
     padding: clamp(2rem, 6vw, 5rem);
     margin: 0 auto;
     border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
     background: var(--surface-solid);
+    box-shadow: var(--shadow-soft);
   }
 
   .resume-sheet__hero {
@@ -205,7 +204,7 @@ const hasEmail = Boolean(siteConfig.email);
 
   .resume-sheet__hero h1 {
     margin: 0.5rem 0;
-    font-size: clamp(3rem, 6vw, 5.8rem);
+    font-size: clamp(3rem, 6vw, 4.25rem);
     letter-spacing: -0.025em;
     line-height: 1.08;
   }
@@ -231,8 +230,8 @@ const hasEmail = Boolean(siteConfig.email);
 
   .resume-section h2 {
     margin: 0 0 1.5rem;
-    font-size: 1rem;
-    font-weight: 700;
+    font-size: 1.25rem;
+    font-weight: 600;
     letter-spacing: 0;
   }
 
@@ -297,7 +296,7 @@ const hasEmail = Boolean(siteConfig.email);
 
   .resume-item h3 {
     margin: 0;
-    font-size: 1.3rem;
+    font-size: 1.4rem;
   }
 
   .resume-item p {

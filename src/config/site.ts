@@ -16,6 +16,7 @@ export const siteConfig = {
     { label: '首页', href: '/' },
     { label: '项目', href: '/projects/' },
     { label: '研究', href: '/research/' },
+    { label: '随想', href: '/research/?category=learning-notes' },
     { label: '关于', href: '/about/' },
     { label: '简历', href: '/resume/' },
   ],

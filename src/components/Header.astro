@@ -2,17 +2,24 @@
 import { siteConfig } from '../config/site';
 
 const pathname = Astro.url.pathname;
-const isActive = (href: string) => (href === '/' ? pathname === '/' : pathname.startsWith(href));
+const currentCategory = Astro.url.searchParams.get('category');
+const isActive = (href: string) => {
+  if (href === '/') return pathname === '/';
+  if (href.includes('category=learning-notes')) {
+    return pathname.startsWith('/research/') && currentCategory === 'learning-notes';
+  }
+  if (href === '/research/') {
+    return pathname.startsWith('/research/') && currentCategory !== 'learning-notes';
+  }
+  return pathname.startsWith(href);
+};
 ---
 
 <header class="site-header" data-header>
   <div class="site-header__inner page-shell">
     <a class="site-brand" href="/" aria-label={`${siteConfig.name}个人网站首页`}>
-      <span class="site-brand__mark" aria-hidden="true">TZ</span>
-      <span>
-        <strong>{siteConfig.englishName}</strong>
-        <small>AI PRODUCT PORTFOLIO</small>
-      </span>
+      <strong>{siteConfig.name}</strong>
+      <small>游戏 AI 产品作品集</small>
     </a>
 
     <nav class="desktop-nav" aria-label="主要导航">
@@ -26,6 +33,15 @@ const isActive = (href: string) => (href === '/' ? pathname === '/' : pathname.s
     </nav>
 
     <div class="header-actions">
+      <a
+        class="header-github"
+        href={siteConfig.github}
+        target="_blank"
+        rel="noreferrer"
+        aria-label="访问赵天琦的 GitHub"
+      >
+        GitHub ↗
+      </a>
       <button class="icon-button" type="button" data-search-open aria-label="搜索网站">
         <span aria-hidden="true">⌕</span>
       </button>
@@ -38,15 +54,6 @@ const isActive = (href: string) => (href === '/' ? pathname === '/' : pathname.s
         <span class="theme-toggle__sun" aria-hidden="true">☼</span>
         <span class="theme-toggle__moon" aria-hidden="true">☾</span>
       </button>
-      <a
-        class="header-github"
-        href={siteConfig.github}
-        target="_blank"
-        rel="noreferrer"
-        aria-label="访问赵天琦的 GitHub"
-      >
-        GitHub ↗
-      </a>
       <button
         class="menu-button"
         type="button"
@@ -67,7 +74,6 @@ const isActive = (href: string) => (href === '/' ? pathname === '/' : pathname.s
         siteConfig.nav.map((item) => (
           <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
             <strong>{item.label}</strong>
-            <small>{item.href}</small>
           </a>
         ))
       }
