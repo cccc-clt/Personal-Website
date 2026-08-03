@@ -1,6 +1,7 @@
 import rss from '@astrojs/rss';
 import { getCollection } from 'astro:content';
 import { siteConfig } from '../config/site';
+import { getInsightPath, parsePublicationDate, sortInsightsByDate } from '../utils/content';
 
 export async function GET(context) {
   if (!context.site) {
@@ -8,18 +9,18 @@ export async function GET(context) {
   }
 
   const articles = (await getCollection('research'))
-    .filter((article) => !article.data.draft)
-    .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+    .filter((article) => article.data.status === 'published')
+    .sort(sortInsightsByDate);
 
   return rss({
-    title: `${siteConfig.name}的研究与随想`,
-    description: '游戏观察、玩家洞察、AI 产品机会、Agent 评测与产品方法文章。',
+    title: `${siteConfig.name}的随笔与研究`,
+    description: '游戏研究、玩家研究、游戏 AI、AI 产品与模型观察。',
     site: context.site,
     items: articles.map((article) => ({
       title: article.data.title,
-      description: article.data.summary,
-      pubDate: article.data.publishedAt,
-      link: `/research/${article.id}/`,
+      description: article.data.description,
+      pubDate: parsePublicationDate(article.data.publishDate),
+      link: getInsightPath(article),
       categories: [article.data.category, ...article.data.tags],
     })),
     customData: '<language>zh-CN</language>',

@@ -1,0 +1,46 @@
+---
+title: '能生成，不等于能成为 AI 产品'
+subtitle: '一次从“可运行 Demo”到“可验证产品”的项目复盘'
+type: 'AI 产品观察'
+section: 'notes'
+kind: 'ai-product-note'
+category: 'ai-product'
+publishDate: '2026-07-23'
+updatedDate: '2026-07-23'
+pageCount: 6
+readingTime: '约 8 分钟'
+description: '结合 AI Game Content Copilot 项目，复盘一个大模型 Demo 如何从“能够生成内容”，迭代为具有输入约束、质量评测、失败恢复、成本控制和风险边界的 AI 产品。'
+tags: ['AI 产品经理', '产品化', 'AI 评测', 'Demo 复盘', '生成式 AI']
+featured: false
+homepageFeatured: false
+cover: '../../assets/report-covers/generation-is-not-ai-product.webp'
+coverAlt: '《能生成，不等于能成为 AI 产品》文章封面，展示核心判断和从模型能力到重复用户价值的产品化路径'
+pdfUrl: '/reports/generation-is-not-ai-product.pdf'
+slug: 'generation-is-not-ai-product'
+status: 'published'
+coreJudgment: '模型证明的是能力存在，产品需要证明的是用户能够在可接受的成本与风险下，稳定完成任务。'
+researchBoundary: '本文是 AI Game Content Copilot 的项目复盘。当前改造主要完成产品机制与观测能力补齐，尚未完成足够规模的对照实验，因此不使用虚构提升百分比描述效果。'
+methodology:
+  - '从初版 Demo 的稳定性、可判断性、延迟成本和失败恢复问题出发复盘。'
+  - '用六维产品化框架重新定义完成标准。'
+  - '把验证拆为固定测试集的离线评测与真实任务的在线产品指标。'
+questions:
+  - '模型成功输出一次，为什么仍不能证明产品可用？'
+  - '用户如何理解输入、判断输出并从失败中恢复？'
+  - '怎样同时衡量质量、延迟、成本与风险？'
+  - 'AI 产品经理应该在哪些环节保留人工判断？'
+keyFindings:
+  - 'AI 产品化需要同时处理可用性、稳定性、可控性、可评测性、成本效率和风险边界。'
+  - '结构化输入、版本定位、人工复核、重试降级和生成记录共同构成任务闭环。'
+  - '好结果需要被转化为固定测试集、评分 Rubric 和最低通过标准。'
+  - '成本应与任务成功一起计算，重点指标是单位成功任务成本，而不是孤立的 Token 单价。'
+  - 'AI Demo 的完成标准是模型成功输出；AI 产品的完成标准是用户稳定、可控、可评测地完成任务。'
+contentStructure:
+  - '从“跑起来”到任务闭环'
+  - 'AI 产品的六维产品化框架'
+  - '项目流程如何围绕输入、评价和失败恢复发生变化'
+  - '离线评测与在线产品指标'
+  - 'AI 产品经理的职责与上线前检查清单'
+relatedProjects: ['ai-game-content-copilot']
+relatedInsights: ['best-model-is-not-best-product-model', 'game-ai-opportunity-method']
+---

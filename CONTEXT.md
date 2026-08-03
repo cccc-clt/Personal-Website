@@ -2,7 +2,7 @@
 
 ## 项目定位
 
-这是赵天琦面向 2027 届秋招的 AI 产品作品集，主要服务游戏 AI、AI 应用、Agent 与产品评测方向的招聘阅读。主信息架构是首页、项目、研究与随想、关于与简历。
+这是赵天琦面向 2027 届秋招的 AI 产品作品集，主要服务游戏 AI、AI 应用、Agent 与产品评测方向的招聘阅读。主信息架构是首页、项目、随笔与研究、关于与简历。
 
 ## 核心领域概念
 
@@ -26,13 +26,17 @@
 
 项目的招聘阅读分类：`game-ai`、`agent`、`evaluation`、`workflow`。一个项目可以属于多个筛选。
 
-### Research
+### Insight
 
-将项目方法、真实观察、产品假设和待验证证据整理为文章的内容集合。草稿不会生成路由、搜索或 RSS 条目。
+将项目方法、真实观察、产品假设和待验证证据整理为研究报告或 AI 产品随笔的统一内容集合。草稿不会生成路由、搜索或 RSS 条目。
 
-### Research category
+### Insight section
 
-`game-research`、`player-insight`、`ai-opportunity`、`agent-evaluation`、`product-method`、`learning-notes`。
+`research` 表示研究报告与方法研究，详情使用 `/research/<slug>/`；`notes` 表示 AI 产品随笔，详情使用 `/notes/<slug>/`。两类内容统一在 `/insights/` 聚合。
+
+### Insight category
+
+`game-research`、`player-research`、`game-ai`、`ai-product`、`model-observation`。
 
 ### Concept image
 

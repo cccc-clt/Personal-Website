@@ -1,0 +1,48 @@
+---
+title: '最强模型，不一定是最适合产品的模型'
+subtitle: '从 Hugging Face 到 Artificial Analysis，我如何完成一次模型选型'
+type: 'AI 模型观察'
+section: 'notes'
+kind: 'ai-product-note'
+category: 'model-observation'
+publishDate: '2026-07-23'
+updatedDate: '2026-07-23'
+pageCount: 8
+readingTime: '约 10 分钟'
+description: '讨论 AI 产品模型选型为什么不能只看排行榜，建立从任务定义、候选模型发现、Model Card 阅读、硬门槛筛选、场景评测到上线监控的完整模型选择方法。'
+tags: ['模型选型', 'Hugging Face', 'Artificial Analysis', 'AI 评测', '成本与延迟']
+featured: false
+homepageFeatured: false
+cover: '../../assets/report-covers/best-model-is-not-best-product-model.webp'
+coverAlt: '《最强模型，不一定是最适合产品的模型》文章封面，展示模型选型核心结论与方法说明'
+pdfUrl: '/reports/best-model-is-not-best-product-model.pdf'
+slug: 'best-model-is-not-best-product-model'
+status: 'published'
+coreJudgment: '排行榜用于发现和比较，场景评测用于决策。AI 产品经理真正要优化的，不是模型的单项分数，而是在质量与风险达标的前提下，降低单位有效任务成本。'
+researchBoundary: '模型版本、价格、延迟与平台排名会持续变化；文中的方法框架相对稳定，具体结论应以选型当期的 Model Card、平台数据和项目实测为准。'
+methodology:
+  - '先定义用户、任务、输入输出和不可接受的失败，再设置硬门槛。'
+  - '用 Hugging Face 等平台发现候选模型，并阅读 Model Card 核验身份与边界。'
+  - '用 Artificial Analysis 等资料比较质量、延迟和成本，但不把公开榜单当作最终结论。'
+  - '建立固定场景测试集、记录 Bad Case，并在上线后持续监控与回归评测。'
+questions:
+  - '公开排行榜测量了什么，又没有测量什么？'
+  - '哪些质量、部署、合规和交互条件属于模型选型的硬门槛？'
+  - '如何比较模型完成一次有效任务的真实成本？'
+  - '上线后如何发现模型版本变化带来的回归风险？'
+keyFindings:
+  - '综合得分只代表特定数据集、语言、输入形式和评分方法，不能直接证明模型适合具体业务。'
+  - 'Trending 反映关注度，不等于能力排名，也不能替代 Model Card 核验。'
+  - '首 Token 延迟、输出速度、端到端时间和失败重试共同决定真实交互体验。'
+  - '候选模型应先通过质量、合规、部署和成本硬门槛，再进入项目场景测试。'
+  - '模型选型不是一次性决定，需要持续记录线上质量、延迟、成本、版本变化与 Bad Case。'
+contentStructure:
+  - '排行榜为什么回答不了产品选型问题'
+  - '先定义任务，再建立候选模型池'
+  - '阅读 Model Card，确认模型身份与边界'
+  - '比较质量、交互体验、经济性与工程条件'
+  - '用固定测试集完成最后判断'
+  - '上线监控与持续回归评测'
+relatedProjects: ['ai-game-content-copilot', 'ai-product-evaluation-workbench']
+relatedInsights: ['generation-is-not-ai-product', 'game-ai-opportunity-method']
+---

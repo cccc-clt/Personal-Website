@@ -1,0 +1,42 @@
+---
+interface Props {
+  pdfUrl: string;
+  title: string;
+}
+
+const { pdfUrl, title } = Astro.props;
+---
+
+<div class="pdf-actions" aria-label={`${title} PDF 操作`}>
+  <a class="button button--primary" href="#pdf-viewer">在线查看 PDF</a>
+  <a class="button" href={pdfUrl} target="_blank" rel="noopener noreferrer">新窗口打开 PDF</a>
+  <a class="text-link pdf-actions__download" href={pdfUrl} download>下载 PDF</a>
+</div>
+
+<style>
+  .pdf-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1rem;
+    align-items: center;
+  }
+
+  .pdf-actions__download {
+    min-height: 44px;
+    padding-inline: 0.35rem;
+  }
+
+  @media (max-width: 560px) {
+    .pdf-actions {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .pdf-actions .button,
+    .pdf-actions .text-link {
+      width: 100%;
+      justify-content: center;
+      text-align: center;
+    }
+  }
+</style>

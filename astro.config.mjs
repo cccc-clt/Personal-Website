@@ -12,8 +12,8 @@ export default defineConfig({
   output: 'static',
   trailingSlash: 'always',
   redirects: {
-    '/game': '/research/?category=game-research',
-    '/moments': '/research/',
+    '/game': '/insights/?category=game-research',
+    '/moments': '/insights/?type=ai-product-note',
     '/agent': '/projects/?filter=agent',
     '/auto': '/projects/automate-ai-car-copilot/',
   },

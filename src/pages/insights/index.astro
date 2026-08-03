@@ -1,0 +1,249 @@
+---
+import { getCollection } from 'astro:content';
+import ArchiveHero from '../../components/ArchiveHero.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import InsightFilters from '../../components/InsightFilters.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { sortInsightsByDate } from '../../utils/content';
+
+const insights = (await getCollection('research'))
+  .filter((entry) => entry.data.status === 'published')
+  .sort(sortInsightsByDate);
+---
+
+<BaseLayout
+  title="随笔与研究 | 赵天琦｜游戏 AI 产品经理"
+  description="围绕游戏产品、玩家研究与 AI 产品实践，记录行业分析、项目复盘和模型观察。"
+>
+  <ArchiveHero
+    eyebrow="Research & Notes"
+    title="随笔与研究"
+    description="围绕游戏产品、玩家研究与 AI 产品实践，记录行业分析、项目复盘和模型观察。"
+  />
+
+  <section class="insights page-shell" aria-labelledby="insights-list-title">
+    <header class="insights__header reveal">
+      <div>
+        <h2 id="insights-list-title">已发布内容</h2>
+        <p>研究报告保留方法、证据与边界；产品随笔记录可复用的判断框架。</p>
+      </div>
+      <div class="insights__tools">
+        <span><strong data-insight-count>{insights.length}</strong> / {insights.length}</span>
+        <button class="button" type="button" data-search-open>搜索内容</button>
+      </div>
+    </header>
+
+    <div class="reveal">
+      <InsightFilters insights={insights} />
+    </div>
+
+    <div class="insights__grid" data-insight-list data-reveal-group>
+      {
+        insights.map((article) => (
+          <div
+            data-insight-item
+            data-insight-kind={article.data.kind}
+            data-insight-category={article.data.category}
+          >
+            <ArticleCard article={article} headingLevel="h2" />
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="insights__empty" data-insight-empty hidden>
+      <h2>这个组合下还没有已发布内容</h2>
+      <p>可以清除筛选，继续浏览全部研究与随笔。</p>
+      <button class="button" type="button" data-insight-reset>清除筛选</button>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const insightKinds = ['research-report', 'ai-product-note'];
+  const insightCategories = [
+    'game-research',
+    'player-research',
+    'game-ai',
+    'ai-product',
+    'model-observation',
+  ];
+
+  const normalizedInsightState = () => {
+    const params = new URL(location.href).searchParams;
+    const requestedKind = params.get('type') ?? 'all';
+    const requestedCategory = params.get('category') ?? 'all';
+    return {
+      kind: insightKinds.includes(requestedKind) ? requestedKind : 'all',
+      category: insightCategories.includes(requestedCategory) ? requestedCategory : 'all',
+    };
+  };
+
+  const applyInsightFilters = () => {
+    const items = document.querySelectorAll<HTMLElement>('[data-insight-item]');
+    if (!items.length) return;
+    const state = normalizedInsightState();
+    let visible = 0;
+
+    items.forEach((item) => {
+      const matchesKind = state.kind === 'all' || item.dataset.insightKind === state.kind;
+      const matchesCategory =
+        state.category === 'all' || item.dataset.insightCategory === state.category;
+      const matches = matchesKind && matchesCategory;
+      item.hidden = !matches;
+      if (matches) visible += 1;
+    });
+
+    document.querySelectorAll<HTMLButtonElement>('[data-insight-kind]').forEach((button) => {
+      button.setAttribute('aria-pressed', String(button.dataset.insightKind === state.kind));
+    });
+    document.querySelectorAll<HTMLButtonElement>('[data-insight-category]').forEach((button) => {
+      button.setAttribute(
+        'aria-pressed',
+        String(button.dataset.insightCategory === state.category),
+      );
+    });
+
+    const count = document.querySelector<HTMLElement>('[data-insight-count]');
+    if (count) count.textContent = String(visible);
+    const empty = document.querySelector<HTMLElement>('[data-insight-empty]');
+    if (empty) empty.hidden = visible > 0;
+  };
+
+  const updateInsightParam = (key: 'type' | 'category', value: string) => {
+    const url = new URL(location.href);
+    if (value === 'all') url.searchParams.delete(key);
+    else url.searchParams.set(key, value);
+    history.pushState({}, '', url);
+    applyInsightFilters();
+  };
+
+  document.addEventListener('click', (event) => {
+    if (!document.querySelector('[data-insight-list]')) return;
+    const target = event.target as HTMLElement;
+    const kindButton = target.closest<HTMLButtonElement>('[data-insight-kind]');
+    const categoryButton = target.closest<HTMLButtonElement>('[data-insight-category]');
+    const resetButton = target.closest<HTMLButtonElement>('[data-insight-reset]');
+
+    if (kindButton) {
+      updateInsightParam('type', kindButton.dataset.insightKind ?? 'all');
+    } else if (categoryButton) {
+      const selected = categoryButton.dataset.insightCategory ?? 'all';
+      const state = normalizedInsightState();
+      updateInsightParam('category', state.category === selected ? 'all' : selected);
+    } else if (resetButton) {
+      const url = new URL(location.href);
+      url.searchParams.delete('type');
+      url.searchParams.delete('category');
+      history.pushState({}, '', url);
+      applyInsightFilters();
+    }
+  });
+
+  addEventListener('popstate', applyInsightFilters);
+  applyInsightFilters();
+</script>
+
+<style>
+  .insights {
+    padding-block: clamp(4.5rem, 8vw, 7.5rem);
+  }
+
+  .insights__header {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-bottom: 1.6rem;
+  }
+
+  .insights__header h2 {
+    margin: 0;
+    font-size: clamp(2rem, 3.5vw, 2.75rem);
+  }
+
+  .insights__header p {
+    max-width: 58ch;
+    margin: 0.7rem 0 0;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+
+  .insights__tools {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .insights__tools > span {
+    color: var(--text-muted);
+    font-size: 0.76rem;
+  }
+
+  .insights__tools > span strong {
+    color: var(--accent-hover);
+  }
+
+  .insights__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(1.4rem, 2.5vw, 2rem);
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+    align-items: stretch;
+  }
+
+  .insights__grid > div {
+    min-width: 0;
+  }
+
+  [data-insight-item][hidden] {
+    display: none;
+  }
+
+  .insights__empty {
+    padding: clamp(3.5rem, 8vw, 6.5rem) 1rem;
+    text-align: center;
+  }
+
+  .insights__empty[hidden] {
+    display: none;
+  }
+
+  .insights__empty h2 {
+    margin: 0;
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+  }
+
+  .insights__empty p {
+    margin: 0.75rem 0 1.4rem;
+    color: var(--text-secondary);
+  }
+
+  @media (max-width: 760px) {
+    .insights {
+      padding-block: 3.5rem 4.5rem;
+    }
+
+    .insights__header {
+      align-items: start;
+      flex-direction: column;
+    }
+
+    .insights__tools {
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    .insights__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 390px) {
+    .insights__tools {
+      align-items: stretch;
+      flex-direction: column;
+    }
+  }
+</style>

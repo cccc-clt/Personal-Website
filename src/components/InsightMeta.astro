@@ -1,0 +1,78 @@
+---
+interface Props {
+  tags: string[];
+  pageCount?: number;
+  readingTime: string;
+  status: 'published' | 'draft';
+}
+
+const { tags, pageCount, readingTime, status } = Astro.props;
+---
+
+<div class="insight-meta">
+  <div class="insight-meta__tags" aria-label="内容标签">
+    {tags.map((tag) => <span>{tag}</span>)}
+  </div>
+  <dl>
+    {
+      pageCount && (
+        <div>
+          <>
+            <dt>页数</dt>
+            <dd>{pageCount} 页</dd>
+          </>
+        </div>
+      )
+    }
+    <div><dt>阅读时间</dt><dd>{readingTime}</dd></div>
+    <div><dt>状态</dt><dd>{status === 'published' ? '已发布' : '草稿'}</dd></div>
+  </dl>
+</div>
+
+<style>
+  .insight-meta {
+    display: grid;
+    gap: 1.15rem;
+  }
+
+  .insight-meta__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .insight-meta__tags span {
+    padding: 0.36rem 0.68rem;
+    border-radius: var(--radius-pill);
+    background: var(--accent-soft);
+    color: var(--accent-hover);
+    font-size: 0.75rem;
+  }
+
+  dl {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem 1.6rem;
+    margin: 0;
+  }
+
+  dl > div {
+    display: flex;
+    gap: 0.45rem;
+  }
+
+  dt,
+  dd {
+    margin: 0;
+    font-size: 0.76rem;
+  }
+
+  dt {
+    color: var(--text-muted);
+  }
+
+  dd {
+    color: var(--text-secondary);
+    font-weight: 600;
+  }
+</style>

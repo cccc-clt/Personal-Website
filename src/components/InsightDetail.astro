@@ -1,0 +1,688 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { formatPublicationDate, parsePublicationDate } from '../utils/content';
+import InsightMeta from './InsightMeta.astro';
+import PdfActions from './PdfActions.astro';
+import PdfViewer from './PdfViewer.astro';
+import RelatedInsights from './RelatedInsights.astro';
+
+interface Props {
+  article: CollectionEntry<'research'>;
+}
+
+const { article } = Astro.props;
+const { Content } = await render(article);
+const hasBody = Boolean(article.body?.trim());
+const allInsights = (await getCollection('research')).filter(
+  (entry) => entry.data.status === 'published',
+);
+const relatedInsights = article.data.relatedInsights.flatMap((slug) => {
+  const entry = allInsights.find((candidate) => candidate.data.slug === slug);
+  return entry ? [entry] : [];
+});
+const projects = await getCollection('projects');
+const relatedProjects = article.data.relatedProjects.flatMap((slug) => {
+  const project = projects.find((entry) => entry.id === slug);
+  return project ? [project] : [];
+});
+const exactPublishedTime =
+  article.data.publishDate.length === 10
+    ? parsePublicationDate(article.data.publishDate)
+    : undefined;
+const exactModifiedTime =
+  article.data.updatedDate.length === 10
+    ? parsePublicationDate(article.data.updatedDate)
+    : undefined;
+const absolutePdfUrl =
+  Astro.site && article.data.pdfUrl
+    ? new URL(article.data.pdfUrl, Astro.site).toString()
+    : article.data.pdfUrl;
+const structuredData = {
+  '@type': article.data.kind === 'research-report' ? 'TechArticle' : 'Article',
+  headline: article.data.title,
+  alternativeHeadline: article.data.subtitle || undefined,
+  description: article.data.description,
+  datePublished: article.data.publishDate,
+  dateModified: article.data.updatedDate,
+  inLanguage: 'zh-CN',
+  author: { '@id': Astro.site ? new URL('/#person', Astro.site).toString() : '#person' },
+  publisher: { '@id': Astro.site ? new URL('/#person', Astro.site).toString() : '#person' },
+  keywords: article.data.tags.join(', '),
+  ...(Astro.site ? { mainEntityOfPage: new URL(Astro.url.pathname, Astro.site).toString() } : {}),
+  ...(absolutePdfUrl
+    ? {
+        associatedMedia: {
+          '@type': 'MediaObject',
+          contentUrl: absolutePdfUrl,
+          encodingFormat: 'application/pdf',
+        },
+      }
+    : {}),
+};
+---
+
+<BaseLayout
+  title={`${article.data.title} | 赵天琦｜游戏 AI 产品经理`}
+  description={article.data.description}
+  image={article.data.cover?.src}
+  pageType="article"
+  publishedTime={exactPublishedTime}
+  modifiedTime={exactModifiedTime}
+  structuredData={structuredData}
+>
+  <article class="insight-detail" id="article-top">
+    <header class="insight-hero page-shell reveal">
+      <a class="insight-hero__back" href="/insights/">← 返回随笔与研究</a>
+      <div class="insight-hero__eyeline">
+        <span>{article.data.type}</span>
+        <time datetime={article.data.publishDate}>
+          {formatPublicationDate(article.data.publishDate)}
+        </time>
+      </div>
+      <h1>{article.data.title}</h1>
+      {article.data.subtitle && <p class="insight-hero__subtitle">{article.data.subtitle}</p>}
+      <blockquote class="insight-hero__judgment">
+        <strong>核心判断</strong>
+        <p>{article.data.coreJudgment}</p>
+      </blockquote>
+      <InsightMeta
+        tags={article.data.tags}
+        pageCount={article.data.pageCount}
+        readingTime={article.data.readingTime}
+        status={article.data.status}
+      />
+    </header>
+
+    {
+      article.data.cover && (
+        <figure class="insight-cover page-shell reveal">
+          <Image
+            src={article.data.cover}
+            alt={article.data.coverAlt ?? `${article.data.title}封面`}
+            width={article.data.cover.width}
+            height={article.data.cover.height}
+            loading="eager"
+            decoding="async"
+          />
+          <figcaption>报告真实首页 · PDF 封面</figcaption>
+        </figure>
+      )
+    }
+
+    <div class="insight-layout page-shell">
+      <aside class="insight-toc reveal" data-pagefind-ignore>
+        <p>页面导航</p>
+        <nav aria-label="详情页目录">
+          <a href="#overview">内容简介</a>
+          {article.data.questions.length > 0 && <a href="#questions">研究问题</a>}
+          <a href="#findings">核心发现</a>
+          <a href="#method">方法与边界</a>
+          <a href="#structure">内容结构</a>
+          {hasBody && <a href="#full-article">完整文章</a>}
+          {article.data.pdfUrl && <a href="#pdf-actions">PDF 阅读</a>}
+        </nav>
+      </aside>
+
+      <div class="insight-main reveal">
+        <section id="overview" class="insight-section">
+          <h2>内容简介</h2>
+          <p class="insight-lede">{article.data.description}</p>
+          {
+            article.data.metrics.length > 0 && (
+              <dl class="research-metrics" aria-label="研究样本数据">
+                {article.data.metrics.map((metric) => (
+                  <div>
+                    <dd>{metric.value}</dd>
+                    <dt>{metric.label}</dt>
+                  </div>
+                ))}
+              </dl>
+            )
+          }
+        </section>
+
+        {
+          article.data.questions.length > 0 && (
+            <section id="questions" class="insight-section">
+              <h2>{article.data.kind === 'research-report' ? '研究问题' : '文章问题'}</h2>
+              <ul>
+                {article.data.questions.map((question) => (
+                  <li>{question}</li>
+                ))}
+              </ul>
+            </section>
+          )
+        }
+
+        <section id="findings" class="insight-section">
+          <h2>核心发现</h2>
+          <ul class="finding-list">
+            {article.data.keyFindings.map((finding) => <li>{finding}</li>)}
+          </ul>
+        </section>
+
+        <section id="method" class="insight-section">
+          <h2>方法与边界</h2>
+          {
+            article.data.methodology.length > 0 && (
+              <ul>
+                {article.data.methodology.map((method) => (
+                  <li>{method}</li>
+                ))}
+              </ul>
+            )
+          }
+          <aside class="research-boundary">
+            <strong>研究边界</strong>
+            <p>{article.data.researchBoundary}</p>
+          </aside>
+        </section>
+
+        <section id="structure" class="insight-section">
+          <h2>内容结构</h2>
+          <ol class="structure-list">
+            {article.data.contentStructure.map((item) => <li>{item}</li>)}
+          </ol>
+        </section>
+
+        {
+          hasBody && (
+            <section id="full-article" class="insight-section">
+              <h2>完整文章</h2>
+              <div class="article-content prose" data-article-content>
+                <Content />
+              </div>
+            </section>
+          )
+        }
+
+        {
+          article.data.pdfUrl && (
+            <section id="pdf-actions" class="insight-section pdf-section">
+              <h2>PDF 阅读与下载</h2>
+              <p>可直接在页面中阅读，也可以新窗口打开或下载保存。</p>
+              <PdfActions pdfUrl={article.data.pdfUrl} title={article.data.title} />
+            </section>
+          )
+        }
+
+        <footer class="insight-footer">
+          <div>
+            <span>首次发布：{formatPublicationDate(article.data.publishDate)}</span>
+            <span>最后更新：{formatPublicationDate(article.data.updatedDate)}</span>
+          </div>
+          <a href="#article-top">返回顶部 ↑</a>
+        </footer>
+      </div>
+    </div>
+
+    {
+      article.data.pdfUrl && (
+        <div class="pdf-viewer-shell page-shell reveal">
+          <PdfViewer pdfUrl={article.data.pdfUrl} title={article.data.title} />
+        </div>
+      )
+    }
+
+    {
+      relatedProjects.length > 0 && (
+        <section
+          class="related-projects page-shell reveal"
+          aria-labelledby="related-projects-title"
+        >
+          <header>
+            <p>关联项目</p>
+            <h2 id="related-projects-title">把方法放回项目证据中</h2>
+          </header>
+          <div>
+            {relatedProjects.map((project) => (
+              <a href={`/projects/${project.id}/`}>
+                <span>{project.data.categories[0]}</span>
+                <strong>{project.data.title}</strong>
+                <p>{project.data.outcome}</p>
+              </a>
+            ))}
+          </div>
+        </section>
+      )
+    }
+
+    <RelatedInsights insights={relatedInsights} />
+  </article>
+</BaseLayout>
+
+<style>
+  .insight-hero {
+    display: grid;
+    gap: 1.3rem;
+    padding-block: clamp(4.5rem, 9vw, 8.5rem) clamp(3rem, 6vw, 5.5rem);
+  }
+
+  .insight-hero__back {
+    width: fit-content;
+    color: var(--text-secondary);
+    font-size: 0.78rem;
+  }
+
+  .insight-hero__back:hover {
+    color: var(--accent-hover);
+  }
+
+  .insight-hero__eyeline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem 1rem;
+    color: var(--text-muted);
+    font-size: 0.78rem;
+  }
+
+  .insight-hero__eyeline span {
+    color: var(--accent-hover);
+    font-weight: 600;
+  }
+
+  h1 {
+    max-width: 18ch;
+    margin: 0;
+    font-size: clamp(2.65rem, 6.4vw, 5rem);
+    letter-spacing: -0.025em;
+    line-height: 1.08;
+    overflow-wrap: anywhere;
+    text-wrap: balance;
+  }
+
+  .insight-hero__subtitle {
+    max-width: 62ch;
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: clamp(1rem, 2vw, 1.25rem);
+    line-height: 1.75;
+    text-wrap: pretty;
+  }
+
+  .insight-hero__judgment {
+    max-width: 70ch;
+    margin: 0.65rem 0 0;
+    padding: clamp(1.15rem, 2.5vw, 1.55rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--surface-warm);
+  }
+
+  .insight-hero__judgment strong {
+    color: var(--accent-hover);
+    font-size: 0.78rem;
+  }
+
+  .insight-hero__judgment p {
+    margin: 0.55rem 0 0;
+    color: var(--text-primary);
+    font-size: clamp(1rem, 1.8vw, 1.18rem);
+    line-height: 1.78;
+  }
+
+  .insight-cover {
+    display: grid;
+    justify-items: center;
+    padding-bottom: clamp(4rem, 8vw, 7rem);
+  }
+
+  .insight-cover img {
+    width: min(100%, 760px);
+    height: auto;
+    border-radius: var(--radius-md);
+    background: #fff;
+    box-shadow: var(--shadow-md);
+  }
+
+  .insight-cover figcaption {
+    margin-top: 0.75rem;
+    color: var(--text-muted);
+    font-size: 0.72rem;
+  }
+
+  .insight-layout {
+    display: grid;
+    grid-template-columns: minmax(160px, 0.22fr) minmax(0, 760px) minmax(0, 0.1fr);
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: start;
+    padding-bottom: clamp(4rem, 8vw, 7rem);
+  }
+
+  .insight-toc {
+    position: sticky;
+    top: 7rem;
+  }
+
+  .insight-toc > p {
+    margin: 0 0 0.8rem;
+    color: var(--text-muted);
+    font-size: 0.72rem;
+  }
+
+  .insight-toc nav {
+    display: grid;
+    border-top: 1px solid var(--border);
+  }
+
+  .insight-toc a {
+    padding: 0.68rem 0;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-secondary);
+    font-size: 0.74rem;
+  }
+
+  .insight-toc a:hover {
+    color: var(--accent-hover);
+  }
+
+  .insight-main {
+    min-width: 0;
+    grid-column: 2;
+  }
+
+  .insight-section {
+    scroll-margin-top: 7rem;
+    padding-block: clamp(2.6rem, 5vw, 4.25rem);
+    border-top: 1px solid var(--border);
+  }
+
+  .insight-section:first-child {
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .insight-section > h2 {
+    margin: 0 0 1.25rem;
+    font-size: clamp(1.85rem, 3vw, 2.5rem);
+    letter-spacing: -0.018em;
+  }
+
+  .insight-section > p,
+  .insight-section li,
+  .article-content :global(p),
+  .article-content :global(li) {
+    color: var(--text-secondary);
+    line-height: 1.85;
+  }
+
+  .insight-lede {
+    margin: 0;
+    color: var(--text-primary) !important;
+    font-size: clamp(1.02rem, 1.7vw, 1.15rem);
+  }
+
+  .insight-section ul,
+  .insight-section ol {
+    display: grid;
+    gap: 0.8rem;
+    margin: 0;
+    padding-left: 1.25rem;
+  }
+
+  .finding-list li::marker {
+    color: var(--accent);
+  }
+
+  .structure-list {
+    counter-reset: structure;
+    padding: 0 !important;
+    list-style: none;
+  }
+
+  .structure-list li {
+    display: grid;
+    grid-template-columns: 2.25rem minmax(0, 1fr);
+    gap: 0.8rem;
+    align-items: baseline;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid var(--border);
+    counter-increment: structure;
+  }
+
+  .structure-list li::before {
+    color: var(--accent-hover);
+    content: counter(structure, decimal-leading-zero);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+  }
+
+  .research-metrics {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin: 2rem 0 0;
+  }
+
+  .research-metrics > div {
+    min-width: 0;
+    padding: 1rem;
+    border-radius: var(--radius-sm);
+    background: var(--surface-warm);
+  }
+
+  .research-metrics dd,
+  .research-metrics dt {
+    margin: 0;
+  }
+
+  .research-metrics dd {
+    color: var(--accent-hover);
+    font-family: var(--font-display);
+    font-size: clamp(1.65rem, 3vw, 2.2rem);
+  }
+
+  .research-metrics dt {
+    margin-top: 0.3rem;
+    color: var(--text-secondary);
+    font-size: 0.72rem;
+    line-height: 1.55;
+  }
+
+  .research-boundary {
+    margin-top: 1.6rem;
+    padding: 1.15rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface-warm);
+  }
+
+  .research-boundary strong {
+    color: var(--accent-hover);
+    font-size: 0.78rem;
+  }
+
+  .research-boundary p {
+    margin: 0.5rem 0 0;
+    color: var(--text-secondary);
+    font-size: 0.84rem;
+    line-height: 1.78;
+  }
+
+  .article-content :global(h2),
+  .article-content :global(h3) {
+    margin-block: 2.5rem 1rem;
+    scroll-margin-top: 7rem;
+  }
+
+  .article-content :global(blockquote) {
+    margin: 1.5rem 0;
+    padding: 1rem 1.15rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface-warm);
+  }
+
+  .article-content :global(table) {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .pdf-section > p {
+    margin: -0.5rem 0 1.3rem;
+  }
+
+  .insight-footer {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 0.74rem;
+  }
+
+  .insight-footer > div {
+    display: grid;
+    gap: 0.25rem;
+  }
+
+  .insight-footer a {
+    color: var(--accent-hover);
+    font-weight: 600;
+  }
+
+  .pdf-viewer-shell {
+    padding-bottom: clamp(4rem, 9vw, 8rem);
+  }
+
+  .related-projects {
+    display: grid;
+    grid-template-columns: minmax(190px, 0.34fr) minmax(0, 1fr);
+    gap: clamp(3rem, 8vw, 8rem);
+    padding-block: clamp(4rem, 9vw, 8rem);
+    border-top: 1px solid var(--border-strong);
+  }
+
+  .related-projects header > p {
+    margin: 0 0 0.6rem;
+    color: var(--accent-hover);
+    font-size: 0.82rem;
+    font-weight: 600;
+  }
+
+  .related-projects h2 {
+    margin: 0;
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    letter-spacing: -0.018em;
+  }
+
+  .related-projects > div {
+    display: grid;
+  }
+
+  .related-projects a {
+    display: grid;
+    grid-template-columns: 105px minmax(180px, 0.7fr) minmax(0, 1fr);
+    gap: 1.4rem;
+    padding: 1.2rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .related-projects a > span {
+    color: var(--text-muted);
+    font-size: 0.72rem;
+  }
+
+  .related-projects a > strong {
+    line-height: 1.5;
+  }
+
+  .related-projects a > p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.78rem;
+    line-height: 1.7;
+  }
+
+  .related-projects a:hover strong {
+    color: var(--accent-hover);
+  }
+
+  :global(.related-insights) {
+    width: min(calc(100% - 2 * var(--page-gutter)), var(--page-max));
+    margin-inline: auto;
+  }
+
+  @media (max-width: 960px) {
+    .insight-layout {
+      grid-template-columns: 1fr;
+    }
+
+    .insight-toc {
+      position: static;
+      min-width: 0;
+      overflow-x: auto;
+    }
+
+    .insight-toc nav {
+      display: flex;
+      width: max-content;
+      max-width: none;
+      border-top: 0;
+    }
+
+    .insight-toc a {
+      padding: 0.65rem 0.9rem;
+      border: 1px solid var(--border);
+      border-right: 0;
+      white-space: nowrap;
+    }
+
+    .insight-toc a:first-child {
+      border-radius: 10px 0 0 10px;
+    }
+
+    .insight-toc a:last-child {
+      border-right: 1px solid var(--border);
+      border-radius: 0 10px 10px 0;
+    }
+
+    .insight-main {
+      grid-column: 1;
+      width: min(100%, 760px);
+    }
+
+    .related-projects {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+  }
+
+  @media (max-width: 680px) {
+    .insight-hero {
+      padding-top: 3.75rem;
+    }
+
+    h1 {
+      max-width: 100%;
+      font-size: clamp(2.15rem, 10.5vw, 3rem);
+      line-height: 1.14;
+    }
+
+    .research-metrics {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .related-projects a {
+      grid-template-columns: 1fr;
+      gap: 0.35rem;
+    }
+
+    .insight-footer {
+      align-items: start;
+      flex-direction: column;
+    }
+  }
+
+  @media (max-width: 360px) {
+    .research-metrics {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

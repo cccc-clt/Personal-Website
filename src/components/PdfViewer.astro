@@ -1,0 +1,83 @@
+---
+interface Props {
+  pdfUrl: string;
+  title: string;
+}
+
+const { pdfUrl, title } = Astro.props;
+---
+
+<section class="pdf-viewer" id="pdf-viewer" aria-labelledby="pdf-viewer-title" data-pagefind-ignore>
+  <header>
+    <div>
+      <h2 id="pdf-viewer-title">在线阅读完整报告</h2>
+      <p>若浏览器未显示预览，可使用下方备用链接打开原始 PDF。</p>
+    </div>
+    <a class="text-link" href={pdfUrl} target="_blank" rel="noopener noreferrer">打开备用链接</a>
+  </header>
+  <object data={pdfUrl} type="application/pdf" aria-label={`${title}完整 PDF 在线预览`}>
+    <div class="pdf-viewer__fallback">
+      <p>当前浏览器无法嵌入显示 PDF。</p>
+      <a class="button" href={pdfUrl} target="_blank" rel="noopener noreferrer">打开完整 PDF</a>
+    </div>
+  </object>
+</section>
+
+<style>
+  .pdf-viewer {
+    scroll-margin-top: 7rem;
+  }
+
+  header {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+
+  h2 {
+    margin: 0;
+    font-size: clamp(1.7rem, 3vw, 2.35rem);
+  }
+
+  header p {
+    margin: 0.45rem 0 0;
+    color: var(--text-secondary);
+    font-size: 0.82rem;
+  }
+
+  header > a {
+    flex: 0 0 auto;
+  }
+
+  object {
+    display: block;
+    width: 100%;
+    height: min(82vh, 920px);
+    min-height: 620px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--surface-solid);
+  }
+
+  .pdf-viewer__fallback {
+    display: grid;
+    min-height: 18rem;
+    place-items: center;
+    padding: 2rem;
+    text-align: center;
+  }
+
+  @media (max-width: 700px) {
+    header {
+      align-items: start;
+      flex-direction: column;
+    }
+
+    object {
+      height: 68vh;
+      min-height: 460px;
+    }
+  }
+</style>

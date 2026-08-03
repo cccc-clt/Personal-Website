@@ -1,0 +1,135 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { insightKindLabels, researchCategoryLabels } from '../config/site';
+
+interface Props {
+  insights: CollectionEntry<'research'>[];
+}
+
+const { insights } = Astro.props;
+const kindCounts = Object.fromEntries(
+  Object.keys(insightKindLabels).map((kind) => [
+    kind,
+    insights.filter((entry) => entry.data.kind === kind).length,
+  ]),
+);
+const categoryCounts = Object.fromEntries(
+  Object.keys(researchCategoryLabels).map((category) => [
+    category,
+    insights.filter((entry) => entry.data.category === category).length,
+  ]),
+);
+---
+
+<div class="insight-filters" aria-label="随笔与研究筛选">
+  <section aria-labelledby="insight-kind-filter">
+    <h2 id="insight-kind-filter">内容类型</h2>
+    <div class="insight-filters__row">
+      <button type="button" data-insight-kind="all" aria-pressed="true">
+        <span>全部</span><small>{insights.length}</small>
+      </button>
+      {
+        Object.entries(insightKindLabels).map(([kind, label]) => (
+          <button type="button" data-insight-kind={kind} aria-pressed="false">
+            <>
+              <span>{label}</span>
+              <small>{kindCounts[kind]}</small>
+            </>
+          </button>
+        ))
+      }
+    </div>
+  </section>
+
+  <section aria-labelledby="insight-category-filter">
+    <h2 id="insight-category-filter">主题</h2>
+    <div class="insight-filters__row">
+      {
+        Object.entries(researchCategoryLabels).map(([category, label]) => (
+          <button type="button" data-insight-category={category} aria-pressed="false">
+            <>
+              <span>{label}</span>
+              <small>{categoryCounts[category]}</small>
+            </>
+          </button>
+        ))
+      }
+    </div>
+  </section>
+</div>
+
+<style>
+  .insight-filters {
+    display: grid;
+    gap: 1.35rem;
+    padding: clamp(1.15rem, 2.5vw, 1.6rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--surface-warm);
+  }
+
+  section {
+    display: grid;
+    gap: 0.7rem;
+  }
+
+  h2 {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+  }
+
+  .insight-filters__row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+  }
+
+  button {
+    display: inline-flex;
+    min-height: 42px;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.56rem 0.76rem;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    background: var(--surface-solid);
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 0.76rem;
+  }
+
+  button:hover,
+  button[aria-pressed='true'] {
+    border-color: color-mix(in srgb, var(--accent) 42%, var(--border));
+    color: var(--accent-hover);
+  }
+
+  button[aria-pressed='true'] {
+    background: var(--accent-soft);
+    font-weight: 600;
+  }
+
+  small {
+    color: var(--text-muted);
+    font-size: 0.66rem;
+  }
+
+  @media (max-width: 520px) {
+    .insight-filters__row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    button {
+      justify-content: space-between;
+      text-align: left;
+    }
+  }
+
+  @media (max-width: 350px) {
+    .insight-filters__row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

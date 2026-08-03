@@ -15,7 +15,7 @@ export const siteConfig = {
   nav: [
     { label: '首页', href: '/' },
     { label: '项目', href: '/projects/' },
-    { label: '研究与随想', href: '/research/' },
+    { label: '随笔与研究', href: '/insights/' },
     { label: '关于', href: '/about/' },
     { label: '简历', href: '/resume/' },
   ],
@@ -79,9 +79,13 @@ export const projectFilterLabels = {
 
 export const researchCategoryLabels = {
   'game-research': '游戏研究',
-  'player-insight': '玩家洞察',
-  'ai-opportunity': 'AI 产品机会',
-  'agent-evaluation': 'Agent 与评测',
-  'product-method': '产品方法',
-  'learning-notes': '学习随想',
+  'player-research': '玩家研究',
+  'game-ai': '游戏 AI',
+  'ai-product': 'AI 产品',
+  'model-observation': '模型观察',
+} as const;
+
+export const insightKindLabels = {
+  'research-report': '研究报告',
+  'ai-product-note': 'AI 产品随笔',
 } as const;

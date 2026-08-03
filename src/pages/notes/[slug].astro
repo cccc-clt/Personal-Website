@@ -4,7 +4,7 @@ import InsightDetail from '../../components/InsightDetail.astro';
 
 export async function getStaticPaths() {
   const articles = (await getCollection('research')).filter(
-    (entry) => entry.data.status === 'published' && entry.data.section === 'research',
+    (entry) => entry.data.status === 'published' && entry.data.section === 'notes',
   );
   return articles.map((article) => ({
     params: { slug: article.data.slug },
