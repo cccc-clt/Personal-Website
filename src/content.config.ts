@@ -5,15 +5,27 @@ import { localMdxLoader } from './loaders/localMdxLoader';
 const track = z.enum(['general', 'game', 'agent', 'auto']);
 const projectFilter = z.enum(['game-ai', 'agent', 'evaluation', 'workflow']);
 const insightSection = z.enum(['research', 'notes']);
-const insightKind = z.enum(['research-report', 'ai-product-note']);
+const insightKind = z.enum([
+  'research-report',
+  'ai-product-note',
+  'game-jam-note',
+  'game-record-note',
+  'growth-note',
+]);
 const researchCategory = z.enum([
   'game-research',
   'player-research',
   'game-ai',
   'ai-product',
   'model-observation',
+  'game-jam',
+  'game-experience',
+  'game-record',
+  'growth-record',
 ]);
 const publicationDate = z.string().regex(/^\d{4}-\d{2}(?:-\d{2})?$/);
+const researchInsightKinds = new Set(['research-report', 'ai-product-note']);
+const noteInsightKinds = new Set(['game-jam-note', 'game-record-note', 'growth-note']);
 
 const projects = defineCollection({
   loader: localMdxLoader('./src/content/projects'),
@@ -85,44 +97,58 @@ const projects = defineCollection({
 const research = defineCollection({
   loader: localMdxLoader('./src/content/research'),
   schema: ({ image }) =>
-    z.object({
-      title: z.string(),
-      subtitle: z.string().default(''),
-      type: z.string(),
-      section: insightSection,
-      kind: insightKind,
-      category: researchCategory,
-      publishDate: publicationDate,
-      updatedDate: publicationDate,
-      pageCount: z.number().int().positive().optional(),
-      readingTime: z.string(),
-      description: z.string(),
-      tags: z.array(z.string()),
-      featured: z.boolean().default(false),
-      homepageFeatured: z.boolean().default(false),
-      homepageOrder: z.number().optional(),
-      cover: image().optional(),
-      coverAlt: z.string().optional(),
-      pdfUrl: z.string().startsWith('/reports/').optional(),
-      slug: z.string(),
-      status: z.enum(['published', 'draft']).default('published'),
-      coreJudgment: z.string(),
-      researchBoundary: z.string(),
-      methodology: z.array(z.string()).default([]),
-      questions: z.array(z.string()).default([]),
-      keyFindings: z.array(z.string()).default([]),
-      contentStructure: z.array(z.string()).default([]),
-      metrics: z
-        .array(
-          z.object({
-            value: z.string(),
-            label: z.string(),
-          }),
-        )
-        .default([]),
-      relatedProjects: z.array(z.string()).default([]),
-      relatedInsights: z.array(z.string()).default([]),
-    }),
+    z
+      .object({
+        title: z.string(),
+        subtitle: z.string().default(''),
+        type: z.string(),
+        section: insightSection,
+        kind: insightKind,
+        category: researchCategory,
+        publishDate: publicationDate,
+        updatedDate: publicationDate,
+        pageCount: z.number().int().positive().optional(),
+        readingTime: z.string(),
+        description: z.string(),
+        tags: z.array(z.string()),
+        featured: z.boolean().default(false),
+        homepageFeatured: z.boolean().default(false),
+        homepageOrder: z.number().optional(),
+        cover: image().optional(),
+        coverAlt: z.string().optional(),
+        pdfUrl: z.string().startsWith('/reports/').optional(),
+        slug: z.string(),
+        status: z.enum(['published', 'draft']).default('published'),
+        coreJudgment: z.string(),
+        researchBoundary: z.string(),
+        methodology: z.array(z.string()).default([]),
+        questions: z.array(z.string()).default([]),
+        keyFindings: z.array(z.string()).default([]),
+        contentStructure: z.array(z.string()).default([]),
+        metrics: z
+          .array(
+            z.object({
+              value: z.string(),
+              label: z.string(),
+            }),
+          )
+          .default([]),
+        relatedProjects: z.array(z.string()).default([]),
+        relatedInsights: z.array(z.string()).default([]),
+      })
+      .superRefine((entry, context) => {
+        const allowedKinds = entry.section === 'research' ? researchInsightKinds : noteInsightKinds;
+        if (allowedKinds.has(entry.kind)) return;
+
+        context.addIssue({
+          code: 'custom',
+          path: ['kind'],
+          message:
+            entry.section === 'research'
+              ? 'research 栏目只允许 research-report 或 ai-product-note'
+              : 'notes 栏目只允许 game-jam-note、game-record-note 或 growth-note',
+        });
+      }),
 });
 
 const spec = defineCollection({

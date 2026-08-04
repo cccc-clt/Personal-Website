@@ -15,6 +15,9 @@ export default defineConfig({
   redirects: {
     '/game': '/insights/?category=game-research',
     '/moments': '/insights/?type=ai-product-note',
+    '/notes/generation-is-not-ai-product': '/research/generation-is-not-ai-product/',
+    '/notes/best-model-is-not-best-product-model':
+      '/research/best-model-is-not-best-product-model/',
     '/agent': '/projects/?filter=agent',
     '/auto': '/projects/automate-ai-car-copilot/',
   },

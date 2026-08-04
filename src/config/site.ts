@@ -15,7 +15,8 @@ export const siteConfig = {
   nav: [
     { label: '首页', href: '/' },
     { label: '项目', href: '/projects/' },
-    { label: '随笔与研究', href: '/insights/' },
+    { label: '研究', href: '/insights/', activePrefixes: ['/insights/', '/research/'] },
+    { label: '随笔', href: '/notes/', activePrefixes: ['/notes/'] },
     { label: '关于', href: '/about/' },
     { label: '简历', href: '/resume/' },
   ],
@@ -83,9 +84,38 @@ export const researchCategoryLabels = {
   'game-ai': '游戏 AI',
   'ai-product': 'AI 产品',
   'model-observation': '模型观察',
+  'game-jam': '游戏比赛',
+  'game-experience': '游戏体验',
+  'game-record': '游戏记录',
+  'growth-record': '成长记录',
 } as const;
 
 export const insightKindLabels = {
-  'research-report': '研究报告',
-  'ai-product-note': 'AI 产品随笔',
+  'research-report': 'AI 研究报告',
+  'ai-product-note': '产品随笔',
+  'game-jam-note': '比赛记录',
+  'game-record-note': '游戏记录',
+  'growth-note': '成长随记',
 } as const;
+
+export type InsightKind = keyof typeof insightKindLabels;
+export type InsightCategory = keyof typeof researchCategoryLabels;
+
+export const researchKindFilters = [
+  'research-report',
+  'ai-product-note',
+] as const satisfies readonly InsightKind[];
+
+export const researchCategoryFilters = [
+  'game-research',
+  'player-research',
+  'game-ai',
+  'ai-product',
+  'model-observation',
+] as const satisfies readonly InsightCategory[];
+
+export const noteKindFilters = [
+  'game-jam-note',
+  'game-record-note',
+  'growth-note',
+] as const satisfies readonly InsightKind[];

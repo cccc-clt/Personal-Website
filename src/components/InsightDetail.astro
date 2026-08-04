@@ -22,16 +22,19 @@ interface Props {
 
 const { article } = Astro.props;
 const { Content, headings } = await render(article);
-const allInsights = (await getCollection('research'))
+const publishedInsights = (await getCollection('research'))
   .filter((entry) => entry.data.status === 'published')
   .sort(sortInsightsByDate);
 const relatedInsights = article.data.relatedInsights.flatMap((slug) => {
-  const entry = allInsights.find((candidate) => candidate.data.slug === slug);
+  const entry = publishedInsights.find((candidate) => candidate.data.slug === slug);
   return entry ? [entry] : [];
 });
-const currentIndex = allInsights.findIndex((entry) => entry.id === article.id);
-const previous = currentIndex >= 0 ? allInsights[currentIndex + 1] : undefined;
-const next = currentIndex > 0 ? allInsights[currentIndex - 1] : undefined;
+const sectionInsights = publishedInsights.filter(
+  (entry) => entry.data.section === article.data.section,
+);
+const currentIndex = sectionInsights.findIndex((entry) => entry.id === article.id);
+const previous = currentIndex >= 0 ? sectionInsights[currentIndex + 1] : undefined;
+const next = currentIndex > 0 ? sectionInsights[currentIndex - 1] : undefined;
 const articleUrl = getInsightPath(article);
 const pdfReaderUrl = article.data.pdfUrl ? getInsightPdfPath(article) : undefined;
 const exactPublishedTime =
@@ -48,6 +51,7 @@ const absolutePdfUrl =
     ? new URL(article.data.pdfUrl, Astro.site).toString()
     : article.data.pdfUrl;
 const citationDate = article.data.publishDate.replaceAll('-', '.');
+const isNote = article.data.section === 'notes';
 const structuredData = {
   '@type': article.data.kind === 'research-report' ? 'TechArticle' : 'Article',
   headline: article.data.title,
@@ -96,7 +100,10 @@ const structuredData = {
         </ArticleProse>
 
         <footer class="article-ending">
-          <KeyConclusion text={article.data.coreJudgment} />
+          <KeyConclusion
+            title={isNote ? '这篇记录留下的判断' : '核心结论'}
+            text={article.data.coreJudgment}
+          />
 
           <ResearchNotice
             title={article.data.kind === 'research-report' ? '研究边界' : '内容说明'}
@@ -134,8 +141,8 @@ const structuredData = {
             <p id="citation-title">版权与引用说明</p>
             <div>
               本文由赵天琦整理并发布。引用建议：赵天琦，《{article.data.title}》，{citationDate}，
-              <a href={articleUrl}>{absoluteArticleUrl}</a>。研究报告的完整附录与来源清单以 PDF
-              原版为准。
+              <a href={articleUrl}>{absoluteArticleUrl}</a>。
+              {!isNote && article.data.pdfUrl && <>研究报告的完整附录与来源清单以 PDF 原版为准。</>}
             </div>
           </section>
 

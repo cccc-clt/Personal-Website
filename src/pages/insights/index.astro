@@ -7,25 +7,26 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { sortInsightsByDate } from '../../utils/content';
 
 const insights = (await getCollection('research'))
-  .filter((entry) => entry.data.status === 'published')
+  .filter((entry) => entry.data.status === 'published' && entry.data.section === 'research')
   .sort(sortInsightsByDate);
 ---
 
 <BaseLayout
-  title="随笔与研究 | 赵天琦｜游戏 AI 产品经理"
-  description="围绕游戏产品、玩家研究与 AI 产品实践，记录行业分析、项目复盘和模型观察。"
+  title="研究与产品随笔 | 赵天琦｜游戏 AI 产品经理"
+  description="围绕游戏产品、玩家体验与 AI 产品实践，沉淀系统研究和可复用的产品判断。"
+  canonicalPath="/insights/"
 >
   <ArchiveHero
-    eyebrow="Research & Notes"
-    title="随笔与研究"
-    description="围绕游戏产品、玩家研究与 AI 产品实践，记录行业分析、项目复盘和模型观察。"
+    eyebrow="Research & Product Notes"
+    title="研究与产品随笔"
+    description="围绕游戏产品、玩家体验与 AI 产品实践，沉淀系统研究和可复用的产品判断。"
   />
 
   <section class="insights page-shell" aria-labelledby="insights-list-title">
     <header class="insights__header reveal">
       <div>
         <h2 id="insights-list-title">已发布内容</h2>
-        <p>研究报告保留方法、证据与边界；产品随笔记录可复用的判断框架。</p>
+        <p>AI 研究报告保留方法、证据和结论边界；产品随笔记录从真实项目与产品问题中形成的判断。</p>
       </div>
       <div class="insights__tools">
         <span><strong data-insight-count>{insights.length}</strong> / {insights.length}</span>
@@ -53,29 +54,29 @@ const insights = (await getCollection('research'))
 
     <div class="insights__empty" data-insight-empty hidden>
       <h2>这个组合下还没有已发布内容</h2>
-      <p>可以清除筛选，继续浏览全部研究与随笔。</p>
+      <p>可以清除筛选，继续浏览全部研究与产品随笔。</p>
       <button class="button" type="button" data-insight-reset>清除筛选</button>
     </div>
   </section>
 </BaseLayout>
 
 <script>
-  const insightKinds = ['research-report', 'ai-product-note'];
-  const insightCategories = [
-    'game-research',
-    'player-research',
-    'game-ai',
-    'ai-product',
-    'model-observation',
-  ];
-
   const normalizedInsightState = () => {
     const params = new URL(location.href).searchParams;
     const requestedKind = params.get('type') ?? 'all';
     const requestedCategory = params.get('category') ?? 'all';
+    const insightKinds = [
+      ...document.querySelectorAll<HTMLButtonElement>('[data-insight-kind]'),
+    ].map((button) => button.dataset.insightKind);
+    const insightCategories = [
+      ...document.querySelectorAll<HTMLButtonElement>('[data-insight-category]'),
+    ].map((button) => button.dataset.insightCategory);
     return {
       kind: insightKinds.includes(requestedKind) ? requestedKind : 'all',
-      category: insightCategories.includes(requestedCategory) ? requestedCategory : 'all',
+      category:
+        requestedCategory === 'all' || insightCategories.includes(requestedCategory)
+          ? requestedCategory
+          : 'all',
     };
   };
 

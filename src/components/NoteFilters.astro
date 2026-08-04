@@ -1,0 +1,91 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { insightKindLabels, noteKindFilters } from '../config/site';
+
+interface Props {
+  notes: CollectionEntry<'research'>[];
+}
+
+const { notes } = Astro.props;
+const filterCounts = Object.fromEntries(
+  noteKindFilters.map((kind) => [kind, notes.filter((entry) => entry.data.kind === kind).length]),
+);
+---
+
+<div class="note-filters" role="group" aria-label="按随笔类型筛选">
+  <button type="button" data-note-kind-filter="all" aria-pressed="true">
+    <span>全部</span><small>{notes.length}</small>
+  </button>
+  {
+    noteKindFilters.map((kind) => (
+      <button type="button" data-note-kind-filter={kind} aria-pressed="false">
+        <>
+          <span>{insightKindLabels[kind]}</span>
+          <small>{filterCounts[kind]}</small>
+        </>
+      </button>
+    ))
+  }
+</div>
+
+<style>
+  .note-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    padding-block: 0.35rem;
+  }
+
+  button {
+    display: inline-flex;
+    min-height: 42px;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.56rem 0.78rem;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface-solid);
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 0.76rem;
+  }
+
+  button:hover,
+  button[aria-pressed='true'] {
+    border-color: color-mix(in srgb, var(--accent) 42%, var(--border));
+    color: var(--accent-hover);
+  }
+
+  button[aria-pressed='true'] {
+    background: var(--accent-soft);
+    font-weight: 650;
+  }
+
+  button:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--accent) 40%, transparent);
+    outline-offset: 2px;
+  }
+
+  small {
+    color: var(--text-muted);
+    font-size: 0.66rem;
+  }
+
+  @media (max-width: 520px) {
+    .note-filters {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    button {
+      justify-content: space-between;
+      text-align: left;
+    }
+  }
+
+  @media (max-width: 350px) {
+    .note-filters {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

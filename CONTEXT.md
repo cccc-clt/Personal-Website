@@ -2,7 +2,7 @@
 
 ## 项目定位
 
-这是赵天琦面向 2027 届秋招的 AI 产品作品集，主要服务游戏 AI、AI 应用、Agent 与产品评测方向的招聘阅读。主信息架构是首页、项目、随笔与研究、关于与简历。
+这是赵天琦面向 2027 届秋招的 AI 产品作品集，主要服务游戏 AI、AI 应用、Agent 与产品评测方向的招聘阅读。主信息架构是首页、项目、研究、随笔、关于与简历。
 
 ## 核心领域概念
 
@@ -28,15 +28,15 @@
 
 ### Insight
 
-将项目方法、真实观察、产品假设和待验证证据整理为研究报告或 AI 产品随笔的统一内容集合。草稿不会生成路由、搜索或 RSS 条目。
+将项目方法、真实观察、产品假设和待验证证据整理为 AI 研究报告、产品随笔或个人记录的统一内容集合。草稿不会生成路由、搜索或 RSS 条目。
 
 ### Insight section
 
-`research` 表示研究报告与方法研究，详情使用 `/research/<slug>/`；`notes` 表示 AI 产品随笔，详情使用 `/notes/<slug>/`。两类内容统一在 `/insights/` 聚合。
+`research` 表示 AI 研究报告与产品随笔，允许 `research-report` 和 `ai-product-note`，列表使用 `/insights/`，详情使用 `/research/<slug>/`；`notes` 表示比赛记录、个人游戏记录与成长随记，允许 `game-jam-note`、`game-record-note` 和 `growth-note`，列表使用 `/notes/`，详情使用 `/notes/<slug>/`。两类内容继续复用同一个 Content Collection。
 
 ### Insight category
 
-`game-research`、`player-research`、`game-ai`、`ai-product`、`model-observation`。
+`game-research`、`player-research`、`game-ai`、`ai-product`、`model-observation`、`game-jam`、`game-experience`、`game-record`、`growth-record`。
 
 ### Concept image
 

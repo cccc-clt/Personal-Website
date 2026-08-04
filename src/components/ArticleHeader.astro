@@ -1,6 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import { researchCategoryLabels } from '../config/site';
+import { insightKindLabels, researchCategoryLabels } from '../config/site';
 import { formatPublicationDate, getInsightPath, getInsightPdfPath } from '../utils/content';
 import PdfActions from './PdfActions.astro';
 
@@ -12,13 +12,17 @@ const { article } = Astro.props;
 const articleUrl = getInsightPath(article);
 const pdfReaderUrl = article.data.pdfUrl ? getInsightPdfPath(article) : undefined;
 const visibleTags = article.data.tags.slice(0, 3);
+const isNote = article.data.section === 'notes';
+const backHref = isNote ? '/notes/' : '/insights/';
+const backLabel = isNote ? '随笔' : '研究与产品随笔';
 ---
 
 <header class="article-header page-shell reveal">
-  <a class="article-header__back" href="/insights/">← 返回“随笔与研究”</a>
+  <a class="article-header__back" href={backHref}>← 返回“{backLabel}”</a>
 
   <div class="article-header__taxonomy" aria-label="文章分类与标签">
-    <span class="article-header__category">{researchCategoryLabels[article.data.category]}</span>
+    <span class="article-header__category">{insightKindLabels[article.data.kind]}</span>
+    <span>{researchCategoryLabels[article.data.category]}</span>
     {visibleTags.map((tag) => <span>{tag}</span>)}
   </div>
 
@@ -49,15 +53,19 @@ const visibleTags = article.data.tags.slice(0, 3);
     }
   </dl>
 
-  <div data-pagefind-ignore>
-    <PdfActions
-      title={article.data.title}
-      context="article"
-      webUrl={articleUrl}
-      pdfUrl={article.data.pdfUrl}
-      readerUrl={pdfReaderUrl}
-    />
-  </div>
+  {
+    article.data.pdfUrl && pdfReaderUrl && (
+      <div data-pagefind-ignore>
+        <PdfActions
+          title={article.data.title}
+          context="article"
+          webUrl={articleUrl}
+          pdfUrl={article.data.pdfUrl}
+          readerUrl={pdfReaderUrl}
+        />
+      </div>
+    )
+  }
 
   <slot />
 </header>

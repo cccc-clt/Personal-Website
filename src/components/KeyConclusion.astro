@@ -1,13 +1,14 @@
 ---
 interface Props {
   text: string;
+  title?: string;
 }
 
-const { text } = Astro.props;
+const { text, title = '核心结论' } = Astro.props;
 ---
 
 <aside class="article-notice article-notice--conclusion" aria-labelledby="key-conclusion-title">
-  <p id="key-conclusion-title">核心结论</p>
+  <p id="key-conclusion-title">{title}</p>
   <strong>{text}</strong>
 </aside>
 

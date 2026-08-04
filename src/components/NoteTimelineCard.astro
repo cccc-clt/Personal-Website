@@ -1,0 +1,277 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { insightKindLabels, researchCategoryLabels } from '../config/site';
+import { formatPublicationDate, getInsightPath } from '../utils/content';
+
+interface Props {
+  article: CollectionEntry<'research'>;
+  compact?: boolean;
+  headingLevel?: 'h2' | 'h3';
+}
+
+const { article, compact = false, headingLevel = 'h3' } = Astro.props;
+const articleUrl = getInsightPath(article);
+const visibleTags = article.data.tags.slice(0, 4);
+const Heading = headingLevel;
+---
+
+<article class:list={['note-entry', { 'note-entry--compact': compact }]}>
+  {
+    !compact && (
+      <div class="note-entry__rail" aria-hidden="true">
+        <span />
+      </div>
+    )
+  }
+
+  <div class="note-entry__card">
+    <div class="note-entry__meta">
+      <time datetime={article.data.publishDate}
+        >{formatPublicationDate(article.data.publishDate)}</time
+      >
+      <span>{insightKindLabels[article.data.kind]}</span>
+      <span>{researchCategoryLabels[article.data.category]}</span>
+      <span>{article.data.readingTime}</span>
+    </div>
+
+    <Heading class="note-entry__title">
+      <a href={articleUrl}>{article.data.title}</a>
+    </Heading>
+    <p class="note-entry__summary">{article.data.description}</p>
+
+    <footer>
+      {
+        !compact && visibleTags.length > 0 ? (
+          <ul aria-label="文章标签">
+            {visibleTags.map((tag) => (
+              <li>{tag}</li>
+            ))}
+          </ul>
+        ) : (
+          <span />
+        )
+      }
+      <a class="note-entry__cta" href={articleUrl} aria-label={`阅读全文：${article.data.title}`}>
+        阅读全文 <span aria-hidden="true">→</span>
+      </a>
+    </footer>
+  </div>
+</article>
+
+<style>
+  .note-entry {
+    position: relative;
+    display: grid;
+    grid-template-columns: 2.5rem minmax(0, 1fr);
+    min-width: 0;
+  }
+
+  .note-entry__rail {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    padding-top: 2rem;
+  }
+
+  .note-entry__rail span {
+    z-index: 1;
+    display: block;
+    width: 0.7rem;
+    height: 0.7rem;
+    border: 2px solid var(--surface-warm);
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 42%, var(--border));
+  }
+
+  .note-entry__card {
+    display: grid;
+    min-width: 0;
+    gap: 1rem;
+    padding: clamp(1.6rem, 3vw, 2.4rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--surface-solid);
+    transition:
+      border-color 180ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .note-entry:not(.note-entry--compact):hover .note-entry__card {
+    border-color: color-mix(in srgb, var(--accent) 35%, var(--border));
+    transform: translateY(-2px);
+  }
+
+  .note-entry__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem 0.9rem;
+    color: var(--text-muted);
+    font-size: 0.74rem;
+  }
+
+  .note-entry__meta span {
+    position: relative;
+    padding-left: 0.9rem;
+  }
+
+  .note-entry__meta span::before {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: currentColor;
+    content: '';
+    transform: translateY(-50%);
+  }
+
+  .note-entry__title {
+    display: -webkit-box;
+    max-width: 30ch;
+    margin: 0;
+    font-family: 'Songti SC', 'STSong', 'Noto Serif SC', 'Source Han Serif SC', serif;
+    font-size: clamp(1.7rem, 3vw, 2.35rem);
+    letter-spacing: -0.018em;
+    line-height: 1.28;
+    overflow: hidden;
+    overflow-wrap: anywhere;
+    text-wrap: balance;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+
+  .note-entry__title a {
+    color: var(--text-primary);
+  }
+
+  .note-entry__title a:hover {
+    color: var(--accent-hover);
+  }
+
+  .note-entry__title a:focus-visible,
+  .note-entry__cta:focus-visible {
+    border-radius: 4px;
+    outline: 3px solid color-mix(in srgb, var(--accent) 42%, transparent);
+    outline-offset: 4px;
+  }
+
+  .note-entry__summary {
+    display: -webkit-box;
+    max-width: 68ch;
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.92rem;
+    line-height: 1.8;
+    overflow: hidden;
+    text-wrap: pretty;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+
+  footer {
+    display: flex;
+    min-width: 0;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 0.35rem;
+  }
+
+  ul {
+    display: flex;
+    min-width: 0;
+    flex-wrap: wrap;
+    gap: 0.42rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  li {
+    max-width: 100%;
+    padding: 0.34rem 0.58rem;
+    border-radius: var(--radius-pill);
+    background: var(--surface-soft);
+    color: var(--text-secondary);
+    font-size: 0.68rem;
+    overflow-wrap: anywhere;
+  }
+
+  .note-entry__cta {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--accent-hover);
+    font-size: 0.78rem;
+    font-weight: 650;
+  }
+
+  .note-entry__cta span {
+    transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .note-entry__cta:hover span {
+    transform: translateX(3px);
+  }
+
+  .note-entry--compact {
+    display: block;
+  }
+
+  .note-entry--compact .note-entry__card {
+    height: 100%;
+    padding: 1.25rem 0;
+    border-width: 1px 0 0;
+    border-radius: 0;
+    background: transparent;
+  }
+
+  .note-entry--compact .note-entry__title {
+    font-size: clamp(1.35rem, 2.5vw, 1.75rem);
+  }
+
+  .note-entry--compact footer {
+    margin-top: auto;
+  }
+
+  @media (max-width: 768px) {
+    .note-entry {
+      grid-template-columns: 1.5rem minmax(0, 1fr);
+    }
+
+    .note-entry__rail {
+      justify-content: flex-start;
+      padding-top: 1.65rem;
+      padding-left: 0.3rem;
+    }
+
+    .note-entry__card {
+      gap: 0.85rem;
+      padding: clamp(1.25rem, 5vw, 1.7rem);
+    }
+
+    .note-entry__title {
+      font-size: clamp(1.45rem, 7vw, 1.9rem);
+    }
+
+    footer {
+      align-items: start;
+      flex-direction: column;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .note-entry__card,
+    .note-entry__cta span {
+      transition: none;
+    }
+
+    .note-entry:not(.note-entry--compact):hover .note-entry__card,
+    .note-entry__cta:hover span {
+      transform: none;
+    }
+  }
+</style>

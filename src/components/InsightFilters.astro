@@ -1,6 +1,11 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import { insightKindLabels, researchCategoryLabels } from '../config/site';
+import {
+  insightKindLabels,
+  researchCategoryFilters,
+  researchCategoryLabels,
+  researchKindFilters,
+} from '../config/site';
 
 interface Props {
   insights: CollectionEntry<'research'>[];
@@ -8,20 +13,24 @@ interface Props {
 
 const { insights } = Astro.props;
 const kindCounts = Object.fromEntries(
-  Object.keys(insightKindLabels).map((kind) => [
+  researchKindFilters.map((kind) => [
     kind,
     insights.filter((entry) => entry.data.kind === kind).length,
   ]),
 );
 const categoryCounts = Object.fromEntries(
-  Object.keys(researchCategoryLabels).map((category) => [
+  researchCategoryFilters.map((category) => [
     category,
     insights.filter((entry) => entry.data.category === category).length,
   ]),
 );
+const visibleKinds = researchKindFilters.filter((kind) => kindCounts[kind] > 0);
+const visibleCategories = researchCategoryFilters.filter(
+  (category) => categoryCounts[category] > 0,
+);
 ---
 
-<div class="insight-filters" aria-label="随笔与研究筛选">
+<div class="insight-filters" aria-label="研究筛选">
   <section aria-labelledby="insight-kind-filter">
     <h2 id="insight-kind-filter">内容类型</h2>
     <div class="insight-filters__row">
@@ -29,10 +38,10 @@ const categoryCounts = Object.fromEntries(
         <span>全部</span><small>{insights.length}</small>
       </button>
       {
-        Object.entries(insightKindLabels).map(([kind, label]) => (
+        visibleKinds.map((kind) => (
           <button type="button" data-insight-kind={kind} aria-pressed="false">
             <>
-              <span>{label}</span>
+              <span>{insightKindLabels[kind]}</span>
               <small>{kindCounts[kind]}</small>
             </>
           </button>
@@ -45,10 +54,10 @@ const categoryCounts = Object.fromEntries(
     <h2 id="insight-category-filter">主题</h2>
     <div class="insight-filters__row">
       {
-        Object.entries(researchCategoryLabels).map(([category, label]) => (
+        visibleCategories.map((category) => (
           <button type="button" data-insight-category={category} aria-pressed="false">
             <>
-              <span>{label}</span>
+              <span>{researchCategoryLabels[category]}</span>
               <small>{categoryCounts[category]}</small>
             </>
           </button>

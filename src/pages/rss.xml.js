@@ -13,8 +13,8 @@ export async function GET(context) {
     .sort(sortInsightsByDate);
 
   return rss({
-    title: `${siteConfig.name}的随笔与研究`,
-    description: '游戏研究、玩家研究、游戏 AI、AI 产品与模型观察。',
+    title: `${siteConfig.name}的研究与随笔`,
+    description: '游戏与玩家研究、AI 产品实践，以及个人体验和阶段性记录。',
     site: context.site,
     items: articles.map((article) => ({
       title: article.data.title,
