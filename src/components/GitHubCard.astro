@@ -8,7 +8,7 @@ const { url, title, description = '查看项目仓库、说明与最新代码。
 const repo = url.replace('https://github.com/', '');
 ---
 
-<a class="github-card" href={url} target="_blank" rel="noreferrer">
+<a class="github-card" href={url} target="_blank" rel="noopener noreferrer">
   <span class="github-card__icon" aria-hidden="true">⌘</span>
   <span><small>GitHub 仓库</small><strong>{repo || title}</strong><p>{description}</p></span>
   <b aria-hidden="true">↗</b>

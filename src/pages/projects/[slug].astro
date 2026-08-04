@@ -1,9 +1,13 @@
 ---
 import { getCollection, render } from 'astro:content';
 import ImageGallery from '../../components/ImageGallery.astro';
+import MetricGrid from '../../components/MetricGrid.astro';
+import ProjectCaseStudy from '../../components/ProjectCaseStudy.astro';
 import ProjectCover from '../../components/ProjectCover.astro';
+import SourceLinkIcon from '../../components/SourceLinkIcon.astro';
 import StatusBadge from '../../components/StatusBadge.astro';
 import { projectFilterLabels } from '../../config/site';
+import { projectCaseStudies } from '../../data/projectCaseStudies';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
 export async function getStaticPaths() {
@@ -20,14 +24,35 @@ const projects = (await getCollection('projects')).sort(
   (a, b) => a.data.order.general - b.data.order.general,
 );
 const currentIndex = projects.findIndex((entry) => entry.id === project.id);
+const previousProject = projects[(currentIndex - 1 + projects.length) % projects.length];
 const nextProject = projects[(currentIndex + 1) % projects.length];
 const coverImage = project.data.cover?.src ?? '/images/og/og-general.webp';
+const projectSlug = project.id.replace(/\.mdx?$/, '');
+const caseStudy = projectCaseStudies[projectSlug];
 const sourceLinks = [
-  project.data.demoUrl && { label: '在线 Demo', href: project.data.demoUrl },
-  project.data.githubUrl && { label: 'GitHub 仓库', href: project.data.githubUrl },
-  project.data.documentUrl && { label: '项目文档', href: project.data.documentUrl },
-  project.data.videoUrl && { label: '演示视频', href: project.data.videoUrl },
-].filter((link): link is { label: string; href: string } => Boolean(link));
+  project.data.demoUrl && { label: '体验 Demo', href: project.data.demoUrl, type: 'demo' },
+  project.data.githubUrl && { label: '查看 GitHub', href: project.data.githubUrl, type: 'github' },
+  project.data.documentUrl && {
+    label: '查看项目文档',
+    href: project.data.documentUrl,
+    type: 'document',
+  },
+  project.data.videoUrl && { label: '观看演示', href: project.data.videoUrl, type: 'video' },
+].filter(
+  (
+    link,
+  ): link is {
+    label: string;
+    href: string;
+    type: 'demo' | 'github' | 'document' | 'video';
+  } => Boolean(link),
+);
+const sourceAriaLabels = {
+  demo: `体验 ${project.data.title} 在线 Demo`,
+  github: `打开 ${project.data.title} GitHub 仓库`,
+  document: `打开 ${project.data.title} 项目文档`,
+  video: `观看 ${project.data.title} 演示视频`,
+};
 const structuredData = {
   '@type': 'CreativeWork',
   name: project.data.title,
@@ -78,15 +103,18 @@ const structuredData = {
                   class:list={['button', { 'button--primary': index === 0 }]}
                   href={link.href}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
+                  aria-label={sourceAriaLabels[link.type]}
                 >
-                  {link.label} ↗
+                  <SourceLinkIcon type={link.type} />
+                  {link.label}
                 </a>
               ))}
             </div>
           )
         }
       </div>
+      {caseStudy && <MetricGrid metrics={caseStudy.metrics} />}
       <figure class="case-hero__cover reveal">
         <ProjectCover
           slug={project.id}
@@ -113,167 +141,295 @@ const structuredData = {
       </dl>
     </section>
 
-    <div class="case-layout page-shell">
-      <aside class="case-toc" aria-label="案例目录">
-        <p>本案例</p>
-        <nav>
-          <a href="#background">背景与目标</a>
-          <a href="#ai-necessity">AI 必要性</a>
-          <a href="#human-checkpoints">人工节点</a>
-          <a href="#product-flow">产品流程</a>
-          <a href="#prototype-evidence">原型证据</a>
-          <a href="#evaluation">评测方法</a>
-          <a href="#failure-boundaries">失败边界</a>
-          <a href="#iterations">迭代记录</a>
-          <a href="#reflection">反思与来源</a>
-        </nav>
-      </aside>
+    {
+      caseStudy ? (
+        <ProjectCaseStudy
+          study={caseStudy}
+          projectTitle={project.data.title}
+          projectSlug={projectSlug}
+          sourceNote={project.data.sourceNote}
+        >
+          <Content />
+        </ProjectCaseStudy>
+      ) : (
+        <div class="case-layout page-shell">
+          <aside class="case-toc" aria-label="案例目录">
+            <p>本案例</p>
+            <nav>
+              <a href="#background">背景与目标</a>
+              <a href="#ai-necessity">AI 必要性</a>
+              <a href="#human-checkpoints">人工节点</a>
+              <a href="#product-flow">产品流程</a>
+              <a href="#prototype-evidence">原型证据</a>
+              <a href="#evaluation">评测方法</a>
+              <a href="#failure-boundaries">失败边界</a>
+              <a href="#iterations">迭代记录</a>
+              <a href="#reflection">反思与来源</a>
+            </nav>
+          </aside>
 
-      <div class="case-content">
-        <section class="case-section reveal" id="background">
-          <header><span>背景与目标</span><h2>先确定为谁解决什么问题</h2></header>
-          <dl class="case-definition">
-            <div><dt>目标用户</dt><dd>{project.data.targetUser}</dd></div>
-            <div><dt>产品目标</dt><dd>{project.data.goal}</dd></div>
-            <div><dt>当前状态</dt><dd>{project.data.period}</dd></div>
-          </dl>
-          <div>
-            <h3>我的工作</h3>
-            <ul>{project.data.responsibilities.map((item) => <li>{item}</li>)}</ul>
-          </div>
-        </section>
+          <div class="case-content">
+            <section class="case-section reveal" id="background">
+              <header>
+                <>
+                  <span>背景与目标</span>
+                  <h2>先确定为谁解决什么问题</h2>
+                </>
+              </header>
+              <dl class="case-definition">
+                <div>
+                  <>
+                    <dt>目标用户</dt>
+                    <dd>{project.data.targetUser}</dd>
+                  </>
+                </div>
+                <div>
+                  <>
+                    <dt>产品目标</dt>
+                    <dd>{project.data.goal}</dd>
+                  </>
+                </div>
+                <div>
+                  <>
+                    <dt>当前状态</dt>
+                    <dd>{project.data.period}</dd>
+                  </>
+                </div>
+              </dl>
+              <div>
+                <h3>我的工作</h3>
+                <ul>
+                  {project.data.responsibilities.map((item) => (
+                    <li>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            </section>
 
-        <section class="case-section reveal" id="ai-necessity">
-          <header><span>AI 必要性</span><h2>模型进入哪一步，为什么</h2></header>
-          <p class="case-lede">{project.data.aiNeeded}</p>
-          <ul class="case-list">{project.data.aiDesign.map((item) => <li>{item}</li>)}</ul>
-        </section>
+            <section class="case-section reveal" id="ai-necessity">
+              <header>
+                <>
+                  <span>AI 必要性</span>
+                  <h2>模型进入哪一步，为什么</h2>
+                </>
+              </header>
+              <p class="case-lede">{project.data.aiNeeded}</p>
+              <ul class="case-list">
+                {project.data.aiDesign.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+            </section>
 
-        <section class="case-section reveal" id="human-checkpoints">
-          <header><span>人工节点</span><h2>哪些判断不能交给模型</h2></header>
-          <div class="case-split">
-            <div>
-              <h3>必须由人确认</h3>
-              <ul>{project.data.humanCheckpoints.map((item) => <li>{item}</li>)}</ul>
-            </div>
-            <div>
-              <h3>安全与使用边界</h3>
-              <ul>{project.data.safety.map((item) => <li>{item}</li>)}</ul>
-            </div>
-          </div>
-        </section>
+            <section class="case-section reveal" id="human-checkpoints">
+              <header>
+                <>
+                  <span>人工节点</span>
+                  <h2>哪些判断不能交给模型</h2>
+                </>
+              </header>
+              <div class="case-split">
+                <div>
+                  <h3>必须由人确认</h3>
+                  <ul>
+                    {project.data.humanCheckpoints.map((item) => (
+                      <li>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <h3>安全与使用边界</h3>
+                  <ul>
+                    {project.data.safety.map((item) => (
+                      <li>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </section>
 
-        <section class="case-section reveal" id="product-flow">
-          <header><span>产品流程</span><h2>从输入到反馈的完整路径</h2></header>
-          <ol class="case-flow">
-            {
-              project.data.flow.map((step, index) => (
-                <li>
-                  <span>{String(index + 1).padStart(2, '0')}</span>
-                  <strong>{step}</strong>
-                </li>
-              ))
-            }
-          </ol>
-        </section>
+            <section class="case-section reveal" id="product-flow">
+              <header>
+                <>
+                  <span>产品流程</span>
+                  <h2>从输入到反馈的完整路径</h2>
+                </>
+              </header>
+              <ol class="case-flow">
+                {project.data.flow.map((step, index) => (
+                  <li>
+                    <span>{String(index + 1).padStart(2, '0')}</span>
+                    <strong>{step}</strong>
+                  </li>
+                ))}
+              </ol>
+            </section>
 
-        <section class="case-section reveal" id="prototype-evidence">
-          <header><span>原型证据</span><h2>现有材料与缺失状态</h2></header>
-          <ImageGallery
-            images={project.data.gallery}
-            title={project.data.title}
-            slug={project.id}
-            index={project.data.index}
-            cover={project.data.cover}
-            coverAlt={project.data.coverAlt}
-            coverPosition={project.data.coverPosition}
-          />
-        </section>
+            <section class="case-section reveal" id="prototype-evidence">
+              <header>
+                <>
+                  <span>原型证据</span>
+                  <h2>现有材料与缺失状态</h2>
+                </>
+              </header>
+              <ImageGallery
+                images={project.data.gallery}
+                title={project.data.title}
+                slug={project.id}
+                index={project.data.index}
+                cover={project.data.cover}
+                coverAlt={project.data.coverAlt}
+                coverPosition={project.data.coverPosition}
+              />
+            </section>
 
-        <section class="case-section reveal" id="evaluation">
-          <header><span>评测方法</span><h2>用什么观察产品是否更可靠</h2></header>
-          <ul class="case-metrics">
-            {project.data.evaluationMetrics.map((metric) => <li>{metric}</li>)}
-          </ul>
-          <h3>当前重点</h3>
-          <p>{project.data.outcome}</p>
-        </section>
+            <section class="case-section reveal" id="evaluation">
+              <header>
+                <>
+                  <span>评测方法</span>
+                  <h2>用什么观察产品是否更可靠</h2>
+                </>
+              </header>
+              <ul class="case-metrics">
+                {project.data.evaluationMetrics.map((metric) => (
+                  <li>{metric}</li>
+                ))}
+              </ul>
+              <h3>当前重点</h3>
+              <p>{project.data.outcome}</p>
+            </section>
 
-        <section class="case-section reveal" id="failure-boundaries">
-          <header><span>失败边界</span><h2>明确哪些情况不算成功</h2></header>
-          <div class="case-split">
-            <div>
-              <h3>已识别失败</h3>
-              <ul>{project.data.failures.map((item) => <li>{item}</li>)}</ul>
-            </div>
-            <div>
-              <h3>异常场景</h3>
-              <ul>{project.data.edgeCases.map((item) => <li>{item}</li>)}</ul>
-            </div>
-          </div>
-        </section>
+            <section class="case-section reveal" id="failure-boundaries">
+              <header>
+                <>
+                  <span>失败边界</span>
+                  <h2>明确哪些情况不算成功</h2>
+                </>
+              </header>
+              <div class="case-split">
+                <div>
+                  <h3>已识别失败</h3>
+                  <ul>
+                    {project.data.failures.map((item) => (
+                      <li>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <h3>异常场景</h3>
+                  <ul>
+                    {project.data.edgeCases.map((item) => (
+                      <li>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </section>
 
-        <section class="case-section reveal" id="iterations">
-          <header><span>迭代记录</span><h2>从问题回到下一轮行动</h2></header>
-          <div class="case-iterations">
-            {
-              project.data.iterations.map((iteration) => (
-                <article>
-                  <div>
-                    <span>{iteration.stage}</span>
-                    <h3>{iteration.problem}</h3>
-                  </div>
-                  <dl>
+            <section class="case-section reveal" id="iterations">
+              <header>
+                <>
+                  <span>迭代记录</span>
+                  <h2>从问题回到下一轮行动</h2>
+                </>
+              </header>
+              <div class="case-iterations">
+                {project.data.iterations.map((iteration) => (
+                  <article>
                     <div>
-                      <>
-                        <dt>判断</dt>
-                        <dd>{iteration.analysis}</dd>
-                      </>
+                      <span>{iteration.stage}</span>
+                      <h3>{iteration.problem}</h3>
                     </div>
-                    <div>
-                      <>
-                        <dt>调整</dt>
-                        <dd>{iteration.change}</dd>
-                      </>
-                    </div>
-                    <div>
-                      <>
-                        <dt>结果</dt>
-                        <dd>{iteration.result}</dd>
-                      </>
-                    </div>
-                    <div>
-                      <>
-                        <dt>下一步</dt>
-                        <dd>{iteration.next}</dd>
-                      </>
-                    </div>
-                  </dl>
-                </article>
-              ))
-            }
-          </div>
-        </section>
+                    <dl>
+                      <div>
+                        <>
+                          <dt>判断</dt>
+                          <dd>{iteration.analysis}</dd>
+                        </>
+                      </div>
+                      <div>
+                        <>
+                          <dt>调整</dt>
+                          <dd>{iteration.change}</dd>
+                        </>
+                      </div>
+                      <div>
+                        <>
+                          <dt>结果</dt>
+                          <dd>{iteration.result}</dd>
+                        </>
+                      </div>
+                      <div>
+                        <>
+                          <dt>下一步</dt>
+                          <dd>{iteration.next}</dd>
+                        </>
+                      </div>
+                    </dl>
+                  </article>
+                ))}
+              </div>
+            </section>
 
-        <section class="case-section reveal" id="reflection">
-          <header><span>反思与来源</span><h2>我从这个项目留下什么判断</h2></header>
-          <blockquote>{project.data.reflection}</blockquote>
-          <h3>后续计划</h3>
-          <ul>{project.data.nextSteps.map((item) => <li>{item}</li>)}</ul>
-          <div class="case-source">
-            <strong>来源说明</strong>
-            <p>{project.data.sourceNote}</p>
+            <section class="case-section reveal" id="reflection">
+              <header>
+                <>
+                  <span>反思与来源</span>
+                  <h2>我从这个项目留下什么判断</h2>
+                </>
+              </header>
+              <blockquote>{project.data.reflection}</blockquote>
+              <h3>后续计划</h3>
+              <ul>
+                {project.data.nextSteps.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+              <div class="case-source">
+                <strong>来源说明</strong>
+                <p>{project.data.sourceNote}</p>
+              </div>
+              <div class="prose case-mdx">
+                <Content />
+              </div>
+            </section>
           </div>
-          <div class="prose case-mdx"><Content /></div>
-        </section>
+        </div>
+      )
+    }
+
+    <footer class="case-footer page-shell reveal">
+      <div class="case-footer__intro">
+        <span>继续探索</span>
+        <h2>回到项目列表，或查看可核验的项目入口</h2>
       </div>
-    </div>
+      <div class="case-footer__actions">
+        <a class="button" href="/projects/">返回项目列表</a>
+        {
+          sourceLinks.map((link, index) => (
+            <a
+              class:list={['button', { 'button--primary': index === 0 }]}
+              href={link.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={sourceAriaLabels[link.type]}
+            >
+              <SourceLinkIcon type={link.type} />
+              {link.label}
+            </a>
+          ))
+        }
+      </div>
+    </footer>
 
-    <nav class="next-case page-shell reveal" aria-label="下一个项目">
-      <span>下一个项目</span>
+    <nav class="case-pagination page-shell reveal" aria-label="相邻项目">
+      <a href={`/projects/${previousProject.id}/`}>
+        <span>← 上一个项目</span>
+        <strong>{previousProject.data.title}</strong>
+      </a>
       <a href={`/projects/${nextProject.id}/`}>
+        <span>下一个项目 →</span>
         <strong>{nextProject.data.title}</strong>
-        <span aria-hidden="true">→</span>
       </a>
     </nav>
   </article>
@@ -339,9 +495,14 @@ const structuredData = {
 
   .case-hero__actions {
     display: flex;
+    min-width: 0;
     flex-wrap: wrap;
     gap: 0.6rem;
     justify-content: flex-end;
+  }
+
+  .case-hero__actions .button {
+    white-space: nowrap;
   }
 
   .case-hero__cover {
@@ -660,40 +821,73 @@ const structuredData = {
     border-top: 1px solid var(--border);
   }
 
-  .next-case {
+  .case-footer {
     display: grid;
     grid-template-columns: 190px minmax(0, 1fr);
     gap: clamp(3rem, 8vw, 8rem);
-    align-items: baseline;
-    padding-block: clamp(3rem, 7vw, 6rem);
+    align-items: end;
+    padding-block: clamp(3.5rem, 8vw, 7rem);
     border-top: 1px solid var(--border-strong);
   }
 
-  .next-case > span {
+  .case-footer__intro > span,
+  .case-pagination a > span {
     color: var(--text-muted);
     font-size: 0.76rem;
   }
 
-  .next-case a {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    font-size: clamp(1.5rem, 3vw, 3rem);
+  .case-footer__intro h2 {
+    max-width: 22ch;
+    margin: 0.55rem 0 0;
+    font-size: clamp(1.35rem, 2.4vw, 2rem);
+    line-height: 1.25;
   }
 
-  .next-case a > span {
-    color: var(--accent-hover);
+  .case-footer__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.65rem;
+  }
+
+  .case-footer__actions .button {
+    white-space: nowrap;
+  }
+
+  .case-pagination {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-top: 1px solid var(--border-strong);
+  }
+
+  .case-pagination a {
+    display: grid;
+    gap: 0.7rem;
+    min-width: 0;
+    padding-block: clamp(2.5rem, 6vw, 4.5rem);
+  }
+
+  .case-pagination a:last-child {
+    padding-left: clamp(1.5rem, 4vw, 4rem);
+    border-left: 1px solid var(--border);
+    text-align: right;
+  }
+
+  .case-pagination strong {
+    overflow-wrap: anywhere;
+    font-size: clamp(1.15rem, 2.3vw, 1.8rem);
+    line-height: 1.3;
   }
 
   @media (max-width: 900px) {
     .case-hero__title,
     .case-layout,
-    .next-case {
+    .case-footer {
       grid-template-columns: 1fr;
     }
 
-    .case-hero__actions {
+    .case-hero__actions,
+    .case-footer__actions {
       justify-content: flex-start;
     }
 
@@ -714,6 +908,25 @@ const structuredData = {
   }
 
   @media (max-width: 680px) {
+    .case-hero__title {
+      gap: 1.5rem;
+    }
+
+    .case-hero__actions {
+      width: 100%;
+    }
+
+    .case-pagination {
+      grid-template-columns: 1fr;
+    }
+
+    .case-pagination a:last-child {
+      padding-left: 0;
+      border-top: 1px solid var(--border);
+      border-left: 0;
+      text-align: left;
+    }
+
     .case-summary dl,
     .case-split,
     .case-flow {
@@ -735,6 +948,13 @@ const structuredData = {
     .case-iterations article {
       grid-template-columns: 1fr;
       gap: 1rem;
+    }
+  }
+
+  @media (max-width: 390px) {
+    .case-hero__actions .button {
+      min-height: 46px;
+      padding-inline: 1rem;
     }
   }
 </style>

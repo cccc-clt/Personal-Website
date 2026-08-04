@@ -1,0 +1,24 @@
+---
+import type { ProjectUserStory } from '../data/projectCaseStudies';
+
+interface Props {
+  title: string;
+  stories: ProjectUserStory[];
+}
+
+const { title, stories } = Astro.props;
+---
+
+<section class="story-group">
+  <h3>{title}</h3>
+  <ol>
+    {
+      stories.map((story) => (
+        <li>
+          <p>{story.story}</p>
+          <small>验收：{story.acceptance}</small>
+        </li>
+      ))
+    }
+  </ol>
+</section>

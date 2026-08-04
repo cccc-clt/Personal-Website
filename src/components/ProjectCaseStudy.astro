@@ -1,0 +1,1090 @@
+---
+import type { ProjectCaseStudy } from '../data/projectCaseStudies';
+import EvidenceBadge from './EvidenceBadge.astro';
+import ProjectEvidenceGallery from './ProjectEvidenceGallery.astro';
+import ScopeColumn from './ScopeColumn.astro';
+import StoryGroup from './StoryGroup.astro';
+import StudyHeader from './StudyHeader.astro';
+
+interface Props {
+  study: ProjectCaseStudy;
+  projectTitle: string;
+  projectSlug: string;
+  sourceNote: string;
+}
+
+const { study, projectTitle, projectSlug, sourceNote } = Astro.props;
+const p0Stories = study.userStories.filter((story) => story.priority === 'P0');
+const p1Stories = study.userStories.filter((story) => story.priority === 'P1');
+const interfaceFigures = study.figures.filter((figure) => figure.group === 'interface');
+const sectionLinks = [
+  ['background', '背景与问题'],
+  ['personas', '目标用户'],
+  ['pain-points', '用户痛点'],
+  ['user-stories', '用户故事'],
+  ['priorities', '需求优先级'],
+  ['prd', '简版 PRD'],
+  ['mvp', 'MVP 范围'],
+  ['research', '用户研究'],
+  ['product-flow', '方案与流程'],
+  ['prototype-evidence', '功能与原型'],
+  ['evaluation', '评测与数据'],
+  ['iterations', 'Bad Case'],
+  ['risks', '风险与边界'],
+  ['contribution', '我的贡献'],
+] as const;
+---
+
+<div class:list={['project-study', `project-study--${study.accent}`]} data-project-study>
+  <div class="project-study__layout page-shell">
+    <aside class="project-study__toc" aria-label="项目详情目录">
+      <p>项目详情</p>
+      <nav data-study-nav>
+        {sectionLinks.map(([id, label]) => <a href={`#${id}`}>{label}</a>)}
+      </nav>
+    </aside>
+
+    <div class="project-study__content">
+      <section class="study-section reveal" id="background">
+        <StudyHeader label="项目背景与问题定义" title="为什么做，以及核心问题是什么" />
+        <div class="background-grid">
+          <article>
+            <h3>为什么做</h3>
+            <p>{study.background.why}</p>
+          </article>
+          <article>
+            <h3>原有流程 / 用户任务</h3>
+            <p>{study.background.originalTask}</p>
+          </article>
+          <article>
+            <h3>核心问题</h3>
+            <p>{study.background.coreProblem}</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="study-section reveal" id="personas">
+        <StudyHeader label="目标用户画像" title="为谁解决什么任务" />
+        <div class="persona-grid" data-reveal-group>
+          {
+            study.personas.map((persona) => (
+              <article class="persona">
+                <h3>{persona.type}</h3>
+                <dl>
+                  <div>
+                    <>
+                      <dt>核心任务</dt>
+                      <dd>{persona.task}</dd>
+                    </>
+                  </div>
+                  <div>
+                    <>
+                      <dt>典型场景</dt>
+                      <dd>{persona.scenario}</dd>
+                    </>
+                  </div>
+                  <div>
+                    <>
+                      <dt>主要目标</dt>
+                      <dd>{persona.goal}</dd>
+                    </>
+                  </div>
+                  <div>
+                    <>
+                      <dt>主要阻碍</dt>
+                      <dd>{persona.barrier}</dd>
+                    </>
+                  </div>
+                </dl>
+              </article>
+            ))
+          }
+        </div>
+      </section>
+
+      <section class="study-section reveal" id="pain-points">
+        <StudyHeader label="用户痛点清单" title="问题、场景与证据放在同一张表里" />
+        <div class="pain-table-wrap">
+          <table class="pain-table">
+            <thead>
+              <tr><th>痛点</th><th>发生场景</th><th>影响</th><th>证据 / 来源</th><th>优先级</th></tr
+              >
+            </thead>
+            <tbody>
+              {
+                study.painPoints.map((point) => (
+                  <tr>
+                    <th scope="row" data-label="痛点">
+                      {point.pain}
+                    </th>
+                    <td data-label="发生场景">{point.scenario}</td>
+                    <td data-label="影响">{point.impact}</td>
+                    <td data-label="证据 / 来源">{point.evidence}</td>
+                    <td data-label="优先级">
+                      <span class={`priority priority--${point.priority.toLowerCase()}`}>
+                        {point.priority}
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="study-section reveal" id="user-stories">
+        <StudyHeader label="用户故事" title="按 P0 / P1 收敛，而不是一次塞满" />
+        <div class="story-groups">
+          <StoryGroup title="P0 · 核心闭环" stories={p0Stories} />
+          <StoryGroup title="P1 · 重要增强" stories={p1Stories} />
+        </div>
+      </section>
+
+      <section class="study-section reveal" id="priorities">
+        <StudyHeader label="需求优先级" title="MVP 核心、增强项与后续规划" />
+        <div class="priority-board">
+          {
+            study.priorities.map((group) => (
+              <article>
+                <div>
+                  <span class={`priority priority--${group.priority.toLowerCase()}`}>
+                    {group.priority}
+                  </span>
+                  <h3>{group.title}</h3>
+                </div>
+                <p>{group.description}</p>
+                <ul>
+                  {group.items.map((item) => (
+                    <li>{item}</li>
+                  ))}
+                </ul>
+              </article>
+            ))
+          }
+        </div>
+      </section>
+
+      <section class="study-section reveal" id="prd">
+        <StudyHeader label="简版 PRD" title="用九个字段概括产品定义" />
+        <dl class="prd-grid">
+          {
+            study.prd.map((item) => (
+              <div>
+                <>
+                  <dt>{item.label}</dt>
+                  <dd>{item.content}</dd>
+                </>
+              </div>
+            ))
+          }
+        </dl>
+      </section>
+
+      <section class="study-section reveal" id="mvp">
+        <StudyHeader label="MVP 范围" title="本期做什么，也明确不做什么" />
+        <div class="mvp-grid">
+          <ScopeColumn title="本期包含" items={study.mvp.included} />
+          <ScopeColumn title="本期不包含" items={study.mvp.excluded} />
+          <ScopeColumn title="后续验证" items={study.mvp.validation} />
+        </div>
+        <div class="success-callout">
+          <strong>MVP 成功标准</strong>
+          <p>{study.mvp.success}</p>
+        </div>
+      </section>
+
+      <section class="study-section reveal" id="research">
+        <StudyHeader label="用户研究状态" title="完成、计划与假设严格分开" />
+        <div class="research-status">
+          <header>
+            <EvidenceBadge status={study.research.status} />
+            <h3>{study.research.title}</h3>
+          </header>
+          <div>
+            <article>
+              <h4>已完成</h4><ul>{study.research.completed.map((item) => <li>{item}</li>)}</ul>
+            </article>
+            <article>
+              <h4>未完成 / 待验证</h4><ul>
+                {study.research.pending.map((item) => <li>{item}</li>)}
+              </ul>
+            </article>
+          </div>
+          <p>{study.research.boundary}</p>
+        </div>
+      </section>
+
+      <section class="study-section reveal" id="product-flow">
+        <StudyHeader label="产品方案与核心流程" title="从输入到人工确认的完整路径" />
+        <ol class="process-timeline">
+          {
+            study.process.map((step, index) => (
+              <li>
+                <span>{String(index + 1).padStart(2, '0')}</span>
+                <div>
+                  <>
+                    <h3>{step.title}</h3>
+                    <p>{step.description}</p>
+                  </>
+                </div>
+              </li>
+            ))
+          }
+        </ol>
+        <ProjectEvidenceGallery
+          figures={study.figures}
+          title={projectTitle}
+          slug={projectSlug}
+          group="flow"
+        />
+      </section>
+
+      <section class="study-section reveal" id="prototype-evidence">
+        <StudyHeader label="功能与界面 / 原型" title="每张图都说明它解决什么问题" />
+        {
+          interfaceFigures.length > 0 ? (
+            <ProjectEvidenceGallery
+              figures={study.figures}
+              title={projectTitle}
+              slug={projectSlug}
+              group="interface"
+            />
+          ) : (
+            <div class="evidence-empty">
+              <strong>当前没有独立界面截图组</strong>
+              <p>
+                详情 Hero 使用真实工作流界面封面；正文继续用 Dify
+                YML、章节检查和评测图表呈现可核验结构，不伪造产品截图。
+              </p>
+            </div>
+          )
+        }
+      </section>
+
+      <section class="study-section reveal" id="evaluation">
+        <StudyHeader label="效果评测与关键数据" title="数字旁边必须有证据状态" />
+        <div class="evaluation-grid">
+          {
+            study.evaluations.map((item) => (
+              <article>
+                <div>
+                  <>
+                    <strong>{item.value}</strong>
+                    <EvidenceBadge status={item.status} />
+                  </>
+                </div>
+                <h3>{item.label}</h3>
+                <p>{item.note}</p>
+              </article>
+            ))
+          }
+        </div>
+        <ProjectEvidenceGallery
+          figures={study.figures}
+          title={projectTitle}
+          slug={projectSlug}
+          group="evaluation"
+        />
+      </section>
+
+      <section class="study-section reveal" id="iterations">
+        <StudyHeader label="Bad Case 与迭代" title="问题 → 定位 → 修复 → 回归验证" />
+        <div class="bad-case-list">
+          {
+            study.badCases.map((badCase) => (
+              <article>
+                <header>
+                  <>
+                    <h3>{badCase.title}</h3>
+                    <EvidenceBadge status={badCase.status} />
+                  </>
+                </header>
+                <ol>
+                  <li>
+                    <>
+                      <span>问题</span>
+                      <p>{badCase.problem}</p>
+                    </>
+                  </li>
+                  <li>
+                    <>
+                      <span>定位</span>
+                      <p>{badCase.diagnosis}</p>
+                    </>
+                  </li>
+                  <li>
+                    <>
+                      <span>修复</span>
+                      <p>{badCase.fix}</p>
+                    </>
+                  </li>
+                  <li>
+                    <>
+                      <span>回归验证</span>
+                      <p>{badCase.verification}</p>
+                    </>
+                  </li>
+                </ol>
+              </article>
+            ))
+          }
+        </div>
+      </section>
+
+      <section class="study-section reveal" id="risks">
+        <StudyHeader label="风险与边界" title="明确不能被模型或页面夸大的部分" />
+        <dl class="risk-list">
+          {
+            study.risks.map((risk) => (
+              <div>
+                <>
+                  <dt>{risk.title}</dt>
+                  <dd>{risk.description}</dd>
+                </>
+              </div>
+            ))
+          }
+        </dl>
+        <blockquote class="boundary-statement">{study.boundaryStatement}</blockquote>
+      </section>
+
+      <section class="study-section reveal" id="contribution">
+        <StudyHeader label="我的贡献" title="以真实可核验的工作说明职责" />
+        <ul class="contribution-list">
+          {study.contributions.map((item) => <li>{item}</li>)}
+        </ul>
+        <div class="source-note">
+          <strong>来源说明</strong>
+          <p>{sourceNote}</p>
+        </div>
+        <div class="project-mdx prose"><slot /></div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<script>
+  let studyNavObserver: IntersectionObserver | undefined;
+
+  const setupStudyNavigation = () => {
+    studyNavObserver?.disconnect();
+    const nav = document.querySelector<HTMLElement>('[data-study-nav]');
+    const links = nav ? [...nav.querySelectorAll<HTMLAnchorElement>('a[href^="#"]')] : [];
+    if (!nav || !links.length) return;
+
+    const sections = links
+      .map((link) => document.querySelector<HTMLElement>(link.hash))
+      .filter((section): section is HTMLElement => Boolean(section));
+
+    const setCurrent = (id: string) => {
+      links.forEach((link) => {
+        if (link.hash === `#${id}`) link.setAttribute('aria-current', 'location');
+        else link.removeAttribute('aria-current');
+      });
+    };
+
+    setCurrent(sections[0]?.id ?? '');
+    studyNavObserver = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+        if (visible) setCurrent((visible.target as HTMLElement).id);
+      },
+      { rootMargin: '-18% 0px -68% 0px', threshold: [0, 0.1] },
+    );
+    sections.forEach((section) => studyNavObserver?.observe(section));
+  };
+
+  setupStudyNavigation();
+  document.addEventListener('site:page-view', setupStudyNavigation);
+</script>
+
+<style>
+  .project-study--cyan {
+    --study-accent: #267b86;
+    --study-accent-soft: color-mix(in srgb, #4b9fac 12%, var(--surface-solid));
+  }
+
+  .project-study--violet {
+    --study-accent: #7c62a8;
+    --study-accent-soft: color-mix(in srgb, #a987c2 13%, var(--surface-solid));
+  }
+
+  .project-study--amber {
+    --study-accent: #a26423;
+    --study-accent-soft: color-mix(in srgb, #c98232 13%, var(--surface-solid));
+  }
+
+  .project-study__layout {
+    display: grid;
+    grid-template-columns: 190px minmax(0, 1fr);
+    gap: clamp(3rem, 8vw, 8rem);
+    align-items: start;
+    padding-bottom: clamp(5rem, 10vw, 10rem);
+  }
+
+  .project-study__toc {
+    position: sticky;
+    top: 7rem;
+    padding-top: 0.8rem;
+  }
+
+  .project-study__toc > p {
+    margin: 0 0 0.8rem;
+    color: var(--text-main);
+    font-size: 0.78rem;
+    font-weight: 650;
+  }
+
+  .project-study__toc nav {
+    display: grid;
+  }
+
+  .project-study__toc a {
+    padding: 0.48rem 0;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    transition: color 180ms ease;
+  }
+
+  .project-study__toc a:hover,
+  .project-study__toc a[aria-current='location'] {
+    color: var(--study-accent);
+  }
+
+  .project-study__content {
+    width: min(100%, 940px);
+    min-width: 0;
+  }
+
+  .study-section {
+    scroll-margin-top: 7rem;
+    padding: clamp(3.8rem, 8vw, 7rem) 0;
+    border-top: 1px solid var(--border-strong);
+  }
+
+  .study-section:first-child {
+    padding-top: 0.8rem;
+    border-top: 0;
+  }
+
+  :global(.study-heading) {
+    margin-bottom: clamp(2rem, 4vw, 2.8rem);
+  }
+
+  :global(.study-heading span) {
+    color: var(--study-accent);
+    font-size: 0.82rem;
+    font-weight: 650;
+  }
+
+  :global(.study-heading h2) {
+    max-width: 20ch;
+    margin: 0.55rem 0 0;
+    font-size: clamp(2.1rem, 4vw, 3rem);
+    letter-spacing: -0.018em;
+    line-height: 1.18;
+  }
+
+  .background-grid,
+  .persona-grid,
+  .priority-board,
+  .mvp-grid,
+  .evaluation-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1px;
+    background: var(--border);
+  }
+
+  .background-grid article,
+  .persona,
+  .priority-board article,
+  .mvp-grid :global(.scope-column),
+  .evaluation-grid article {
+    min-width: 0;
+    padding: clamp(1.25rem, 3vw, 1.7rem);
+    background: var(--surface-solid);
+  }
+
+  .background-grid h3,
+  .persona h3,
+  .priority-board h3,
+  .evaluation-grid h3 {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: 0.92rem;
+  }
+
+  .background-grid p,
+  .priority-board p,
+  .evaluation-grid p {
+    margin: 0.8rem 0 0;
+    color: var(--text-secondary);
+    font-size: 0.84rem;
+    line-height: 1.75;
+  }
+
+  .persona-grid {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+
+  .persona h3 {
+    color: var(--study-accent);
+    font-size: 1rem;
+  }
+
+  .persona dl {
+    display: grid;
+    gap: 0;
+    margin: 1rem 0 0;
+  }
+
+  .persona dl > div {
+    padding: 0.85rem 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .persona dt,
+  .prd-grid dt,
+  .risk-list dt {
+    color: var(--text-muted);
+    font-size: 0.7rem;
+    font-weight: 650;
+  }
+
+  .persona dd,
+  .prd-grid dd,
+  .risk-list dd {
+    margin: 0.35rem 0 0;
+    color: var(--text-secondary);
+    font-size: 0.82rem;
+    line-height: 1.72;
+  }
+
+  .pain-table-wrap {
+    max-width: 100%;
+    overflow-x: auto;
+    border-top: 1px solid var(--border-strong);
+  }
+
+  .pain-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.78rem;
+  }
+
+  .pain-table th,
+  .pain-table td {
+    padding: 0.9rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-secondary);
+    line-height: 1.6;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .pain-table thead th {
+    color: var(--text-main);
+    font-size: 0.7rem;
+    font-weight: 650;
+  }
+
+  .pain-table tbody th {
+    min-width: 10rem;
+    color: var(--text-main);
+    font-weight: 600;
+  }
+
+  .priority {
+    display: inline-flex;
+    min-width: 34px;
+    min-height: 24px;
+    align-items: center;
+    justify-content: center;
+    padding: 0.2rem 0.45rem;
+    border-radius: var(--radius-pill);
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-weight: 700;
+  }
+
+  .priority--p0 {
+    background: color-mix(in srgb, var(--study-accent) 16%, var(--surface-solid));
+    color: var(--study-accent);
+  }
+
+  .priority--p1 {
+    background: var(--accent-soft);
+    color: var(--accent-hover);
+  }
+
+  .priority--p2 {
+    background: var(--surface-soft);
+    color: var(--text-secondary);
+  }
+
+  .story-groups {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(2rem, 5vw, 4rem);
+  }
+
+  :global(.story-group h3),
+  :global(.scope-column h3) {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+  }
+
+  :global(.story-group ol) {
+    display: grid;
+    gap: 0;
+    margin: 1rem 0 0;
+    padding: 0;
+    border-top: 1px solid var(--border);
+    list-style: none;
+  }
+
+  :global(.story-group li) {
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  :global(.story-group li > p) {
+    margin: 0;
+    color: var(--text-main);
+    font-size: 0.84rem;
+    line-height: 1.7;
+  }
+
+  :global(.story-group li > small) {
+    display: block;
+    margin-top: 0.5rem;
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    line-height: 1.6;
+  }
+
+  .priority-board article > div {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+  }
+
+  .priority-board ul,
+  .mvp-grid :global(ul),
+  .research-status ul,
+  .contribution-list {
+    display: grid;
+    gap: 0.55rem;
+    margin: 1rem 0 0;
+    padding-left: 1.1rem;
+  }
+
+  .priority-board li,
+  .mvp-grid :global(li),
+  .research-status li,
+  .contribution-list li {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    line-height: 1.65;
+  }
+
+  .prd-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin: 0;
+    border-top: 1px solid var(--border-strong);
+  }
+
+  .prd-grid > div {
+    padding: 1.15rem 1rem 1.2rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .prd-grid > div:not(:nth-child(3n + 1)) {
+    padding-left: 1rem;
+    border-left: 1px solid var(--border);
+  }
+
+  .mvp-grid :global(.scope-column h3) {
+    color: var(--study-accent);
+  }
+
+  .success-callout,
+  .research-status,
+  .evidence-empty,
+  .source-note {
+    margin-top: 1.5rem;
+    padding: 1.25rem 1.4rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface-solid);
+  }
+
+  .success-callout strong,
+  .source-note strong,
+  .evidence-empty strong {
+    color: var(--study-accent);
+    font-size: 0.78rem;
+  }
+
+  .success-callout p,
+  .source-note p,
+  .evidence-empty p {
+    margin: 0.5rem 0 0;
+    color: var(--text-secondary);
+    font-size: 0.84rem;
+    line-height: 1.75;
+  }
+
+  .research-status header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.7rem;
+  }
+
+  .research-status h3,
+  .research-status h4 {
+    margin: 0;
+    font-family: var(--font-sans);
+  }
+
+  .research-status h3 {
+    font-size: 1rem;
+  }
+
+  .research-status h4 {
+    font-size: 0.8rem;
+  }
+
+  .research-status > div {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2rem;
+    margin-top: 1.5rem;
+  }
+
+  .research-status > p {
+    margin: 1.4rem 0 0;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 0.76rem;
+    line-height: 1.7;
+  }
+
+  .process-timeline {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 0 0 2rem;
+    padding: 0;
+    border-top: 1px solid var(--border-strong);
+    list-style: none;
+  }
+
+  .process-timeline li {
+    display: grid;
+    grid-template-columns: 2.4rem minmax(0, 1fr);
+    gap: 0.8rem;
+    padding: 1rem 1rem 1.1rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .process-timeline li:nth-child(even) {
+    padding-left: 1rem;
+    border-left: 1px solid var(--border);
+  }
+
+  .process-timeline > li > span {
+    color: var(--study-accent);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+  }
+
+  .process-timeline h3 {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: 0.84rem;
+  }
+
+  .process-timeline p {
+    margin: 0.45rem 0 0;
+    color: var(--text-secondary);
+    font-size: 0.76rem;
+    line-height: 1.65;
+  }
+
+  .evaluation-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-bottom: 2rem;
+  }
+
+  .evaluation-grid article > div {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.65rem;
+  }
+
+  .evaluation-grid strong {
+    font-family: var(--font-mono);
+    font-size: 1.05rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .evaluation-grid h3 {
+    margin-top: 0.7rem;
+  }
+
+  .bad-case-list {
+    display: grid;
+    gap: 2.2rem;
+  }
+
+  .bad-case-list > article {
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--border-strong);
+  }
+
+  .bad-case-list header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .bad-case-list h3 {
+    margin: 0;
+    font-size: 1.2rem;
+  }
+
+  .bad-case-list ol {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1px;
+    margin: 1.2rem 0 0;
+    padding: 0;
+    background: var(--border);
+    list-style: none;
+  }
+
+  .bad-case-list li {
+    padding: 1.1rem;
+    background: var(--surface-solid);
+  }
+
+  .bad-case-list li span {
+    color: var(--study-accent);
+    font-size: 0.72rem;
+    font-weight: 650;
+  }
+
+  .bad-case-list li p {
+    margin: 0.55rem 0 0;
+    color: var(--text-secondary);
+    font-size: 0.76rem;
+    line-height: 1.65;
+  }
+
+  .risk-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 0;
+    border-top: 1px solid var(--border-strong);
+  }
+
+  .risk-list > div {
+    padding: 1rem 1rem 1.1rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .risk-list > div:nth-child(even) {
+    padding-left: 1rem;
+    border-left: 1px solid var(--border);
+  }
+
+  .boundary-statement {
+    margin: 1.5rem 0 0;
+    padding: 1.25rem 1.4rem;
+    border-radius: var(--radius-sm);
+    background: var(--study-accent-soft);
+    color: var(--text-main);
+    font-size: clamp(0.95rem, 1.6vw, 1.08rem);
+    font-weight: 600;
+    line-height: 1.75;
+  }
+
+  .contribution-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--border-strong);
+    list-style: none;
+  }
+
+  .contribution-list li {
+    padding: 1rem 1rem 1rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .contribution-list li:nth-child(even) {
+    border-left: 1px solid var(--border);
+  }
+
+  .project-mdx {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+  }
+
+  @media (max-width: 900px) {
+    .project-study__layout {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+
+    .project-study__toc {
+      position: static;
+      min-width: 0;
+      overflow-x: auto;
+      padding-top: 0;
+    }
+
+    .project-study__toc > p {
+      display: none;
+    }
+
+    .project-study__toc nav {
+      display: flex;
+      min-width: max-content;
+      gap: 1rem;
+      border-bottom: 1px solid var(--border-strong);
+    }
+
+    .project-study__toc a {
+      flex: 0 0 auto;
+      border-bottom: 0;
+    }
+
+    .bad-case-list ol {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 700px) {
+    .background-grid,
+    .priority-board,
+    .mvp-grid,
+    .evaluation-grid,
+    .story-groups,
+    .research-status > div,
+    .process-timeline,
+    .risk-list,
+    .contribution-list {
+      grid-template-columns: 1fr;
+    }
+
+    .prd-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .prd-grid > div:nth-child(n),
+    .process-timeline li:nth-child(n),
+    .risk-list > div:nth-child(n),
+    .contribution-list li:nth-child(n) {
+      padding-inline: 0;
+      border-left: 0;
+    }
+
+    .persona-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .pain-table-wrap {
+      overflow: visible;
+      border-top: 0;
+    }
+
+    .pain-table,
+    .pain-table tbody,
+    .pain-table tr,
+    .pain-table th,
+    .pain-table td {
+      display: block;
+      width: 100%;
+    }
+
+    .pain-table thead {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+    }
+
+    .pain-table tr {
+      margin-bottom: 1rem;
+      padding: 0.8rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--surface-solid);
+    }
+
+    .pain-table th,
+    .pain-table td {
+      display: grid;
+      grid-template-columns: 6.5rem minmax(0, 1fr);
+      gap: 0.75rem;
+      padding: 0.58rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .pain-table td:last-child {
+      border-bottom: 0;
+    }
+
+    .pain-table th::before,
+    .pain-table td::before {
+      color: var(--text-muted);
+      content: attr(data-label);
+      font-size: 0.68rem;
+      font-weight: 600;
+    }
+
+    .bad-case-list ol {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 390px) {
+    .project-study__layout {
+      gap: 2rem;
+    }
+
+    .study-section {
+      padding-block: 3.5rem;
+    }
+
+    .background-grid article,
+    .persona,
+    .priority-board article,
+    .mvp-grid :global(.scope-column),
+    .evaluation-grid article {
+      padding: 1.1rem;
+    }
+
+    .pain-table th,
+    .pain-table td {
+      grid-template-columns: 1fr;
+      gap: 0.25rem;
+    }
+  }
+</style>

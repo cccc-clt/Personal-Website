@@ -1,0 +1,251 @@
+---
+import type { ProjectFigure } from '../data/projectCaseStudies';
+
+interface Props {
+  figures: ProjectFigure[];
+  title: string;
+  slug: string;
+  group: ProjectFigure['group'];
+}
+
+const { figures, title, slug, group } = Astro.props;
+const items = figures.filter((figure) => figure.group === group);
+const dialogId = `evidence-${slug}-${group}`;
+---
+
+{
+  items.length > 0 && (
+    <div class:list={['evidence-gallery', `evidence-gallery--${group}`]}>
+      <div class="evidence-gallery__grid">
+        {items.map((figure, index) => (
+          <figure>
+            <button
+              type="button"
+              data-evidence-open={dialogId}
+              data-evidence-src={figure.src}
+              data-evidence-alt={figure.alt}
+              data-evidence-caption={figure.caption}
+              aria-label={`放大查看：${figure.alt}`}
+            >
+              <img
+                src={figure.src}
+                alt={figure.alt}
+                width="1600"
+                height="900"
+                loading="lazy"
+                decoding="async"
+              />
+              <span>放大查看</span>
+            </button>
+            <figcaption>
+              <span>{String(index + 1).padStart(2, '0')}</span>
+              {figure.caption}
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+
+      <dialog
+        id={dialogId}
+        class="evidence-dialog"
+        data-evidence-dialog
+        aria-label={`${title} 图片预览`}
+      >
+        <button
+          type="button"
+          class="evidence-dialog__close"
+          data-evidence-close
+          aria-label="关闭图片"
+        >
+          ×
+        </button>
+        <figure>
+          <img
+            src={items[0].src}
+            alt={items[0].alt}
+            width="1600"
+            height="900"
+            data-evidence-image
+          />
+          <figcaption data-evidence-dialog-caption>{items[0].caption}</figcaption>
+        </figure>
+      </dialog>
+    </div>
+  )
+}
+
+<script>
+  let evidenceTrigger: HTMLButtonElement | null = null;
+
+  document.addEventListener('click', (event) => {
+    const target = event.target as HTMLElement;
+    const openButton = target.closest<HTMLButtonElement>('[data-evidence-open]');
+    if (openButton) {
+      const dialog = document.getElementById(
+        openButton.dataset.evidenceOpen ?? '',
+      ) as HTMLDialogElement | null;
+      const image = dialog?.querySelector<HTMLImageElement>('[data-evidence-image]');
+      const caption = dialog?.querySelector<HTMLElement>('[data-evidence-dialog-caption]');
+      if (!dialog || !image || !openButton.dataset.evidenceSrc) return;
+      evidenceTrigger = openButton;
+      image.src = openButton.dataset.evidenceSrc;
+      image.alt = openButton.dataset.evidenceAlt ?? '项目证据图片';
+      if (caption) caption.textContent = openButton.dataset.evidenceCaption ?? '';
+      dialog.showModal();
+      dialog.querySelector<HTMLButtonElement>('[data-evidence-close]')?.focus();
+      return;
+    }
+
+    const closeButton = target.closest<HTMLButtonElement>('[data-evidence-close]');
+    if (closeButton) closeButton.closest<HTMLDialogElement>('dialog')?.close();
+    if (target.matches('[data-evidence-dialog]')) (target as HTMLDialogElement).close();
+  });
+
+  document.addEventListener(
+    'close',
+    (event) => {
+      if ((event.target as HTMLElement).matches('[data-evidence-dialog]')) evidenceTrigger?.focus();
+    },
+    true,
+  );
+</script>
+
+<style>
+  .evidence-gallery__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(1.2rem, 3vw, 2rem);
+  }
+
+  figure {
+    min-width: 0;
+    margin: 0;
+  }
+
+  .evidence-gallery--flow figure:first-child,
+  .evidence-gallery--interface figure:first-child {
+    grid-column: 1 / -1;
+  }
+
+  figure > button {
+    position: relative;
+    display: grid;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    place-items: center;
+    overflow: hidden;
+    padding: 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface-solid);
+    cursor: zoom-in;
+  }
+
+  figure > button img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: scale 300ms var(--ease-out);
+  }
+
+  figure > button:hover img {
+    scale: 1.012;
+  }
+
+  figure > button span {
+    position: absolute;
+    right: 0.75rem;
+    bottom: 0.75rem;
+    padding: 0.42rem 0.6rem;
+    border-radius: 8px;
+    background: rgba(24, 20, 17, 0.84);
+    color: #fff;
+    font-size: 0.68rem;
+  }
+
+  figure > figcaption {
+    display: grid;
+    grid-template-columns: 2rem minmax(0, 1fr);
+    gap: 0.7rem;
+    margin-top: 0.7rem;
+    color: var(--text-secondary);
+    font-size: 0.76rem;
+    line-height: 1.65;
+  }
+
+  figure > figcaption span {
+    color: var(--study-accent, var(--accent-hover));
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+  }
+
+  .evidence-dialog {
+    width: min(1240px, calc(100vw - 32px));
+    max-width: none;
+    max-height: calc(100dvh - 32px);
+    padding: 1rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--surface-solid);
+    color: var(--text-main);
+  }
+
+  .evidence-dialog::backdrop {
+    background: rgba(8, 7, 6, 0.82);
+    backdrop-filter: blur(6px);
+  }
+
+  .evidence-dialog figure {
+    margin: 0;
+  }
+
+  .evidence-dialog img {
+    display: block;
+    width: 100%;
+    max-height: calc(100dvh - 130px);
+    object-fit: contain;
+  }
+
+  .evidence-dialog figcaption {
+    padding: 0.75rem 0.25rem 0;
+    color: var(--text-secondary);
+    font-size: 0.78rem;
+    line-height: 1.6;
+  }
+
+  .evidence-dialog__close {
+    position: absolute;
+    z-index: 2;
+    top: 1.4rem;
+    right: 1.4rem;
+    display: grid;
+    width: 44px;
+    height: 44px;
+    place-items: center;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--surface-solid) 92%, transparent);
+    color: var(--text-main);
+    cursor: pointer;
+    font-size: 1.4rem;
+  }
+
+  @media (max-width: 700px) {
+    .evidence-gallery__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .evidence-gallery--flow figure:first-child,
+    .evidence-gallery--interface figure:first-child {
+      grid-column: auto;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    figure > button img,
+    figure > button:hover img {
+      transition: none;
+      scale: 1;
+    }
+  }
+</style>

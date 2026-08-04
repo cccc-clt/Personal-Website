@@ -1,0 +1,57 @@
+---
+import type { EvidenceStatus } from '../data/projectCaseStudies';
+
+interface Props {
+  status: EvidenceStatus;
+}
+
+const { status } = Astro.props;
+const tone: Record<EvidenceStatus, string> = {
+  已实现: 'implemented',
+  真实测试: 'tested',
+  估算: 'estimated',
+  目标值: 'target',
+  待验证: 'pending',
+  模拟数据: 'simulated',
+  Review: 'review',
+  未完成: 'incomplete',
+};
+---
+
+<span class:list={['evidence-badge', `evidence-badge--${tone[status]}`]}>{status}</span>
+
+<style>
+  .evidence-badge {
+    display: inline-flex;
+    min-height: 24px;
+    align-items: center;
+    padding: 0.2rem 0.48rem;
+    border-radius: var(--radius-pill);
+    background: var(--surface-soft);
+    color: var(--text-secondary);
+    font-size: 0.66rem;
+    font-weight: 650;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .evidence-badge--tested,
+  .evidence-badge--implemented {
+    background: color-mix(in srgb, var(--success) 13%, var(--surface-solid));
+    color: color-mix(in srgb, var(--success) 88%, var(--text-main));
+  }
+
+  .evidence-badge--estimated,
+  .evidence-badge--target,
+  .evidence-badge--review {
+    background: color-mix(in srgb, var(--warning) 14%, var(--surface-solid));
+    color: color-mix(in srgb, var(--warning) 88%, var(--text-main));
+  }
+
+  .evidence-badge--pending,
+  .evidence-badge--simulated,
+  .evidence-badge--incomplete {
+    background: color-mix(in srgb, var(--purple) 11%, var(--surface-solid));
+    color: color-mix(in srgb, var(--purple) 78%, var(--text-main));
+  }
+</style>

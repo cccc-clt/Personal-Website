@@ -30,7 +30,7 @@ const isActive = (href: string) => {
         class="header-github"
         href={siteConfig.github}
         target="_blank"
-        rel="noreferrer"
+        rel="noopener noreferrer"
         aria-label="访问赵天琦的 GitHub"
       >
         GitHub ↗
@@ -75,7 +75,7 @@ const isActive = (href: string) => {
       <div class="mobile-menu__utilities" aria-label="辅助操作">
         <button type="button" data-search-open><span aria-hidden="true">⌕</span>搜索</button>
         <button type="button" data-theme-toggle><span aria-hidden="true">◐</span>主题</button>
-        <a href={siteConfig.github} target="_blank" rel="noreferrer">GitHub ↗</a>
+        <a href={siteConfig.github} target="_blank" rel="noopener noreferrer">GitHub ↗</a>
       </div>
       <p>{siteConfig.availability}</p>
     </div>

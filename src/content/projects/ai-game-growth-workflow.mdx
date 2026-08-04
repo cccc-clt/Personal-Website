@@ -5,14 +5,14 @@ englishTitle: 'AI Game Growth Experiment Workflow'
 codename: '流光投放'
 summary: '将用户、广告素材、实验数据和玩家反馈输入多节点工作流，自动生成投放诊断、Prompt 模板、评测标准与迭代方案。'
 homepageSummary: '将用户、广告素材、实验数据和玩家反馈输入多节点工作流，自动生成投放诊断、Prompt 模板、评测标准与迭代方案。'
-description: '基于现有本地案例材料整理的游戏增长 AI 工作流；当前没有可核验的公开 GitHub 仓库，也不展示未公开的运行指标。'
+description: '基于 Dify 的游戏增长诊断与实验评测工作流，区分事实、假设、人工确认和结果复盘，并保留真实运行与边缘输入评测记录。'
 updated: 2026-07-17
 status: 'ITERATING'
 categories: ['游戏 AI', '增长实验', 'Dify 工作流']
 targetTracks: ['general', 'game']
 filters: ['game-ai', 'workflow']
 role: '需求拆解 / 工作流设计 / 评测框架'
-period: '本地案例 · 仓库未公开'
+period: '在线工作流 · 已运行验证 · 持续迭代'
 techStack: ['Dify', 'LLM Workflow', 'Structured Output', 'Human Review']
 highlights: ['素材问题结构化', '实验假设生成', '人工确认节点', '复盘字段设计']
 responsibilities:
@@ -25,7 +25,7 @@ goal: '让模型建议进入可检查的增长实验流程，而不是直接输�
 problem: '素材问题、用户假设、生成建议和实验复盘容易分散在不同文档中，模型输出也可能缺少依据。'
 aiNeeded: '模型适合帮助归类文本信息和生成候选假设，但真实投放决策必须由业务人员结合数据审核。'
 solution: '用 Dify 工作流区分已知事实、素材问题与待验证假设，再连接人工确认、实验记录和复盘字段，避免模型直接给出投放结论。'
-outcome: '当前已有本地案例材料与工作流设计，仓库未公开；页面不展示无法核验的投放或运行结果。'
+outcome: '在线 Dify 工作流已可访问；Phase 2 三次真实流式运行全部完成，评测同时保留 Token、延迟与人工复核边界。'
 flow:
   [
     '提交素材与背景',
@@ -48,14 +48,14 @@ evaluationMetrics:
   ['输入字段完整性', '问题归类可解释性', '假设可验证性', '人工确认覆盖', '复盘记录完整性']
 failures: ['把模型推测写成用户事实', '建议无法对应可验证实验', '没有结果数据却声称效果提升']
 iterations:
-  - stage: 'LOCAL_CASE_NOTE'
+  - stage: 'REAL_WORKFLOW_EVALUATION'
     problem: '现有增长思路缺少统一的输入、输出和人工确认结构。'
     analysis: '需要先把事实、假设和结果字段分开，避免模型代填业务证据。'
-    change: '本地案例保留工作流结构、结构化输出和人工确认节点。'
-    result: '已整理页面所需的流程和评测关注项；未发布仓库，也未对外声明运行数据。'
-    next: '在获得可公开材料后补充流程截图、版本记录和真实实验复盘。'
+    change: 'Dify 工作流加入结构化输出、人工确认节点，并用真实流式运行与边缘输入样本记录延迟、Token 和报告完整性。'
+    result: 'Phase 2 三次运行全部完成；v1 人工复核合并出一个独立证据问题，v2 修复完整性但延迟与 Token 成本上升。'
+    next: '增加重复运行次数并继续优化长尾节点，暂不把模拟业务输入写成真实投放效果。'
 reflection: '增长工作流的价值在于帮助团队形成可验证假设，不能用生成内容替代真实投放证据。'
-nextSteps: ['补充可公开的工作流文件', '记录版本与失败样本', '在有真实实验后再填写结果']
+nextSteps: ['增加重复运行次数', '优化长尾节点与 Token 成本', '在有真实投放证据后再填写业务结果']
 cover: '../../assets/project-covers/game-ai-growth-workflow.webp'
 coverAlt: 'Dify 中连接用户输入、广告诊断、Prompt 生成和完整报告输出的多节点游戏增长工作流'
 coverPosition: 'center center'
@@ -63,7 +63,8 @@ gallery: []
 featured: true
 homepageFeatured: true
 homepageOrder: 3
-sourceNote: '当前没有可核验的公开 GitHub 仓库；本页只保留已有本地案例材料，不提供虚构仓库链接，也不宣称未发生的运行结果。'
+demoUrl: 'https://udify.app/workflow/UBdxukvQmeVlxkJp'
+sourceNote: '已依据 Dify v2 工作流文件、真实流式运行记录和评测报告校对；当前不提供 GitHub 入口，模拟业务输入不代表真实投放效果。'
 order: { general: 7, game: 3, agent: 7, auto: 2 }
 ---
 
@@ -73,4 +74,4 @@ order: { general: 7, game: 3, agent: 7, auto: 2 }
 
 ## 当前证据边界
 
-本页没有公开 GitHub 入口，也不展示虚构的投放、转化或效率数据。后续只有在工作流文件和真实复盘可公开后，才会补充运行证据。
+本页没有公开 GitHub 入口，也不展示虚构的投放、转化或效率数据。已有运行证据仅用于说明工作流可运行性、报告完整性和成本表现，不代表真实业务增长。

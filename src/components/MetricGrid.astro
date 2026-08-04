@@ -1,0 +1,106 @@
+---
+import type { ProjectMetric } from '../data/projectCaseStudies';
+import EvidenceBadge from './EvidenceBadge.astro';
+
+interface Props {
+  metrics: ProjectMetric[];
+  label?: string;
+}
+
+const { metrics, label = '关键证据' } = Astro.props;
+---
+
+<section class="metric-grid" aria-label={label}>
+  {
+    metrics.map((metric) => (
+      <article>
+        <div>
+          <strong>{metric.value}</strong>
+          <EvidenceBadge status={metric.status} />
+        </div>
+        <p>{metric.label}</p>
+        {metric.note && <small>{metric.note}</small>}
+      </article>
+    ))
+  }
+</section>
+
+<style>
+  .metric-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    margin-top: clamp(1.6rem, 4vw, 2.6rem);
+    border-block: 1px solid var(--border-strong);
+  }
+
+  article {
+    min-width: 0;
+    padding: 1.2rem 1.25rem 1.25rem 0;
+  }
+
+  article + article {
+    padding-left: 1.25rem;
+    border-left: 1px solid var(--border);
+  }
+
+  article > div {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  strong {
+    color: var(--text-main);
+    font-family: var(--font-mono);
+    font-size: clamp(1.05rem, 2vw, 1.35rem);
+    font-variant-numeric: tabular-nums;
+  }
+
+  p {
+    margin: 0.65rem 0 0;
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+
+  small {
+    display: block;
+    margin-top: 0.35rem;
+    color: var(--text-muted);
+    font-size: 0.68rem;
+    line-height: 1.55;
+  }
+
+  @media (max-width: 720px) {
+    .metric-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    article:nth-child(n) {
+      padding: 1rem 0;
+      border-left: 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    article:nth-child(odd) {
+      padding-right: 1rem;
+    }
+
+    article:nth-child(even) {
+      padding-left: 1rem;
+      border-left: 1px solid var(--border);
+    }
+  }
+
+  @media (max-width: 420px) {
+    .metric-grid {
+      grid-template-columns: 1fr;
+    }
+
+    article:nth-child(n) {
+      padding-inline: 0;
+      border-left: 0;
+    }
+  }
+</style>
