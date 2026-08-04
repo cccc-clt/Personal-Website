@@ -4,7 +4,6 @@ import ImageGallery from '../../components/ImageGallery.astro';
 import ProjectCover from '../../components/ProjectCover.astro';
 import StatusBadge from '../../components/StatusBadge.astro';
 import { projectFilterLabels } from '../../config/site';
-import { projectCovers } from '../../config/visualAssets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
 export async function getStaticPaths() {
@@ -22,8 +21,7 @@ const projects = (await getCollection('projects')).sort(
 );
 const currentIndex = projects.findIndex((entry) => entry.id === project.id);
 const nextProject = projects[(currentIndex + 1) % projects.length];
-const coverConfig = project.data.cover ? projectCovers[project.data.cover] : undefined;
-const coverImage = coverConfig?.image ?? '/images/og/og-general.webp';
+const coverImage = project.data.cover?.src ?? '/images/og/og-general.webp';
 const sourceLinks = [
   project.data.demoUrl && { label: '在线 Demo', href: project.data.demoUrl },
   project.data.githubUrl && { label: 'GitHub 仓库', href: project.data.githubUrl },
@@ -95,10 +93,13 @@ const structuredData = {
           title={project.data.title}
           index={project.data.index}
           cover={project.data.cover}
+          coverAlt={project.data.coverAlt}
+          coverPosition={project.data.coverPosition}
+          loading="eager"
         />
         <figcaption>
-          <strong>概念图 · 非运行截图</strong>
-          {coverConfig?.alt ?? `${project.data.title} 概念封面`}
+          <strong>真实产品截图</strong>
+          {project.data.coverAlt ?? `${project.data.title} 的真实产品界面`}
         </figcaption>
       </figure>
     </header>
@@ -184,6 +185,8 @@ const structuredData = {
             slug={project.id}
             index={project.data.index}
             cover={project.data.cover}
+            coverAlt={project.data.coverAlt}
+            coverPosition={project.data.coverPosition}
           />
         </section>
 

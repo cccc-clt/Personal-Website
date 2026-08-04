@@ -4,6 +4,7 @@ import swup from '@swup/astro';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'astro/config';
 import { env } from 'node:process';
+import { URL } from 'node:url';
 
 const site = env.SITE_URL || undefined;
 
@@ -30,7 +31,13 @@ export default defineConfig({
       updateHead: true,
       globalInstance: true,
     }),
-    ...(site ? [sitemap()] : []),
+    ...(site
+      ? [
+          sitemap({
+            filter: (page) => !/^\/insights\/[^/]+\/pdf\/$/.test(new URL(page).pathname),
+          }),
+        ]
+      : []),
   ],
   vite: {
     plugins: [tailwindcss()],

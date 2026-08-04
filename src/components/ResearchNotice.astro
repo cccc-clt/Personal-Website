@@ -1,0 +1,36 @@
+---
+interface Props {
+  text: string;
+  title?: string;
+}
+
+const { text, title = '研究边界' } = Astro.props;
+---
+
+<aside class="research-notice" aria-labelledby="research-notice-title">
+  <p id="research-notice-title">{title}</p>
+  <div>{text}</div>
+</aside>
+
+<style>
+  .research-notice {
+    padding: clamp(1.1rem, 3vw, 1.5rem);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-md);
+    background: var(--surface-warm);
+  }
+
+  p {
+    margin: 0 0 0.55rem;
+    color: var(--text-primary);
+    font-size: 0.74rem;
+    font-weight: 700;
+  }
+
+  div {
+    color: var(--text-secondary);
+    font-size: 0.88rem;
+    line-height: 1.8;
+    text-wrap: pretty;
+  }
+</style>

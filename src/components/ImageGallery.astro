@@ -1,7 +1,7 @@
 ---
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
-import type { ProjectCoverKey } from '../config/visualAssets';
+import type { ImageMetadata } from 'astro';
 import ProjectCover from './ProjectCover.astro';
 
 interface Props {
@@ -9,10 +9,12 @@ interface Props {
   title: string;
   slug: string;
   index: string;
-  cover?: ProjectCoverKey;
+  cover?: ImageMetadata;
+  coverAlt?: string;
+  coverPosition?: 'center top' | 'center center' | 'left top' | 'right top';
 }
 
-const { images, title, slug, index, cover } = Astro.props;
+const { images, title, slug, index, cover, coverAlt, coverPosition } = Astro.props;
 const availableImages = images.filter(
   (src) =>
     src.startsWith('/') &&
@@ -49,10 +51,17 @@ const dialogId = `gallery-${slug}`;
       </div>
     ) : (
       <figure class="gallery__fallback">
-        <ProjectCover slug={slug} title={title} index={index} cover={cover} />
+        <ProjectCover
+          slug={slug}
+          title={title}
+          index={index}
+          cover={cover}
+          coverAlt={coverAlt}
+          coverPosition={coverPosition}
+        />
         <figcaption>
-          <strong>概念图 · 非运行截图</strong>
-          真实项目截图尚未写入本地。本页不会用概念封面冒充产品运行界面。
+          <strong>真实产品截图 · 当前封面</strong>
+          当前项目暂未提供更多过程截图，以上为项目真实产品界面。
         </figcaption>
       </figure>
     )

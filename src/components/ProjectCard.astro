@@ -27,9 +27,11 @@ const summary =
         title={project.data.title}
         index={project.data.index}
         cover={project.data.cover}
+        coverAlt={project.data.coverAlt}
+        coverPosition={project.data.coverPosition}
         compact
       />
-      <figcaption>概念图</figcaption>
+      <figcaption>真实产品截图</figcaption>
     </figure>
     <div class="project-card__body">
       <div class="chip-row" aria-label="项目标签">
@@ -53,6 +55,7 @@ const summary =
 
   .project-card__link {
     display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
     height: 100%;
     overflow: hidden;
     border: 1px solid var(--border);

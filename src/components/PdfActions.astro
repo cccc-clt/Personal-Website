@@ -1,40 +1,74 @@
 ---
 interface Props {
-  pdfUrl: string;
   title: string;
+  context: 'article' | 'reader';
+  webUrl: string;
+  pdfUrl?: string;
+  readerUrl?: string;
 }
 
-const { pdfUrl, title } = Astro.props;
+const { title, context, webUrl, pdfUrl, readerUrl } = Astro.props;
 ---
 
 <div class="pdf-actions" aria-label={`${title} PDF 操作`}>
-  <a class="button button--primary" href="#pdf-viewer">在线查看 PDF</a>
-  <a class="button" href={pdfUrl} target="_blank" rel="noopener noreferrer">新窗口打开 PDF</a>
-  <a class="text-link pdf-actions__download" href={pdfUrl} download>下载 PDF</a>
+  {
+    context === 'article' ? (
+      <>
+        <a class="button button--primary" href={webUrl} aria-current="page">
+          网页阅读
+        </a>
+        {readerUrl && (
+          <a class="button" href={readerUrl}>
+            PDF 原版
+          </a>
+        )}
+        {pdfUrl && (
+          <a class="button button--quiet" href={pdfUrl} download>
+            下载 PDF
+          </a>
+        )}
+      </>
+    ) : (
+      <>
+        <a class="button" href={webUrl}>
+          返回文章
+        </a>
+        {pdfUrl && (
+          <a class="button button--primary" href={pdfUrl} target="_blank" rel="noopener noreferrer">
+            新窗口打开
+          </a>
+        )}
+        {pdfUrl && (
+          <a class="button button--quiet" href={pdfUrl} download>
+            下载 PDF
+          </a>
+        )}
+      </>
+    )
+  }
 </div>
 
 <style>
   .pdf-actions {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.75rem 1rem;
+    gap: 0.65rem;
     align-items: center;
   }
 
-  .pdf-actions__download {
+  .pdf-actions .button {
     min-height: 44px;
-    padding-inline: 0.35rem;
+    padding: 0.66rem 0.9rem;
+    font-size: 0.76rem;
   }
 
   @media (max-width: 560px) {
     .pdf-actions {
       align-items: stretch;
-      flex-direction: column;
     }
 
-    .pdf-actions .button,
-    .pdf-actions .text-link {
-      width: 100%;
+    .pdf-actions .button {
+      flex: 1 1 8.5rem;
       justify-content: center;
       text-align: center;
     }

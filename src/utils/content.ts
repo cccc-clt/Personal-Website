@@ -33,6 +33,10 @@ export function getInsightPath(article: CollectionEntry<'research'>) {
   return `/${article.data.section}/${article.data.slug}/`;
 }
 
+export function getInsightPdfPath(article: CollectionEntry<'research'>) {
+  return `/insights/${article.data.slug}/pdf/`;
+}
+
 export function sortInsightsByDate(
   left: CollectionEntry<'research'>,
   right: CollectionEntry<'research'>,

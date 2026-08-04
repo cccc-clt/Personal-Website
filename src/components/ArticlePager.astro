@@ -1,0 +1,81 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { getInsightPath } from '../utils/content';
+
+interface Props {
+  previous?: CollectionEntry<'research'>;
+  next?: CollectionEntry<'research'>;
+}
+
+const { previous, next } = Astro.props;
+---
+
+{
+  (previous || next) && (
+    <nav class="article-pager" aria-label="上一篇与下一篇" data-pagefind-ignore>
+      {previous ? (
+        <a href={getInsightPath(previous)}>
+          <span>上一篇</span>
+          <strong>{previous.data.title}</strong>
+        </a>
+      ) : (
+        <span aria-hidden="true" />
+      )}
+      {next && (
+        <a class="article-pager__next" href={getInsightPath(next)}>
+          <span>下一篇</span>
+          <strong>{next.data.title}</strong>
+        </a>
+      )}
+    </nav>
+  )
+}
+
+<style>
+  .article-pager {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border-strong);
+  }
+
+  a {
+    display: grid;
+    gap: 0.42rem;
+    min-width: 0;
+    padding: 0.25rem 0;
+  }
+
+  a span {
+    color: var(--text-muted);
+    font-size: 0.72rem;
+  }
+
+  a strong {
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    line-height: 1.55;
+    text-wrap: pretty;
+  }
+
+  a:hover strong {
+    color: var(--accent-hover);
+  }
+
+  .article-pager__next {
+    text-align: right;
+  }
+
+  @media (max-width: 600px) {
+    .article-pager {
+      grid-template-columns: 1fr;
+    }
+
+    .article-pager__next {
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      text-align: left;
+    }
+  }
+</style>

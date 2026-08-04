@@ -28,19 +28,18 @@
 - [x] 姓名、岗位、价值主张和操作均保留为独立 HTML
 - [x] 已删除重复且未引用的 `public/images/hero/underwater-opening.*`
 
-### 项目概念封面
+### 项目真实产品封面
 
-- [x] `public/images/projects/game-growth-workflow.webp` → AI 游戏增长投放与实验评测工作流
-- [x] `public/images/projects/ai-product-evaluation-workbench.webp` → AI Product Evaluation Workbench
-- [x] `public/images/projects/mobile-uiagent-lab.webp` → Mobile UIAgent Evaluation Lab
-- [x] `public/images/projects/automate-car-copilot.webp` → Automate AI Car Copilot
-- [x] `public/images/projects/game-content-copilot.webp` → AI Game Content Copilot
-- [x] `public/images/projects/pdf-learning-assistant.webp` → AI PDF Learning Assistant
-- [x] `public/images/projects/elysia-character-agent.webp` → 爱莉希雅 AI 角色陪伴应用
-- [x] 七张封面均为 1672×941 WebP，且分别映射到七个真实项目
-- [x] 概念封面只承担视觉主题表达，不代表真实运行界面或项目指标
-- [x] 增长工作流封面的示意数字已通过蒙层降低视觉权重，正文不引用这些数字
-- [x] Workbench 封面的评分、雷达图、图表和数字仅为视觉概念，正文不提取或引用
+- [x] `src/assets/project-covers/game-ai-growth-workflow.webp` → AI 游戏增长投放与实验评测工作流
+- [x] `src/assets/project-covers/ai-product-evaluation-workbench.webp` → AI Product Evaluation Workbench
+- [x] `src/assets/project-covers/mobile-uiagent-evaluation-lab.webp` → Mobile UIAgent Evaluation Lab
+- [x] `src/assets/project-covers/automate-ai-car-copilot.webp` → AutoMate AI Car Copilot
+- [x] `src/assets/project-covers/ai-game-content-copilot.webp` → AI Game Content Copilot
+- [x] `src/assets/project-covers/ai-pdf-learning-assistant.webp` → AI PDF Learning Assistant
+- [x] `src/assets/project-covers/elysia-ai-character-agent.webp` → 爱莉希雅 AI 角色陪伴应用
+- [x] 七张封面均为 1600×1000 WebP，且分别映射到七个真实项目
+- [x] 所有封面均来自本地真实运行截图，不使用远程图片或生成式装饰图
+- [x] 项目卡片、首页精选与详情 Hero 共用 Content Collection 中的同一份封面数据
 
 ### 安全降级与真实性
 
@@ -52,7 +51,7 @@
 ## 尚未提供
 
 - [ ] `public/images/avatar/character.png`（真正透明的原创看板娘立绘）
-- [ ] 七个项目的真实界面或过程截图；当前 Gallery 继续与概念封面明确区分
+- [ ] 七个项目的更多过程截图；当前 Gallery 使用真实产品封面并诚实说明暂无更多图片
 - [ ] 三个首页研究选题的独立真实封面；当前已发布文章复用并标注品牌插图，两个整理中选题使用 CSS 占位视觉
 - [ ] “二次元跨端 RPG 竞品研究”与“二次元开放世界玩家评论洞察”的可发布正文和可核验材料
 - [ ] 新的 404 插图（当前可继续使用已存在的本地插图或文字降级）
@@ -63,6 +62,6 @@
 
 - [x] 不调用 imagegen
 - [x] 不下载或热链远程图片
-- [x] 不覆盖、删除或把概念图冒充真实项目截图
+- [x] 不把概念图冒充真实项目截图
 - [x] 首页、头像、名片和项目封面均有安全降级
 - [x] 远程图片开关保持关闭

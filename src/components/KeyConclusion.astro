@@ -1,0 +1,38 @@
+---
+interface Props {
+  text: string;
+}
+
+const { text } = Astro.props;
+---
+
+<aside class="article-notice article-notice--conclusion" aria-labelledby="key-conclusion-title">
+  <p id="key-conclusion-title">核心结论</p>
+  <strong>{text}</strong>
+</aside>
+
+<style>
+  .article-notice {
+    padding: clamp(1.2rem, 3vw, 1.65rem);
+    border: 1px solid color-mix(in srgb, var(--accent) 28%, var(--border));
+    border-radius: var(--radius-md);
+    background: var(--accent-soft);
+  }
+
+  p {
+    margin: 0 0 0.6rem;
+    color: var(--accent-hover);
+    font-size: 0.74rem;
+    font-weight: 700;
+  }
+
+  strong {
+    display: block;
+    color: var(--text-primary);
+    font-family: var(--font-display);
+    font-size: clamp(1.08rem, 2vw, 1.28rem);
+    font-weight: 600;
+    line-height: 1.75;
+    text-wrap: pretty;
+  }
+</style>

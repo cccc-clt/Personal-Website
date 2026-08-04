@@ -1,0 +1,148 @@
+---
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  headings: Heading[];
+  variant: 'desktop' | 'mobile';
+}
+
+const { headings, variant } = Astro.props;
+const visibleHeadings = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
+---
+
+{
+  visibleHeadings.length > 0 && variant === 'desktop' && (
+    <aside class="article-toc article-toc--desktop" data-article-toc data-pagefind-ignore>
+      <p>本文目录</p>
+      <nav aria-label="文章目录">
+        {visibleHeadings.map((heading) => (
+          <a
+            class:list={{ 'article-toc__subheading': heading.depth === 3 }}
+            href={`#${heading.slug}`}
+          >
+            {heading.text}
+          </a>
+        ))}
+      </nav>
+    </aside>
+  )
+}
+
+{
+  visibleHeadings.length > 0 && variant === 'mobile' && (
+    <details class="article-toc article-toc--mobile" data-article-toc data-pagefind-ignore>
+      <summary>展开本文目录</summary>
+      <nav aria-label="文章目录">
+        {visibleHeadings.map((heading) => (
+          <a
+            class:list={{ 'article-toc__subheading': heading.depth === 3 }}
+            href={`#${heading.slug}`}
+          >
+            {heading.text}
+          </a>
+        ))}
+      </nav>
+    </details>
+  )
+}
+
+<style>
+  .article-toc--desktop {
+    position: sticky;
+    top: 6.5rem;
+    min-width: 0;
+  }
+
+  .article-toc--desktop > p {
+    margin: 0 0 0.7rem;
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    font-weight: 620;
+  }
+
+  nav {
+    display: grid;
+    max-height: min(68vh, 680px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+  }
+
+  a {
+    position: relative;
+    padding: 0.5rem 0.65rem 0.5rem 0.85rem;
+    border-left: 1px solid var(--border-strong);
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+    transition:
+      border-color 180ms ease,
+      color 180ms ease;
+  }
+
+  a:hover,
+  a[aria-current='location'] {
+    border-left-color: var(--accent);
+    color: var(--accent-hover);
+  }
+
+  a[aria-current='location'] {
+    font-weight: 650;
+  }
+
+  .article-toc__subheading {
+    padding-left: 1.5rem;
+    font-size: 0.71rem;
+  }
+
+  .article-toc--mobile {
+    display: none;
+    margin-top: 0.4rem;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .article-toc--mobile summary {
+    padding: 0.9rem 0;
+    color: var(--text-primary);
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 650;
+  }
+
+  .article-toc--mobile nav {
+    max-height: 46vh;
+    padding-bottom: 0.75rem;
+  }
+
+  .article-toc--mobile a {
+    border-left: 0;
+    border-bottom: 1px solid var(--border);
+    padding-inline: 0;
+  }
+
+  .article-toc--mobile .article-toc__subheading {
+    padding-left: 1rem;
+  }
+
+  @media (max-width: 960px) {
+    .article-toc--desktop {
+      display: none;
+    }
+
+    .article-toc--mobile {
+      display: block;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    a {
+      transition: none;
+    }
+  }
+</style>

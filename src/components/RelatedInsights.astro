@@ -12,17 +12,18 @@ const { insights } = Astro.props;
 
 {
   insights.length > 0 && (
-    <section class="related-insights" aria-labelledby="related-insights-title">
+    <section class="related-insights" aria-labelledby="related-insights-title" data-pagefind-ignore>
       <header>
-        <p>相关内容</p>
+        <p>相关文章</p>
         <h2 id="related-insights-title">沿着同一问题继续阅读</h2>
       </header>
       <div>
         {insights.map((insight) => (
           <a href={getInsightPath(insight)}>
-            <span>{researchCategoryLabels[insight.data.category]}</span>
+            <span>
+              {researchCategoryLabels[insight.data.category]} · {insight.data.readingTime}
+            </span>
             <strong>{insight.data.title}</strong>
-            <p>{insight.data.description}</p>
           </a>
         ))}
       </div>
@@ -33,35 +34,36 @@ const { insights } = Astro.props;
 <style>
   .related-insights {
     display: grid;
-    grid-template-columns: minmax(190px, 0.34fr) minmax(0, 1fr);
-    gap: clamp(3rem, 8vw, 8rem);
-    padding-block: clamp(4rem, 9vw, 8rem);
-    border-top: 1px solid var(--border-strong);
+    gap: 1rem;
+    padding-block: 1.5rem;
+    border-top: 1px solid var(--border);
   }
 
   header p {
-    margin: 0 0 0.6rem;
-    color: var(--accent-hover);
-    font-size: 0.82rem;
-    font-weight: 600;
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    font-weight: 650;
   }
 
   h2 {
-    margin: 0;
-    font-size: clamp(2rem, 3.5vw, 3rem);
-    letter-spacing: -0.018em;
+    margin: 0.3rem 0 0;
+    font-size: clamp(1.25rem, 2.3vw, 1.55rem);
+    letter-spacing: -0.01em;
   }
 
   .related-insights > div {
     display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
   }
 
   a {
     display: grid;
-    grid-template-columns: 105px minmax(180px, 0.7fr) minmax(0, 1fr);
-    gap: 1.4rem;
-    padding: 1.2rem 0;
-    border-bottom: 1px solid var(--border);
+    gap: 0.5rem;
+    padding: 1rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
   }
 
   a > span {
@@ -70,35 +72,19 @@ const { insights } = Astro.props;
   }
 
   a > strong {
-    line-height: 1.5;
-  }
-
-  a > p {
-    display: -webkit-box;
-    margin: 0;
-    overflow: hidden;
-    color: var(--text-secondary);
-    font-size: 0.78rem;
-    line-height: 1.7;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
+    color: var(--text-primary);
+    font-size: 0.86rem;
+    line-height: 1.55;
+    text-wrap: pretty;
   }
 
   a:hover strong {
     color: var(--accent-hover);
   }
 
-  @media (max-width: 900px) {
-    .related-insights {
-      grid-template-columns: 1fr;
-      gap: 2rem;
-    }
-  }
-
   @media (max-width: 680px) {
-    a {
+    .related-insights > div {
       grid-template-columns: 1fr;
-      gap: 0.35rem;
     }
   }
 </style>

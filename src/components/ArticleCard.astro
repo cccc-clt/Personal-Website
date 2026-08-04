@@ -3,7 +3,7 @@ import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import { heroAssetConfig } from '../config/visualAssets';
 import { researchCategoryLabels } from '../config/site';
-import { formatPublicationDate, getInsightPath } from '../utils/content';
+import { formatPublicationDate, getInsightPath, getInsightPdfPath } from '../utils/content';
 
 interface Props {
   article: CollectionEntry<'research'>;
@@ -20,7 +20,7 @@ const cover = article.data.cover;
   <a
     class="article-card__cover-link"
     href={articleUrl}
-    aria-label={`阅读摘要：${article.data.title}`}
+    aria-label={`阅读全文：${article.data.title}`}
   >
     <figure>
       {
@@ -70,16 +70,11 @@ const cover = article.data.cover;
         <span>{article.data.readingTime}</span>
       </div>
       <div class="article-card__actions">
-        <a class="button button--small" href={articleUrl}>阅读摘要</a>
+        <a class="button button--small" href={articleUrl}>网页阅读</a>
         {
           article.data.pdfUrl && (
-            <a
-              class="button button--small button--quiet"
-              href={article.data.pdfUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              查看 PDF
+            <a class="button button--small button--quiet" href={getInsightPdfPath(article)}>
+              PDF 原版
             </a>
           )
         }

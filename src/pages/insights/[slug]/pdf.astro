@@ -1,0 +1,108 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import PdfActions from '../../../components/PdfActions.astro';
+import PdfViewer from '../../../components/PdfViewer.astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { getInsightPath } from '../../../utils/content';
+
+export async function getStaticPaths() {
+  const articles = (await getCollection('research')).filter(
+    (entry) => entry.data.status === 'published' && Boolean(entry.data.pdfUrl),
+  );
+
+  return articles.map((article) => ({
+    params: { slug: article.data.slug },
+    props: { article },
+  }));
+}
+
+interface Props {
+  article: CollectionEntry<'research'>;
+}
+
+const { article } = Astro.props;
+const articleUrl = getInsightPath(article);
+const pdfUrl = article.data.pdfUrl;
+---
+
+<BaseLayout
+  title={`${article.data.title} · PDF 原版 | 赵天琦`}
+  description={`${article.data.title}的 PDF 原版阅读与下载页面。`}
+  image={article.data.cover?.src}
+  canonicalPath={articleUrl}
+  noindex
+  pagefindIgnore
+>
+  <article class="pdf-reader page-shell">
+    <header class="pdf-reader__header">
+      <a class="pdf-reader__back" href={articleUrl}>← 返回文章</a>
+      <div>
+        <p>PDF 原版</p>
+        <h1>{article.data.title}</h1>
+        <div class="pdf-reader__meta">
+          <span>{article.data.readingTime}</span>
+          {article.data.pageCount && <span>{article.data.pageCount} 页</span>}
+        </div>
+      </div>
+      {
+        pdfUrl && (
+          <PdfActions
+            title={article.data.title}
+            context="reader"
+            webUrl={articleUrl}
+            pdfUrl={pdfUrl}
+          />
+        )
+      }
+    </header>
+
+    {pdfUrl && <PdfViewer pdfUrl={pdfUrl} title={article.data.title} />}
+  </article>
+</BaseLayout>
+
+<style>
+  .pdf-reader {
+    padding-block: clamp(6.5rem, 11vw, 9rem) clamp(4rem, 8vw, 7rem);
+  }
+
+  .pdf-reader__header {
+    display: grid;
+    gap: 1.3rem;
+    margin-bottom: clamp(2rem, 5vw, 3.5rem);
+  }
+
+  .pdf-reader__back {
+    width: fit-content;
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+  }
+
+  .pdf-reader__back:hover {
+    color: var(--accent-hover);
+  }
+
+  .pdf-reader__header > div > p {
+    margin: 0 0 0.65rem;
+    color: var(--accent-hover);
+    font-size: 0.76rem;
+    font-weight: 650;
+  }
+
+  h1 {
+    max-width: 24ch;
+    margin: 0;
+    font-size: clamp(2rem, 5vw, 3.8rem);
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+    text-wrap: balance;
+  }
+
+  .pdf-reader__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    margin-top: 0.8rem;
+    color: var(--text-muted);
+    font-size: 0.76rem;
+  }
+</style>

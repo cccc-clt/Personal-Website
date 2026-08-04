@@ -12,6 +12,8 @@ interface Props {
   description?: string;
   image?: string;
   noindex?: boolean;
+  canonicalPath?: string;
+  pagefindIgnore?: boolean;
   pageClass?: string;
   pageType?: 'website' | 'article';
   publishedTime?: Date;
@@ -24,6 +26,8 @@ const {
   description = siteConfig.description,
   image = '/images/og/og-general.webp',
   noindex = false,
+  canonicalPath,
+  pagefindIgnore = false,
   pageClass = '',
   pageType = 'website',
   publishedTime,
@@ -31,7 +35,9 @@ const {
   structuredData = [],
 } = Astro.props;
 
-const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site) : undefined;
+const canonical = Astro.site
+  ? new URL(canonicalPath ?? Astro.url.pathname, Astro.site)
+  : canonicalPath;
 const socialImage = Astro.site ? new URL(image, Astro.site) : undefined;
 const extraStructuredData = Array.isArray(structuredData) ? structuredData : [structuredData];
 const jsonLd = {
@@ -111,11 +117,11 @@ const jsonLd = {
     </script>
     <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   </head>
-  <body class={pageClass}>
+  <body class={pageClass} data-pagefind-ignore={pagefindIgnore ? 'all' : undefined}>
     <div id="swup-container" class="transition-swup-fade">
       <a class="skip-link" href="#main-content">跳到主要内容</a>
       <Header />
-      <main id="main-content" data-pagefind-body>
+      <main id="main-content" data-pagefind-body={pagefindIgnore ? undefined : ''}>
         <slot />
       </main>
       <Footer />
@@ -312,6 +318,7 @@ const jsonLd = {
         updateChrome();
         syncPortalFilters();
         setupReveals();
+        document.dispatchEvent(new CustomEvent('site:page-view'));
       };
 
       let hasSwupHook = false;
