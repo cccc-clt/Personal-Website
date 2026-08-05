@@ -13,7 +13,7 @@ const isActive = (item: (typeof siteConfig.nav)[number]) => {
   <div class="site-header__inner page-shell">
     <a class="site-brand" href="/" aria-label={`${siteConfig.name}个人网站首页`}>
       <strong>{siteConfig.name}</strong>
-      <small>游戏 AI 产品作品集</small>
+      <small>{pathname === '/' ? 'AI 产品作品集' : '游戏 AI 产品作品集'}</small>
     </a>
 
     <nav class="desktop-nav" aria-label="主要导航">
