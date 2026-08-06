@@ -266,7 +266,12 @@ export const projectCaseStudies: Partial<Record<string, ProjectCaseStudy>> = {
         priority: 'P1',
         title: '重要增强',
         description: '核心闭环成立后，继续提升可编辑性与任务恢复。',
-        items: ['基础编辑与 Markdown/TXT 导出', '单版本重试', '生成状态反馈', '历史任务记录'],
+        items: [
+          '基础编辑与 Markdown/TXT 导出',
+          '单版本重试',
+          '生成状态反馈',
+          '用户侧任务历史（尚未实现）',
+        ],
       },
       {
         priority: 'P2',
@@ -358,7 +363,8 @@ export const projectCaseStudies: Partial<Record<string, ProjectCaseStudy>> = {
       { title: '人工编辑优化', description: '由内容负责人选择候选、补充判断并提交定向优化。' },
       {
         title: '导出并留痕',
-        description: '导出 Markdown/TXT，同时保留调用、Prompt 版本和失败证据。',
+        description:
+          '向用户导出 Markdown/TXT；后端另行记录模型调用，并可按条件导出 XLSX 用于排查与评测。',
       },
     ],
     figures: [
@@ -405,6 +411,13 @@ export const projectCaseStudies: Partial<Record<string, ProjectCaseStudy>> = {
         group: 'interface',
       },
       {
+        src: '/images/projects/ai-game-content-copilot/model-call-observability.png',
+        alt: 'AI Game Content Copilot 线上模型调用记录接口、HTTP 200 导出结果和 XLSX 汇总证据',
+        caption:
+          '线上导出验证：success=true 返回 HTTP 200 与 XLSX；图中 1 条成功调用是独立接口验证样本，与 111 次测试样本分开统计。',
+        group: 'evaluation',
+      },
+      {
         src: '/images/projects/ai-game-content-copilot/latency-by-content-type.png',
         alt: 'AI Game Content Copilot 各内容类型平均响应时间图表',
         caption: '平均响应时间：用于识别世界观等高耗时任务，不代表线上 SLA。',
@@ -413,7 +426,8 @@ export const projectCaseStudies: Partial<Record<string, ProjectCaseStudy>> = {
       {
         src: '/images/projects/ai-game-content-copilot/tokens-by-content-type.png',
         alt: 'AI Game Content Copilot 各内容类型平均 Token 消耗图表',
-        caption: 'Token 分布：用于定位输出规模与成本敏感任务。',
+        caption:
+          'Token 分布：usage 来自模型供应商响应，用于定位输出规模；导出文件本身不提供价格或账单。',
         group: 'evaluation',
       },
       {

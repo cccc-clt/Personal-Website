@@ -945,6 +945,69 @@ const sectionLinks = [
     border-top: 1px solid var(--border);
   }
 
+  :global(.project-entry-grid) {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1px;
+    margin: 1.5rem 0 2.5rem;
+    border-block: 1px solid var(--border-strong);
+    background: var(--border);
+  }
+
+  :global(.project-entry) {
+    display: grid;
+    align-content: start;
+    gap: 0.5rem;
+    min-width: 0;
+    padding: 1.15rem;
+    background: var(--surface-solid);
+    color: var(--text-main);
+    text-decoration: none;
+  }
+
+  :global(.project-entry:hover) {
+    background: var(--surface-soft);
+    color: var(--text-main);
+  }
+
+  :global(.project-entry span) {
+    color: var(--study-accent);
+    font-size: 0.68rem;
+    font-weight: 650;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  :global(.project-entry strong) {
+    font-size: 0.98rem;
+    line-height: 1.35;
+  }
+
+  :global(.project-entry small) {
+    color: var(--text-muted);
+    font-size: 0.73rem;
+    line-height: 1.65;
+  }
+
+  :global(.project-privacy-note) {
+    margin: 1.5rem 0 2.5rem;
+    padding: 1rem 1.15rem;
+    border-left: 3px solid var(--study-accent);
+    background: var(--study-accent-soft);
+  }
+
+  :global(.project-privacy-note strong) {
+    color: var(--text-main);
+    font-size: 0.78rem;
+  }
+
+  :global(.project-privacy-note p) {
+    margin: 0.4rem 0 0;
+    color: var(--text-secondary);
+    font-size: 0.78rem;
+    line-height: 1.75;
+  }
+
   @media (max-width: 900px) {
     .project-study__layout {
       grid-template-columns: 1fr;
@@ -980,6 +1043,10 @@ const sectionLinks = [
   }
 
   @media (max-width: 700px) {
+    :global(.project-entry-grid) {
+      grid-template-columns: 1fr;
+    }
+
     .background-grid,
     .priority-board,
     .mvp-grid,

@@ -6,13 +6,13 @@ codename: '万象织梦'
 summary: '面向游戏策划、剧情文案与内容运营的 AI 内容生产 Copilot，支持多版本生成、五维评分与迭代优化。'
 homepageSummary: '面向游戏策划、剧情文案与内容运营的 AI 内容生产 Copilot，支持多版本生成、五维评分与迭代优化。'
 description: 'Python/FastAPI 与 React/Vite 构建的游戏内容生成原型，覆盖七类文本场景、A/B/C 版本与五维评估。'
-updated: 2026-07-17
+updated: 2026-08-06
 status: 'ITERATING'
 categories: ['游戏 AI', '内容生成', '工作流']
 targetTracks: ['general', 'game']
 filters: ['game-ai', 'workflow']
 role: '产品设计 / 工作流 / 前后端原型'
-period: '在线 Demo · 公开仓库 · 原型迭代'
+period: '在线 Demo · 在线 API · 公开仓库'
 techStack: ['Python', 'FastAPI', 'React 18', 'Vite', 'OpenAI-compatible API']
 highlights: ['7 类游戏文本场景', 'A/B/C 三版本生成', '5 维内容评估', '优化与导出流程']
 responsibilities:
@@ -25,7 +25,7 @@ goal: '让内容生成从空白对话框变成输入明确、版本可比、结�
 problem: '开放式聊天难以稳定承接题材、语气、角色和长度约束，也不利于多版本比较。'
 aiNeeded: '大模型适合提供文本候选，但必须通过结构化约束、版本对照和人工评审控制可用性。'
 solution: '把内容需求拆成结构化输入、A/B/C 候选生成、五维检查提示、人工比选、反馈优化与文档导出，让模型产出进入可评审工作流。'
-outcome: '在线 Demo 与公开仓库已可访问；原型支持结构化输入、三版本生成、五维检查提示、优化与导出。'
+outcome: '在线 Demo、FastAPI 文档与公开仓库均可访问；模型调用记录已通过线上接口成功导出为 XLSX。'
 flow:
   [
     '选择文本场景',
@@ -40,7 +40,7 @@ aiDesign:
   - '七类文本场景共享基础输入，同时保留各自约束'
   - '一次生成三个候选版本，支持并排比较'
   - '五维评估用于提示检查方向，不替代内容负责人判断'
-  - 'API Key 由本地环境配置，仓库不提供托管模型凭据'
+  - '模型凭据由线上后端环境配置，浏览器与公开仓库均不接收或保存密钥'
 humanCheckpoints: ['确认世界观和角色约束', '选择或改写候选', '检查敏感内容与版权风险']
 edgeCases: ['输入约束冲突', '版本差异不足', '内容偏离角色设定', 'API 不可用']
 safety: ['不内置真实游戏 IP 内容', '不包含官方美术或音频资产', '生成结果需人工审核后使用']
@@ -54,7 +54,7 @@ iterations:
     result: '当前公开仓库提供 FastAPI 后端和 React 18/Vite 前端原型。'
     next: '继续补充失败样本和人工评审记录格式。'
 reflection: '内容 Copilot 应该提高候选形成和比较效率，而不是替代内容负责人做最终判断。'
-nextSteps: ['补充失败样本库', '完善评审记录', '增加输入冲突提示']
+nextSteps: ['补充失败样本库', '完善评审记录', '为模型调用导出增加访问控制与脱敏策略']
 cover: '../../assets/project-covers/ai-game-content-copilot.webp'
 coverAlt: 'AI Game Content Copilot 的产品主页，展示目标用户、多版本生成、五维评分和迭代优化功能'
 coverPosition: 'center top'
@@ -64,7 +64,8 @@ homepageFeatured: true
 homepageOrder: 1
 githubUrl: 'https://github.com/cccc-clt/ai-game-content-copilot'
 demoUrl: 'https://ai-game-content-copilot.pages.dev/'
-sourceNote: '已依据公开仓库、在线 Demo 与本地测试记录校对；项目不包含真实 IP 资产，生成结果仍需人工审核。'
+apiDocsUrl: 'https://ai-game-content-copilot.zeabur.app/docs'
+sourceNote: '已依据公开仓库、在线 Demo、线上 FastAPI 文档、本地测试记录与 2026-08-06 模型调用导出文件校对；公开页面不展示真实 Prompt、用户输入或模型原始输出。'
 order: { general: 4, game: 1, agent: 6, auto: 6 }
 ---
 
@@ -72,9 +73,84 @@ order: { general: 4, game: 1, agent: 6, auto: 6 }
 
 这个原型没有把生成入口做成一个无约束聊天框，而是让用户先选择场景、填写约束，再比较三个候选版本。五维评估提供检查提示，最终选择和修改仍由人完成。
 
+## 在线架构与入口
+
+当前版本已经形成可公开验证的前后端链路：React/Vite 页面负责结构化输入与结果比较，线上 FastAPI 后端负责校验、Prompt 组装、模型调用、结构解析、评测和文件导出。模型凭据只配置在后端环境中，不进入浏览器，也不写入公开仓库。
+
+<div class="project-entry-grid">
+  <a
+    class="project-entry"
+    href="https://ai-game-content-copilot.pages.dev/"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <span>01 · Product</span>
+    <strong>在线 Demo</strong>
+    <small>体验结构化生成、版本比较与优化流程</small>
+  </a>
+  <a
+    class="project-entry"
+    href="https://ai-game-content-copilot.zeabur.app/docs"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <span>02 · API</span>
+    <strong>FastAPI 文档</strong>
+    <small>核验生成、优化、导出与模型调用记录接口</small>
+  </a>
+  <a
+    class="project-entry"
+    href="https://github.com/cccc-clt/ai-game-content-copilot"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <span>03 · Source</span>
+    <strong>公开仓库</strong>
+    <small>查看前后端实现、测试与可观测性说明</small>
+  </a>
+</div>
+
+一次在线请求按“浏览器 → FastAPI → OpenAI-compatible 模型 → 结构解析与评测 → 页面结果”的顺序完成。Markdown/TXT 属于面向用户的内容交付；模型调用 XLSX 则属于后端可观测性证据，两者用途不同。
+
+## 模型调用可观测性
+
+后端会为每次真实模型调用记录 `run_id`、`call_id`、操作类型、内容类型、Prompt 版本、模型、延迟、Token、解析与校验状态、重试原因和错误信息。公开接口 `GET /api/model-calls/export` 支持按日期、操作、内容类型、Prompt 版本、模型、成功状态和 `run_id` 筛选，并返回 XLSX 文件。
+
+导出的工作簿包含四个工作表：
+
+1. **模型调用记录**：调用标识、模型配置、延迟、Token、成功状态与错误字段。
+2. **Prompt 与输出**：完整 Prompt、原始响应、解析后响应及 SHA-256；仅用于受控排查。
+3. **错误记录**：重试原因、错误类型、HTTP 状态、原始响应和发生时间。
+4. **汇总**：调用次数、成功/失败、解析与校验失败、重试、usage 缺失、平均与 P50/P90 延迟、平均 Token，并按操作、模型、Prompt 版本和内容类型分组。
+
+Token 直接读取模型供应商响应中的 usage 字段；供应商未返回时会标记为 usage 缺失，不使用本地字符数估算。这里记录的是**单次模型调用**，不是一整个用户任务的聚合成本；XLSX 也不包含价格或账单字段。
+
+### Swagger 实测步骤
+
+1. 打开线上 [FastAPI 文档](https://ai-game-content-copilot.zeabur.app/docs)。
+2. 展开 `GET /api/model-calls/export`，点击 **Try it out**。
+3. 可按需填写 `date_from`、`date_to`、`operation`、`content_type`、`prompt_version`、`model`、`success` 或 `run_id`。
+4. 本次验证选择 `success=true`，点击 **Execute**。
+5. 服务返回 HTTP `200`、`Download file` 与 XLSX 文件名。
+6. 下载后核对四个工作表、字段与汇总结果；本次独立验证样本包含 1 条成功调用，错误记录为空。
+
+<aside class="project-privacy-note">
+  <strong>公开边界</strong>
+  <p>
+    导出文件可能包含完整 system Prompt、用户输入、模型原始响应与解析结果。本站只展示接口、HTTP
+    状态、XLSX
+    文件类型和不含正文的汇总证据，不提供原始工作簿下载。生产环境还应为该导出接口增加身份认证、权限控制和字段脱敏。
+  </p>
+</aside>
+
+### 它不是“用户历史记录”
+
+当前前端没有账号体系、用户项目历史中心、账号隔离或跨设备同步。页面中的任务状态保存在当前浏览器会话内，刷新或离开页面后不会作为用户历史恢复。模型调用 XLSX 面向后端排查与评测，不能替代用户侧的任务保存功能。
+
 ## 当前限制
 
-- 需要在本地配置模型 API
-- 在线 Demo 可直接访问；模型调用能力仍受部署配置与服务额度约束
+- 在线 Demo 与后端已经公开，但模型调用能力仍受部署可用性与服务额度约束
+- 用户侧任务历史、账号隔离与跨设备同步尚未实现
+- 模型调用导出包含敏感排查字段，正式生产使用前需要补充认证、权限与脱敏
 - 不包含真实游戏 IP、官方图片或音频
 - 生成结果仍需人工检查事实、语气与合规风险

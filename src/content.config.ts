@@ -81,6 +81,7 @@ const projects = defineCollection({
       homepageOrder: z.number().optional(),
       homepageSummary: z.string().optional(),
       demoUrl: z.url().optional(),
+      apiDocsUrl: z.url().optional(),
       githubUrl: z.url().optional(),
       documentUrl: z.url().optional(),
       videoUrl: z.url().optional(),

@@ -31,6 +31,11 @@ const projectSlug = project.id.replace(/\.mdx?$/, '');
 const caseStudy = projectCaseStudies[projectSlug];
 const sourceLinks = [
   project.data.demoUrl && { label: '体验 Demo', href: project.data.demoUrl, type: 'demo' },
+  project.data.apiDocsUrl && {
+    label: '查看 API 文档',
+    href: project.data.apiDocsUrl,
+    type: 'api',
+  },
   project.data.githubUrl && { label: '查看 GitHub', href: project.data.githubUrl, type: 'github' },
   project.data.documentUrl && {
     label: '查看项目文档',
@@ -44,11 +49,12 @@ const sourceLinks = [
   ): link is {
     label: string;
     href: string;
-    type: 'demo' | 'github' | 'document' | 'video';
+    type: 'demo' | 'api' | 'github' | 'document' | 'video';
   } => Boolean(link),
 );
 const sourceAriaLabels = {
   demo: `体验 ${project.data.title} 在线 Demo`,
+  api: `打开 ${project.data.title} API 文档`,
   github: `打开 ${project.data.title} GitHub 仓库`,
   document: `打开 ${project.data.title} 项目文档`,
   video: `观看 ${project.data.title} 演示视频`,
