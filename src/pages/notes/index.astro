@@ -138,20 +138,23 @@ const notes = (await getCollection('research'))
 
   .notes-shell {
     min-height: 72vh;
-    padding-block: clamp(7.5rem, 12vw, 10rem) clamp(5rem, 9vw, 8rem);
+    padding-block: clamp(5.75rem, 8vw, 7.25rem) clamp(5rem, 9vw, 8rem);
   }
 
   .notes-intro {
     max-width: 780px;
-    padding-bottom: clamp(2rem, 4vw, 3rem);
+    margin-inline: auto;
+    padding-bottom: clamp(1.5rem, 2.5vw, 2rem);
     border-bottom: 1px solid var(--border-strong);
+    text-align: center;
   }
 
   .notes-intro__label {
-    margin: 0 0 0.6rem;
+    margin: 0 0 0.5rem;
     color: var(--accent-hover);
     font-size: 0.8rem;
     font-weight: 650;
+    letter-spacing: 0.08em;
   }
 
   .notes-intro h1 {
@@ -164,30 +167,38 @@ const notes = (await getCollection('research'))
   }
 
   .notes-intro__description {
-    max-width: 58ch;
-    margin: 1.25rem 0 0;
+    max-width: 40ch;
+    margin: 0.9rem auto 0;
     color: var(--text-secondary);
     font-size: clamp(0.98rem, 1.5vw, 1.08rem);
-    line-height: 1.8;
+    line-height: 1.75;
     text-wrap: pretty;
   }
 
   .notes-intro__count {
-    margin: 1.2rem 0 0;
+    margin: 0.75rem auto 0;
     color: var(--text-muted);
     font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    line-height: 1.5;
   }
 
   .notes-intro__count strong {
     color: var(--accent-hover);
+    font-weight: 750;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0;
   }
 
   .notes-content {
-    margin-top: clamp(2rem, 4vw, 3rem);
+    margin-top: clamp(1.5rem, 2.5vw, 2rem);
   }
 
   .notes-content__filters {
-    margin-bottom: clamp(2.5rem, 5vw, 4rem);
+    max-width: 1080px;
+    margin-inline: auto;
+    margin-bottom: clamp(2rem, 3.5vw, 3rem);
   }
 
   .notes-timeline {
@@ -274,11 +285,21 @@ const notes = (await getCollection('research'))
 
   @media (max-width: 768px) {
     .notes-shell {
-      padding-block: 6.2rem 4.5rem;
+      padding-block: 5.5rem 4.5rem;
     }
 
     .notes-intro h1 {
       font-size: clamp(2.8rem, 14vw, 4rem);
+    }
+
+    .notes-intro__description {
+      max-width: 38ch;
+      margin-top: 0.8rem;
+      line-height: 1.7;
+    }
+
+    .notes-intro__count {
+      margin-top: 0.7rem;
     }
 
     .notes-timeline[data-note-list]::before {
