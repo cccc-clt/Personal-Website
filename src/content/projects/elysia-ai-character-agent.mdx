@@ -5,14 +5,14 @@ englishTitle: 'Elysia AI Character Companion'
 codename: '记忆回廊'
 summary: '结合角色人设、长期记忆、亲密度与人工反馈机制的角色陪伴 Agent。'
 homepageSummary: '结合角色人设、长期记忆、亲密度与人工反馈机制的角色陪伴 Agent。'
-description: '基于 Streamlit 的非商业同人角色陪伴 Demo，包含长期记忆、待确认记忆、陪伴场景、可选语音提供方与一致性评测。'
+description: '基于 Streamlit 的非商业同人角色陪伴作品，包含长期记忆、待确认记忆、陪伴场景、可选语音提供方与一致性评测。'
 updated: 2026-07-17
 status: 'ITERATING'
 categories: ['角色 Agent', '长期记忆', '陪伴体验']
 targetTracks: ['general', 'game', 'agent']
 filters: ['game-ai', 'agent', 'evaluation']
 role: '产品设计 / 记忆机制 / Agent 评测'
-period: '在线 Demo · 公开仓库 · Fan-made 原型'
+period: '在线作品 · 公开仓库 · Fan-made 原型'
 techStack:
   [
     'Python',
@@ -34,7 +34,7 @@ goal: '验证角色陪伴中长期记忆、用户控制、语音降级和一致�
 problem: '角色 Agent 容易出现记忆误写、设定漂移和过度拟人化，语音资源也涉及额外的合规边界。'
 aiNeeded: '模型负责自然语言互动和记忆候选提取，但记忆确认、角色边界和风险提示需要产品机制约束。'
 solution: '用 SQLite 或 JSON 保存会话，把模型提取的信息先放入待确认记忆，再由用户决定保存或拒绝；陪伴场景、可选语音和一致性评测均保留降级与人工控制。'
-outcome: '在线 Demo 与公开仓库已可访问；非商业同人原型覆盖记忆确认、场景、可选语音和一致性评测，不含官方角色资产。'
+outcome: '在线作品与公开仓库已可访问；非商业同人原型覆盖记忆确认、场景、可选语音和一致性评测，不含官方角色资产。'
 flow:
   [
     '进入陪伴场景',
@@ -57,7 +57,7 @@ safety:
     '用户保留记忆控制权',
     '不把 Agent 描述为现实关系替代品',
     '仓库不包含官方美术、音频、模型权重或角色资产',
-    '非商业同人 Demo，与米哈游或 HoYoverse 无隶属关系',
+    '非商业同人作品，与米哈游或 HoYoverse 无隶属关系',
   ]
 evaluationMetrics: ['角色一致性', '记忆引用正确性', '记忆确认可控性', '回复边界', '语音失败降级']
 failures: ['未经确认写入长期记忆', '把模型推断当成用户事实', '语音失败阻断文本对话']
@@ -66,7 +66,7 @@ iterations:
     problem: '长期记忆若自动写入，用户难以纠正错误或控制隐私。'
     analysis: '角色陪伴中的记忆需要可见、可确认、可删除。'
     change: '仓库提供待确认记忆、长期记忆管理、陪伴场景、可选语音和一致性评测。'
-    result: '当前公开仓库形成可运行的同人角色陪伴 Demo，且不包含官方角色资产。'
+    result: '当前公开仓库形成可运行的同人角色陪伴作品，且不包含官方角色资产。'
     next: '继续扩展记忆冲突和角色漂移测试样本。'
 reflection: '陪伴体验越自然，越需要把记忆控制、身份边界和降级路径做得清楚。'
 nextSteps: ['扩展记忆冲突测试', '完善角色漂移样本', '加强语音资源合规说明']
@@ -79,8 +79,8 @@ homepageFeatured: true
 homepageOrder: 2
 githubUrl: 'https://github.com/cccc-clt/elysia-ai-character-agent'
 demoUrl: 'https://elysia-ai-character-agent-gfgpbbhuzdrl6igygq6evb.streamlit.app/'
-sourceNote: '已依据公开 GitHub 仓库、在线 Demo 与本地评测材料校对；这是非商业同人 Demo，仓库不含官方角色资产。'
-order: { general: 6, game: 2, agent: 5, auto: 4 }
+sourceNote: '已依据公开 GitHub 仓库、在线作品与本地评测材料校对；这是非商业同人作品，仓库不含官方角色资产。'
+order: { general: 2, game: 2, agent: 5, auto: 4 }
 ---
 
 ## 记忆不是默认授权
@@ -89,4 +89,4 @@ order: { general: 6, game: 2, agent: 5, auto: 4 }
 
 ## 同人项目说明
 
-这是用于产品与工程学习的非商业同人 Demo，与米哈游或 HoYoverse 没有隶属或授权关系。公开仓库不包含官方图片、音频、模型权重或角色资产；可选语音能力需要使用者自行确认资源来源与许可。
+这是用于产品与工程学习的非商业同人作品，与米哈游或 HoYoverse 没有隶属或授权关系。公开仓库不包含官方图片、音频、模型权重或角色资产；可选语音能力需要使用者自行确认资源来源与许可。

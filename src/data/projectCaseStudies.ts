@@ -527,7 +527,7 @@ export const projectCaseStudies: Partial<Record<string, ProjectCaseStudy>> = {
       '明确人工审核、版权、敏感数据与失败日志的产品边界。',
     ],
     boundaryStatement:
-      '已提供在线前端 Demo；涉及模型调用的能力仍取决于后端服务和模型 API 的实际可用状态。页面不把估算效率写成真实业务结果。',
+      '已提供在线前端版本；涉及模型调用的能力仍取决于后端服务和模型 API 的实际可用状态。页面不把估算效率写成真实业务结果。',
   },
 
   'elysia-ai-character-agent': {
@@ -717,7 +717,7 @@ export const projectCaseStudies: Partial<Record<string, ProjectCaseStudy>> = {
         '稳定角色 Prompt 与五种陪伴模式',
         '候选记忆确认、长期记忆管理与删除',
         '反馈、SQLite 持久化和基础评估',
-        '在线文本 Demo 与语音失败降级',
+        '在线文本版本与语音失败降级',
       ],
       excluded: [
         '官方角色还原或官方资产分发',

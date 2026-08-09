@@ -162,7 +162,7 @@ export const aiProductWorkbench = [
     scene: '产品评测、UI Agent、PDF、角色陪伴与座舱 Mock 原型。',
     project: 'AI Product Evaluation Workbench',
     projectHref: '/projects/ai-product-evaluation-workbench/',
-    next: '明确其原型定位，不把可运行 Demo 描述为生产级上线。',
+    next: '明确其原型定位，不把可运行原型描述为生产级上线。',
   },
   {
     name: 'GitHub',

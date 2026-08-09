@@ -11,7 +11,7 @@ categories: ['智能座舱', 'AI Agent', '产品评测']
 targetTracks: ['general', 'agent', 'auto']
 filters: ['agent', 'evaluation', 'workflow']
 role: '产品流程 / Agent 设计 / 评测与安全'
-period: '在线 Demo · 公开仓库 · Mock 原型'
+period: '在线作品 · 公开仓库 · Mock 原型'
 techStack:
   [
     'Python',
@@ -33,7 +33,7 @@ goal: '在不连接真实车辆的前提下，验证知识问答、意图解析�
 problem: '座舱请求同时涉及知识、车辆状态、控制意图和安全风险，单轮聊天难以表达完整产品闭环。'
 aiNeeded: '自然语言请求需要被解析成结构化意图，并结合知识、状态和安全规则决定回答、确认或拒绝。'
 solution: '在 Streamlit Mock 原型中依次读取车辆状态、解析八字段意图、调用 RAG 或场景 Agent，再由三级安全规则决定直接响应、二次确认或拒绝。'
-outcome: '在线 Demo 与公开仓库已可访问；当前智能座舱 Copilot 原型为 Mock，不连接真实车辆。'
+outcome: '在线作品与公开仓库已可访问；当前智能座舱 Copilot 原型为 Mock，不连接真实车辆。'
 flow:
   [
     '接收用户请求',
@@ -56,7 +56,7 @@ evaluationMetrics: ['意图解析正确性', '回答相关性', '场景完成度
 failures: ['把自然语言直接映射为控制', '忽略当前车辆状态', '模型回答越过安全规则']
 iterations:
   - stage: 'CURRENT_REPOSITORY'
-    problem: '知识问答、座舱控制和评测容易被拆成互不连通的 Demo。'
+    problem: '知识问答、座舱控制和评测容易被拆成互不连通的功能原型。'
     analysis: '需要一个共同状态和清晰的安全决策顺序。'
     change: '仓库将 RAG、意图解析、四类 Agent、反馈池和 Judge 评测整合到 Streamlit。'
     result: '当前公开仓库提供完整 Mock 流程；车辆状态与控制均为模拟。'
@@ -71,8 +71,8 @@ featured: true
 homepageFeatured: false
 githubUrl: 'https://github.com/cccc-clt/automate-ai-car-copilot'
 demoUrl: 'https://automate-ai-car-copilot-7uky6hwfrkb2marf6f3but.streamlit.app/'
-sourceNote: '已依据公开 GitHub 仓库与在线 Demo 校对；所有车辆状态与控制均明确标注为 Mock。'
-order: { general: 3, game: 6, agent: 3, auto: 1 }
+sourceNote: '已依据公开 GitHub 仓库与在线作品校对；所有车辆状态与控制均明确标注为 Mock。'
+order: { general: 6, game: 6, agent: 3, auto: 1 }
 ---
 
 ## 仓库事实

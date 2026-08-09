@@ -30,7 +30,7 @@ const coverImage = project.data.cover?.src ?? '/images/og/og-general.webp';
 const projectSlug = project.id.replace(/\.mdx?$/, '');
 const caseStudy = projectCaseStudies[projectSlug];
 const sourceLinks = [
-  project.data.demoUrl && { label: '体验 Demo', href: project.data.demoUrl, type: 'demo' },
+  project.data.demoUrl && { label: '体验作品', href: project.data.demoUrl, type: 'demo' },
   project.data.apiDocsUrl && {
     label: '查看 API 文档',
     href: project.data.apiDocsUrl,
@@ -53,7 +53,7 @@ const sourceLinks = [
   } => Boolean(link),
 );
 const sourceAriaLabels = {
-  demo: `体验 ${project.data.title} 在线 Demo`,
+  demo: `体验 ${project.data.title} 在线作品`,
   api: `打开 ${project.data.title} API 文档`,
   github: `打开 ${project.data.title} GitHub 仓库`,
   document: `打开 ${project.data.title} 项目文档`,
