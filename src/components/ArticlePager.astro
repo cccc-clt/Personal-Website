@@ -5,27 +5,36 @@ import { getInsightPath } from '../utils/content';
 interface Props {
   previous?: CollectionEntry<'research'>;
   next?: CollectionEntry<'research'>;
+  series?: boolean;
+  pendingNextLabel?: string;
 }
 
-const { previous, next } = Astro.props;
+const { previous, next, series = false, pendingNextLabel } = Astro.props;
 ---
 
 {
-  (previous || next) && (
+  (previous || next || pendingNextLabel) && (
     <nav class="article-pager" aria-label="上一篇与下一篇" data-pagefind-ignore>
       {previous ? (
         <a href={getInsightPath(previous)}>
-          <span>上一篇</span>
+          <span>{series ? '系列上一篇' : '上一篇'}</span>
           <strong>{previous.data.title}</strong>
         </a>
       ) : (
         <span aria-hidden="true" />
       )}
-      {next && (
+      {next ? (
         <a class="article-pager__next" href={getInsightPath(next)}>
-          <span>下一篇</span>
+          <span>{series ? '系列下一篇' : '下一篇'}</span>
           <strong>{next.data.title}</strong>
         </a>
+      ) : (
+        pendingNextLabel && (
+          <span class="article-pager__next article-pager__pending" aria-disabled="true">
+            <span>系列下一篇</span>
+            <strong>{pendingNextLabel}</strong>
+          </span>
+        )
       )}
     </nav>
   )
@@ -47,12 +56,21 @@ const { previous, next } = Astro.props;
     padding: 0.25rem 0;
   }
 
-  a span {
+  .article-pager__pending {
+    display: grid;
+    gap: 0.42rem;
+    min-width: 0;
+    padding: 0.25rem 0;
+  }
+
+  a span,
+  .article-pager__pending span {
     color: var(--text-muted);
     font-size: 0.72rem;
   }
 
-  a strong {
+  a strong,
+  .article-pager__pending strong {
     color: var(--text-primary);
     font-size: 0.9rem;
     line-height: 1.55;
@@ -61,6 +79,11 @@ const { previous, next } = Astro.props;
 
   a:hover strong {
     color: var(--accent-hover);
+  }
+
+  .article-pager__pending strong {
+    color: var(--text-muted);
+    font-weight: 580;
   }
 
   .article-pager__next {

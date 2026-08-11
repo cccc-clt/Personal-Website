@@ -8,6 +8,7 @@ const insightSection = z.enum(['research', 'notes']);
 const insightKind = z.enum([
   'research-report',
   'ai-product-note',
+  'learning-note',
   'game-jam-note',
   'game-record-note',
   'growth-note',
@@ -25,7 +26,12 @@ const researchCategory = z.enum([
 ]);
 const publicationDate = z.string().regex(/^\d{4}-\d{2}(?:-\d{2})?$/);
 const researchInsightKinds = new Set(['research-report', 'ai-product-note']);
-const noteInsightKinds = new Set(['game-jam-note', 'game-record-note', 'growth-note']);
+const noteInsightKinds = new Set([
+  'learning-note',
+  'game-jam-note',
+  'game-record-note',
+  'growth-note',
+]);
 
 const projects = defineCollection({
   loader: localMdxLoader('./src/content/projects'),
@@ -122,6 +128,19 @@ const research = defineCollection({
         pdfUrl: z.string().startsWith('/reports/').optional(),
         slug: z.string(),
         status: z.enum(['published', 'draft']).default('published'),
+        series: z.string().optional(),
+        seriesIndex: z.number().int().positive().optional(),
+        level: z.string().optional(),
+        chapters: z
+          .array(
+            z.object({
+              index: z.string(),
+              title: z.string(),
+            }),
+          )
+          .default([]),
+        seriesStatus: z.string().optional(),
+        seriesDescription: z.string().optional(),
         coreJudgment: z.string(),
         researchBoundary: z.string(),
         methodology: z.array(z.string()).default([]),
@@ -141,16 +160,27 @@ const research = defineCollection({
       })
       .superRefine((entry, context) => {
         const allowedKinds = entry.section === 'research' ? researchInsightKinds : noteInsightKinds;
-        if (allowedKinds.has(entry.kind)) return;
+        if (!allowedKinds.has(entry.kind)) {
+          context.addIssue({
+            code: 'custom',
+            path: ['kind'],
+            message:
+              entry.section === 'research'
+                ? 'research 栏目只允许 research-report 或 ai-product-note'
+                : 'notes 栏目只允许 learning-note、game-jam-note、game-record-note 或 growth-note',
+          });
+        }
 
-        context.addIssue({
-          code: 'custom',
-          path: ['kind'],
-          message:
-            entry.section === 'research'
-              ? 'research 栏目只允许 research-report 或 ai-product-note'
-              : 'notes 栏目只允许 game-jam-note、game-record-note 或 growth-note',
-        });
+        if (
+          entry.series &&
+          (!entry.seriesIndex || !entry.level || entry.chapters.length === 0 || !entry.seriesStatus)
+        ) {
+          context.addIssue({
+            code: 'custom',
+            path: ['series'],
+            message: '系列文章必须同时提供 seriesIndex、level、chapters 与 seriesStatus',
+          });
+        }
       }),
 });
 

@@ -1,0 +1,139 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  article: CollectionEntry<'research'>;
+}
+
+const { article } = Astro.props;
+const { series, level, chapters, seriesDescription, seriesStatus } = article.data;
+---
+
+{
+  series && level && chapters.length > 0 && (
+    <section class="series-notice" aria-labelledby="series-notice-title">
+      <div class="series-notice__copy">
+        <p class="series-notice__label" id="series-notice-title">
+          关于这个系列
+        </p>
+        <p>{seriesDescription ?? `这是我的“${series}”个人学习记录，后续内容会继续更新。`}</p>
+      </div>
+
+      <dl>
+        <div>
+          <dt>当前文章属于</dt>
+          <dd>{level.replace('：', ' · ')}</dd>
+        </div>
+        <div>
+          <dt>本篇记录</dt>
+          <dd>
+            <ul>
+              {chapters.map((chapter) => (
+                <li>
+                  <span>{chapter.index}</span>：{chapter.title}
+                </li>
+              ))}
+            </ul>
+          </dd>
+        </div>
+      </dl>
+
+      <p class="series-notice__status">后续章节会继续更新 · {seriesStatus}</p>
+    </section>
+  )
+}
+
+<style>
+  .series-notice {
+    display: grid;
+    gap: 1.25rem;
+    margin-bottom: clamp(2.75rem, 5vw, 4rem);
+    padding: clamp(1.3rem, 3vw, 1.7rem);
+    border-block: 1px solid var(--border-strong);
+    background: var(--surface-warm);
+  }
+
+  .series-notice__copy {
+    display: grid;
+    gap: 0.45rem;
+  }
+
+  .series-notice__copy p,
+  .series-notice__status,
+  dl,
+  dd {
+    margin: 0;
+  }
+
+  .series-notice__label {
+    color: var(--text-primary);
+    font-family: var(--font-display);
+    font-size: 1.08rem;
+    font-weight: 700;
+  }
+
+  .series-notice__copy p:last-child,
+  .series-notice__status {
+    color: var(--text-secondary);
+    font-size: 0.88rem;
+    line-height: 1.75;
+    text-wrap: pretty;
+  }
+
+  dl {
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  dl > div {
+    display: grid;
+    grid-template-columns: minmax(7rem, 0.28fr) 1fr;
+    gap: 0.8rem 1.2rem;
+  }
+
+  dt {
+    color: var(--text-muted);
+    font-size: 0.74rem;
+    font-weight: 650;
+  }
+
+  dd {
+    color: var(--text-primary);
+    font-size: 0.84rem;
+    line-height: 1.65;
+  }
+
+  ul {
+    display: grid;
+    gap: 0.3rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  li,
+  li span {
+    overflow-wrap: anywhere;
+  }
+
+  li span {
+    font-weight: 650;
+  }
+
+  .series-notice__status {
+    padding-top: 0.9rem;
+    border-top: 1px solid var(--border);
+  }
+
+  @media (max-width: 560px) {
+    .series-notice {
+      margin-inline: -0.25rem;
+      padding-inline: 1rem;
+    }
+
+    dl > div {
+      grid-template-columns: 1fr;
+      gap: 0.3rem;
+    }
+  }
+</style>

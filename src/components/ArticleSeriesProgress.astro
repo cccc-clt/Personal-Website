@@ -1,0 +1,141 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  article: CollectionEntry<'research'>;
+}
+
+const { article } = Astro.props;
+const { series, level, chapters } = article.data;
+---
+
+{
+  series && level && chapters.length > 0 && (
+    <section class="series-progress" aria-labelledby="series-progress-title">
+      <header>
+        <p>{series}</p>
+        <h2 id="series-progress-title">{level.replace('：', '｜')}</h2>
+      </header>
+
+      <ol>
+        {chapters.map((chapter) => (
+          <li>
+            <span class="series-progress__marker" aria-hidden="true">
+              <svg viewBox="0 0 16 16" width="16" height="16">
+                <path d="m3.25 8.25 2.75 2.75 6.75-6.75" />
+              </svg>
+            </span>
+            <span>
+              <strong>{chapter.index}</strong>：{chapter.title}
+            </span>
+            <small>已记录</small>
+          </li>
+        ))}
+        <li class="series-progress__pending">
+          <span class="series-progress__marker" aria-hidden="true" />
+          <span>后续章节 · 持续整理中</span>
+          <small>待更新</small>
+        </li>
+      </ol>
+    </section>
+  )
+}
+
+<style>
+  .series-progress {
+    display: grid;
+    gap: 1.25rem;
+    padding: clamp(1.35rem, 3vw, 1.8rem) 0;
+    border-block: 1px solid var(--border-strong);
+  }
+
+  header {
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  header p,
+  header h2,
+  ol {
+    margin: 0;
+  }
+
+  header p {
+    color: var(--text-muted);
+    font-size: 0.74rem;
+    font-weight: 650;
+  }
+
+  header h2 {
+    font-size: clamp(1.2rem, 2.2vw, 1.5rem);
+    line-height: 1.45;
+    text-wrap: pretty;
+  }
+
+  ol {
+    display: grid;
+    gap: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  li {
+    display: grid;
+    grid-template-columns: 1.25rem minmax(0, 1fr) auto;
+    gap: 0.75rem;
+    align-items: start;
+    padding: 0.7rem 0;
+    border-top: 1px solid var(--border);
+    color: var(--text-primary);
+    font-size: 0.86rem;
+    line-height: 1.65;
+  }
+
+  .series-progress__marker {
+    display: grid;
+    width: 1rem;
+    height: 1rem;
+    place-items: center;
+    margin-top: 0.22rem;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    color: var(--accent-hover);
+  }
+
+  svg {
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.6;
+  }
+
+  strong {
+    font-weight: 680;
+  }
+
+  small {
+    color: var(--text-muted);
+    font-size: 0.7rem;
+    white-space: nowrap;
+  }
+
+  .series-progress__pending {
+    color: var(--text-secondary);
+  }
+
+  .series-progress__pending .series-progress__marker {
+    border: 1px solid var(--border-strong);
+    background: transparent;
+  }
+
+  @media (max-width: 520px) {
+    li {
+      grid-template-columns: 1.15rem minmax(0, 1fr);
+    }
+
+    small {
+      grid-column: 2;
+    }
+  }
+</style>

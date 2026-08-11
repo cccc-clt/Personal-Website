@@ -11,8 +11,18 @@ interface Props {
 
 const { article, compact = false, headingLevel = 'h3' } = Astro.props;
 const articleUrl = getInsightPath(article);
-const visibleTags = article.data.tags.slice(0, 4);
+const kindLabel = insightKindLabels[article.data.kind];
+const categoryLabel = researchCategoryLabels[article.data.category];
+const visibleTags = article.data.tags
+  .filter((tag) => tag !== kindLabel && tag !== categoryLabel)
+  .slice(0, 4);
 const Heading = headingLevel;
+const seriesLabel = article.data.series
+  ? `${article.data.series} ${String(article.data.seriesIndex).padStart(2, '0')}`
+  : undefined;
+const cardTitle = article.data.series
+  ? (article.data.displayTitle ?? article.data.title).replace(/^\d+\s*[｜|]\s*/, '')
+  : article.data.title;
 ---
 
 <article class:list={['note-entry', { 'note-entry--compact': compact }]}>
@@ -25,18 +35,31 @@ const Heading = headingLevel;
   }
 
   <div class="note-entry__card">
+    {seriesLabel && <p class="note-entry__series">{seriesLabel}</p>}
+
     <div class="note-entry__meta">
       <time datetime={article.data.publishDate}
         >{formatPublicationDate(article.data.publishDate)}</time
       >
-      <span>{insightKindLabels[article.data.kind]}</span>
-      <span>{researchCategoryLabels[article.data.category]}</span>
+      <span>{kindLabel}</span>
+      <span>{categoryLabel}</span>
       <span>{article.data.readingTime}</span>
     </div>
 
     <Heading class="note-entry__title">
-      <a href={articleUrl}>{article.data.title}</a>
+      <a href={articleUrl}>{cardTitle}</a>
     </Heading>
+
+    {
+      article.data.series && article.data.level && (
+        <div class="note-entry__series-meta" aria-label="系列进度">
+          <span>{article.data.level.replace('：', ' · ')}</span>
+          <span>{article.data.chapters.map((chapter) => chapter.index).join(' / ')}</span>
+          {article.data.seriesStatus && <span>{article.data.seriesStatus}</span>}
+        </div>
+      )
+    }
+
     <p class="note-entry__summary">{article.data.description}</p>
 
     <footer>
@@ -110,6 +133,13 @@ const Heading = headingLevel;
     font-size: 0.74rem;
   }
 
+  .note-entry__series {
+    margin: 0 0 -0.3rem;
+    color: var(--accent-hover);
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+
   .note-entry__meta span {
     position: relative;
     padding-left: 0.9rem;
@@ -168,6 +198,29 @@ const Heading = headingLevel;
     text-wrap: pretty;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 3;
+  }
+
+  .note-entry__series-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.55rem;
+    margin-top: -0.25rem;
+  }
+
+  .note-entry__series-meta span {
+    padding: 0.34rem 0.58rem;
+    border-radius: var(--radius-pill);
+    background: var(--surface-soft);
+    color: var(--text-secondary);
+    font-size: 0.69rem;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+  }
+
+  .note-entry__series-meta span:last-child {
+    background: var(--accent-soft);
+    color: var(--accent-hover);
+    font-weight: 650;
   }
 
   footer {

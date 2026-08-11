@@ -12,7 +12,7 @@ const notes = (await getCollection('research'))
 
 <BaseLayout
   title="随笔 | 赵天琦｜游戏 AI 产品作品集"
-  description="记录游戏比赛、个人游玩体验、Game Jam 开发过程与阶段性成长。"
+  description="记录 AI 产品学习、游戏比赛、个人游玩体验、Game Jam 开发过程与阶段性成长。"
   canonicalPath="/notes/"
   pagefindIgnore={notes.length === 0}
   pageClass="notes-page"
@@ -22,7 +22,7 @@ const notes = (await getCollection('research'))
       <p class="notes-intro__label">Notes</p>
       <h1>随笔</h1>
       <p class="notes-intro__description">
-        记录游戏比赛、游玩体验与成长过程，也保留那些尚未形成正式研究结论的真实观察。
+        记录 AI 产品学习、游戏比赛、游玩体验与成长过程，也保留那些尚未形成正式研究结论的真实观察。
       </p>
       <p class="notes-intro__count" aria-live="polite">
         共 <strong data-note-count>{notes.length}</strong> 篇记录
@@ -59,9 +59,11 @@ const notes = (await getCollection('research'))
             >
               <h2 id="notes-empty-title">第一批随笔正在整理中</h2>
               <p>
-                这里将记录游戏比赛、个人游戏体验与阶段性成长。完成后的文章会按时间顺序出现在这里。
+                这里将记录 AI
+                产品学习、游戏比赛、个人游戏体验与阶段性成长。完成后的文章会按时间顺序出现在这里。
               </p>
               <ul aria-label="随笔栏目方向">
+                <li>学习笔记</li>
                 <li>比赛记录</li>
                 <li>游戏记录</li>
                 <li>成长随记</li>

@@ -10,6 +10,8 @@ import {
 import ArticleHeader from './ArticleHeader.astro';
 import ArticlePager from './ArticlePager.astro';
 import ArticleProse from './ArticleProse.astro';
+import ArticleSeriesNotice from './ArticleSeriesNotice.astro';
+import ArticleSeriesProgress from './ArticleSeriesProgress.astro';
 import ArticleToc from './ArticleToc.astro';
 import KeyConclusion from './KeyConclusion.astro';
 import PdfActions from './PdfActions.astro';
@@ -32,9 +34,26 @@ const relatedInsights = article.data.relatedInsights.flatMap((slug) => {
 const sectionInsights = publishedInsights.filter(
   (entry) => entry.data.section === article.data.section,
 );
-const currentIndex = sectionInsights.findIndex((entry) => entry.id === article.id);
-const previous = currentIndex >= 0 ? sectionInsights[currentIndex + 1] : undefined;
-const next = currentIndex > 0 ? sectionInsights[currentIndex - 1] : undefined;
+const navigationInsights = article.data.series
+  ? sectionInsights
+      .filter((entry) => entry.data.series === article.data.series)
+      .sort((left, right) => (left.data.seriesIndex ?? 0) - (right.data.seriesIndex ?? 0))
+  : sectionInsights;
+const currentIndex = navigationInsights.findIndex((entry) => entry.id === article.id);
+const previous = article.data.series
+  ? currentIndex > 0
+    ? navigationInsights[currentIndex - 1]
+    : undefined
+  : currentIndex >= 0
+    ? navigationInsights[currentIndex + 1]
+    : undefined;
+const next = article.data.series
+  ? currentIndex >= 0
+    ? navigationInsights[currentIndex + 1]
+    : undefined
+  : currentIndex > 0
+    ? navigationInsights[currentIndex - 1]
+    : undefined;
 const articleUrl = getInsightPath(article);
 const pdfReaderUrl = article.data.pdfUrl ? getInsightPdfPath(article) : undefined;
 const exactPublishedTime =
@@ -98,11 +117,15 @@ const structuredData = {
 
     <div class="article-layout page-shell">
       <div class="article-reading-column">
+        <ArticleSeriesNotice article={article} />
+
         <ArticleProse>
           <Content />
         </ArticleProse>
 
         <footer class="article-ending">
+          <ArticleSeriesProgress article={article} />
+
           <KeyConclusion
             title={isNote ? '这篇记录留下的判断' : '核心结论'}
             text={article.data.coreJudgment}
@@ -122,7 +145,11 @@ const structuredData = {
               >
                 <div>
                   <p>PDF 原版</p>
-                  <h2 id="article-pdf-title">查看正式排版、完整附录与来源清单</h2>
+                  <h2 id="article-pdf-title">
+                    {article.data.series
+                      ? '阅读或下载这篇学习笔记的 PDF 版本'
+                      : '查看正式排版、完整附录与来源清单'}
+                  </h2>
                 </div>
                 <PdfActions
                   title={article.data.title}
@@ -159,7 +186,12 @@ const structuredData = {
           </section>
 
           <RelatedInsights insights={relatedInsights} />
-          <ArticlePager previous={previous} next={next} />
+          <ArticlePager
+            previous={previous}
+            next={next}
+            series={Boolean(article.data.series)}
+            pendingNextLabel={article.data.series && !next ? '下一篇学习笔记 · 整理中' : undefined}
+          />
         </footer>
       </div>
 

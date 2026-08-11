@@ -11,7 +11,11 @@ interface Props {
 const { article } = Astro.props;
 const articleUrl = getInsightPath(article);
 const pdfReaderUrl = article.data.pdfUrl ? getInsightPdfPath(article) : undefined;
-const visibleTags = article.data.tags.slice(0, 3);
+const kindLabel = insightKindLabels[article.data.kind];
+const categoryLabel = researchCategoryLabels[article.data.category];
+const visibleTags = article.data.tags
+  .filter((tag) => tag !== kindLabel && tag !== categoryLabel)
+  .slice(0, article.data.series ? 2 : 3);
 const isNote = article.data.section === 'notes';
 const backHref = isNote ? '/notes/' : '/insights/';
 const backLabel = isNote ? '随笔' : '研究与产品随笔';
@@ -20,15 +24,51 @@ const backLabel = isNote ? '随笔' : '研究与产品随笔';
 <header class="article-header page-shell reveal">
   <a class="article-header__back" href={backHref}>← 返回“{backLabel}”</a>
 
-  <div class="article-header__taxonomy" aria-label="文章分类与标签">
-    <span class="article-header__category">{insightKindLabels[article.data.kind]}</span>
-    <span>{researchCategoryLabels[article.data.category]}</span>
-    {visibleTags.map((tag) => <span>{tag}</span>)}
-  </div>
+  {article.data.series && <p class="article-header__series">{article.data.series}</p>}
+
+  {
+    !article.data.series && (
+      <div class="article-header__taxonomy" aria-label="文章分类与标签">
+        <span class="article-header__category">{kindLabel}</span>
+        <span>{categoryLabel}</span>
+        {visibleTags.map((tag) => (
+          <span>{tag}</span>
+        ))}
+      </div>
+    )
+  }
 
   <h1>{article.data.displayTitle ?? article.data.title}</h1>
   {article.data.subtitle && <p class="article-header__subtitle">{article.data.subtitle}</p>}
+
+  {
+    article.data.series && article.data.level && article.data.chapters.length > 0 && (
+      <div class="article-header__series-context" aria-label="系列学习进度">
+        <p>{article.data.level}</p>
+        <ul>
+          {article.data.chapters.map((chapter) => (
+            <li>
+              <span>{chapter.index}</span> · {chapter.title}
+            </li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
+
   <p class="article-header__summary">{article.data.description}</p>
+
+  {
+    article.data.series && (
+      <div class="article-header__taxonomy" aria-label="文章分类与标签">
+        <span class="article-header__category">{kindLabel}</span>
+        <span>{categoryLabel}</span>
+        {visibleTags.map((tag) => (
+          <span>{tag}</span>
+        ))}
+      </div>
+    )
+  }
 
   <dl class="article-header__meta" aria-label="文章信息">
     <div>
@@ -43,6 +83,14 @@ const backLabel = isNote ? '随笔' : '研究与产品随笔';
       <dt>阅读时间</dt>
       <dd>{article.data.readingTime}</dd>
     </div>
+    {
+      article.data.seriesStatus && (
+        <div>
+          <dt>系列状态</dt>
+          <dd>{article.data.seriesStatus}</dd>
+        </div>
+      )
+    }
     {
       article.data.pageCount && (
         <div>
@@ -86,6 +134,13 @@ const backLabel = isNote ? '随笔' : '研究与产品随笔';
 
   .article-header__back:hover {
     color: var(--accent-hover);
+  }
+
+  .article-header__series {
+    margin: 0.55rem 0 -0.35rem;
+    color: var(--accent-hover);
+    font-size: 0.84rem;
+    font-weight: 680;
   }
 
   .article-header__taxonomy {
@@ -138,6 +193,41 @@ const backLabel = isNote ? '随笔' : '研究与产品随笔';
     font-size: clamp(0.98rem, 1.4vw, 1.08rem);
     line-height: 1.8;
     text-wrap: pretty;
+  }
+
+  .article-header__series-context {
+    display: grid;
+    gap: 0.65rem;
+    max-width: 720px;
+    padding-block: 0.95rem;
+    border-block: 1px solid var(--border-strong);
+  }
+
+  .article-header__series-context p {
+    margin: 0;
+    color: var(--text-primary);
+    font-size: 0.86rem;
+    font-weight: 680;
+  }
+
+  .article-header__series-context ul {
+    display: grid;
+    gap: 0.35rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .article-header__series-context li {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    line-height: 1.55;
+    overflow-wrap: anywhere;
+  }
+
+  .article-header__series-context li span {
+    color: var(--text-primary);
+    font-weight: 650;
   }
 
   .article-header__meta {

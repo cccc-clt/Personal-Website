@@ -86,6 +86,7 @@ export const researchCategoryLabels = {
 export const insightKindLabels = {
   'research-report': 'AI 研究报告',
   'ai-product-note': '产品随笔',
+  'learning-note': '学习笔记',
   'game-jam-note': '比赛记录',
   'game-record-note': '游戏记录',
   'growth-note': '成长随记',
@@ -108,6 +109,7 @@ export const researchCategoryFilters = [
 ] as const satisfies readonly InsightCategory[];
 
 export const noteKindFilters = [
+  'learning-note',
   'game-jam-note',
   'game-record-note',
   'growth-note',
