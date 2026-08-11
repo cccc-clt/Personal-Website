@@ -12,30 +12,14 @@
 
   .site-header,
   .site-footer,
-  .resume-actions,
   .contact-section,
   .lab-guide,
   [data-no-print] {
     display: none !important;
   }
 
-  .resume-page,
-  .resume-sheet {
-    width: 100% !important;
-    max-width: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    border: 0 !important;
-    box-shadow: none !important;
-  }
-
   a {
     color: black !important;
     text-decoration: none !important;
-  }
-
-  .resume-section,
-  .resume-item {
-    break-inside: avoid;
   }
 }

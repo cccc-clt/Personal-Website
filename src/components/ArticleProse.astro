@@ -63,14 +63,55 @@
     margin: 2rem 0;
     padding: 1.1rem 1.2rem;
     border: 1px solid var(--border);
-    border-left: 3px solid var(--accent);
-    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    border-left-color: var(--accent);
+    border-radius: var(--radius-sm);
     background: var(--surface-warm);
     color: var(--text-primary);
   }
 
   .article-prose :global(blockquote p:last-child) {
     margin-bottom: 0;
+  }
+
+  .article-prose :global(.article-flow) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.42rem 0.72rem;
+    align-items: center;
+    margin: 0.25rem 0 1.7rem;
+    padding-block: 0.85rem;
+    border-block: 1px solid var(--border);
+    color: var(--text-primary);
+    font-size: 0.92rem;
+    font-weight: 620;
+  }
+
+  .article-prose :global(.article-flow span[aria-hidden='true']) {
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  .article-prose :global(.article-problems) {
+    margin: 2rem 0 2.4rem;
+    padding: clamp(1.15rem, 3vw, 1.6rem);
+    border: 1px solid color-mix(in srgb, var(--accent) 28%, var(--border-strong));
+    border-radius: var(--radius-md);
+    background: var(--accent-soft);
+  }
+
+  .article-prose :global(.article-problems__label) {
+    margin: 0 0 0.9rem;
+    color: var(--accent-hover);
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+
+  .article-prose :global(.article-problems ul) {
+    margin: 0;
+  }
+
+  .article-prose :global(.article-problems li) {
+    color: var(--text-primary);
   }
 
   .article-prose :global(hr) {
@@ -174,6 +215,15 @@
 
     .article-prose :global(h2) {
       margin-top: 3rem;
+    }
+
+    .article-prose :global(.article-flow) {
+      gap-inline: 0.55rem;
+      font-size: 0.88rem;
+    }
+
+    .article-prose :global(.article-problems) {
+      padding-inline: 1rem;
     }
   }
 </style>

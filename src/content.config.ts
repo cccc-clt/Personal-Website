@@ -101,6 +101,8 @@ const research = defineCollection({
     z
       .object({
         title: z.string(),
+        displayTitle: z.string().optional(),
+        seoTitle: z.string().optional(),
         subtitle: z.string().default(''),
         type: z.string(),
         section: insightSection,

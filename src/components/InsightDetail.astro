@@ -52,6 +52,9 @@ const absolutePdfUrl =
     : article.data.pdfUrl;
 const citationDate = article.data.publishDate.replaceAll('-', '.');
 const isNote = article.data.section === 'notes';
+const citationTitle = article.data.title.startsWith('《')
+  ? article.data.title
+  : `《${article.data.title}》`;
 const structuredData = {
   '@type': article.data.kind === 'research-report' ? 'TechArticle' : 'Article',
   headline: article.data.title,
@@ -79,7 +82,7 @@ const structuredData = {
 ---
 
 <BaseLayout
-  title={`${article.data.title} | 赵天琦｜游戏 AI 产品经理`}
+  title={article.data.seoTitle ?? `${article.data.title} | 赵天琦｜游戏 AI 产品经理`}
   description={article.data.description}
   image={article.data.cover?.src}
   canonicalPath={articleUrl}
@@ -140,9 +143,18 @@ const structuredData = {
           <section class="article-ending__citation" aria-labelledby="citation-title">
             <p id="citation-title">版权与引用说明</p>
             <div>
-              本文由赵天琦整理并发布。引用建议：赵天琦，《{article.data.title}》，{citationDate}，
+              本文由赵天琦整理并发布。引用建议：赵天琦，{citationTitle}，{citationDate}，
               <a href={articleUrl}>{absoluteArticleUrl}</a>。
-              {!isNote && article.data.pdfUrl && <>研究报告的完整附录与来源清单以 PDF 原版为准。</>}
+              {
+                article.data.kind === 'research-report' && article.data.pdfUrl && (
+                  <>研究报告的完整附录与来源清单以 PDF 原版为准。</>
+                )
+              }
+              {
+                article.data.kind === 'ai-product-note' && article.data.pdfUrl && (
+                  <>本文所附 PDF 版本保留原始排版与资料来源说明。</>
+                )
+              }
             </div>
           </section>
 

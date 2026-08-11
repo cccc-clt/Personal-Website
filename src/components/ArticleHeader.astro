@@ -26,7 +26,7 @@ const backLabel = isNote ? '随笔' : '研究与产品随笔';
     {visibleTags.map((tag) => <span>{tag}</span>)}
   </div>
 
-  <h1>{article.data.title}</h1>
+  <h1>{article.data.displayTitle ?? article.data.title}</h1>
   {article.data.subtitle && <p class="article-header__subtitle">{article.data.subtitle}</p>}
   <p class="article-header__summary">{article.data.description}</p>
 

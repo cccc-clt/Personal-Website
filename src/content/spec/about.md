@@ -57,4 +57,3 @@ Evaluation 不是只给一个平均分。它需要说明任务、样本、模型
 
 - GitHub：<https://github.com/cccc-clt>
 - 项目案例：[/projects/](/projects/)
-- 在线简历：[/resume/](/resume/)

@@ -13,6 +13,7 @@ export default defineConfig(
       '.astro/**',
       'dist/**',
       'node_modules/**',
+      'tmp/**',
     ],
   },
   eslint.configs.recommended,

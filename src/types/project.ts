@@ -24,7 +24,6 @@ export interface TrackConfig {
   role: string;
   description: string;
   tags: string[];
-  resumeLabel: string;
   accent: string;
   seoDescription: string;
 }

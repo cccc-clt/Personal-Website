@@ -26,8 +26,8 @@ const pdfUrl = article.data.pdfUrl;
 ---
 
 <BaseLayout
-  title={`${article.data.title} · PDF 原版 | 赵天琦`}
-  description={`${article.data.title}的 PDF 原版阅读与下载页面。`}
+  title={`${article.data.title} · PDF 阅读 | 赵天琦`}
+  description={`${article.data.title}的 PDF 阅读与下载页面。`}
   image={article.data.cover?.src}
   canonicalPath={articleUrl}
   noindex
@@ -37,7 +37,7 @@ const pdfUrl = article.data.pdfUrl;
     <header class="pdf-reader__header">
       <a class="pdf-reader__back" href={articleUrl}>← 返回文章</a>
       <div>
-        <p>PDF 原版</p>
+        <p>PDF 阅读</p>
         <h1>{article.data.title}</h1>
         <div class="pdf-reader__meta">
           <span>{article.data.readingTime}</span>

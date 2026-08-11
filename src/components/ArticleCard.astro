@@ -73,8 +73,12 @@ const cover = article.data.cover;
         <a class="button button--small" href={articleUrl}>网页阅读</a>
         {
           article.data.pdfUrl && (
-            <a class="button button--small button--quiet" href={getInsightPdfPath(article)}>
-              PDF 原版
+            <a
+              class="button button--small button--quiet"
+              href={getInsightPdfPath(article)}
+              aria-label={`阅读${article.data.title}的 PDF 版本`}
+            >
+              PDF 阅读
             </a>
           )
         }

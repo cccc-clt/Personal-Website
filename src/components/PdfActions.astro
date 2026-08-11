@@ -18,28 +18,34 @@ const { title, context, webUrl, pdfUrl, readerUrl } = Astro.props;
           网页阅读
         </a>
         {readerUrl && (
-          <a class="button" href={readerUrl}>
-            PDF 原版
+          <a class="button" href={readerUrl} aria-label={`阅读${title}的 PDF 版本`}>
+            PDF 阅读
           </a>
         )}
         {pdfUrl && (
-          <a class="button button--quiet" href={pdfUrl} download>
+          <a class="button button--quiet" href={pdfUrl} download aria-label={`下载${title} PDF`}>
             下载 PDF
           </a>
         )}
       </>
     ) : (
       <>
-        <a class="button" href={webUrl}>
-          返回文章
+        <a class="button" href={webUrl} aria-label={`返回${title}网页阅读`}>
+          返回网页阅读
         </a>
         {pdfUrl && (
-          <a class="button button--primary" href={pdfUrl} target="_blank" rel="noopener noreferrer">
-            新窗口打开
+          <a
+            class="button button--primary"
+            href={pdfUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`在浏览器中打开${title} PDF`}
+          >
+            在浏览器中打开 PDF
           </a>
         )}
         {pdfUrl && (
-          <a class="button button--quiet" href={pdfUrl} download>
+          <a class="button button--quiet" href={pdfUrl} download aria-label={`下载${title} PDF`}>
             下载 PDF
           </a>
         )}

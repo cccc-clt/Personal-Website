@@ -6,7 +6,6 @@ export const siteConfig = {
   description:
     '赵天琦的 AI 产品作品集，聚焦游戏 AI、AI Agent、产品评测与从真实问题到验证回路的产品实践。',
   github: 'https://github.com/cccc-clt',
-  email: '',
   location: '中国 · 河南',
   school: '河南城建学院',
   major: '交通工程',
@@ -18,12 +17,6 @@ export const siteConfig = {
     { label: '研究', href: '/insights/', activePrefixes: ['/insights/', '/research/'] },
     { label: '随笔', href: '/notes/', activePrefixes: ['/notes/'] },
     { label: '关于', href: '/about/' },
-    { label: '简历', href: '/resume/' },
-  ],
-  resumes: [
-    { label: '通用 AI 产品简历', path: '/resume/resume-general.pdf' },
-    { label: '游戏 AI 定向简历', path: '/resume/resume-game.pdf' },
-    { label: '智能汽车 AI 定向简历', path: '/resume/resume-auto.pdf' },
   ],
   banner: {
     desktop: '/assets/images/banner/home.webp',
