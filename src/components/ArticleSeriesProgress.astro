@@ -3,14 +3,16 @@ import type { CollectionEntry } from 'astro:content';
 
 interface Props {
   article: CollectionEntry<'research'>;
+  completedArticles?: CollectionEntry<'research'>[];
 }
 
-const { article } = Astro.props;
-const { series, level, chapters } = article.data;
+const { article, completedArticles = [article] } = Astro.props;
+const { series, level } = article.data;
+const completedChapters = completedArticles.flatMap((entry) => entry.data.chapters);
 ---
 
 {
-  series && level && chapters.length > 0 && (
+  series && level && completedChapters.length > 0 && (
     <section class="series-progress" aria-labelledby="series-progress-title">
       <header>
         <p>{series}</p>
@@ -18,7 +20,7 @@ const { series, level, chapters } = article.data;
       </header>
 
       <ol>
-        {chapters.map((chapter) => (
+        {completedChapters.map((chapter) => (
           <li>
             <span class="series-progress__marker" aria-hidden="true">
               <svg viewBox="0 0 16 16" width="16" height="16">

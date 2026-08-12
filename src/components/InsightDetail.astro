@@ -40,6 +40,9 @@ const navigationInsights = article.data.series
       .sort((left, right) => (left.data.seriesIndex ?? 0) - (right.data.seriesIndex ?? 0))
   : sectionInsights;
 const currentIndex = navigationInsights.findIndex((entry) => entry.id === article.id);
+const completedSeriesInsights = article.data.series
+  ? navigationInsights.slice(0, currentIndex + 1)
+  : [];
 const previous = article.data.series
   ? currentIndex > 0
     ? navigationInsights[currentIndex - 1]
@@ -117,14 +120,14 @@ const structuredData = {
 
     <div class="article-layout page-shell">
       <div class="article-reading-column">
-        <ArticleSeriesNotice article={article} />
+        <ArticleSeriesNotice article={article} previous={previous} />
 
         <ArticleProse>
           <Content />
         </ArticleProse>
 
         <footer class="article-ending">
-          <ArticleSeriesProgress article={article} />
+          <ArticleSeriesProgress article={article} completedArticles={completedSeriesInsights} />
 
           <KeyConclusion
             title={isNote ? '这篇记录留下的判断' : '核心结论'}
