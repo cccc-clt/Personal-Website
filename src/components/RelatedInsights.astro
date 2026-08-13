@@ -1,7 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import { researchCategoryLabels } from '../config/site';
-import { getInsightPath } from '../utils/content';
+import { getInsightPath, getInsightReadingTime } from '../utils/content';
 
 interface Props {
   insights: CollectionEntry<'research'>[];
@@ -21,7 +21,7 @@ const { insights } = Astro.props;
         {insights.map((insight) => (
           <a href={getInsightPath(insight)}>
             <span>
-              {researchCategoryLabels[insight.data.category]} · {insight.data.readingTime}
+              {researchCategoryLabels[insight.data.category]} · {getInsightReadingTime(insight)}
             </span>
             <strong>{insight.data.title}</strong>
           </a>

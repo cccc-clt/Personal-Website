@@ -7,9 +7,10 @@ interface Props {
   next?: CollectionEntry<'research'>;
   series?: boolean;
   pendingNextLabel?: string;
+  pendingNextEyebrow?: string;
 }
 
-const { previous, next, series = false, pendingNextLabel } = Astro.props;
+const { previous, next, series = false, pendingNextLabel, pendingNextEyebrow } = Astro.props;
 ---
 
 {
@@ -31,7 +32,7 @@ const { previous, next, series = false, pendingNextLabel } = Astro.props;
       ) : (
         pendingNextLabel && (
           <span class="article-pager__next article-pager__pending" aria-disabled="true">
-            <span>系列下一篇</span>
+            <span>{pendingNextEyebrow ?? '系列下一篇'}</span>
             <strong>{pendingNextLabel}</strong>
           </span>
         )

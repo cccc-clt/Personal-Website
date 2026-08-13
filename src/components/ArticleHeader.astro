@@ -1,7 +1,13 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import { insightKindLabels, researchCategoryLabels } from '../config/site';
-import { formatPublicationDate, getInsightPath, getInsightPdfPath } from '../utils/content';
+import { getLearningSeriesConfig } from '../data/learningSeries';
+import {
+  formatPublicationDate,
+  getInsightPath,
+  getInsightPdfPath,
+  getInsightReadingTime,
+} from '../utils/content';
 import PdfActions from './PdfActions.astro';
 
 interface Props {
@@ -19,6 +25,8 @@ const visibleTags = article.data.tags
 const isNote = article.data.section === 'notes';
 const backHref = isNote ? '/notes/' : '/insights/';
 const backLabel = isNote ? '随笔' : '研究与产品随笔';
+const readingTime = getInsightReadingTime(article);
+const seriesConfig = getLearningSeriesConfig(article.data.series);
 ---
 
 <header class="article-header page-shell reveal">
@@ -81,13 +89,13 @@ const backLabel = isNote ? '随笔' : '研究与产品随笔';
     </div>
     <div>
       <dt>阅读时间</dt>
-      <dd>{article.data.readingTime}</dd>
+      <dd>{readingTime}</dd>
     </div>
     {
-      article.data.seriesStatus && (
+      (seriesConfig?.status ?? article.data.seriesStatus) && (
         <div>
           <dt>系列状态</dt>
-          <dd>{article.data.seriesStatus}</dd>
+          <dd>{seriesConfig?.status ?? article.data.seriesStatus}</dd>
         </div>
       )
     }

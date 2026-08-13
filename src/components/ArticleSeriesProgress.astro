@@ -1,26 +1,35 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import { getLearningSeriesConfig } from '../data/learningSeries';
 
 interface Props {
   article: CollectionEntry<'research'>;
-  completedArticles?: CollectionEntry<'research'>[];
+  seriesArticles?: CollectionEntry<'research'>[];
 }
 
-const { article, completedArticles = [article] } = Astro.props;
+const { article, seriesArticles = [article] } = Astro.props;
 const { series, level } = article.data;
-const completedChapters = completedArticles.flatMap((entry) => entry.data.chapters);
+const seriesConfig = getLearningSeriesConfig(series);
+const chapters =
+  seriesConfig?.chapters ??
+  article.data.chapters.map((chapter) => ({
+    ...chapter,
+    articleIndex: article.data.seriesIndex ?? 1,
+  }));
+const publishedArticleIndexes = new Set(seriesArticles.map((entry) => entry.data.seriesIndex));
 ---
 
 {
-  series && level && completedChapters.length > 0 && (
+  series && level && chapters.length > 0 && (
     <section class="series-progress" aria-labelledby="series-progress-title">
       <header>
         <p>{series}</p>
-        <h2 id="series-progress-title">{level.replace('：', '｜')}</h2>
+        <h2 id="series-progress-title">{(seriesConfig?.level ?? level).replace('：', '｜')}</h2>
+        {seriesConfig && <strong class="series-progress__status">{seriesConfig.status}</strong>}
       </header>
 
       <ol>
-        {completedChapters.map((chapter) => (
+        {chapters.map((chapter) => (
           <li>
             <span class="series-progress__marker" aria-hidden="true">
               <svg viewBox="0 0 16 16" width="16" height="16">
@@ -30,15 +39,17 @@ const completedChapters = completedArticles.flatMap((entry) => entry.data.chapte
             <span>
               <strong>{chapter.index}</strong>：{chapter.title}
             </span>
-            <small>已记录</small>
+            <small>{publishedArticleIndexes.has(chapter.articleIndex) ? '已记录' : '待更新'}</small>
           </li>
         ))}
-        <li class="series-progress__pending">
-          <span class="series-progress__marker" aria-hidden="true" />
-          <span>后续章节 · 持续整理中</span>
-          <small>待更新</small>
-        </li>
       </ol>
+
+      {seriesConfig && (
+        <footer>
+          <span>{seriesConfig.nextStageLabel}</span>
+          <strong>{seriesConfig.nextStageText}</strong>
+        </footer>
+      )}
     </section>
   )
 }
@@ -72,6 +83,13 @@ const completedChapters = completedArticles.flatMap((entry) => entry.data.chapte
     font-size: clamp(1.2rem, 2.2vw, 1.5rem);
     line-height: 1.45;
     text-wrap: pretty;
+  }
+
+  .series-progress__status {
+    width: fit-content;
+    color: var(--accent-hover);
+    font-size: 0.78rem;
+    font-weight: 680;
   }
 
   ol {
@@ -122,13 +140,23 @@ const completedChapters = completedArticles.flatMap((entry) => entry.data.chapte
     white-space: nowrap;
   }
 
-  .series-progress__pending {
-    color: var(--text-secondary);
+  footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 0.7rem;
+    align-items: baseline;
+    padding-top: 0.9rem;
+    border-top: 1px solid var(--border);
   }
 
-  .series-progress__pending .series-progress__marker {
-    border: 1px solid var(--border-strong);
-    background: transparent;
+  footer span {
+    color: var(--text-muted);
+    font-size: 0.72rem;
+  }
+
+  footer strong {
+    color: var(--text-primary);
+    font-size: 0.88rem;
   }
 
   @media (max-width: 520px) {

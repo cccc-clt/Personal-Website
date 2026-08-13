@@ -10,6 +10,10 @@ export function estimateReadingMinutes(body = '') {
   return Math.max(1, Math.ceil(hanCharacters / 420 + latinWords / 220));
 }
 
+export function getInsightReadingTime(article: CollectionEntry<'research'>) {
+  return article.data.readingTime ?? `约 ${estimateReadingMinutes(article.body ?? '')} 分钟`;
+}
+
 export function formatDate(date: Date) {
   return new Intl.DateTimeFormat('zh-CN', {
     year: 'numeric',

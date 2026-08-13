@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import { getLearningSeriesConfig } from '../data/learningSeries';
 import { getInsightPath } from '../utils/content';
 
 interface Props {
@@ -9,6 +10,11 @@ interface Props {
 
 const { article, previous } = Astro.props;
 const { series, level, chapters, seriesDescription, seriesStatus } = article.data;
+const seriesConfig = getLearningSeriesConfig(series);
+const isCurrentSeriesEnding =
+  seriesConfig &&
+  article.data.seriesIndex ===
+    Math.max(...seriesConfig.chapters.map((chapter) => chapter.articleIndex));
 ---
 
 {
@@ -48,7 +54,11 @@ const { series, level, chapters, seriesDescription, seriesStatus } = article.dat
         </div>
       )}
 
-      <p class="series-notice__status">后续章节会继续更新 · {seriesStatus}</p>
+      <p class="series-notice__status">
+        {isCurrentSeriesEnding
+          ? `${seriesConfig.completionStatement} ${seriesConfig.nextStageText}。`
+          : `第一层现已整理至第 10 章 · ${seriesConfig?.status ?? seriesStatus}`}
+      </p>
     </section>
   )
 }

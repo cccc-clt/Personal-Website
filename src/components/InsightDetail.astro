@@ -1,6 +1,7 @@
 ---
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { getLearningSeriesConfig } from '../data/learningSeries';
 import {
   getInsightPath,
   getInsightPdfPath,
@@ -40,9 +41,7 @@ const navigationInsights = article.data.series
       .sort((left, right) => (left.data.seriesIndex ?? 0) - (right.data.seriesIndex ?? 0))
   : sectionInsights;
 const currentIndex = navigationInsights.findIndex((entry) => entry.id === article.id);
-const completedSeriesInsights = article.data.series
-  ? navigationInsights.slice(0, currentIndex + 1)
-  : [];
+const seriesConfig = getLearningSeriesConfig(article.data.series);
 const previous = article.data.series
   ? currentIndex > 0
     ? navigationInsights[currentIndex - 1]
@@ -127,7 +126,7 @@ const structuredData = {
         </ArticleProse>
 
         <footer class="article-ending">
-          <ArticleSeriesProgress article={article} completedArticles={completedSeriesInsights} />
+          <ArticleSeriesProgress article={article} seriesArticles={navigationInsights} />
 
           <KeyConclusion
             title={isNote ? '这篇记录留下的判断' : '核心结论'}
@@ -193,7 +192,12 @@ const structuredData = {
             previous={previous}
             next={next}
             series={Boolean(article.data.series)}
-            pendingNextLabel={article.data.series && !next ? '下一篇学习笔记 · 整理中' : undefined}
+            pendingNextLabel={article.data.series && !next
+              ? seriesConfig?.nextStageText
+              : undefined}
+            pendingNextEyebrow={article.data.series && !next
+              ? seriesConfig?.nextStageLabel
+              : undefined}
           />
         </footer>
       </div>

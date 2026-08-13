@@ -117,7 +117,7 @@ const research = defineCollection({
         publishDate: publicationDate,
         updatedDate: publicationDate,
         pageCount: z.number().int().positive().optional(),
-        readingTime: z.string(),
+        readingTime: z.string().optional(),
         description: z.string(),
         tags: z.array(z.string()),
         featured: z.boolean().default(false),
@@ -171,14 +171,11 @@ const research = defineCollection({
           });
         }
 
-        if (
-          entry.series &&
-          (!entry.seriesIndex || !entry.level || entry.chapters.length === 0 || !entry.seriesStatus)
-        ) {
+        if (entry.series && (!entry.seriesIndex || !entry.level || entry.chapters.length === 0)) {
           context.addIssue({
             code: 'custom',
             path: ['series'],
-            message: '系列文章必须同时提供 seriesIndex、level、chapters 与 seriesStatus',
+            message: '系列文章必须同时提供 seriesIndex、level 与 chapters',
           });
         }
       }),

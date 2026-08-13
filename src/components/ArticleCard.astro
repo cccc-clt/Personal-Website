@@ -3,7 +3,12 @@ import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import { heroAssetConfig } from '../config/visualAssets';
 import { researchCategoryLabels } from '../config/site';
-import { formatPublicationDate, getInsightPath, getInsightPdfPath } from '../utils/content';
+import {
+  formatPublicationDate,
+  getInsightPath,
+  getInsightPdfPath,
+  getInsightReadingTime,
+} from '../utils/content';
 
 interface Props {
   article: CollectionEntry<'research'>;
@@ -14,6 +19,7 @@ const { article, headingLevel = 'h3' } = Astro.props;
 const Heading = headingLevel;
 const articleUrl = getInsightPath(article);
 const cover = article.data.cover;
+const readingTime = getInsightReadingTime(article);
 ---
 
 <article class="article-card reveal">
@@ -67,7 +73,7 @@ const cover = article.data.cover;
       <div class="article-card__meta">
         <span>{researchCategoryLabels[article.data.category]}</span>
         {article.data.pageCount && <span>{article.data.pageCount} 页</span>}
-        <span>{article.data.readingTime}</span>
+        <span>{readingTime}</span>
       </div>
       <div class="article-card__actions">
         <a class="button button--small" href={articleUrl}>网页阅读</a>
