@@ -25,6 +25,7 @@ interface Props {
 
 const { article } = Astro.props;
 const { Content, headings } = await render(article);
+const tocHeadings = headings.filter((heading) => heading.depth <= article.data.tocDepth);
 const publishedInsights = (await getCollection('research'))
   .filter((entry) => entry.data.status === 'published')
   .sort(sortInsightsByDate);
@@ -79,7 +80,7 @@ const citationTitle = article.data.title.startsWith('《')
 const structuredData = {
   '@type': article.data.kind === 'research-report' ? 'TechArticle' : 'Article',
   headline: article.data.title,
-  alternativeHeadline: article.data.subtitle || undefined,
+  alternativeHeadline: article.data.englishTitle || article.data.subtitle || undefined,
   description: article.data.description,
   datePublished: article.data.publishDate,
   dateModified: article.data.updatedDate,
@@ -114,7 +115,7 @@ const structuredData = {
 >
   <article class="article-detail" id="article-top">
     <ArticleHeader article={article}>
-      <ArticleToc headings={headings} variant="mobile" />
+      <ArticleToc headings={tocHeadings} variant="mobile" />
     </ArticleHeader>
 
     <div class="article-layout page-shell">
@@ -202,7 +203,7 @@ const structuredData = {
         </footer>
       </div>
 
-      <ArticleToc headings={headings} variant="desktop" />
+      <ArticleToc headings={tocHeadings} variant="desktop" />
     </div>
   </article>
 </BaseLayout>

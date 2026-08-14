@@ -62,7 +62,7 @@ const readingTime = getInsightReadingTime(article);
       </time>
     </div>
 
-    <Heading><a href={articleUrl}>{article.data.title}</a></Heading>
+    <Heading><a href={articleUrl}>{article.data.cardTitle ?? article.data.title}</a></Heading>
     <p>{article.data.description}</p>
 
     <div class="article-card__tags" aria-label="内容标签">

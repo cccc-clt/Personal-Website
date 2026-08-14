@@ -17,7 +17,7 @@ interface Props {
 const { article } = Astro.props;
 const articleUrl = getInsightPath(article);
 const pdfReaderUrl = article.data.pdfUrl ? getInsightPdfPath(article) : undefined;
-const kindLabel = insightKindLabels[article.data.kind];
+const kindLabel = article.data.heroLabel ?? insightKindLabels[article.data.kind];
 const categoryLabel = researchCategoryLabels[article.data.category];
 const visibleTags = article.data.tags
   .filter((tag) => tag !== kindLabel && tag !== categoryLabel)
@@ -48,6 +48,13 @@ const seriesConfig = getLearningSeriesConfig(article.data.series);
 
   <h1>{article.data.displayTitle ?? article.data.title}</h1>
   {article.data.subtitle && <p class="article-header__subtitle">{article.data.subtitle}</p>}
+  {
+    article.data.englishTitle && (
+      <p class="article-header__english-title" lang="en">
+        {article.data.englishTitle}
+      </p>
+    )
+  }
 
   {
     article.data.series && article.data.level && article.data.chapters.length > 0 && (
@@ -64,7 +71,7 @@ const seriesConfig = getLearningSeriesConfig(article.data.series);
     )
   }
 
-  <p class="article-header__summary">{article.data.description}</p>
+  <p class="article-header__summary">{article.data.heroSummary ?? article.data.description}</p>
 
   {
     article.data.series && (
@@ -200,6 +207,15 @@ const seriesConfig = getLearningSeriesConfig(article.data.series);
     color: var(--text-secondary);
     font-size: clamp(0.98rem, 1.4vw, 1.08rem);
     line-height: 1.8;
+    text-wrap: pretty;
+  }
+
+  .article-header__english-title {
+    max-width: 68ch;
+    margin: -0.3rem 0 0;
+    color: var(--text-muted);
+    font-size: clamp(0.78rem, 1.15vw, 0.9rem);
+    line-height: 1.6;
     text-wrap: pretty;
   }
 

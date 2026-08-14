@@ -107,9 +107,13 @@ const research = defineCollection({
     z
       .object({
         title: z.string(),
+        cardTitle: z.string().optional(),
         displayTitle: z.string().optional(),
         seoTitle: z.string().optional(),
+        englishTitle: z.string().optional(),
+        heroLabel: z.string().optional(),
         subtitle: z.string().default(''),
+        heroSummary: z.string().optional(),
         type: z.string(),
         section: insightSection,
         kind: insightKind,
@@ -118,6 +122,7 @@ const research = defineCollection({
         updatedDate: publicationDate,
         pageCount: z.number().int().positive().optional(),
         readingTime: z.string().optional(),
+        tocDepth: z.union([z.literal(2), z.literal(3)]).default(3),
         description: z.string(),
         tags: z.array(z.string()),
         featured: z.boolean().default(false),

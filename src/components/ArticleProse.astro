@@ -81,6 +81,75 @@
     margin-bottom: 0;
   }
 
+  .article-prose :global(.article-research-insight) {
+    display: grid;
+    gap: 0.55rem;
+    margin: 2.3rem 0 2.6rem;
+    padding: clamp(1.15rem, 3vw, 1.55rem);
+    border: 1px solid color-mix(in srgb, var(--accent) 25%, var(--border-strong));
+    border-radius: var(--radius-md);
+    background: var(--accent-soft);
+  }
+
+  .article-prose :global(.article-research-insight p),
+  .article-prose :global(.article-research-insight strong) {
+    margin: 0;
+  }
+
+  .article-prose :global(.article-research-insight p) {
+    color: var(--accent-hover);
+    font-size: 0.76rem;
+    font-weight: 700;
+  }
+
+  .article-prose :global(.article-research-insight strong) {
+    color: var(--text-primary);
+    font-family: var(--font-display);
+    font-size: clamp(1.08rem, 2vw, 1.32rem);
+    font-weight: 650;
+    line-height: 1.65;
+    text-wrap: pretty;
+  }
+
+  .article-prose :global(.article-product-translation) {
+    display: grid;
+    gap: 0.75rem;
+    margin: 1.5rem 0 2.8rem;
+    padding: clamp(1.25rem, 3vw, 1.8rem);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-md);
+    background: var(--surface-soft);
+  }
+
+  .article-prose :global(.article-product-translation p),
+  .article-prose :global(.article-product-translation h3) {
+    margin: 0;
+  }
+
+  .article-prose :global(.article-product-translation__kicker) {
+    color: var(--accent-hover);
+    font-size: 0.76rem;
+    font-weight: 700;
+  }
+
+  .article-prose :global(.article-product-translation h3) {
+    font-size: clamp(1.65rem, 3vw, 2.2rem);
+  }
+
+  .article-prose :global(.article-product-translation__positioning) {
+    color: var(--text-primary);
+    font-family: var(--font-display);
+    font-size: clamp(1.05rem, 1.8vw, 1.24rem);
+    font-weight: 620;
+    line-height: 1.65;
+  }
+
+  .article-prose :global(.article-product-translation p:not([class])) {
+    color: var(--text-secondary);
+    font-size: 0.94rem;
+    line-height: 1.8;
+  }
+
   .article-prose :global(.article-flow) {
     display: flex;
     flex-wrap: wrap;
@@ -819,6 +888,11 @@
     }
 
     .article-prose :global(.article-problems) {
+      padding-inline: 1rem;
+    }
+
+    .article-prose :global(.article-research-insight),
+    .article-prose :global(.article-product-translation) {
       padding-inline: 1rem;
     }
 
