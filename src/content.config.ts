@@ -123,8 +123,10 @@ const research = defineCollection({
         pageCount: z.number().int().positive().optional(),
         readingTime: z.string().optional(),
         tocDepth: z.union([z.literal(2), z.literal(3)]).default(3),
+        tocHighlights: z.array(z.string()).default([]),
         description: z.string(),
         tags: z.array(z.string()),
+        seoKeywords: z.array(z.string()).default([]),
         featured: z.boolean().default(false),
         homepageFeatured: z.boolean().default(false),
         homepageOrder: z.number().optional(),
@@ -136,6 +138,8 @@ const research = defineCollection({
         series: z.string().optional(),
         seriesIndex: z.number().int().positive().optional(),
         level: z.string().optional(),
+        levelIndex: z.number().int().positive().optional(),
+        levelArticleIndex: z.number().int().positive().optional(),
         chapters: z
           .array(
             z.object({
@@ -176,11 +180,19 @@ const research = defineCollection({
           });
         }
 
-        if (entry.series && (!entry.seriesIndex || !entry.level || entry.chapters.length === 0)) {
+        if (
+          entry.series &&
+          (!entry.seriesIndex ||
+            !entry.level ||
+            !entry.levelIndex ||
+            !entry.levelArticleIndex ||
+            entry.chapters.length === 0)
+        ) {
           context.addIssue({
             code: 'custom',
             path: ['series'],
-            message: '系列文章必须同时提供 seriesIndex、level 与 chapters',
+            message:
+              '系列文章必须同时提供 seriesIndex、level、levelIndex、levelArticleIndex 与 chapters',
           });
         }
       }),

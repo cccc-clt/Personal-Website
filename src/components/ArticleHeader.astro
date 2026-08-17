@@ -1,7 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import { insightKindLabels, researchCategoryLabels } from '../config/site';
-import { getLearningSeriesConfig } from '../data/learningSeries';
+import { getLearningSeriesLevel } from '../data/learningSeries';
 import {
   formatPublicationDate,
   getInsightPath,
@@ -26,7 +26,7 @@ const isNote = article.data.section === 'notes';
 const backHref = isNote ? '/notes/' : '/insights/';
 const backLabel = isNote ? '随笔' : '研究与产品随笔';
 const readingTime = getInsightReadingTime(article);
-const seriesConfig = getLearningSeriesConfig(article.data.series);
+const currentLevel = getLearningSeriesLevel(article.data.series, article.data.levelIndex);
 ---
 
 <header class="article-header page-shell reveal">
@@ -99,10 +99,10 @@ const seriesConfig = getLearningSeriesConfig(article.data.series);
       <dd>{readingTime}</dd>
     </div>
     {
-      (seriesConfig?.status ?? article.data.seriesStatus) && (
+      (currentLevel?.articleStatus ?? article.data.seriesStatus) && (
         <div>
           <dt>系列状态</dt>
-          <dd>{seriesConfig?.status ?? article.data.seriesStatus}</dd>
+          <dd>{currentLevel?.articleStatus ?? article.data.seriesStatus}</dd>
         </div>
       )
     }

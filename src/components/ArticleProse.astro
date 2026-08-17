@@ -759,6 +759,78 @@
     color: var(--text-primary);
   }
 
+  .article-prose :global(.article-question-list) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+    margin: 2rem 0 2.4rem;
+    padding: 0;
+    border-block: 1px solid var(--border-strong);
+    list-style: none;
+    counter-reset: learning-question;
+  }
+
+  .article-prose :global(.article-question-list li) {
+    position: relative;
+    min-width: 0;
+    padding: 0.85rem 0.8rem 0.85rem 2.6rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-primary);
+    font-size: 0.86rem;
+    line-height: 1.65;
+    counter-increment: learning-question;
+  }
+
+  .article-prose :global(.article-question-list li:nth-child(even)) {
+    border-left: 1px solid var(--border);
+  }
+
+  .article-prose :global(.article-question-list li::before) {
+    position: absolute;
+    top: 0.92rem;
+    left: 0.75rem;
+    color: var(--accent-hover);
+    content: counter(learning-question, decimal-leading-zero);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 700;
+  }
+
+  .article-prose :global(.article-example-badge) {
+    display: inline-flex;
+    width: fit-content;
+    margin: 0 0 0.7rem;
+    padding: 0.28rem 0.5rem;
+    border-radius: var(--radius-pill);
+    background: var(--accent-soft);
+    color: var(--accent-hover);
+    font-size: 0.68rem;
+    font-weight: 700;
+  }
+
+  .article-prose :global(.article-code-sequence) {
+    display: grid;
+    gap: 0.55rem;
+    margin: 1.6rem 0 2rem;
+    padding: 1rem;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    background: var(--surface-soft);
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    line-height: 1.65;
+  }
+
+  .article-prose :global(.article-code-sequence p) {
+    margin: 0;
+  }
+
+  .article-prose :global(.article-code-sequence span) {
+    color: var(--accent-hover);
+    font-weight: 700;
+  }
+
   .article-prose :global(hr) {
     margin: 3.25rem 0;
     border: 0;
@@ -977,6 +1049,14 @@
 
     .article-prose :global(.article-bad-cases ol) {
       grid-template-columns: 1fr;
+    }
+
+    .article-prose :global(.article-question-list) {
+      grid-template-columns: 1fr;
+    }
+
+    .article-prose :global(.article-question-list li:nth-child(even)) {
+      border-left: 0;
     }
   }
 </style>

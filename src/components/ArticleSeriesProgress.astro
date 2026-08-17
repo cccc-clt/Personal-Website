@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import { getLearningSeriesConfig } from '../data/learningSeries';
+import { getInsightPath } from '../utils/content';
 
 interface Props {
   article: CollectionEntry<'research'>;
@@ -10,46 +11,95 @@ interface Props {
 const { article, seriesArticles = [article] } = Astro.props;
 const { series, level } = article.data;
 const seriesConfig = getLearningSeriesConfig(series);
-const chapters =
-  seriesConfig?.chapters ??
-  article.data.chapters.map((chapter) => ({
-    ...chapter,
-    articleIndex: article.data.seriesIndex ?? 1,
-  }));
-const publishedArticleIndexes = new Set(seriesArticles.map((entry) => entry.data.seriesIndex));
+const articleByIndex = new Map(
+  seriesArticles.map((entry) => [entry.data.seriesIndex, entry] as const),
+);
+const levels =
+  seriesConfig?.levels ??
+  (level
+    ? [
+        {
+          id: 'current',
+          index: article.data.levelIndex ?? 1,
+          title: level.replace(/^第.+层：/, ''),
+          status: article.data.seriesStatus ?? '持续学习',
+          articleStatus: article.data.seriesStatus ?? '持续学习',
+          progressText: '',
+          pendingNextLabel: '下一篇',
+          pendingNextText: '持续整理中',
+          articles: [
+            {
+              index: article.data.seriesIndex ?? 1,
+              title: article.data.displayTitle ?? article.data.title,
+              chapters: article.data.chapters,
+            },
+          ],
+        },
+      ]
+    : []);
 ---
 
 {
-  series && level && chapters.length > 0 && (
+  series && levels.length > 0 && (
     <section class="series-progress" aria-labelledby="series-progress-title">
       <header>
-        <p>{series}</p>
-        <h2 id="series-progress-title">{(seriesConfig?.level ?? level).replace('：', '｜')}</h2>
-        {seriesConfig && <strong class="series-progress__status">{seriesConfig.status}</strong>}
+        <p>系列学习进度</p>
+        <h2 id="series-progress-title">{series}</h2>
       </header>
 
-      <ol>
-        {chapters.map((chapter) => (
-          <li>
-            <span class="series-progress__marker" aria-hidden="true">
-              <svg viewBox="0 0 16 16" width="16" height="16">
-                <path d="m3.25 8.25 2.75 2.75 6.75-6.75" />
-              </svg>
-            </span>
-            <span>
-              <strong>{chapter.index}</strong>：{chapter.title}
-            </span>
-            <small>{publishedArticleIndexes.has(chapter.articleIndex) ? '已记录' : '待更新'}</small>
-          </li>
-        ))}
-      </ol>
+      <div class="series-progress__levels">
+        {levels.map((seriesLevel) => (
+          <details open={seriesLevel.index === article.data.levelIndex}>
+            <summary>
+              <span>
+                第{seriesLevel.index}层｜{seriesLevel.title}
+              </span>
+              <strong>{seriesLevel.status}</strong>
+            </summary>
 
-      {seriesConfig && (
-        <footer>
-          <span>{seriesConfig.nextStageLabel}</span>
-          <strong>{seriesConfig.nextStageText}</strong>
-        </footer>
-      )}
+            <ol>
+              {seriesLevel.articles.map((seriesArticle) => {
+                const publishedArticle = articleByIndex.get(seriesArticle.index);
+                const isCurrent = publishedArticle?.id === article.id;
+                const chapterLabel = seriesArticle.chapters
+                  .map((chapter) => chapter.index)
+                  .join('、');
+                return (
+                  <li>
+                    <span class="series-progress__marker" aria-hidden="true">
+                      {publishedArticle ? (
+                        <svg viewBox="0 0 16 16" width="16" height="16">
+                          <path d="m3.25 8.25 2.75 2.75 6.75-6.75" />
+                        </svg>
+                      ) : (
+                        <span />
+                      )}
+                    </span>
+                    <div>
+                      {publishedArticle ? (
+                        <a
+                          href={getInsightPath(publishedArticle)}
+                          aria-current={isCurrent ? 'page' : undefined}
+                        >
+                          <strong>{String(seriesArticle.index).padStart(2, '0')}</strong>
+                          <span>{seriesArticle.title}</span>
+                        </a>
+                      ) : (
+                        <span class="series-progress__pending-article">
+                          <strong>{String(seriesArticle.index).padStart(2, '0')}</strong>
+                          <span>{seriesArticle.title}</span>
+                        </span>
+                      )}
+                      <small>{chapterLabel}</small>
+                    </div>
+                    <small>{isCurrent ? '当前' : publishedArticle ? '已记录' : '待更新'}</small>
+                  </li>
+                );
+              })}
+            </ol>
+          </details>
+        ))}
+      </div>
     </section>
   )
 }
@@ -85,17 +135,43 @@ const publishedArticleIndexes = new Set(seriesArticles.map((entry) => entry.data
     text-wrap: pretty;
   }
 
-  .series-progress__status {
-    width: fit-content;
-    color: var(--accent-hover);
-    font-size: 0.78rem;
+  .series-progress__levels {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  details {
+    border-top: 1px solid var(--border);
+  }
+
+  summary {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.9rem 0;
+    color: var(--text-primary);
+    cursor: pointer;
+    font-size: 0.86rem;
+    list-style: none;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  summary span {
     font-weight: 680;
+  }
+
+  summary strong {
+    color: var(--accent-hover);
+    font-size: 0.74rem;
+    white-space: nowrap;
   }
 
   ol {
     display: grid;
-    gap: 0;
-    padding: 0;
+    padding: 0 0 0.5rem;
     list-style: none;
   }
 
@@ -104,11 +180,35 @@ const publishedArticleIndexes = new Set(seriesArticles.map((entry) => entry.data
     grid-template-columns: 1.25rem minmax(0, 1fr) auto;
     gap: 0.75rem;
     align-items: start;
-    padding: 0.7rem 0;
+    padding: 0.75rem 0;
     border-top: 1px solid var(--border);
+  }
+
+  li > div {
+    display: grid;
+    gap: 0.2rem;
+    min-width: 0;
+  }
+
+  li a,
+  .series-progress__pending-article {
+    display: grid;
+    grid-template-columns: 2rem minmax(0, 1fr);
+    gap: 0.5rem;
     color: var(--text-primary);
     font-size: 0.86rem;
-    line-height: 1.65;
+    line-height: 1.55;
+  }
+
+  li a:hover,
+  li a[aria-current='page'] {
+    color: var(--accent-hover);
+  }
+
+  li a strong,
+  .series-progress__pending-article strong {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
   }
 
   .series-progress__marker {
@@ -116,10 +216,17 @@ const publishedArticleIndexes = new Set(seriesArticles.map((entry) => entry.data
     width: 1rem;
     height: 1rem;
     place-items: center;
-    margin-top: 0.22rem;
+    margin-top: 0.2rem;
     border-radius: 50%;
     background: var(--accent-soft);
     color: var(--accent-hover);
+  }
+
+  .series-progress__marker > span {
+    width: 0.35rem;
+    height: 0.35rem;
+    border-radius: 50%;
+    background: currentColor;
   }
 
   svg {
@@ -130,33 +237,14 @@ const publishedArticleIndexes = new Set(seriesArticles.map((entry) => entry.data
     stroke-width: 1.6;
   }
 
-  strong {
-    font-weight: 680;
-  }
-
   small {
     color: var(--text-muted);
     font-size: 0.7rem;
+    line-height: 1.5;
+  }
+
+  li > small {
     white-space: nowrap;
-  }
-
-  footer {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.35rem 0.7rem;
-    align-items: baseline;
-    padding-top: 0.9rem;
-    border-top: 1px solid var(--border);
-  }
-
-  footer span {
-    color: var(--text-muted);
-    font-size: 0.72rem;
-  }
-
-  footer strong {
-    color: var(--text-primary);
-    font-size: 0.88rem;
   }
 
   @media (max-width: 520px) {
@@ -164,7 +252,7 @@ const publishedArticleIndexes = new Set(seriesArticles.map((entry) => entry.data
       grid-template-columns: 1.15rem minmax(0, 1fr);
     }
 
-    small {
+    li > small {
       grid-column: 2;
     }
   }

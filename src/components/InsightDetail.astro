@@ -1,7 +1,7 @@
 ---
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getLearningSeriesConfig } from '../data/learningSeries';
+import { getLearningSeriesLevel } from '../data/learningSeries';
 import {
   getInsightPath,
   getInsightPdfPath,
@@ -42,7 +42,7 @@ const navigationInsights = article.data.series
       .sort((left, right) => (left.data.seriesIndex ?? 0) - (right.data.seriesIndex ?? 0))
   : sectionInsights;
 const currentIndex = navigationInsights.findIndex((entry) => entry.id === article.id);
-const seriesConfig = getLearningSeriesConfig(article.data.series);
+const currentLevel = getLearningSeriesLevel(article.data.series, article.data.levelIndex);
 const previous = article.data.series
   ? currentIndex > 0
     ? navigationInsights[currentIndex - 1]
@@ -73,6 +73,8 @@ const absolutePdfUrl =
     ? new URL(article.data.pdfUrl, Astro.site).toString()
     : article.data.pdfUrl;
 const citationDate = article.data.publishDate.replaceAll('-', '.');
+const seoKeywords =
+  article.data.seoKeywords.length > 0 ? article.data.seoKeywords : article.data.tags;
 const isNote = article.data.section === 'notes';
 const citationTitle = article.data.title.startsWith('《')
   ? article.data.title
@@ -88,7 +90,7 @@ const structuredData = {
   isAccessibleForFree: true,
   author: { '@id': Astro.site ? new URL('/#person', Astro.site).toString() : '#person' },
   publisher: { '@id': Astro.site ? new URL('/#person', Astro.site).toString() : '#person' },
-  keywords: article.data.tags.join(', '),
+  keywords: seoKeywords.join(', '),
   mainEntityOfPage: absoluteArticleUrl,
   url: absoluteArticleUrl,
   ...(absolutePdfUrl
@@ -106,6 +108,7 @@ const structuredData = {
 <BaseLayout
   title={article.data.seoTitle ?? `${article.data.title} | 赵天琦｜游戏 AI 产品经理`}
   description={article.data.description}
+  keywords={seoKeywords}
   image={article.data.cover?.src}
   canonicalPath={articleUrl}
   pageType="article"
@@ -115,7 +118,7 @@ const structuredData = {
 >
   <article class="article-detail" id="article-top">
     <ArticleHeader article={article}>
-      <ArticleToc headings={tocHeadings} variant="mobile" />
+      <ArticleToc headings={tocHeadings} highlights={article.data.tocHighlights} variant="mobile" />
     </ArticleHeader>
 
     <div class="article-layout page-shell">
@@ -193,17 +196,27 @@ const structuredData = {
             previous={previous}
             next={next}
             series={Boolean(article.data.series)}
+            previousEyebrow={previous?.data.levelIndex !== article.data.levelIndex
+              ? '上一层最后一篇'
+              : undefined}
+            nextEyebrow={next?.data.levelIndex !== article.data.levelIndex
+              ? `下一阶段 · ${next?.data.level?.replace('：', '｜')}`
+              : undefined}
             pendingNextLabel={article.data.series && !next
-              ? seriesConfig?.nextStageText
+              ? currentLevel?.pendingNextText
               : undefined}
             pendingNextEyebrow={article.data.series && !next
-              ? seriesConfig?.nextStageLabel
+              ? currentLevel?.pendingNextLabel
               : undefined}
           />
         </footer>
       </div>
 
-      <ArticleToc headings={tocHeadings} variant="desktop" />
+      <ArticleToc
+        headings={tocHeadings}
+        highlights={article.data.tocHighlights}
+        variant="desktop"
+      />
     </div>
   </article>
 </BaseLayout>

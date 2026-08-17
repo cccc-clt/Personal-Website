@@ -1,0 +1,193 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { getLearningSeriesConfig } from '../data/learningSeries';
+import NoteTimelineCard from './NoteTimelineCard.astro';
+
+interface Props {
+  articles: CollectionEntry<'research'>[];
+  series: string;
+}
+
+const { articles, series } = Astro.props;
+const seriesConfig = getLearningSeriesConfig(series);
+const articleByIndex = new Map(
+  articles.map((article) => [article.data.seriesIndex, article] as const),
+);
+---
+
+{
+  seriesConfig && (
+    <section class="learning-series" aria-labelledby="learning-series-title" data-note-group>
+      <header class="learning-series__header">
+        <p>持续学习记录</p>
+        <h2 id="learning-series-title">{seriesConfig.title}</h2>
+        <span>从基础认知继续进入系统诊断、Evaluation 与持续迭代。</span>
+      </header>
+
+      <div class="learning-series__levels">
+        {seriesConfig.levels.map((level) => {
+          const levelArticles = level.articles.flatMap((seriesArticle) => {
+            const publishedArticle = articleByIndex.get(seriesArticle.index);
+            return publishedArticle ? [publishedArticle] : [];
+          });
+
+          return (
+            levelArticles.length > 0 && (
+              <section
+                class="learning-level"
+                aria-labelledby={`learning-level-${level.id}`}
+                data-note-group
+              >
+                <header class="learning-level__header">
+                  <div>
+                    <h3 id={`learning-level-${level.id}`}>
+                      第{level.index}层｜{level.title}
+                    </h3>
+                    <p>{level.progressText}</p>
+                  </div>
+                  <strong>{level.status}</strong>
+                </header>
+
+                <ol class="learning-level__articles" data-note-list data-reveal-group>
+                  {levelArticles.map((article) => (
+                    <li data-note-item data-note-kind={article.data.kind}>
+                      <NoteTimelineCard article={article} />
+                    </li>
+                  ))}
+                </ol>
+              </section>
+            )
+          );
+        })}
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .learning-series {
+    display: grid;
+    gap: clamp(2rem, 4vw, 3rem);
+    max-width: 1080px;
+    margin-inline: auto;
+  }
+
+  .learning-series__header {
+    display: grid;
+    gap: 0.45rem;
+    max-width: 760px;
+  }
+
+  .learning-series__header p,
+  .learning-series__header h2,
+  .learning-series__header span,
+  .learning-level__header h3,
+  .learning-level__header p {
+    margin: 0;
+  }
+
+  .learning-series__header p {
+    color: var(--accent-hover);
+    font-size: 0.76rem;
+    font-weight: 680;
+  }
+
+  .learning-series__header h2 {
+    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+    line-height: 1.3;
+    text-wrap: balance;
+  }
+
+  .learning-series__header span {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.75;
+  }
+
+  .learning-series__levels {
+    display: grid;
+    gap: clamp(3rem, 6vw, 4.75rem);
+  }
+
+  .learning-level {
+    display: grid;
+    gap: 1.35rem;
+  }
+
+  .learning-level__header {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-strong);
+  }
+
+  .learning-level__header > div {
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .learning-level__header h3 {
+    color: var(--text-primary);
+    font-size: clamp(1.2rem, 2.4vw, 1.55rem);
+    line-height: 1.45;
+  }
+
+  .learning-level__header p {
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    line-height: 1.6;
+  }
+
+  .learning-level__header strong {
+    flex: 0 0 auto;
+    padding: 0.35rem 0.62rem;
+    border-radius: var(--radius-pill);
+    background: var(--accent-soft);
+    color: var(--accent-hover);
+    font-size: 0.7rem;
+  }
+
+  .learning-level__articles {
+    position: relative;
+    display: grid;
+    gap: clamp(2rem, 4vw, 3rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .learning-level__articles::before {
+    position: absolute;
+    top: 2.35rem;
+    bottom: 2.35rem;
+    left: 1.24rem;
+    width: 1px;
+    background: var(--border-strong);
+    content: '';
+  }
+
+  .learning-level__articles > li {
+    min-width: 0;
+  }
+
+  [data-note-item][hidden],
+  [data-note-group][hidden] {
+    display: none;
+  }
+
+  @media (max-width: 768px) {
+    .learning-level__header {
+      align-items: start;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .learning-level__articles::before {
+      top: 2rem;
+      bottom: 2rem;
+      left: 0.64rem;
+    }
+  }
+</style>

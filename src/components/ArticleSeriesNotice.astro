@@ -1,6 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import { getLearningSeriesConfig } from '../data/learningSeries';
+import { getLearningSeriesLevel } from '../data/learningSeries';
 import { getInsightPath } from '../utils/content';
 
 interface Props {
@@ -10,11 +10,10 @@ interface Props {
 
 const { article, previous } = Astro.props;
 const { series, level, chapters, seriesDescription, seriesStatus } = article.data;
-const seriesConfig = getLearningSeriesConfig(series);
-const isCurrentSeriesEnding =
-  seriesConfig &&
-  article.data.seriesIndex ===
-    Math.max(...seriesConfig.chapters.map((chapter) => chapter.articleIndex));
+const currentLevel = getLearningSeriesLevel(series, article.data.levelIndex);
+const noticeTitle = article.data.levelIndex === 2 ? '关于第二层' : '关于这个系列';
+const previousLabel =
+  previous?.data.levelIndex !== article.data.levelIndex ? '上一层最后一篇' : '上一篇';
 ---
 
 {
@@ -22,7 +21,7 @@ const isCurrentSeriesEnding =
     <section class="series-notice" aria-labelledby="series-notice-title">
       <div class="series-notice__copy">
         <p class="series-notice__label" id="series-notice-title">
-          关于这个系列
+          {noticeTitle}
         </p>
         <p>{seriesDescription ?? `这是我的“${series}”个人学习记录，后续内容会继续更新。`}</p>
       </div>
@@ -30,7 +29,7 @@ const isCurrentSeriesEnding =
       <dl>
         <div>
           <dt>当前文章属于</dt>
-          <dd>{level.replace('：', ' · ')}</dd>
+          <dd>{level.replace('：', '｜')}</dd>
         </div>
         <div>
           <dt>本篇记录</dt>
@@ -38,7 +37,7 @@ const isCurrentSeriesEnding =
             <ul>
               {chapters.map((chapter) => (
                 <li>
-                  <span>{chapter.index}</span>：{chapter.title}
+                  <span>{chapter.index}</span> · {chapter.title}
                 </li>
               ))}
             </ul>
@@ -48,16 +47,15 @@ const isCurrentSeriesEnding =
 
       {previous && (
         <div class="series-notice__previous">
-          <span>上一篇</span>
+          <span>{previousLabel}</span>
           <a href={getInsightPath(previous)}>{previous.data.displayTitle ?? previous.data.title}</a>
           <small>覆盖 {previous.data.chapters.map((chapter) => chapter.index).join('与')}</small>
         </div>
       )}
 
       <p class="series-notice__status">
-        {isCurrentSeriesEnding
-          ? `${seriesConfig.completionStatement} ${seriesConfig.nextStageText}。`
-          : `第一层现已整理至第 10 章 · ${seriesConfig?.status ?? seriesStatus}`}
+        {currentLevel?.articleStatus ?? seriesStatus}
+        {currentLevel?.progressText ? ` · ${currentLevel.progressText}` : ''}
       </p>
     </section>
   )

@@ -7,19 +7,25 @@ interface Heading {
 
 interface Props {
   headings: Heading[];
+  highlights?: string[];
   variant: 'desktop' | 'mobile';
 }
 
-const { headings, variant } = Astro.props;
+const { headings, highlights = [], variant } = Astro.props;
 const visibleHeadings = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
+const highlightedHeadings =
+  highlights.length > 0
+    ? visibleHeadings.filter((heading) => heading.depth === 2 || highlights.includes(heading.text))
+    : visibleHeadings;
+const hasExpandedToc = highlightedHeadings.length < visibleHeadings.length;
 ---
 
 {
-  visibleHeadings.length > 0 && variant === 'desktop' && (
+  highlightedHeadings.length > 0 && variant === 'desktop' && (
     <aside class="article-toc article-toc--desktop" data-article-toc data-pagefind-ignore>
       <p>本文目录</p>
-      <nav aria-label="文章目录">
-        {visibleHeadings.map((heading) => (
+      <nav aria-label="文章主要目录">
+        {highlightedHeadings.map((heading) => (
           <a
             class:list={{ 'article-toc__subheading': heading.depth === 3 }}
             href={`#${heading.slug}`}
@@ -28,16 +34,31 @@ const visibleHeadings = headings.filter((heading) => heading.depth === 2 || head
           </a>
         ))}
       </nav>
+      {hasExpandedToc && (
+        <details class="article-toc__all">
+          <summary>展开全部目录</summary>
+          <nav aria-label="文章完整目录">
+            {visibleHeadings.map((heading) => (
+              <a
+                class:list={{ 'article-toc__subheading': heading.depth === 3 }}
+                href={`#${heading.slug}`}
+              >
+                {heading.text}
+              </a>
+            ))}
+          </nav>
+        </details>
+      )}
     </aside>
   )
 }
 
 {
-  visibleHeadings.length > 0 && variant === 'mobile' && (
+  highlightedHeadings.length > 0 && variant === 'mobile' && (
     <details class="article-toc article-toc--mobile" data-article-toc data-pagefind-ignore>
       <summary>展开本文目录</summary>
-      <nav aria-label="文章目录">
-        {visibleHeadings.map((heading) => (
+      <nav aria-label="文章主要目录">
+        {highlightedHeadings.map((heading) => (
           <a
             class:list={{ 'article-toc__subheading': heading.depth === 3 }}
             href={`#${heading.slug}`}
@@ -46,6 +67,21 @@ const visibleHeadings = headings.filter((heading) => heading.depth === 2 || head
           </a>
         ))}
       </nav>
+      {hasExpandedToc && (
+        <details class="article-toc__all">
+          <summary>查看全部小节</summary>
+          <nav aria-label="文章完整目录">
+            {visibleHeadings.map((heading) => (
+              <a
+                class:list={{ 'article-toc__subheading': heading.depth === 3 }}
+                href={`#${heading.slug}`}
+              >
+                {heading.text}
+              </a>
+            ))}
+          </nav>
+        </details>
+      )}
     </details>
   )
 }
@@ -100,6 +136,23 @@ const visibleHeadings = headings.filter((heading) => heading.depth === 2 || head
     font-size: 0.71rem;
   }
 
+  .article-toc__all {
+    margin-top: 0.7rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .article-toc__all > summary {
+    padding: 0.7rem 0;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 0.72rem;
+    font-weight: 650;
+  }
+
+  .article-toc__all[open] > nav {
+    max-height: min(48vh, 520px);
+  }
+
   .article-toc--mobile {
     display: none;
     margin-top: 0.4rem;
@@ -107,7 +160,7 @@ const visibleHeadings = headings.filter((heading) => heading.depth === 2 || head
     border-bottom: 1px solid var(--border);
   }
 
-  .article-toc--mobile summary {
+  .article-toc--mobile > summary {
     padding: 0.9rem 0;
     color: var(--text-primary);
     cursor: pointer;
@@ -115,7 +168,7 @@ const visibleHeadings = headings.filter((heading) => heading.depth === 2 || head
     font-weight: 650;
   }
 
-  .article-toc--mobile nav {
+  .article-toc--mobile > nav {
     max-height: 46vh;
     padding-bottom: 0.75rem;
   }
@@ -128,6 +181,10 @@ const visibleHeadings = headings.filter((heading) => heading.depth === 2 || head
 
   .article-toc--mobile .article-toc__subheading {
     padding-left: 1rem;
+  }
+
+  .article-toc--mobile .article-toc__all {
+    margin-bottom: 0.75rem;
   }
 
   @media (max-width: 960px) {

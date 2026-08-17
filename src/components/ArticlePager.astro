@@ -6,11 +6,21 @@ interface Props {
   previous?: CollectionEntry<'research'>;
   next?: CollectionEntry<'research'>;
   series?: boolean;
+  previousEyebrow?: string;
+  nextEyebrow?: string;
   pendingNextLabel?: string;
   pendingNextEyebrow?: string;
 }
 
-const { previous, next, series = false, pendingNextLabel, pendingNextEyebrow } = Astro.props;
+const {
+  previous,
+  next,
+  series = false,
+  previousEyebrow,
+  nextEyebrow,
+  pendingNextLabel,
+  pendingNextEyebrow,
+} = Astro.props;
 ---
 
 {
@@ -18,7 +28,7 @@ const { previous, next, series = false, pendingNextLabel, pendingNextEyebrow } =
     <nav class="article-pager" aria-label="上一篇与下一篇" data-pagefind-ignore>
       {previous ? (
         <a href={getInsightPath(previous)}>
-          <span>{series ? '系列上一篇' : '上一篇'}</span>
+          <span>{previousEyebrow ?? (series ? '系列上一篇' : '上一篇')}</span>
           <strong>{previous.data.title}</strong>
         </a>
       ) : (
@@ -26,7 +36,7 @@ const { previous, next, series = false, pendingNextLabel, pendingNextEyebrow } =
       )}
       {next ? (
         <a class="article-pager__next" href={getInsightPath(next)}>
-          <span>{series ? '系列下一篇' : '下一篇'}</span>
+          <span>{nextEyebrow ?? (series ? '系列下一篇' : '下一篇')}</span>
           <strong>{next.data.title}</strong>
         </a>
       ) : (

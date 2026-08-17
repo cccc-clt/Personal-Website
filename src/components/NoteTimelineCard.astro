@@ -1,7 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import { insightKindLabels, researchCategoryLabels } from '../config/site';
-import { getLearningSeriesConfig } from '../data/learningSeries';
+import { getLearningSeriesLevel } from '../data/learningSeries';
 import { formatPublicationDate, getInsightPath, getInsightReadingTime } from '../utils/content';
 
 interface Props {
@@ -25,7 +25,7 @@ const cardTitle = article.data.series
   ? (article.data.displayTitle ?? article.data.title).replace(/^\d+\s*[｜|]\s*/, '')
   : article.data.title;
 const readingTime = getInsightReadingTime(article);
-const seriesConfig = getLearningSeriesConfig(article.data.series);
+const currentLevel = getLearningSeriesLevel(article.data.series, article.data.levelIndex);
 ---
 
 <article class:list={['note-entry', { 'note-entry--compact': compact }]}>
@@ -58,8 +58,8 @@ const seriesConfig = getLearningSeriesConfig(article.data.series);
         <div class="note-entry__series-meta" aria-label="系列进度">
           <span>{article.data.level.replace('：', ' · ')}</span>
           <span>{article.data.chapters.map((chapter) => chapter.index).join(' / ')}</span>
-          {(seriesConfig?.status ?? article.data.seriesStatus) && (
-            <span>{seriesConfig?.status ?? article.data.seriesStatus}</span>
+          {(currentLevel?.articleStatus ?? article.data.seriesStatus) && (
+            <span>{currentLevel?.articleStatus ?? article.data.seriesStatus}</span>
           )}
         </div>
       )

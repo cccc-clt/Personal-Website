@@ -1,0 +1,109 @@
+---
+interface Props {
+  label: string;
+  steps: string[];
+  loopLabel?: string;
+}
+
+const { label, steps, loopLabel } = Astro.props;
+---
+
+<figure class="flow-steps" aria-label={label}>
+  <figcaption>{label}</figcaption>
+  <ol>
+    {steps.map((step) => <li>{step}</li>)}
+  </ol>
+  {loopLabel && <p class="flow-steps__loop">↺ {loopLabel}</p>}
+</figure>
+
+<style>
+  .flow-steps {
+    margin: 2rem 0 2.4rem;
+    border-block: 1px solid var(--border-strong);
+  }
+
+  figcaption {
+    padding: 0.8rem 0;
+    color: var(--accent-hover);
+    font-size: 0.74rem;
+    font-weight: 700;
+    text-align: left;
+  }
+
+  ol {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--border);
+    list-style: none;
+    counter-reset: flow-step;
+  }
+
+  li {
+    display: grid;
+    grid-template-columns: 1.6rem minmax(0, 1fr);
+    gap: 0.55rem;
+    align-items: center;
+    min-width: 0;
+    padding: 0.85rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+    counter-increment: flow-step;
+  }
+
+  li:not(:nth-child(3n + 1)) {
+    border-left: 1px solid var(--border);
+  }
+
+  li::before {
+    display: grid;
+    width: 1.45rem;
+    height: 1.45rem;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    color: var(--accent-hover);
+    content: counter(flow-step, decimal-leading-zero);
+    font-size: 0.62rem;
+    font-weight: 750;
+  }
+
+  .flow-steps__loop {
+    margin: 0;
+    padding: 0.8rem 0;
+    color: var(--text-secondary);
+    font-size: 0.78rem;
+    font-weight: 650;
+    text-align: right;
+  }
+
+  @media (max-width: 560px) {
+    ol {
+      grid-template-columns: 1fr;
+    }
+
+    li:not(:nth-child(3n + 1)) {
+      border-left: 0;
+    }
+
+    li {
+      position: relative;
+      padding-inline: 0;
+    }
+
+    li:not(:last-child)::after {
+      position: absolute;
+      bottom: -0.62rem;
+      left: 0.56rem;
+      z-index: 1;
+      color: var(--accent);
+      content: '↓';
+      font-size: 0.72rem;
+    }
+  }
+</style>
