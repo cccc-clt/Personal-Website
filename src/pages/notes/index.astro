@@ -2,16 +2,12 @@
 import { getCollection } from 'astro:content';
 import NoteFilters from '../../components/NoteFilters.astro';
 import NoteTimelineCard from '../../components/NoteTimelineCard.astro';
-import LearningSeriesGroup from '../../components/LearningSeriesGroup.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { sortInsightsByDate } from '../../utils/content';
 
 const notes = (await getCollection('research'))
   .filter((entry) => entry.data.status === 'published' && entry.data.section === 'notes')
   .sort(sortInsightsByDate);
-const learningSeriesTitle = 'AI 产品经理学习笔记';
-const learningSeriesNotes = notes.filter((entry) => entry.data.series === learningSeriesTitle);
-const otherNotes = notes.filter((entry) => entry.data.series !== learningSeriesTitle);
 ---
 
 <BaseLayout
@@ -41,25 +37,13 @@ const otherNotes = notes.filter((entry) => entry.data.series !== learningSeriesT
               <NoteFilters notes={notes} />
             </div>
 
-            {learningSeriesNotes.length > 0 && (
-              <LearningSeriesGroup articles={learningSeriesNotes} series={learningSeriesTitle} />
-            )}
-
-            {otherNotes.length > 0 && (
-              <section class="notes-other" aria-labelledby="other-notes-title" data-note-group>
-                <header class="notes-other__header">
-                  <h2 id="other-notes-title">其他随笔</h2>
-                  <p>比赛、游戏体验与阶段性成长记录。</p>
-                </header>
-                <ol class="notes-timeline" data-note-list data-reveal-group>
-                  {otherNotes.map((article) => (
-                    <li data-note-item data-note-kind={article.data.kind}>
-                      <NoteTimelineCard article={article} />
-                    </li>
-                  ))}
-                </ol>
-              </section>
-            )}
+            <ol class="notes-timeline" data-note-list data-reveal-group>
+              {notes.map((article) => (
+                <li data-note-item data-note-kind={article.data.kind}>
+                  <NoteTimelineCard article={article} seriesHeader />
+                </li>
+              ))}
+            </ol>
 
             <div class="notes-filtered-empty" data-note-filtered-empty hidden>
               <h2>这个类型下还没有内容</h2>
@@ -123,10 +107,6 @@ const otherNotes = notes.filter((entry) => entry.data.series !== learningSeriesT
     if (count) count.textContent = String(visible);
     const empty = document.querySelector<HTMLElement>('[data-note-filtered-empty]');
     if (empty) empty.hidden = visible > 0;
-
-    document.querySelectorAll<HTMLElement>('[data-note-group]').forEach((group) => {
-      group.hidden = !group.querySelector('[data-note-item]:not([hidden])');
-    });
   };
 
   const updateNoteKind = (kind: string) => {
@@ -233,34 +213,6 @@ const otherNotes = notes.filter((entry) => entry.data.series !== learningSeriesT
     list-style: none;
   }
 
-  .notes-other {
-    display: grid;
-    max-width: 1080px;
-    gap: 1.35rem;
-    margin: clamp(4.5rem, 8vw, 7rem) auto 0;
-  }
-
-  .notes-other__header {
-    display: grid;
-    gap: 0.35rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid var(--border-strong);
-  }
-
-  .notes-other__header h2,
-  .notes-other__header p {
-    margin: 0;
-  }
-
-  .notes-other__header h2 {
-    font-size: clamp(1.35rem, 2.8vw, 1.8rem);
-  }
-
-  .notes-other__header p {
-    color: var(--text-muted);
-    font-size: 0.8rem;
-  }
-
   .notes-timeline[data-note-list]::before {
     position: absolute;
     top: 2.35rem;
@@ -276,7 +228,6 @@ const otherNotes = notes.filter((entry) => entry.data.series !== learningSeriesT
   }
 
   [data-note-item][hidden],
-  [data-note-group][hidden],
   .notes-filtered-empty[hidden] {
     display: none;
   }

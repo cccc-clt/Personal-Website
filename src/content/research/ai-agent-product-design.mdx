@@ -3,52 +3,64 @@ title: '从“回答问题”到“完成任务”：AI Agent 产品的交互、
 cardTitle: '从“回答问题”到“完成任务”：AI Agent 产品设计研究'
 displayTitle: '从“回答问题”到“完成任务”'
 seoTitle: '从“回答问题”到“完成任务”：AI Agent 产品的交互、工作流与控制权设计'
-englishTitle: 'From Answers to Actions: Interaction, Workflow and Control in AI Agent Products'
+englishTitle: 'From Answers to Outcomes: Interaction, Workflow and Control Design for AI Agent Products'
 heroLabel: 'AI 产品研究'
 subtitle: 'AI Agent 产品的交互、工作流与控制权设计'
-heroSummary: 'AI Agent 的价值不只是“比 Chatbot 多调用几个工具”，而是让 AI 开始围绕用户目标持续规划、执行、观察和调整。当 AI 开始真正影响外部世界，产品设计的重点也从“回答得好不好”转向“什么时候应该行动、行动到什么程度，以及用户如何重新获得控制权”。'
+heroSummary: '当 AI 从“生成答案”走向“持续执行任务”，产品设计的核心也从回答质量扩展到目标理解、任务规划、工具调用、权限控制、过程可见、失败恢复与结果验证。本文结合 2026 年 7—8 月 Agent 产品变化、Codex 实际使用观察与 Personal Work Agent MVP，讨论什么任务值得 Agent 化，以及如何在自主性与用户控制之间建立可用的产品机制。'
 type: 'AI 产品研究'
 section: 'research'
 kind: 'research-report'
 category: 'ai-product'
-publishDate: '2026-08'
-updatedDate: '2026-08'
-pageCount: 29
+publishDate: '2026-08-18'
+updatedDate: '2026-08-18'
+pageCount: 27
 tocDepth: 2
-description: '当 AI 从“回答问题”进一步走向“完成任务”，产品设计的核心问题也从生成质量扩展到了任务理解、规划执行、控制权、异常恢复与结果验证。本文从 AI 产品经理视角，系统拆解 Chatbot、Workflow 与 Agent 的边界，并围绕自主性、Human-in-the-loop、状态管理、信任设计和 Agent 评测建立一套完整的产品分析框架。'
-tags: ['AI Agent', 'AI 产品', 'Human-in-the-loop', 'Agent UX', '产品设计']
+description: '从 Chatbot、Workflow 到 Agent，结合 2026 年 7—8 月行业变化、Codex 实测与 Personal Work Agent MVP，分析 AI Agent 的任务适用性、交互、控制权、失败恢复与评测体系。'
+tags: ['AI Agent', 'AI 产品', 'Product Design', 'Human-in-the-loop', 'Evaluation']
+seoKeywords:
+  - 'AI Agent 产品设计'
+  - 'Agent 工作流'
+  - 'Human-in-the-loop'
+  - 'Progressive Autonomy'
+  - 'Agent Evaluation'
+  - 'Agent Security'
 featured: true
 homepageFeatured: true
 homepageOrder: 1
-cover: '../../assets/report-covers/ai-agent-product-research.webp'
-coverAlt: '《从“回答问题”到“完成任务”》AI Agent 产品研究报告封面，白色版面展示中文标题、研究核心问题与 2026.08 版本信息'
-pdfUrl: '/reports/ai-agent-product-research.pdf'
+cover: '../../assets/report-covers/ai-agent-product-design.webp'
+coverAlt: '《从“回答问题”到“完成任务”》AI Agent 产品研究报告最终版封面，展示研究标题、核心问题与 2026.08 完整修订版信息'
+pdfUrl: '/reports/ai-agent-product-design.pdf'
 slug: 'ai-agent-product-design'
 status: 'published'
-coreJudgment: 'Agent 产品最大的产品难点，不是让 AI 获得更多行动能力，而是让 AI 获得行动能力的同时，用户仍然拥有足够的控制权。'
-researchBoundary: '本文以产品设计视角为主，不试图穷举 Agent 技术架构。Personal Work Agent 是用于验证文中框架的 MVP 产品方案与原型，不代表已经上线的产品、真实业务数据或商业结果。'
+coreJudgment: '一个真正可用的 Agent，不应只具备 Go，还必须具备 Stop、Pause、Undo、Retry、Explain 与 Verify；执行能力越强，控制与恢复机制越不能被视为附属功能。'
+researchBoundary: '本文以 AI 产品经理视角研究 Agent 产品机制，不构成 Codex 模型能力 Benchmark，也不代表相关公司的官方定义。Personal Work Agent 是用于验证本文框架的 MVP 设计载体，不代表已经上线的产品、真实业务数据或商业结果。'
 methodology:
   - '从 Chatbot、AI Workflow 与 Agent 的产品边界出发，判断任务是否真正需要动态决策。'
   - '围绕 Intent、Goal、Constraints、Plan、Permission、State、Recovery 与 Verification 拆解完整任务闭环。'
-  - '用 Progressive Autonomy、Human-in-the-loop 与风险确认机制研究自主性和用户控制权的分配。'
+  - '用 Progressive Autonomy、Human-in-the-loop、Evidence Sufficiency 与 Agent Security 研究自主性和用户控制权的分配。'
+  - '结合真实 Codex Coding Agent 工作流，观察 Context Gathering、Planning、Action 与 Verification 是否形成闭环。'
   - '使用 Agent Product Scorecard 与 Personal Work Agent MVP 将研究判断转化为可验证的产品方案。'
 questions:
-  - '什么任务值得 Agent 化？'
-  - 'AI 应获得多大自主权？'
-  - '用户应在何时介入？'
-  - '一个可用 Agent 产品至少需要哪些机制？'
+  - 'Chatbot、Workflow 与 Agent 的边界是什么？'
+  - '什么任务真正值得 Agent 化？'
+  - 'Agent 应获得多大自主权？'
+  - '用户应该在什么时候介入？'
+  - 'Agent 产品如何处理权限、失败与恢复？'
+  - 'Agent 应该如何做结果与过程评测？'
+  - '一个可用 Agent 产品至少需要哪些产品机制？'
 keyFindings:
-  - 'Chatbot 的典型终点是答案，Agent 的典型终点是可验证的结果。'
-  - '路径稳定、规则明确的任务优先使用 Workflow，只有动态判断能带来足够收益时才需要 Agent。'
-  - '自主性越强，越需要权限、确认、撤销、状态可见、Guardrails 与恢复机制。'
-  - 'Agent 评测必须从 Tool Success 转向 Task Success，并同时覆盖结果、过程与边界。'
+  - 'Agent 的终点正在从 Answer 转向可验证的 Outcome。'
+  - '路径稳定、规则明确的任务优先使用 Workflow，只有动态判断能显著提高价值时才考虑 Agent。'
+  - 'Agent 的核心矛盾是 Autonomy × Control，自主性应根据风险、可逆性与证据充分度渐进提升。'
+  - 'Human-in-the-loop 应发生在错误影响即将扩大之前，而不是每一步。'
+  - 'Agent 评测必须从 Tool Success 转向 Verified Task Completion，并同时覆盖结果、过程与边界。'
 contentStructure:
-  - '执行摘要与 Agent 产品定义'
-  - 'Chatbot、Workflow 与 Agent 的边界及适用性判断'
-  - '目标理解、规划执行与 Agent 工作空间'
-  - '自主性、Human-in-the-loop 与权限设计'
-  - '状态、异常恢复、信任设计与 Agent 产品评测'
-  - 'Personal Work Agent MVP、产品假设与验证方法'
+  - '执行摘要与 2026 年 7—8 月行业时间线'
+  - 'Agent 定义、Chatbot / Workflow / Agent 边界与适用性矩阵'
+  - '目标理解、Planning、Agent Workspace 与 Progressive Autonomy'
+  - 'Agent Security、Human-in-the-loop、状态、失败与恢复'
+  - 'Trust Design、Agent Product Scorecard 与 Codex 真实使用观察'
+  - 'Personal Work Agent MVP、四张原型与验证方法'
 relatedInsights:
   - 'game-ai-product-opportunity-map'
   - 'generation-is-not-ai-product'
@@ -56,26 +68,27 @@ relatedInsights:
 ---
 
 import ResearchFigure from '../../components/ResearchFigure.astro';
+import ResearchNotice from '../../components/ResearchNotice.astro';
 
 ## 00｜执行摘要
 
-大模型产品正在经历一个关键变化：用户不再只希望 AI “告诉我怎么做”，而是越来越期待 AI “替我把事情做完”。这意味着产品形态从以生成内容为中心的 Chatbot，逐步扩展到能够理解目标、拆解任务、调用工具、修改外部状态并根据结果继续行动的 Agent。能力边界的扩大，也同步放大了错误、权限、信任和责任问题。
+大模型产品正在经历一个关键变化：用户不再只希望 AI “告诉我怎么做”，而是越来越期待 AI “替我把事情做完”。这意味着产品形态从以生成内容为中心的 Chatbot，逐步扩展到能够理解目标、拆解任务、调用工具、读取环境反馈，并根据结果持续调整下一步的 Agent。能力边界的扩大，也同步放大了错误、权限、信任和责任问题。
 
 因此，Agent 产品的核心并不是让模型拥有更多工具，而是让模型在恰当的任务、恰当的权限和恰当的检查点上采取行动。对产品经理而言，真正需要设计的是一套“自主性与控制权的分配机制”：哪些步骤可以自动完成，哪些步骤必须用户确认；出现失败时如何恢复；用户如何理解当前进度；以及最终如何验证任务是否真正完成。
 
 ### 五个核心结论
 
-1. **Chatbot 与 Agent 的本质区别，不在于是否使用大模型，而在于 AI 是否能够围绕目标持续行动并改变外部状态。**Chatbot 的典型终点是“答案”；Agent 的典型终点是“结果”。
-2. **不是所有任务都值得 Agent 化。**路径稳定、规则明确、结果可预期的任务通常更适合 Workflow；只有当任务存在多步骤、路径不确定、需要工具、需要中间判断并且自动化收益足够高时，Agent 才具有明显价值。
-3. **Agent 产品最大的产品矛盾是 Autonomy × Control。**自主性越强，潜在效率越高，但错误的影响范围也越大。产品需要通过权限、确认、撤销、状态可见和 Guardrails 控制“爆炸半径”。
-4. **Human-in-the-loop 不等于“每一步都让用户确认”。**更合理的设计是关键节点介入：高风险、不可逆、对外沟通、涉及资金、意图不清或成本异常时暂停，其余低风险步骤在授权范围内自动执行。
-5. **Agent 的评价标准必须从“工具调用是否成功”升级为“用户目标是否完成”。**任务完成率、首次成功率、人工介入率、恢复率、行动准确率、完成时间与单任务成本应被组合评估。
+1. **Agent 的终点正在从 Answer 转向 Outcome。**关键不是工具数量，而是系统能否围绕目标持续行动，并根据环境反馈动态调整，直到满足完成条件或主动把决策权交还给用户。
+2. **不是所有任务都值得 Agent 化。**路径稳定、规则明确、结果可预期的任务通常更适合 Workflow；只有当多步骤、路径不确定、工具依赖、中间判断和自动化收益同时存在时，Agent 才更有价值。
+3. **Agent 产品的核心矛盾是 Autonomy × Control。**自主性越强，潜在效率越高，但错误影响范围也越大。权限、确认、状态可见、恢复和验证必须与执行能力同步增长。
+4. **Human-in-the-loop 应发生在关键节点，而不是每一步。**高风险、不可逆、对外沟通、意图不清、异常成本或证据不足时暂停，其余低风险步骤在授权范围内自动执行。
+5. **Agent Evaluation 应从 Tool Success 转向 Verified Task Completion。**工具返回成功不等于用户目标完成，评测必须同时覆盖结果、过程与权限边界。
 
-<aside className="article-research-insight" aria-label="核心判断">
-  <p>核心判断</p>
+<aside className="article-research-insight" aria-label="本文主张">
+  <p>本文主张</p>
   <strong>
-    Agent 产品最大的产品难点，不是让 AI 获得更多行动能力，而是让 AI
-    获得行动能力的同时，用户仍然拥有足够的控制权。
+    一个真正可用的 Agent，不应只具备 Go，还必须具备 Stop、Pause、Undo、Retry、Explain 与
+    Verify。执行能力越强，控制与恢复机制越不能被视为附属功能。
   </strong>
 </aside>
 
@@ -85,14 +98,47 @@ import ResearchFigure from '../../components/ResearchFigure.astro';
 | ------------------ | ---------------------------------- | -------------------------------------- |
 | Goal / Intent      | 用户真正想完成什么？               | 意图识别、参数补全、约束识别、必要澄清 |
 | Plan               | 应该怎么做？路径是否需要动态调整？ | 任务拆解、计划预览、协作式规划         |
-| Permission         | AI 被允许做到什么程度？            | 最小权限、一次性授权、风险分级         |
-| Action / Tool      | 如何影响外部世界？                 | 工具调用、环境反馈、状态更新           |
+| Permission         | AI 被允许做到什么程度？            | 最小权限、即时授权、风险分级           |
+| Action / Tool      | 如何读取或影响外部世界？           | 工具调用、环境反馈、状态更新           |
 | Observe / Evaluate | 中间结果是否正确？                 | 结果读取、证据检查、进度追踪           |
 | Re-plan / Recovery | 失败后下一步是什么？               | 重试、换路径、回滚、升级给用户         |
 | Checkpoint         | 何时必须让用户回来？               | 人工确认、审批、暂停与继续             |
 | Verification       | 用户目标真的完成了吗？             | 结果核验、交付物检查、完成条件         |
 
-> 一个真正可用的 Agent，不应只具备 “Go”，还必须具备 “Stop、Pause、Undo、Retry、Explain、Verify”。执行能力越强，控制与恢复机制越不能被视为附属功能。
+### 为什么是现在：2026.07—08 Agent 产品演进
+
+<ol className="article-vertical-flow article-vertical-flow--product">
+  <li>
+    <strong>2026.07.09｜ChatGPT Work</strong>
+    <span>
+      Goal → Finished Work、Long-running Task、Progress 与 Approval 开始成为同一产品流程的一部分。AI
+      产品从单轮回答进一步进入跨应用、多步骤、长时间完成工作的形态。
+    </span>
+  </li>
+  <li>
+    <strong>2026.07.28｜MCP 2026-07-28</strong>
+    <span>
+      Stateless Core、Multi Round-Trip Requests、Tasks 与 Authorization
+      进入新规范，基础设施开始显式处理长任务、Tool 交互和执行中重新请求用户输入的问题。
+    </span>
+  </li>
+  <li>
+    <strong>2026.07.31｜Gemini Enterprise Agent Evaluation GA</strong>
+    <span>
+      评测覆盖 Tool Use、Trajectory、Grounding、Safety 与 Online Evaluation，Agent
+      评测开始从最终回答扩展到完整执行过程。
+    </span>
+  </li>
+  <li>
+    <strong>2026.08.12｜From Assistance to Execution</strong>
+    <span>
+      OpenAI 企业使用研究呈现从 Assistance 向 Execution 转移的信号。该数据反映 OpenAI
+      企业客户使用情况，不代表整个 AI 市场。
+    </span>
+  </li>
+</ol>
+
+这些变化共同指向同一个产品趋势：AI 的基本单位正从 Question / Prompt 向 Goal / Finished Work 移动。产品经理需要设计的不再只是“如何得到更好的回答”，而是“如何让一个长任务在现实约束中安全、可见、可恢复地完成”。
 
 ## 01｜从“回答”到“行动”：Agent 的产品定义
 
@@ -100,44 +146,62 @@ import ResearchFigure from '../../components/ResearchFigure.astro';
 
 传统 Chatbot 的典型交互链路是“用户输入—模型理解—生成回答—用户继续操作”。即使回答质量很高，AI 的主要输出仍停留在信息层：它可以写邮件、给建议、生成计划，但真正发送邮件、创建日程、修改文件、提交申请，通常仍由用户完成。
 
-Agent 的变化在于，模型不再只产出文本，而是被置于一个“目标—行动—观察—调整”的循环中。用户给出目标后，系统需要先理解目标和约束，再决定需要哪些步骤与工具；每次行动后读取环境反馈，根据结果继续、重试、改道，直至满足完成条件或遇到必须由人判断的节点。
+Agent 的变化在于，模型不再只产出文本，而是被置于“目标—行动—观察—调整”的循环中。用户给出目标后，系统需要先理解目标和约束，再决定步骤与工具；每次行动后读取环境反馈，根据结果继续、重试、改道，直至满足完成条件或遇到必须由人判断的节点。
 
-| Chatbot                    | Agent                                                              |
-| -------------------------- | ------------------------------------------------------------------ |
-| “帮我写一封催进度的邮件。” | “根据最近的沟通记录起草催进度邮件，确认收件人与附件后交给我审核。” |
-| “告诉我明天有哪些会议。”   | “检查明天会议冲突，并提出两个可调整方案；获得确认后更新日历。”     |
-| “给我一个竞品研究框架。”   | “围绕指定问题搜索资料、读取证据、比较差异并形成可交付研究稿。”     |
+| Chatbot                    | Agent                                                      |
+| -------------------------- | ---------------------------------------------------------- |
+| “帮我写一封催进度的邮件。” | “根据最近沟通记录起草邮件，确认收件人与附件后交给我审核。” |
+| “告诉我明天有哪些会议。”   | “检查明天会议冲突，提出方案；获得确认后更新日历。”         |
+| “给我一个竞品研究框架。”   | “搜索资料、读取证据、比较差异并形成可交付研究稿。”         |
 
 ### 从产品视角定义 AI Agent
 
-本文将 AI Agent 定义为：一种围绕用户目标，在明确权限和约束范围内，能够自主进行任务理解、计划、工具调用、状态观察、策略调整和结果交付的 AI 产品形态。这个定义强调“目标驱动”和“闭环行动”，而不是单纯强调模型是否拥有工具。
+> **AI Agent 是一种围绕用户目标，在明确权限与约束范围内，能够持续进行任务理解、规划、工具调用、环境观察与策略调整，直至满足任务完成条件或主动将决策权交还给用户的 AI 产品形态。**
 
-从实现上看，Agent 往往由大模型、工具、上下文或记忆、运行时、Guardrails 与评测系统共同构成。OpenAI Agents SDK 将工具、handoff、guardrails、sessions 与 tracing 等作为 Agent 运行时的重要能力；Anthropic 也区分预定义代码路径的 workflow 与由模型动态决定过程和工具使用的 agent。这里的共同点是：Agent 的价值来自对任务路径的动态决策，而不是“多调用几个 API”。
+这个定义强调 **Goal-driven + Closed-loop Action + Dynamic Decision**。改变外部状态是 Agent 的重要能力之一，但不是判断 Agent 的唯一标准。
+
+例如 Research Agent 即使没有修改邮箱、数据库或日历，也可以形成 Agentic Loop：
+
+<div className="article-flow" aria-label="Research Agent 循环">
+  <strong>Search</strong>
+  <span aria-hidden="true">→</span>
+  <strong>Read</strong>
+  <span aria-hidden="true">→</span>
+  <strong>Evaluate</strong>
+  <span aria-hidden="true">→</span>
+  <strong>Re-search</strong>
+  <span aria-hidden="true">→</span>
+  <strong>Verify</strong>
+  <span aria-hidden="true">→</span>
+  <strong>Deliver</strong>
+</div>
+
+从实现上看，Agent 往往由大模型、工具、上下文或记忆、运行时、Guardrails 与评测系统共同构成。OpenAI Agents SDK 将工具、handoff、guardrails、sessions 与 tracing 等作为运行时能力；Anthropic 则区分预定义代码路径的 workflow 与由模型动态决定过程和工具使用的 agent。共同点是：Agent 的价值来自对任务路径的动态决策，而不是“多调用几个 API”。
 
 ### Agent 的最小能力模型
 
-| 能力            | 产品含义                         | 缺失后的典型问题                             |
-| --------------- | -------------------------------- | -------------------------------------------- |
-| Goal            | 理解用户真正要完成的结果         | 把模糊要求误当作具体指令，方向从第一步就偏离 |
-| Planning        | 把目标转化为可执行步骤           | 只能做单步工具调用，无法处理复杂任务         |
-| Tool / Action   | 读取或修改外部系统               | 仍然停留在“告诉用户怎么做”                   |
-| State / Context | 知道任务进行到哪里、已有何种证据 | 重复执行、遗忘约束、长任务失控               |
-| Observation     | 读取工具与环境的真实反馈         | 工具调用成功就误以为任务成功                 |
-| Evaluation      | 判断结果是否满足目标             | 无法识别“做了但没做对”                       |
-| Recovery        | 失败后重试、改道或请求人工介入   | 任何异常都退化为 “Something went wrong”      |
+| 能力            | 产品含义                       | 缺失后的典型问题                        |
+| --------------- | ------------------------------ | --------------------------------------- |
+| Goal            | 理解用户真正要完成的结果       | 把模糊要求误当作具体指令                |
+| Planning        | 把目标转化为可执行步骤         | 只能做单步工具调用                      |
+| Tool / Action   | 读取或影响外部环境             | 仍停留在“告诉用户怎么做”                |
+| State / Context | 知道任务进度与已有证据         | 重复执行、遗忘约束、长任务失控          |
+| Observation     | 读取工具与环境的真实反馈       | 工具调用成功就误以为任务成功            |
+| Evaluation      | 判断结果是否满足目标           | 无法识别“做了但没做对”                  |
+| Recovery        | 失败后重试、改道或请求人工介入 | 任何异常都退化为 “Something went wrong” |
 
 ### Agent 产品的核心矛盾：Autonomy × Control
 
-Agent 的效率来自“少打断用户”，风险则来自“替用户做错事”。如果所有步骤都需要确认，Agent 会退化成一个不断弹窗的 Workflow；如果几乎不做确认，错误的范围又可能从一条错误回答扩展为错误发送、错误修改、错误删除甚至资金损失。
+Agent 的效率来自“少打断用户”，风险则来自“替用户做错事”。如果所有步骤都需要确认，Agent 会退化成不断弹窗的 Workflow；如果几乎不做确认，错误范围又可能从一条错误回答扩展为错误发送、错误修改、错误删除甚至资金损失。
 
-因此自主性不是越高越好，而应当与任务风险、可逆性、用户历史信任和模型置信度共同决定。产品的目标不是追求最高自治等级，而是在可接受风险下尽可能减少用户操作成本。
+因此自主性不是越高越好，而应与任务风险、可逆性、证据充分度、用户授权范围和组织政策共同决定。产品目标不是追求最高自治等级，而是在可接受风险下尽可能减少用户操作成本。
 
 ## 02｜Chatbot、Workflow 与 Agent：先判断是否真的需要 Agent
 
 <ResearchFigure
   id="chatbot-workflow-agent"
   src="/images/research/ai-agent-product-design/chatbot-workflow-agent.jpg"
-  alt="Chatbot、Workflow 与 Agent 三种 AI 产品形态对比图，分别展示核心模式、适合场景、优势与局限"
+  alt="Chatbot、Workflow 与 Agent 三种 AI 产品形态对比图，展示目标、路径、工具、状态、可控性、成本与典型任务"
   caption="图 1｜Chatbot、Workflow 与 Agent：三种 AI 产品形态对比"
   priority={true}
 />
@@ -154,51 +218,56 @@ Agent 的效率来自“少打断用户”，风险则来自“替用户做错�
 | 成本 / 延迟 | 低到中           | 中                     | 通常更高                             |
 | 典型任务    | 翻译、总结、写作 | 审核、分类、结构化报表 | 研究、编程、跨应用办公、动态问题解决 |
 
-### 最重要的产品判断：先使用最简单的可行方案
+### 最重要的产品判断：优先使用最简单的可行方案
 
-“Agent 化”本身不是产品价值。更复杂的架构会增加延迟、成本、错误传播路径和测试难度。对于规则明确、输入输出结构稳定的场景，Workflow 往往更容易交付稳定体验；只有在固定流程无法覆盖现实路径、需要模型持续做判断时，才应增加 Agent 自主性。
+“Agent 化”本身不是产品价值。更复杂的架构会增加延迟、成本、错误传播路径和测试难度。只有固定流程无法覆盖现实路径、且动态决策能显著提高任务价值时，才应增加 Agent 自主性。
 
-产品经理的判断顺序应该是：先问“一个提示词能否解决？”；不能，再问“固定 Workflow 能否解决？”；仍不能，且动态决策能带来足够业务收益时，才进入 Agent 设计。
-
-<aside className="article-research-insight" aria-label="产品判断">
-  <p>产品判断</p>
-  <strong>不是所有 AI 产品都应该 Agent 化。优先使用能够完成用户任务的最简单方案。</strong>
-</aside>
+<div className="article-code-sequence" aria-label="Agent 形态选择顺序">
+  <p>
+    <span>01</span> 一个 Prompt 能解决？能则保持 Chatbot。
+  </p>
+  <p>
+    <span>02</span> 固定 Workflow 能解决？能则保持可预测流程。
+  </p>
+  <p>
+    <span>03</span> 动态决策能显著提高任务价值？只有答案为 Yes 时才考虑 Agent。
+  </p>
+</div>
 
 ### Agent Suitability Matrix：什么任务值得 Agent 化
 
 <ResearchFigure
   id="agent-suitability-matrix"
   src="/images/research/ai-agent-product-design/agent-suitability-matrix.jpg"
-  alt="Agent Suitability Matrix，使用多步骤程度、环境不确定性、工具依赖、判断需求与自动化收益判断任务是否值得 Agent 化"
+  alt="Agent Suitability Matrix，使用多步骤、路径不确定性、工具依赖、中间判断、持续状态、行动价值与自动化收益判断任务适用性"
   caption="图 2｜Agent Suitability Matrix：什么任务值得 Agent 化"
 />
 
-可以用七个维度评估一个需求是否值得 Agent 化。每项按 0（低）、1（中）、2（高）计分。总分并不是绝对门槛，而是帮助团队把“想做 Agent”转化为可讨论的产品判断。
+**框架属性：本文分析框架（Author's Framework），不是 OpenAI、Anthropic 或其他公司的官方模型。**每个维度按 0（低）、1（中）、2（高）计分。总分不是绝对门槛，而是把“想做 Agent”转化为可以讨论的产品判断。
 
-| 维度         | 0 分         | 1 分               | 2 分                         |
-| ------------ | ------------ | ------------------ | ---------------------------- |
-| 多步骤程度   | 单步即可完成 | 2–3 个连续步骤     | 长链路、多阶段任务           |
-| 路径不确定性 | 路径固定     | 少量分支           | 必须根据中间结果动态改道     |
-| 工具依赖     | 无需外部工具 | 单一工具           | 跨多个系统与工具             |
-| 中间判断需求 | 几乎无判断   | 局部判断           | 每一步结果都会影响后续决策   |
-| 持续状态需求 | 无需记忆     | 短期上下文         | 跨多轮、长时间保持任务状态   |
-| 行动价值     | 只需信息     | 需要生成可执行草稿 | 需要实际修改外部世界         |
-| 自动化收益   | 人工成本很低 | 有一定节省         | 人工重复、耗时且结果导向明显 |
+| 维度         | 0 分         | 1 分           | 2 分                         |
+| ------------ | ------------ | -------------- | ---------------------------- |
+| 多步骤程度   | 单步即可完成 | 2–3 个连续步骤 | 长链路、多阶段任务           |
+| 路径不确定性 | 路径固定     | 少量分支       | 必须根据中间结果动态改道     |
+| 工具依赖     | 无需外部工具 | 单一工具       | 跨多个系统与工具             |
+| 中间判断需求 | 几乎无判断   | 局部判断       | 每一步结果都会影响后续决策   |
+| 持续状态需求 | 无需记忆     | 短期上下文     | 跨多轮、长时间保持任务状态   |
+| 行动价值     | 只需信息     | 生成可执行草稿 | 产生可执行结果或影响外部环境 |
+| 自动化收益   | 人工成本很低 | 有一定节省     | 人工重复、耗时且结果导向明显 |
 
-例如，“把一句中文翻译成英文”几乎所有维度都为低分，使用 Chatbot 即可；“上传简历—解析 JD—匹配—评分—输出建议”路径稳定，适合 Workflow；“持续搜索适合我的岗位，根据每个 JD 判断匹配，追踪申请状态并在需要时生成材料”则存在动态搜索、工具组合和状态维护，更接近 Agent。
+“把一句中文翻译成英文”使用 Chatbot 即可；“上传简历—解析 JD—匹配—评分—输出建议”路径稳定，更适合 Workflow；“持续搜索岗位、根据每个 JD 判断匹配并追踪申请状态”存在动态搜索、工具组合和状态维护，更接近 Agent。
 
 ### 不适合 Agent 的典型情况
 
 - 高确定性、固定流程且对稳定性要求远高于灵活性的任务。
 - 每一步都属于高风险或不可逆动作，且不存在有效回滚与审核机制的任务。
-- 单次任务价值很低，但 Agent 的模型、搜索、工具成本很高的任务。
-- 缺乏可验证环境反馈的任务：系统无法判断自己做得是否正确，只能“自我感觉完成”。
+- 单次任务价值很低，但模型、搜索与工具成本很高的任务。
+- 缺乏可验证环境反馈，系统只能“自我感觉完成”的任务。
 - 数据权限、合规和身份边界尚未明确，却要求 Agent 跨系统行动的任务。
 
 ## 03｜从模糊意图到可执行目标
 
-### Intent → Goal → Constraints → Output
+### Intent → Goal → Inputs → Constraints → Output → Completion Criteria
 
 真实用户往往不会用结构化方式描述任务。“帮我准备一下明天的会议”“把这个报告弄好”“帮我看看有哪些适合的岗位”都包含大量未显式说明的信息。Agent 如果把自然语言直接映射成动作，很容易把缺失信息当作默认值，导致后续整条任务链建立在错误假设上。
 
@@ -214,37 +283,35 @@ Agent 的效率来自“少打断用户”，风险则来自“替用户做错�
 <ResearchFigure
   id="intent-goal-constraints"
   src="/images/research/ai-agent-product-design/intent-goal-constraints.jpg"
-  alt="从模糊意图到可执行目标的任务理解框架，展示 Intent、Goal、Constraints、Output 与澄清成本判断"
+  alt="从模糊意图到可执行目标的任务理解框架，展示 Intent、Goal、Inputs、Constraints、Output、Completion Criteria 与澄清成本判断"
   caption="图 3｜从模糊意图到可执行目标：任务理解框架"
 />
 
-### 什么时候追问，什么时候直接执行
+### Progressive Clarification：什么时候追问，什么时候直接执行
 
-追问不是越多越安全。过度澄清会把 Agent 变成“问卷生成器”；澄清不足则容易出现高成本误操作。一个实用的判断是比较 Clarification Cost（追问给用户带来的打断成本）与 Wrong Action Cost（错误行动的代价）。
+追问不是越多越安全。过度澄清会把 Agent 变成“问卷生成器”；澄清不足则容易出现高成本误操作。产品需要比较 **Clarification Cost** 与 **Wrong Action Cost**。
 
-| 情况                              | 推荐策略                 | 示例                       |
-| --------------------------------- | ------------------------ | -------------------------- |
-| 低风险 + 可逆 + 默认值明确        | 直接执行，必要时提供撤销 | 把文件按主题建立分类草稿   |
-| 低风险 + 信息缺失但可从上下文推断 | 先推断并说明假设         | 根据历史格式生成周报草稿   |
-| 关键参数缺失                      | 只追问阻塞任务的最小信息 | “发给谁？”“截止时间？”     |
-| 高风险或不可逆                    | 执行前必须确认           | 删除、付款、提交、对外发布 |
-| 存在多个合理策略且偏好影响明显    | 给 2–3 个方案让用户选    | 旅行预算与路线取舍         |
+| 情况                        | 推荐策略                 | 示例                       |
+| --------------------------- | ------------------------ | -------------------------- |
+| 低风险 + 可逆 + 默认值明确  | 直接执行，必要时提供撤销 | 把文件按主题建立分类草稿   |
+| 低风险 + 信息可从上下文推断 | 先推断并说明假设         | 根据历史格式生成周报草稿   |
+| 关键参数缺失                | 只追问阻塞任务的最小信息 | “发给谁？”“截止时间？”     |
+| 高风险或不可逆              | 执行前必须确认           | 删除、付款、提交、对外发布 |
+| 多个合理策略且偏好影响明显  | 给 2–3 个方案让用户选择  | 旅行预算与路线取舍         |
 
-**Progressive Clarification：**能推断的尽量推断；低风险的使用可撤销默认；真正阻塞任务的才追问；高风险动作在执行前确认。目标是“以最少打断换取足够确定性”。
+产品原则是：**能推断的尽量推断；低风险使用可撤销默认；真正阻塞任务的才追问；高风险动作在执行前确认。**目标是用最少打断换取足够确定性。
 
-### 把关键假设显性化
+### 把隐含假设显性化
 
-对复杂 Agent，一个很有价值的交互不是展示完整“思考过程”，而是展示会影响执行结果的关键假设。例如：“我将默认使用最近 30 天数据”“我会把价格优先级放在距离之后”“我只会生成邮件草稿，不会发送”。用户不需要看到模型的内部推理，但需要知道影响结果的前提。
+对复杂 Agent，一个有价值的交互不是展示完整内部推理，而是展示会影响执行结果的关键假设。例如：“我将默认使用最近 30 天数据”“我会把价格优先级放在距离之后”“我只会生成邮件草稿，不会发送”。用户不需要看到模型内部 Chain-of-Thought，但需要知道影响结果的前提。
 
 ## 04｜规划与执行：用户需要看到多少过程
 
 ### Planning 的目标不是把步骤写得越细越好
 
-复杂任务需要计划，但“计划”不是为了向用户证明 AI 很聪明，而是为了让系统拥有可检查的执行结构。一个有效计划至少应包含阶段目标、输入、工具、完成条件和潜在阻塞点。过细的计划会造成视觉噪声，也会让模型在现实变化后频繁违背自己预先写下的步骤。
+复杂任务需要计划，但“计划”不是为了向用户证明 AI 很聪明，而是为了让系统拥有可检查的执行结构。有效计划至少应包含阶段目标、输入、工具、完成条件和潜在阻塞点。过细的计划会造成视觉噪声，也会让模型在现实变化后频繁违背预先写下的步骤。
 
-更合理的是“分层计划”：对用户展示 3–6 个稳定的高层阶段，对系统内部保留更细的执行动作；当环境反馈改变时，可以局部重规划，而不需要整份计划从头生成。
-
-### 三种计划交互模式
+更合理的是分层计划：对用户展示 3–6 个稳定的高层阶段，对系统内部保留更细的执行动作；当环境反馈改变时，可以局部重规划，而不需要整份计划从头生成。
 
 | 模式                   | 适用场景                 | 优点                   | 风险                     |
 | ---------------------- | ------------------------ | ---------------------- | ------------------------ |
@@ -254,13 +321,15 @@ Agent 的效率来自“少打断用户”，风险则来自“替用户做错�
 
 ### 动态计划：Plan → Act → Observe → Evaluate → Re-plan
 
-Agent 的关键并不是“一次规划正确”，而是根据真实环境反馈持续修正。搜索没有找到可靠来源时需要改关键词；接口失败时需要切换工具；文件格式不可读时需要告知并请求替代材料；发现目标冲突时需要停下让用户选择。
+Agent 的关键不是“一次规划正确”，而是根据真实环境反馈持续修正。搜索没有找到可靠来源时需要改关键词；接口失败时需要切换工具；文件格式不可读时需要请求替代材料；发现目标冲突时需要停下让用户选择。
 
-这个循环要求产品同时具备两个条件：第一，工具返回必须足够结构化，使 Agent 能判断成功、失败和异常；第二，任务必须定义停止条件，防止模型在开放环境中无限尝试。常见停止条件包括达到完成标准、连续失败次数上限、成本或时间预算上限、需要人工判断或触发风险策略。
+这个循环要求工具返回足够结构化，使 Agent 能判断成功、失败和异常；任务还必须定义停止条件，防止系统在开放环境中无限尝试。常见停止条件包括达到完成标准、连续失败次数上限、成本或时间预算上限、需要人工判断或触发风险策略。
+
+> **Plan Preview，而不是 Chain-of-Thought Preview。**用户需要看到 Goal、高层 Plan、Current Step、Activity、Artifacts、Approval 与 Verification，而不是模型内部完整推理。
 
 ### Agent UI 不应只有一个聊天框
 
-当任务从“回答问题”变成“持续执行”，聊天流很难承载全部状态。用户需要区分“我说了什么”“AI 计划做什么”“当前正在做什么”“产生了哪些文件或结果”“哪些动作等待批准”。因此，Agent 交互更接近一个工作空间，而非纯对话产品。
+当任务从“回答问题”变成“持续执行”，聊天流很难承载全部状态。用户需要区分“我说了什么”“AI 计划做什么”“当前正在做什么”“产生了哪些文件或结果”“哪些动作等待批准”。Agent 交互因此更接近工作空间，而不是纯对话产品。
 
 | 界面区域          | 承担的信息                             |
 | ----------------- | -------------------------------------- |
@@ -279,103 +348,113 @@ Agent 的关键并不是“一次规划正确”，而是根据真实环境反�
 <ResearchFigure
   id="progressive-autonomy"
   src="/images/research/ai-agent-product-design/progressive-autonomy.jpg"
-  alt="从 Automation 到 Autonomy 的自主性与确认策略图，展示 L0 至 L5 自主等级以及 Risk、Reversibility、Confidence 决策规则"
+  alt="Progressive Autonomy 图，展示 L0 至 L5 自主等级，以及 Risk、Reversibility 与 Evidence Sufficiency 共同决定确认策略"
   caption="图 4｜从 Automation 到 Autonomy：自主性与确认策略"
 />
 
 | 等级              | AI 的权限                  | 典型交互                   | 适合任务               |
 | ----------------- | -------------------------- | -------------------------- | ---------------------- |
-| L0 信息           | 只提供事实与解释           | “这是你需要知道的信息”     | 查询、解释             |
-| L1 建议           | 给出行动建议               | “建议你这样做”             | 策略、决策辅助         |
-| L2 草稿           | 生成可执行草稿             | “我已经准备好，等待你编辑” | 邮件、文档、计划       |
-| L3 确认后执行     | 用户审批后调用工具         | “确认后我会发送或提交”     | 对外沟通、重要修改     |
-| L4 边界内自动执行 | 授权范围内自动操作，可撤销 | “已完成，可撤销”           | 低风险整理、同步、分类 |
-| L5 高度自主       | 用户给目标，系统持续执行   | “完成后汇报，仅异常时打断” | 可信环境内的长期任务   |
+| L0 Information    | 只提供事实与解释           | “这是你需要知道的信息”     | 查询、解释             |
+| L1 Suggestion     | 给出行动建议               | “建议你这样做”             | 策略、决策辅助         |
+| L2 Draft          | 生成可执行草稿             | “我已经准备好，等待你编辑” | 邮件、文档、计划       |
+| L3 Confirm Action | 用户审批后调用工具         | “确认后我会发送或提交”     | 对外沟通、重要修改     |
+| L4 Bounded        | 授权范围内自动操作，可撤销 | “已完成，可撤销”           | 低风险整理、同步、分类 |
+| L5 High Autonomy  | 用户给目标，系统持续执行   | “完成后汇报，仅异常时打断” | 可信环境内的长期任务   |
 
-优秀 Agent 不应默认从 L5 开始。更合理的是 Progressive Autonomy：系统根据任务风险、用户历史行为、成功记录、权限范围和组织政策逐步增加自治度。即使同一个 Agent，在“读取文件”和“发送邮件”两个动作上也应使用不同自治等级。
+优秀 Agent 不应默认追求最高自治等级，而应采用 **Progressive Autonomy**。系统根据任务风险、可逆性、证据充分度、权限范围、历史成功记录和组织政策逐步增加自治度；同一个 Agent 在“读取文件”和“发送邮件”两个动作上也应使用不同等级。
 
-### Risk × Reversibility × Confidence：决定是否需要确认
+### Risk × Reversibility × Evidence Sufficiency
 
-可以把确认策略简化为三个主要变量。Risk 代表错误会造成多大损失；Reversibility 代表能否低成本恢复；Confidence 代表系统对当前意图、参数和执行结果有多大把握。三者共同决定 Agent 是直接执行、执行后可撤销，还是执行前强制确认。
+确认策略由三个主要变量共同决定：**Risk** 代表错误会造成多大损失；**Reversibility** 代表是否能够低成本恢复；**Evidence Sufficiency** 代表当前理解与执行是否有足够证据支持。
 
-| 动作               | 风险 | 可逆性     | 推荐策略                       |
-| ------------------ | ---- | ---------- | ------------------------------ |
-| 搜索公开资料       | 低   | 高         | 自动执行                       |
-| 创建文档草稿       | 低   | 高         | 自动执行                       |
-| 修改内部文档       | 中   | 高         | 自动执行 + 清晰撤销            |
-| 调整日历           | 中   | 中高       | 授权范围内执行，变更摘要可见   |
-| 发送外部邮件       | 高   | 低         | 发送前确认收件人、内容与附件   |
-| 提交申请或发布内容 | 高   | 低         | 强确认 + 最终预览              |
-| 删除数据           | 高   | 低或不可逆 | 强确认，优先使用回收站或软删除 |
-| 支付或下单         | 关键 | 有限       | 强确认 + 金额和对象二次核验    |
+Evidence Sufficiency 不等于让模型直接自报“我有 95% confidence”。它应由关键参数完整性、多源证据一致性、Tool 返回状态、规则校验、Evaluator 结果与目标歧义程度共同形成。
+
+| 动作           | 风险 | 可逆性     | 推荐策略                          |
+| -------------- | ---- | ---------- | --------------------------------- |
+| 搜索公开资料   | 低   | 高         | 自动执行                          |
+| 创建文档草稿   | 低   | 高         | 自动执行                          |
+| 修改内部文档   | 中   | 高         | 自动执行 + 清晰撤销               |
+| 调整日历       | 中   | 中高       | 授权范围内执行，变更摘要可见      |
+| 发送外部邮件   | 高   | 低         | 发送前确认收件人、内容与附件      |
+| 提交申请或发布 | 高   | 低         | 强确认 + 最终预览                 |
+| 删除数据       | 高   | 低或不可逆 | 强确认，优先回收站或软删除        |
+| 支付或下单     | 关键 | 有限       | 强确认 + 金额、对象与账户二次核验 |
 
 ### Human-in-the-loop 的六类触发器
 
 <ResearchFigure
   id="human-in-the-loop"
   src="/images/research/ai-agent-product-design/human-in-the-loop.jpg"
-  alt="Human-in-the-loop 关键节点确认机制图，展示六类触发器与低风险行动到人工确认的流程"
+  alt="Human-in-the-loop 关键节点确认机制图，展示高风险、不可逆、对外沟通、意图不清、异常成本与证据不足六类触发"
   caption="图 5｜Human-in-the-loop：关键节点确认机制"
 />
 
-- **高风险：**资金、身份、生产环境、法律责任等。
-- **不可逆：**删除、提交、发布或难以撤销的外部动作。
-- **对外沟通：**Agent 以用户身份向第三方发送内容。
-- **意图不清：**存在多个合理解释且不同选择会显著改变结果。
-- **异常成本：**工具调用次数、金额、Token、时间或资源消耗超出阈值。
-- **低置信度或证据冲突：**系统无法可靠判断事实或参数。
+1. **高风险**：资金、身份、生产环境、法律责任等。
+2. **不可逆**：删除、提交、发布或难以撤销的外部动作。
+3. **对外沟通**：Agent 以用户身份向第三方发送内容。
+4. **意图不清**：存在多个合理解释且不同选择会显著改变结果。
+5. **异常成本**：工具调用次数、金额、Token、时间或资源消耗超出阈值。
+6. **Evidence Sufficiency 不足或证据冲突**：系统无法可靠判断事实、参数或执行结果。
 
-关键是“关键节点确认”而不是“逐步确认”。确认应该发生在错误影响即将扩大之前，而不是把每个低风险动作都变成弹窗。
-
-<aside className="article-research-insight" aria-label="控制权原则">
-  <p>控制权原则</p>
-  <strong>自主能力越强，越需要确认、撤销、权限、可观测性和恢复机制。</strong>
-</aside>
+核心不是“每一步都确认”，而是**在错误影响即将扩大之前确认**。
 
 ### 权限设计：Least Privilege 与 Just-in-time Permission
 
-Agent 能力越强，权限设计越接近产品核心。最小权限原则要求系统只获得完成当前任务所需的最低权限；即时授权则意味着只有在任务真正需要某项能力时再请求，而不是首次使用产品就索取邮箱、日历、云盘和通讯录的全部权限。
+Agent 能力越强，权限设计越接近产品核心。最小权限原则要求系统只获得完成当前任务所需的最低权限；即时授权意味着只有任务真正需要某项能力时再请求，而不是首次使用产品就索取邮箱、日历、云盘和通讯录的全部权限。
 
-| 权限层级          | 可做什么         | 典型策略               |
-| ----------------- | ---------------- | ---------------------- |
-| Read              | 读取信息         | 可持续授权，但明确范围 |
-| Create            | 新建草稿或对象   | 通常低到中风险         |
-| Modify            | 修改已有对象     | 需要版本记录与撤销     |
-| Send / Publish    | 对外产生影响     | 通常执行前确认         |
-| Delete            | 移除数据         | 优先软删除、强确认     |
-| Purchase / Commit | 资金或不可逆承诺 | 最高强度确认与额外校验 |
+| 权限层级          | 可做什么         | 典型策略                   |
+| ----------------- | ---------------- | -------------------------- |
+| Read              | 读取信息         | 可持续授权，但明确数据范围 |
+| Create            | 新建草稿或对象   | 通常低到中风险             |
+| Modify            | 修改已有对象     | 版本记录与撤销             |
+| Send / Publish    | 对外产生影响     | 通常执行前确认             |
+| Delete            | 移除数据         | 优先软删除、强确认         |
+| Purchase / Commit | 资金或不可逆承诺 | 最高强度确认与额外校验     |
+
+### Agent Security：当外部内容本身不可信
+
+当 Agent 开始浏览网页、读取邮件、处理文件以及调用外部 Tool 后，风险不只是“有没有权限”，还包括外部内容本身可能包含攻击指令。产品必须坚持：**Untrusted Content ≠ Trusted Instruction。**
+
+| 风险                      | 产品场景                                     | 产品侧保护                                  |
+| ------------------------- | -------------------------------------------- | ------------------------------------------- |
+| Indirect Prompt Injection | 网页、邮件、文件试图改变 Agent 行为          | 外部内容视为 Data；高风险动作再次确认       |
+| Tool Trust                | 第三方 Tool 或 MCP Server 返回异常或恶意内容 | Tool Allowlist、来源验证、Schema Validation |
+| Cross-system Data Leakage | 数据从一个系统被错误发送到另一个系统         | Data Scope、目标系统限制、敏感数据检测      |
+| Authorization Abuse       | Agent 获得超过当前任务需要的权限             | Least Privilege、即时授权、Token Scope      |
+
+这不是网络安全技术教程，而是产品边界设计：权限、Tool Boundary、Sandbox、Human Checkpoint、Trace 与 Rollback 需要共同限制一次错误或攻击的“爆炸半径”。
 
 ## 06｜失败不是异常：可观测性、状态与恢复设计
 
 ### 为什么 Agent 比 Chatbot 更容易“错得更远”
 
-Chatbot 的错误通常止于一条回答；Agent 的错误可能沿执行链传播：错误理解目标 → 错误搜索 → 读取错误数据 → 选择错误工具 → 执行错误动作 → 产生错误外部结果。多步任务中，单步准确率即使看起来很高，串联后也可能明显降低整体成功率。
+Chatbot 的一次错误通常停留在一段回答中；Agent 的错误会通过计划、工具和状态继续传播。错误目标可能生成错误计划，错误计划会触发错误工具调用，错误结果又可能成为下一步输入。Failure Path 因此不是边缘情况，而是 Agent 核心路径的一部分。
 
-因此产品设计不能只优化 Happy Path。对于 Agent，Failure Path 是核心路径的一部分：失败应当被检测、解释、限制影响范围，并尽可能恢复到可继续的状态。
+恢复机制可以概括为四类：**Retry、Re-plan、Rollback、Escalate**。产品需要明确系统什么时候可以自行重试，什么时候应该换路径，什么时候必须撤销，以及什么时候应该停止并把决定权交还给用户。
 
 ### Agent State Machine：让任务处于可管理状态
 
 <ResearchFigure
   id="agent-state-machine"
   src="/images/research/ai-agent-product-design/agent-state-machine.jpg"
-  alt="Agent State Machine 状态机图，展示 Planning、Executing、Waiting for User、Retrying、Blocked、Partially Completed 与 Completed 状态及恢复策略"
+  alt="Agent State Machine 图，展示 Planning、Executing、Waiting for User、Retrying、Re-planning、Blocked、Partially Completed 与 Completed 状态"
   caption="图 6｜Agent State Machine：状态、异常与恢复"
 />
 
-| 状态                | 含义                     | 用户应该看到什么             |
-| ------------------- | ------------------------ | ---------------------------- |
-| Planning            | 正在形成计划             | 目标、约束、预计步骤         |
-| Executing           | 正在调用工具执行         | 当前步骤、关键进度           |
-| Waiting for User    | 等待信息或审批           | 缺什么、为什么需要用户       |
-| Retrying            | 在安全范围内重试         | 失败原因、当前第几次尝试     |
-| Re-planning         | 原路径不可行，正在换方案 | 将改变哪些步骤               |
-| Blocked             | 无法继续                 | 阻塞原因与可选替代方案       |
-| Partially Completed | 部分完成                 | 已完成部分、未完成部分、影响 |
-| Completed           | 满足完成条件             | 最终结果、证据与后续操作     |
+| 状态                | 含义                     | 用户应该看到什么                   |
+| ------------------- | ------------------------ | ---------------------------------- |
+| Planning            | 正在形成计划             | 目标、约束、预计步骤               |
+| Executing           | 正在调用工具执行         | 当前步骤、关键进度                 |
+| Waiting for User    | 等待信息或审批           | 缺什么、为什么需要用户             |
+| Retrying            | 在安全范围内重试         | 失败原因、当前第几次尝试           |
+| Re-planning         | 原路径不可行，正在换方案 | 将改变哪些步骤                     |
+| Blocked             | 无法继续                 | 阻塞原因与可选替代方案             |
+| Partially Completed | 部分完成                 | 已完成部分、未完成部分、原因与影响 |
+| Completed           | 满足完成条件             | 最终结果、证据与后续操作           |
 
 ### 进度可见：不要只显示 “Thinking…”
 
-当 Agent 工作几十秒甚至数分钟，用户最关心的不是内部推理文本，而是“它是否在推进”“是否卡住”“是否正在做我允许的事情”。因此 Progress Visibility 应展示可验证的工作状态，而不是伪装成透明度的长篇思维输出。
+当 Agent 工作几十秒甚至数分钟，用户最关心的不是内部推理文本，而是“它是否在推进”“是否卡住”“是否正在做我允许的事情”。Progress Visibility 应展示可验证的工作状态，而不是伪装成透明度的长篇思维输出。
 
 | 差的进度信息         | 更好的进度信息                                            |
 | -------------------- | --------------------------------------------------------- |
@@ -399,32 +478,32 @@ Chatbot 的错误通常止于一条回答；Agent 的错误可能沿执行链传
 
 ### Partial Success：比“成功 / 失败”二元状态更真实
 
-复杂任务经常只完成一部分。例如 Agent 成功分析了 17 份文件，但 3 份加密文件无法读取；完成了会议 Brief，却因为权限不足无法创建日历邀请。把这种情况简单标记为“任务失败”会抹掉已有价值；标记为“任务完成”又会掩盖缺口。
+复杂任务经常只完成一部分。例如 Agent 成功分析了 17 份文件，但 3 份加密文件无法读取；完成了会议 Brief，却因为权限不足无法创建日历邀请。简单标记“失败”会抹掉已有价值；标记“完成”又会掩盖缺口。
 
 因此 Agent 产品需要正式支持 Partially Completed：明确已完成、未完成、原因、影响和下一步选项。部分成功状态也有利于恢复，因为系统可以从已有成果继续，而不是重头执行。
 
 ## 07｜Trust Design 与结果验证
 
-### 信任不是一句“AI 可能犯错”
+### 用户信任来自哪些产品因素
 
-当产品只生成文本时，用户可以用“看完再用”控制风险；当 Agent 能直接修改外部世界时，信任必须被设计成一组具体机制。用户需要知道 AI 准备做什么、为什么做、能做到什么范围、做完后发生了什么、如果做错能否恢复。
+当产品只生成文本时，用户可以用“看完再用”控制风险；当 Agent 能直接影响外部世界时，信任必须被设计成一组具体机制。用户需要知道 AI 准备做什么、为什么做、能做到什么范围、做完后发生了什么，以及做错后如何恢复。
 
-| 机制            | 作用                                         |
-| --------------- | -------------------------------------------- |
-| Preview         | 在高风险操作前让用户看到对象、参数与后果     |
-| Explain         | 解释行动依据与关键假设，而非暴露内部思维链   |
-| Scope           | 明确权限边界、数据范围与时间范围             |
-| Evidence        | 关键事实附证据或来源，支持核验               |
-| History / Trace | 保留任务、工具调用与关键状态的可追踪记录     |
-| Undo / Rollback | 降低错误后果，提升用户敢于授权的意愿         |
-| Confirmation    | 在影响扩大前建立人工检查点                   |
-| Guardrails      | 在输入、工具调用或输出层拦截不符合策略的行为 |
+| 机制            | 作用                                       |
+| --------------- | ------------------------------------------ |
+| Preview         | 在高风险操作前让用户看到对象、参数与后果   |
+| Explain         | 解释行动依据与关键假设，而非暴露内部思维链 |
+| Scope           | 明确权限边界、数据范围与时间范围           |
+| Evidence        | 关键事实附证据或来源，支持核验             |
+| History / Trace | 保留任务、工具调用与关键状态的可追踪记录   |
+| Undo / Rollback | 对可逆动作降低错误后果                     |
+| Confirmation    | 在影响扩大前建立人工检查点                 |
+| Guardrails      | 在输入、工具调用或输出层拦截违规行为       |
 
-**一个更完整的信任公式：**Trust ≠ Model Accuracy。更接近实际产品的是：Trust = Accuracy + Transparency + Control + Recoverability。准确只是起点；透明、可控、可恢复决定用户是否愿意长期把行动权交给 Agent。
+本文将 Agent 用户信任拆解为四个主要产品因素：**Accuracy、Transparency、Control、Recoverability**。模型准确性影响用户第一次是否愿意尝试；透明、可控和可恢复，更影响用户是否愿意长期把行动权交给 Agent。这是一种产品分析拆解，不是数学等式。
 
 ### Outcome-oriented：从“动作成功”转向“目标完成”
 
-Agent 最容易出现的评测错觉是把 Tool Success 当作 Task Success。用户说“给张三安排明天下午会议”，Calendar API 返回成功并不意味着任务完成；还需要验证时区是否正确、参会人是否正确、时间是否冲突、邀请是否真的创建并处于预期状态。
+Agent 最容易出现的评测错觉是把 Tool Success 当作 Task Success。用户说“给张三安排明天下午会议”，Calendar API 返回成功并不意味着任务完成；还需要验证时区、参会人、时间冲突、邀请是否真的创建并处于预期状态。
 
 因此每个高价值任务都应定义 Completion Criteria。系统在结束前需要执行结果核验；若无法自动验证，也应明确告诉用户哪些部分已确认、哪些部分仍依赖人工检查。
 
@@ -433,7 +512,7 @@ Agent 最容易出现的评测错觉是把 Tool Success 当作 Task Success。�
 <ResearchFigure
   id="agent-scorecard"
   src="/images/research/ai-agent-product-design/agent-scorecard.jpg"
-  alt="Agent Product Scorecard 评测框架图，从任务成功、步骤成功、人工介入、效率与用户信任五个维度评估 Agent 产品"
+  alt="Agent Product Scorecard 评测框架图，展示任务完成、行动准确、人工介入、恢复、效率、成本与用户接受等指标"
   caption="图 7｜Agent Product Scorecard：如何评估一个 Agent 产品"
 />
 
@@ -449,28 +528,95 @@ Agent 最容易出现的评测错觉是把 Tool Success 当作 Task Success。�
 | Cost per Task           | 模型、工具与基础设施的单任务成本 | 决定规模化可行性       |
 | User Acceptance         | 用户最终采用交付结果的比例       | 连接模型表现与真实价值 |
 
-Agent 评测比单轮生成更复杂，因为同一个任务可能存在多条合理路径。仅比较最终文本很难发现过程中的危险行为，也无法评价恢复能力。因此评测集至少应覆盖三层：**结果层**看任务是否完成；**过程层**看工具、计划、状态与重试是否合理；**边界层**看权限、确认、Guardrails 是否在正确时机生效。
+最重要的北极星指标是 **Verified Task Completion Rate**：经结果核验后，真正满足 Completion Criteria 的任务比例。
 
-在发布前，可以用可重复的沙盒任务做离线评测；上线后结合真实任务成功率、人工介入率、异常分布与用户纠正行为持续监控。多轮、工具调用和状态修改使 Agent 需要比普通 LLM 更系统的评测设计。
+```text
+Tool Success ≠ Task Success
+```
 
-<aside className="article-research-insight" aria-label="评测原则">
-  <p>评测原则</p>
-  <strong>Tool Call 成功不等于任务完成。Agent 最终应该围绕用户目标是否真正完成进行评测。</strong>
-</aside>
+### 覆盖“结果、过程与边界”
+
+Agent 评测至少覆盖三层：**结果层**看任务是否完成；**过程层**看工具、计划、状态与重试是否合理；**边界层**看权限、确认、Guardrails 是否在正确时机生效。离线阶段可使用可重复的沙盒任务；上线后结合真实任务成功率、人工介入率、异常分布与用户纠正行为持续监控。
+
+## 从框架到实测：一次 Codex Agent 真实使用观察
+
+这不是 Codex 使用教程，也不是性能 Benchmark。这里使用真实 Coding Agent 工作流，观察前文提出的 Context Gathering、Planning、State、Action 与 Verification 是否会在实际任务中出现。
+
+### 实测 01｜Context Gathering & Planning
+
+<ResearchFigure
+  id="codex-context-planning"
+  src="/images/research/ai-agent-product-design/codex-context-planning.png"
+  alt="Codex 只读检查个人网站结构后列出 Astro、MDX、研究路由、PDF、TOC、Lightbox 与首页精选逻辑，并形成实施计划"
+  caption="图｜Codex 实测 01：读取现有项目结构并形成执行计划"
+/>
+
+截图中，Codex 明确说明“已完成只读检查，尚未写入任何文件”，并识别 Astro 7、MDX Content Collection、`/insights/`、`/research/<slug>/`、PDF 阅读页、Article Header、Sticky TOC、Lightbox 与首页研究数据逻辑。
+
+**产品观察：**Agent 的第一步不应该总是 Action。对于复杂系统，可靠的 Context Gathering 是后续执行正确性的基础。
+
+### 实测 02｜Multi-file Action & Verification
+
+<ResearchFigure
+  id="codex-multifile-verification"
+  src="/images/research/ai-agent-product-design/codex-multifile-verification.png"
+  alt="Codex 同时修改 Notes 页面、Timeline Card 与多篇 MDX，并验证内容按 08-17、08-13、08-12、08-11、08-06 降序排列"
+  caption="图｜Codex 实测 02：跨文件修改并验证最终内容排序"
+/>
+
+第二项任务涉及 Notes 页面、Timeline Card、多篇 MDX、日期排序与 Series Metadata。Codex 不仅列出修改文件，还继续验证最终顺序：08-17 → 08-13 → 08-12 → 08-11 → 08-06。
+
+**产品观察：**Code Change Success ≠ User Goal Success。用户要求的是“最终页面按正确顺序工作”，而不是“代码成功保存”。
+
+### 实测 03｜Build / Link Verification
+
+<ResearchFigure
+  id="codex-build-verification"
+  src="/images/research/ai-agent-product-design/codex-build-verification.png"
+  alt="Codex 完成 Content Schema、Series Metadata、Article Components 与 Notes Timeline 修改，并运行 Prettier、ESLint、Astro check、Build 和链接检查"
+  caption="图｜Codex 实测 03：任务完成后的 Build 与链接核验"
+/>
+
+第三项任务同时涉及 Content Schema、Series Metadata、Article Components、Notes Timeline 与多篇 MDX。Codex 随后运行 Prettier、ESLint、Astro check、`npm run build` 与链接检查；当次记录为 33 pages generated、14 internal pages checked、0 missing links。
+
+**产品观察：**Verification 必须属于 Agent 工作流本身，而不能完全留给用户事后检查。
+
+<div className="article-flow" aria-label="Codex 实测任务闭环">
+  <strong>Context Gathering</strong>
+  <span aria-hidden="true">→</span>
+  <strong>Planning</strong>
+  <span aria-hidden="true">→</span>
+  <strong>Multi-file Action</strong>
+  <span aria-hidden="true">→</span>
+  <strong>Environment Feedback</strong>
+  <span aria-hidden="true">→</span>
+  <strong>Verification</strong>
+  <span aria-hidden="true">→</span>
+  <strong>Final Outcome</strong>
+</div>
+
+该实践只是一次真实产品体验观察，不构成 Codex 模型能力 Benchmark，也不能代表其所有任务的成功率。
 
 ## 08｜从研究走向产品：Personal Work Agent MVP
+
+### 为什么 2026 年还要设计这个 MVP？
+
+2026 年已经存在 ChatGPT Work 等通用 Agent，因此本文不是重新设计一个“万能 AI Assistant”。Personal Work Agent 是**用于验证本文产品机制的设计载体**：把 Goal Card、Progressive Clarification、Plan Preview、Progressive Autonomy、Risk-triggered Approval、Activity Timeline、Partial Success、Undo / Rollback 与 Result Verification 放入同一个可检查流程。
 
 <section className="article-product-translation" aria-labelledby="personal-work-agent-title">
   <p className="article-product-translation__kicker">From Research to Product</p>
   <h3 id="personal-work-agent-title">Personal Work Agent</h3>
-  <p className="article-product-translation__positioning">帮助知识工作者完成需要跨资料、跨工具与多步骤执行的复杂工作任务。</p>
-
-<p>
-  这个 MVP
-  不追求“什么都能做”，而聚焦一种高频价值：把用户从“搜索资料—阅读—整理—写文档—准备沟通”的重复多步骤工作中释放出来，同时严格限制高风险外部动作。
-</p>
-
-  <p><strong>MVP 目标：</strong>让用户用一句自然语言描述任务，Agent 能够形成目标卡片和高层计划，在授权范围内完成搜索、文件读取、信息整理和文档生成；涉及对外沟通时仅生成草稿，必须获得用户批准后才执行。</p>
+  <p className="article-product-translation__positioning">
+    帮助知识工作者完成需要跨资料、跨工具与多步骤执行的复杂工作任务。
+  </p>
+  <p>
+    这个 MVP
+    不追求“什么都能做”，而聚焦一种高频价值：把用户从搜索资料、阅读、整理、写文档与准备沟通的重复多步骤工作中释放出来，同时严格限制高风险外部动作。
+  </p>
+  <p>
+    <strong>MVP 目标：</strong>用户用一句自然语言描述任务后，Agent
+    形成目标卡片和高层计划，在授权范围内完成搜索、文件读取、信息整理和文档生成；涉及对外沟通时只生成草稿，获得用户批准后才执行。
+  </p>
 </section>
 
 ### MVP Scope 与 Non-goals
@@ -495,9 +641,9 @@ Agent 评测比单轮生成更复杂，因为同一个任务可能存在多条�
 | 5. Artifact           | 生成 1 页 Brief 与议程草稿              | Artifact Workspace          |
 | 6. Verification       | 检查关键数据与引用是否齐全              | Result Verification         |
 | 7. Approval           | 询问是否生成或发送会议材料              | Human Checkpoint            |
-| 8. Completion         | 经确认后执行允许动作并记录结果          | Trace + History + Undo      |
+| 8. Completion         | 经确认后执行允许动作并记录结果          | Trace + History + Recovery  |
 
-### 01 Task Creation
+### Prototype 01｜Task Creation
 
 用户输入最终目标，同时补充截止时间、资料范围、限制条件和允许调用的工具。界面把自然语言任务转换为可检查的目标、约束与授权范围，而不是立即开始不可见的执行。
 
@@ -508,7 +654,7 @@ Agent 评测比单轮生成更复杂，因为同一个任务可能存在多条�
   caption="图 8｜Personal Work Agent 原型 01：Task Creation"
 />
 
-### 02 Plan Preview
+### Prototype 02｜Plan Preview
 
 在复杂任务真正执行前，让用户了解 Agent 准备如何完成任务，并允许修改执行计划与边界。页面只展示稳定的高层阶段、预计工具与风险边界，避免把内部细碎步骤全部暴露给用户。
 
@@ -519,48 +665,61 @@ Agent 评测比单轮生成更复杂，因为同一个任务可能存在多条�
   caption="图 9｜Personal Work Agent 原型 02：Plan Preview"
 />
 
-### 03 Execution Workspace & Approval
+### Prototype 03｜Execution Workspace
 
-执行过程中持续展示 Progress、Activity、Artifacts 与 Approval，在关键行为发生前重新把控制权交给用户。聊天仍是入口，但任务、状态、产物和审批拥有各自清晰的位置。
+执行过程中持续展示 Current Step、Activity、Artifacts 与待处理的 Approval。聊天仍是入口，但任务、状态、产物和审批拥有各自清晰的位置。
 
 <ResearchFigure
   id="personal-work-agent-execution"
   src="/images/research/ai-agent-product-design/personal-work-agent-execution.jpg"
-  alt="Personal Work Agent Execution Workspace 与 Approval 原型，展示执行进度、活动记录、产物和发送材料前的人工审批"
-  caption="图 10｜Personal Work Agent 原型 03：Execution Workspace & Approval"
+  alt="Personal Work Agent Execution Workspace 原型，展示执行进度、活动记录、任务产物与人工审批入口"
+  caption="图 10｜Personal Work Agent 原型 03：Execution Workspace"
 />
 
-| 页面                | 核心信息                             | 关键交互                       |
-| ------------------- | ------------------------------------ | ------------------------------ |
-| Task Creation       | 用户目标、附件、可用上下文           | 自然语言输入；快速补充约束     |
-| Plan Preview        | 目标卡、阶段计划、预计使用工具       | 开始执行、调整计划、修改权限   |
-| Execution Workspace | Current Step、Activity、Artifacts    | 暂停、取消、查看证据、调整任务 |
-| Approval & Result   | 高风险动作预览、最终交付物、完成核验 | Review、Edit、Approve、Undo    |
+### Prototype 04｜Approval & Result
+
+高风险动作执行前，界面展示 Action Summary、Risk Review、Approval Required、最终预览与已完成的校验。用户可以 Review、Edit、Approve 或 Cancel。
+
+<ResearchFigure
+  id="personal-work-agent-approval-result"
+  src="/images/research/ai-agent-product-design/personal-work-agent-approval-result.png"
+  alt="Personal Work Agent Approval and Result 原型，展示发送外部邮件前的操作摘要、风险原因、校验状态、最终预览和 Review、Edit、Approve、Cancel 操作"
+  caption="图 11｜Personal Work Agent 原型 04：Approval & Result"
+/>
+
+对于已经完成的不可逆行为，产品不应显示虚假的 Undo。邮件发送后更合理的恢复入口是 **Create Correction、Send Follow-up 与 View History**；Undo / Rollback 只适用于真正可逆的动作。
+
+| 页面                | 核心信息                             | 关键交互                                     |
+| ------------------- | ------------------------------------ | -------------------------------------------- |
+| Task Creation       | 用户目标、附件、可用上下文           | 自然语言输入；快速补充约束                   |
+| Plan Preview        | 目标卡、阶段计划、预计使用工具       | 开始执行、调整计划、修改权限                 |
+| Execution Workspace | Current Step、Activity、Artifacts    | 暂停、取消、查看证据、调整任务               |
+| Approval & Result   | 高风险动作预览、最终交付物、完成核验 | Review、Edit、Approve、Correction、Follow-up |
 
 ### 关键产品假设与验证方法
 
-| 假设                                              | 验证方式                        | 核心指标                         |
-| ------------------------------------------------- | ------------------------------- | -------------------------------- |
-| H1 用户愿意把低风险、多步骤任务交给 Agent         | 可用性测试 + Beta 真实任务      | Task Completion、人工接管率      |
-| H2 Plan Preview 能降低复杂任务的方向性错误        | A/B：直接执行 vs 计划预览       | 取消率、计划修改率、首次成功率   |
-| H3 关键节点确认优于逐步确认                       | A/B：全量确认 vs 风险触发确认   | 确认次数、完成时间、错误率       |
-| H4 Activity Timeline 能提升用户对长任务的可理解性 | 访谈 + 行为数据                 | 中途取消率、查看进度率、信任评分 |
-| H5 Undo 能提高用户对 L4 自动执行的接受度          | 灰度开放可撤销自动化            | 授权率、撤销率、长期留存         |
-| H6 结果核验能减少“看似完成”的假成功               | 增加 completion checks 前后对比 | Task Success、返工率             |
+| 假设                                         | 验证方式                        | 核心指标                         |
+| -------------------------------------------- | ------------------------------- | -------------------------------- |
+| H1 用户愿意把低风险、多步骤任务交给 Agent    | 可用性测试 + Beta 真实任务      | Task Completion、人工接管率      |
+| H2 Plan Preview 能降低复杂任务的方向性错误   | A/B：直接执行 vs 计划预览       | 取消率、计划修改率、首次成功率   |
+| H3 关键节点确认优于逐步确认                  | A/B：全量确认 vs 风险触发确认   | 确认次数、完成时间、错误率       |
+| H4 Activity Timeline 能提升长任务可理解性    | 访谈 + 行为数据                 | 中途取消率、查看进度率、信任评分 |
+| H5 Undo 能提高用户对 L4 可逆自动执行的接受度 | 灰度开放可撤销自动化            | 授权率、撤销率、长期留存         |
+| H6 结果核验能减少“看似完成”的假成功          | 增加 completion checks 前后对比 | Task Success、返工率             |
 
 ### MVP 的成功标准
 
-MVP 是否成功，不应以“用户觉得很智能”衡量，而应以能否稳定减少真实任务成本衡量。第一阶段最重要的北极星指标可以是 **Verified Task Completion Rate（经结果核验的任务完成率）**，并用平均人工介入次数、完成时长、撤销或纠正率和单任务成本作为约束指标。
+MVP 是否成功，不应以“用户觉得很智能”衡量，而应以能否稳定减少真实任务成本衡量。第一阶段的北极星指标是 **Verified Task Completion Rate**，并用平均人工介入次数、完成时长、撤销或纠正率和单任务成本作为约束指标。
 
-如果任务完成率提升的同时，确认次数和成本快速上升，说明系统可能只是用更多步骤换取结果；如果人工介入率很低但撤销率升高，则说明自主性超出了用户可接受边界。Agent 产品需要在结果、效率与风险之间做三方权衡。
+如果任务完成率提升的同时，确认次数和成本快速上升，说明系统可能只是用更多步骤换取结果；如果人工介入率很低但纠正率升高，则说明自主性超出了用户可接受边界。Agent 产品需要在结果、效率与风险之间做三方权衡。
 
 ## 09｜结语：Agent 产品真正竞争的不是“会不会调用工具”
 
-Agent 让 AI 产品从“信息系统”向“行动系统”移动。这个变化改变了产品经理需要关注的核心问题：过去更多关心回答质量、对话体验和内容生成；现在还必须关心权限、外部状态、过程可见、人工审批、失败恢复、成本边界与结果责任。
+Agent 让 AI 产品从“信息系统”向“行动系统”移动。这个变化改变了产品经理需要关注的核心问题：过去更多关心回答质量、对话体验和内容生成；现在还必须关心权限、环境状态、过程可见、人工审批、失败恢复、成本边界与结果责任。
 
-因此，Agent 并不是 Chatbot 加几个 Tools，也不是把固定 Workflow 换成大模型来决定每一步。一个可用 Agent 的关键，是把目标、计划、权限、行动、反馈、恢复和验证组织成稳定闭环，并在每一个可能放大错误的节点设计控制机制。
+因此，Agent 不是 Chatbot 加几个 Tools，也不是把固定 Workflow 换成大模型来决定每一步。一个可用 Agent 的关键，是把目标、计划、权限、行动、反馈、恢复和验证组织成稳定闭环，并在每一个可能放大错误的节点设计控制机制。
 
-未来 Agent 产品的竞争，可能逐步从 “Model Capability” 转向 “Task Completion Reliability”：谁能在真实环境里更稳定地完成任务、少打断用户、可解释地失败、可恢复地继续，并在需要的时候把决定权交还给人，谁才更接近真正的生产力产品。
+未来 Agent 产品的竞争，可能逐步从 Model Capability 转向 Task Completion Reliability：谁能在真实环境里更稳定地完成任务、少打断用户、可解释地失败、可恢复地继续，并在需要的时候把决定权交还给人，谁才更接近真正的生产力产品。
 
 > 当 AI 产品从“回答用户”进一步走向“代表用户行动”，产品经理需要关注的不再只是模型生成质量，而是目标理解、任务规划、权限、状态、确认、恢复和结果验证。
 >
@@ -573,7 +732,7 @@ Agent 让 AI 产品从“信息系统”向“行动系统”移动。这个变�
 - 需求是否真的需要动态决策？固定 Workflow 是否已经足够？
 - 用户的最终 Goal 与 Completion Criteria 是否可明确描述？
 - Agent 需要访问哪些工具、数据与账户？是否满足最小权限原则？
-- 哪些动作会改变外部世界？分别属于什么风险等级？
+- 哪些动作会影响外部世界？分别属于什么风险等级？
 - 哪些动作必须在执行前确认？哪些动作允许执行后撤销？
 - 任务状态有哪些？是否支持 Pause / Cancel / Resume？
 - 每一步如何获得环境反馈？如何判断工具“成功但结果错误”？
@@ -609,11 +768,124 @@ Agent 让 AI 产品从“信息系统”向“行动系统”移动。这个变�
 | 错误后果很高且缺乏回滚？         | 自主行动风险不可接受       | 降低自治或不用 Agent |
 | 自动化收益不足以覆盖成本或延迟？ | “更智能”但业务收益有限     | 保持更简单方案       |
 
-### 参考资料与研究说明
+## References / 参考资料
 
-本文以产品设计视角为主，不试图穷举 Agent 技术架构。原始材料中的 Chatbot / Workflow / Agent 边界、Autonomy × Control、Progressive Autonomy、Human-in-the-loop、Error Recovery 与 Result Verification 等框架被重新组织并扩展；同时参考公开的一手 Agent 工程资料，用于校准对 workflow / agent 边界、guardrails、tracing、human-in-the-loop 与 agent evaluation 的表述。
+本文以一手官方产品、工程与协议资料为主。以下链接均在本文论证中实际使用：
 
-1. OpenAI. _OpenAI Agents SDK Documentation_（Agents、Guardrails、Tracing、Human-in-the-loop 等模块），2026。
-2. Anthropic. _Building Effective AI Agents_，2024-12-19。
-3. Anthropic. _Demystifying Evals for AI Agents_，2026-01-09。
-4. Anthropic. _Trustworthy Agents in Practice_，2026-04-09。
+<ol>
+  <li>
+    <a
+      href="https://openai.github.io/openai-agents-python/"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      OpenAI — OpenAI Agents SDK Documentation
+    </a>
+    ，2026。
+  </li>
+  <li>
+    <a
+      href="https://www.anthropic.com/engineering/building-effective-agents"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Anthropic — Building Effective AI Agents
+    </a>
+    ，2024-12-19。
+  </li>
+  <li>
+    <a
+      href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Anthropic — Demystifying Evals for AI Agents
+    </a>
+    ，2026-01-09。
+  </li>
+  <li>
+    <a
+      href="https://www.anthropic.com/research/trustworthy-agents"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Anthropic — Trustworthy Agents in Practice
+    </a>
+    ，2026-04-09。
+  </li>
+  <li>
+    <a
+      href="https://openai.com/index/chatgpt-for-your-most-ambitious-work/"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      OpenAI — ChatGPT is now a partner for your most ambitious work
+    </a>
+    ，2026-07-09。
+  </li>
+  <li>
+    <a
+      href="https://blog.modelcontextprotocol.io/posts/2026-07-28/"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Model Context Protocol — The 2026-07-28 Specification
+    </a>
+    ，2026-07-28。
+  </li>
+  <li>
+    <a
+      href="https://developers.googleblog.com/agent-and-model-evaluations-in-gemini-enterprise-agent-platform-are-now-ga/"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Google Developers — Agent and Model Evaluations in Gemini Enterprise Agent Platform are now GA
+    </a>
+    ，2026-07-31。
+  </li>
+  <li>
+    <a
+      href="https://openai.com/index/how-enterprises-put-ai-to-work/"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      OpenAI — From assistance to execution: How enterprises put AI to work
+    </a>
+    ，2026-08-12。
+  </li>
+  <li>
+    <a
+      href="https://www.anthropic.com/research/prompt-injection-defenses"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Anthropic — Mitigating the risk of prompt injections in browser use
+    </a>
+    ，2025-11-24。
+  </li>
+  <li>
+    <a
+      href="https://modelcontextprotocol.io/docs/2026-07-28/tutorials/security/security_best_practices"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Model Context Protocol — Security Best Practices
+    </a>
+    ，2026-07-28。
+  </li>
+  <li>
+    <a
+      href="https://www.anthropic.com/research/measuring-agent-autonomy"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Anthropic — Measuring AI agent autonomy in practice
+    </a>
+    ，2026-02-18。
+  </li>
+</ol>
+
+<ResearchNotice
+  title="研究与实践说明"
+  text="本文研究主要基于 2026 年公开的一手产品与工程资料，并结合本人对 Codex Coding Agent 的实际使用进行产品观察。行业案例用于理解 Agent 产品的发展方向；个人实测用于验证交互、任务状态与结果核验等产品机制。本文提出的 Agent Suitability Matrix、Progressive Autonomy、Risk × Reversibility × Evidence Sufficiency、Agent Product Scorecard 等均为基于公开资料和个人实践整理形成的产品分析框架，不代表相关公司的官方定义。"
+/>

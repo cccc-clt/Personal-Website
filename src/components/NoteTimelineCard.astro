@@ -8,9 +8,10 @@ interface Props {
   article: CollectionEntry<'research'>;
   compact?: boolean;
   headingLevel?: 'h2' | 'h3';
+  seriesHeader?: boolean;
 }
 
-const { article, compact = false, headingLevel = 'h3' } = Astro.props;
+const { article, compact = false, headingLevel = 'h3', seriesHeader = false } = Astro.props;
 const articleUrl = getInsightPath(article);
 const kindLabel = insightKindLabels[article.data.kind];
 const categoryLabel = researchCategoryLabels[article.data.category];
@@ -26,6 +27,10 @@ const cardTitle = article.data.series
   : article.data.title;
 const readingTime = getInsightReadingTime(article);
 const currentLevel = getLearningSeriesLevel(article.data.series, article.data.levelIndex);
+const levelLabel = article.data.level
+  ?.replace(/^第一层：/, '第1层｜')
+  .replace(/^第二层：/, '第2层｜')
+  .replace('：', '｜');
 ---
 
 <article class:list={['note-entry', { 'note-entry--compact': compact }]}>
@@ -38,7 +43,22 @@ const currentLevel = getLearningSeriesLevel(article.data.series, article.data.le
   }
 
   <div class="note-entry__card">
-    {seriesLabel && <p class="note-entry__series">{seriesLabel}</p>}
+    {
+      seriesHeader && seriesLabel && levelLabel ? (
+        <header class="note-entry__series-header">
+          <p>
+            <span>{seriesLabel}</span>
+            <span aria-hidden="true">·</span>
+            <span>{levelLabel}</span>
+          </p>
+          {article.data.seriesStatus && (
+            <strong class="note-entry__series-status">{article.data.seriesStatus}</strong>
+          )}
+        </header>
+      ) : (
+        seriesLabel && <p class="note-entry__series">{seriesLabel}</p>
+      )
+    }
 
     <div class="note-entry__meta">
       <time datetime={article.data.publishDate}
@@ -54,7 +74,15 @@ const currentLevel = getLearningSeriesLevel(article.data.series, article.data.le
     </Heading>
 
     {
-      article.data.series && article.data.level && (
+      seriesHeader && article.data.series && article.data.chapters.length > 0 && (
+        <p class="note-entry__chapters" aria-label="文章章节">
+          {article.data.chapters.map((chapter) => chapter.index).join(' / ')}
+        </p>
+      )
+    }
+
+    {
+      !seriesHeader && article.data.series && article.data.level && (
         <div class="note-entry__series-meta" aria-label="系列进度">
           <span>{article.data.level.replace('：', ' · ')}</span>
           <span>{article.data.chapters.map((chapter) => chapter.index).join(' / ')}</span>
@@ -138,6 +166,48 @@ const currentLevel = getLearningSeriesLevel(article.data.series, article.data.le
     font-size: 0.74rem;
   }
 
+  .note-entry__series-header {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem 1.25rem;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .note-entry__series-header p {
+    display: flex;
+    min-width: 0;
+    flex-wrap: wrap;
+    gap: 0.28rem 0.45rem;
+    margin: 0;
+    color: var(--accent-hover);
+    font-size: 0.76rem;
+    font-weight: 680;
+    line-height: 1.55;
+  }
+
+  .note-entry__series-header p span {
+    overflow-wrap: anywhere;
+  }
+
+  .note-entry__series-header p span:nth-child(2) {
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  .note-entry__series-status {
+    flex: 0 0 auto;
+    padding: 0.32rem 0.58rem;
+    border-radius: var(--radius-pill);
+    background: var(--accent-soft);
+    color: var(--accent-hover);
+    font-size: 0.68rem;
+    font-weight: 680;
+    line-height: 1.35;
+  }
+
   .note-entry__series {
     margin: 0 0 -0.3rem;
     color: var(--accent-hover);
@@ -203,6 +273,15 @@ const currentLevel = getLearningSeriesLevel(article.data.series, article.data.le
     text-wrap: pretty;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 3;
+  }
+
+  .note-entry__chapters {
+    margin: -0.2rem 0 0;
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    font-weight: 580;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
   }
 
   .note-entry__series-meta {
@@ -315,8 +394,28 @@ const currentLevel = getLearningSeriesLevel(article.data.series, article.data.le
       font-size: clamp(1.45rem, 7vw, 1.9rem);
     }
 
+    .note-entry__series-header {
+      align-items: flex-start;
+    }
+
+    .note-entry__series-header p {
+      display: grid;
+      gap: 0.12rem;
+    }
+
+    .note-entry__series-header p span:nth-child(2) {
+      display: none;
+    }
+
     footer {
       align-items: start;
+      flex-direction: column;
+    }
+  }
+
+  @media (max-width: 390px) {
+    .note-entry__series-header {
+      align-items: flex-start;
       flex-direction: column;
     }
   }
