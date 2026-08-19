@@ -136,6 +136,48 @@ const abilityLabels = ['问题定义', '工作流设计', '原型验证', '评�
   </div>
 </section>
 
+<section class="home-development" aria-labelledby="home-development-title">
+  <div class="page-shell">
+    <header class="home-development__heading reveal">
+      <h2 id="home-development-title">补充实践</h2>
+      <p lang="en">Professional Development</p>
+    </header>
+
+    <article class="development-entry reveal">
+      <div class="development-entry__content">
+        <header class="development-entry__header">
+          <h3>Forage Product Management Job Simulation</h3>
+          <p>
+            Forage Academy <span aria-hidden="true">·</span>
+            <time datetime="2026-08">2026.08</time>
+          </p>
+        </header>
+
+        <p class="development-entry__summary">
+          完成移动策略 RPG 场景下的 KPI 判断、玩家洞察优先级与 Stakeholder Presentation
+          项目规划实践。
+        </p>
+
+        <ul class="development-entry__skills" aria-label="技能标签">
+          <li>KPI &amp; Metrics</li>
+          <li>Player Insights</li>
+          <li>Project Planning</li>
+        </ul>
+      </div>
+
+      <a
+        class="text-link development-entry__certificate"
+        href="/certificates/forage-product-management-job-simulation-2026-08.pdf"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="在新标签页查看 Forage Product Management Job Simulation 完成证书（PDF）"
+      >
+        查看证书 <span aria-hidden="true">↗</span>
+      </a>
+    </article>
+  </div>
+</section>
+
 <section class="career-cta" aria-labelledby="career-cta-title">
   <div class="page-shell career-cta__layout reveal">
     <div>
@@ -272,6 +314,115 @@ const abilityLabels = ['问题定义', '工作流设计', '原型验证', '评�
     line-height: 1.82;
   }
 
+  .home-development {
+    padding-block: clamp(3.25rem, 5.5vw, 4.75rem);
+  }
+
+  .home-development__heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.4rem 0.9rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .home-development__heading h2 {
+    margin: 0;
+    font-size: clamp(1.45rem, 2.5vw, 1.8rem);
+    letter-spacing: -0.012em;
+    line-height: 1.3;
+  }
+
+  .home-development__heading p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.78rem;
+    line-height: 1.5;
+  }
+
+  .development-entry {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    min-width: 0;
+    align-items: end;
+    gap: 1.25rem clamp(2rem, 5vw, 4rem);
+    padding: clamp(1.4rem, 3vw, 1.8rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--surface-solid);
+  }
+
+  .development-entry__content {
+    min-width: 0;
+  }
+
+  .development-entry__header h3 {
+    margin: 0;
+    font-size: clamp(1.15rem, 2vw, 1.35rem);
+    letter-spacing: -0.008em;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+    text-wrap: balance;
+  }
+
+  .development-entry__header p {
+    margin: 0.4rem 0 0;
+    color: var(--text-secondary);
+    font-size: 0.78rem;
+    line-height: 1.6;
+  }
+
+  .development-entry__summary {
+    max-width: 68ch;
+    margin: 0.9rem 0 0;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.75;
+    overflow-wrap: anywhere;
+    text-wrap: pretty;
+  }
+
+  .development-entry__skills {
+    display: flex;
+    min-width: 0;
+    flex-wrap: wrap;
+    gap: 0.42rem;
+    margin: 0.95rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .development-entry__skills li {
+    max-width: 100%;
+    padding: 0.32rem 0.56rem;
+    border-radius: var(--radius-pill);
+    background: var(--surface-soft);
+    color: var(--text-secondary);
+    font-size: 0.68rem;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+  }
+
+  .development-entry__certificate {
+    min-height: 44px;
+    justify-self: end;
+    padding-block: 0.55rem;
+    font-size: 0.84rem;
+    white-space: nowrap;
+  }
+
+  .development-entry__certificate::after {
+    content: none;
+  }
+
+  .development-entry__certificate span {
+    transition: translate 280ms var(--ease-out);
+  }
+
+  .development-entry__certificate:hover span {
+    translate: 3px -2px;
+  }
+
   .career-cta {
     padding-block: clamp(4.5rem, 8vw, 7rem);
     border-block: 1px solid var(--border);
@@ -341,6 +492,20 @@ const abilityLabels = ['问题定义', '工作流设计', '原型验证', '评�
       width: min(72%, 300px);
     }
 
+    .home-development {
+      padding-block: 3rem;
+    }
+
+    .development-entry {
+      grid-template-columns: 1fr;
+      align-items: start;
+      gap: 1rem;
+    }
+
+    .development-entry__certificate {
+      justify-self: start;
+    }
+
     .career-cta__actions {
       align-items: stretch;
       flex-direction: column;
@@ -350,6 +515,16 @@ const abilityLabels = ['问题定义', '工作流设计', '原型验证', '评�
     .career-cta__actions .text-link {
       width: 100%;
       justify-content: center;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .development-entry__certificate span {
+      transition: none;
+    }
+
+    .development-entry__certificate:hover span {
+      translate: none;
     }
   }
 </style>
