@@ -57,9 +57,9 @@ export const toolStack = [
     state: '公开仓库可核验',
     use: '保存实验、反馈、会话和记忆等原型数据。',
     scene: '产品评测记录与角色陪伴长期记忆。',
-    project: '爱莉希雅 AI 角色陪伴应用',
+    project: 'Elysia Persona Agent',
     projectHref: '/projects/elysia-ai-character-agent/',
-    next: '继续强化数据迁移、用户删除和隐私边界。',
+    next: '推进 Memory V2 检索与权限边界 hardening。',
   },
   {
     name: 'Pandas + Plotly',
@@ -230,8 +230,8 @@ export const featuredProjectLinks = [
     href: '/projects/mobile-uiagent-evaluation-lab/',
   },
   {
-    type: '角色 Agent',
-    title: 'Elysia AI 角色 Agent',
+    type: 'Persona Agent',
+    title: 'Elysia Persona Agent',
     href: '/projects/elysia-ai-character-agent/',
   },
 ] as const;

@@ -1,12 +1,15 @@
 ---
 import { getCollection, render } from 'astro:content';
+import ElysiaProjectCaseStudy from '../../components/ElysiaProjectCaseStudy.astro';
 import ImageGallery from '../../components/ImageGallery.astro';
 import MetricGrid from '../../components/MetricGrid.astro';
+import PhaseStatusBadge from '../../components/PhaseStatusBadge.astro';
 import ProjectCaseStudy from '../../components/ProjectCaseStudy.astro';
 import ProjectCover from '../../components/ProjectCover.astro';
 import SourceLinkIcon from '../../components/SourceLinkIcon.astro';
 import StatusBadge from '../../components/StatusBadge.astro';
 import { projectFilterLabels } from '../../config/site';
+import { ELYSIA_PROJECT_SLUG, elysiaProjectPage } from '../../data/elysiaProjectPage';
 import { projectCaseStudies } from '../../data/projectCaseStudies';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
@@ -28,7 +31,9 @@ const previousProject = projects[(currentIndex - 1 + projects.length) % projects
 const nextProject = projects[(currentIndex + 1) % projects.length];
 const coverImage = project.data.cover?.src ?? '/images/og/og-general.webp';
 const projectSlug = project.id.replace(/\.mdx?$/, '');
-const caseStudy = projectCaseStudies[projectSlug];
+const isElysiaV2 = projectSlug === ELYSIA_PROJECT_SLUG;
+const caseStudy = isElysiaV2 ? undefined : projectCaseStudies[projectSlug];
+const heroMetrics = isElysiaV2 ? elysiaProjectPage.heroMetrics : caseStudy?.metrics;
 const sourceLinks = [
   project.data.demoUrl && { label: '体验作品', href: project.data.demoUrl, type: 'demo' },
   project.data.apiDocsUrl && {
@@ -99,7 +104,19 @@ const structuredData = {
             }
           </p>
           <h1>{project.data.title}</h1>
-          <p>{project.data.description}</p>
+          {project.data.englishTitle && isElysiaV2 && (
+            <p class="case-hero__english">{project.data.englishTitle}</p>
+          )}
+          <p class="case-hero__desc">{project.data.description}</p>
+          {isElysiaV2 && (
+            <div class="case-hero__phase" aria-label="当前阶段">
+              <PhaseStatusBadge status="IN_PROGRESS" />
+              <div>
+                <strong>{elysiaProjectPage.heroPhase.primary}</strong>
+                <span>{elysiaProjectPage.heroPhase.secondary}</span>
+              </div>
+            </div>
+          )}
         </div>
         {
           sourceLinks.length > 0 && (
@@ -120,7 +137,7 @@ const structuredData = {
           )
         }
       </div>
-      {caseStudy && <MetricGrid metrics={caseStudy.metrics} />}
+      {heroMetrics && <MetricGrid metrics={heroMetrics} />}
       <figure class="case-hero__cover reveal">
         <ProjectCover
           slug={project.id}
@@ -138,17 +155,30 @@ const structuredData = {
       </figure>
     </header>
 
-    <section class="case-summary page-shell reveal" aria-label="项目摘要">
-      <dl>
-        <div><dt>用户问题</dt><dd>{project.data.problem}</dd></div>
-        <div><dt>产品方案</dt><dd>{project.data.solution}</dd></div>
-        <div><dt>我的职责</dt><dd>{project.data.role}</dd></div>
-        <div><dt>真实产出</dt><dd>{project.data.outcome}</dd></div>
-      </dl>
-    </section>
+    {
+      !isElysiaV2 && (
+        <section class="case-summary page-shell reveal" aria-label="项目摘要">
+          <dl>
+            <div><dt>用户问题</dt><dd>{project.data.problem}</dd></div>
+            <div><dt>产品方案</dt><dd>{project.data.solution}</dd></div>
+            <div><dt>我的职责</dt><dd>{project.data.role}</dd></div>
+            <div><dt>真实产出</dt><dd>{project.data.outcome}</dd></div>
+          </dl>
+        </section>
+      )
+    }
 
     {
-      caseStudy ? (
+      isElysiaV2 ? (
+        <ElysiaProjectCaseStudy
+          page={elysiaProjectPage}
+          projectTitle={project.data.title}
+          projectSlug={projectSlug}
+          sourceNote={project.data.sourceNote}
+        >
+          <Content />
+        </ElysiaProjectCaseStudy>
+      ) : caseStudy ? (
         <ProjectCaseStudy
           study={caseStudy}
           projectTitle={project.data.title}
@@ -491,12 +521,44 @@ const structuredData = {
     line-height: 1.12;
   }
 
-  .case-hero__title > div:first-child > p:last-child {
+  .case-hero__title > div:first-child > p:last-child,
+  .case-hero__desc {
     max-width: 68ch;
     margin: 1.2rem 0 0;
     color: var(--text-secondary);
     font-size: clamp(1rem, 1.4vw, 1.18rem);
     line-height: 1.8;
+  }
+
+  .case-hero__english {
+    margin: 0.45rem 0 0 !important;
+    color: var(--text-muted) !important;
+    font-size: 0.92rem !important;
+    letter-spacing: 0.01em;
+    line-height: 1.5 !important;
+  }
+
+  .case-hero__phase {
+    display: flex;
+    gap: 0.85rem;
+    align-items: flex-start;
+    margin-top: 1.25rem;
+    padding: 0.9rem 1.05rem;
+    border-radius: var(--radius-sm);
+    background: color-mix(in srgb, #a987c2 13%, var(--surface-solid));
+  }
+
+  .case-hero__phase strong {
+    display: block;
+    font-size: 0.95rem;
+  }
+
+  .case-hero__phase span {
+    display: block;
+    margin-top: 0.25rem;
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    line-height: 1.55;
   }
 
   .case-hero__actions {

@@ -1,0 +1,928 @@
+---
+import type { ElysiaProjectPage } from '../data/elysiaProjectPage';
+import EvidenceBadge from './EvidenceBadge.astro';
+import PhaseStatusBadge from './PhaseStatusBadge.astro';
+import ProjectEvidenceGallery from './ProjectEvidenceGallery.astro';
+import StudyHeader from './StudyHeader.astro';
+
+interface Props {
+  page: ElysiaProjectPage;
+  projectTitle: string;
+  projectSlug: string;
+  sourceNote: string;
+}
+
+const { page, projectTitle, projectSlug, sourceNote } = Astro.props;
+const interfaceFigures = page.figures.filter((figure) => figure.group === 'interface');
+
+const sectionLinks = [
+  ['overview', '01 项目概览'],
+  ['why-upgrade', '02 为什么升级'],
+  ['evolution', '03 产品演进'],
+  ['architecture', '04 系统架构'],
+  ['permission', '05 Permission'],
+  ['lore-rag', '06 Lore RAG'],
+  ['memory-v2', '07 Memory V2'],
+  ['evaluation', '08 Evaluation'],
+  ['next', '09 边界与 Next'],
+] as const;
+---
+
+<div class:list={['project-study', 'elysia-v2', `project-study--${page.accent}`]} data-project-study>
+  <div class="project-study__layout page-shell">
+    <aside class="project-study__toc" aria-label="项目详情目录">
+      <p>项目详情</p>
+      <nav data-study-nav>
+        {sectionLinks.map(([id, label]) => <a href={`#${id}`}>{label}</a>)}
+      </nav>
+    </aside>
+
+    <div class="project-study__content">
+      <section class="study-section reveal" id="overview">
+        <StudyHeader label="01｜项目概览" title="这是什么，做到哪一步，我做什么" />
+        <div class="phase-banner">
+          <PhaseStatusBadge status="IN_PROGRESS" />
+          <div>
+            <strong>{page.heroPhase.primary}</strong>
+            <p>{page.heroPhase.secondary}</p>
+          </div>
+        </div>
+        <div class="summary-cards">
+          {
+            page.summaryCards.map((card) => (
+              <article>
+                <h3>{card.title}</h3>
+                <p>{card.body}</p>
+              </article>
+            ))
+          }
+        </div>
+      </section>
+
+      <section class="study-section reveal" id="why-upgrade">
+        <StudyHeader
+          label="02｜为什么升级"
+          title="从 Character Companion 到 Persona Agent"
+        />
+        <p class="section-lede">
+          V1 并不是失败版本。它完成了人格、记忆、关系与评测闭环，但在继续扩展工具与知识后暴露出 Agent
+          边界。
+        </p>
+        <div class="two-col">
+          <article>
+            <h3>V1 已完成</h3>
+            <ul>
+              {page.whyUpgrade.v1Done.map((item) => <li>{item}</li>)}
+            </ul>
+          </article>
+          <article>
+            <h3>继续扩展后暴露的边界</h3>
+            <ul>
+              {page.whyUpgrade.boundaries.map((item) => <li>{item}</li>)}
+            </ul>
+          </article>
+        </div>
+        <blockquote class="judgment-callout">{page.whyUpgrade.judgment}</blockquote>
+      </section>
+
+      <section class="study-section reveal" id="evolution">
+        <StudyHeader label="03｜V1 → V2 产品演进" title="按阶段验收，而不是一次性堆功能" />
+        <ol class="phase-timeline">
+          {
+            page.timeline.map((item) => (
+              <li>
+                <div class="phase-timeline__meta">
+                  <PhaseStatusBadge status={item.status} />
+                  <h3>{item.label}</h3>
+                </div>
+                <p>{item.summary}</p>
+                <ul>
+                  {item.capabilities.map((cap) => (
+                    <li>{cap}</li>
+                  ))}
+                </ul>
+                {item.footnote && <p class="footnote">{item.footnote}</p>}
+              </li>
+            ))
+          }
+        </ol>
+        <ProjectEvidenceGallery
+          figures={page.figures}
+          title={projectTitle}
+          slug={projectSlug}
+          group="flow"
+        />
+      </section>
+
+      <section class="study-section reveal" id="architecture">
+        <StudyHeader label="04｜Agent 系统架构" title="执行链与上下文来源分开" />
+        <p class="section-lede">{page.architecture.note}</p>
+        <div class="arch-grid">
+          <div class="arch-diagram" tabindex="0" role="region" aria-label="Agent 主执行链">
+            <pre>{page.architecture.mainFlow}</pre>
+          </div>
+          <div class="arch-diagram" tabindex="0" role="region" aria-label="旁路上下文模块">
+            <pre>{page.architecture.sideModules}</pre>
+          </div>
+        </div>
+      </section>
+
+      <section class="study-section reveal" id="permission">
+        <StudyHeader label="05｜Permission & Tool Calling" title="能不能做，还要看用户是否允许做" />
+        <blockquote class="judgment-callout">{page.permission.principle}</blockquote>
+        <div class="arch-grid">
+          <div>
+            <h3>权限检查路径</h3>
+            <div class="arch-diagram" tabindex="0" role="region" aria-label="权限检查流程">
+              <pre>{page.permission.flow}</pre>
+            </div>
+          </div>
+          <div>
+            <h3>用户拒绝路径</h3>
+            <div class="arch-diagram" tabindex="0" role="region" aria-label="用户拒绝流程">
+              <pre>{page.permission.rejectFlow}</pre>
+            </div>
+            <p class="footnote">{page.permission.rejectNote}</p>
+          </div>
+        </div>
+        <div class="two-col">
+          <article>
+            <h3>已实现工具</h3>
+            <ul>
+              {page.permission.implementedTools.map((item) => <li>{item}</li>)}
+            </ul>
+          </article>
+          <article>
+            <h3>Planned 工具</h3>
+            <ul>
+              {page.permission.plannedTools.map((item) => <li>{item}</li>)}
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="study-section reveal" id="lore-rag">
+        <StudyHeader label="06｜Lore RAG" title="设定回答需要可检查的知识来源" />
+        <p class="section-lede">V1 问题：{page.loreRag.problem}</p>
+        <div class="arch-grid">
+          <div>
+            <h3>V1</h3>
+            <div class="arch-diagram" tabindex="0" role="region" aria-label="V1 Lore 模型">
+              <pre>{page.loreRag.v1Model}</pre>
+            </div>
+          </div>
+          <div>
+            <h3>V2</h3>
+            <div class="arch-diagram" tabindex="0" role="region" aria-label="V2 Lore 检索链">
+              <pre>{page.loreRag.v2Flow}</pre>
+            </div>
+          </div>
+        </div>
+        <blockquote class="judgment-callout">{page.loreRag.value}</blockquote>
+        <ul class="capability-list">
+          {page.loreRag.capabilities.map((item) => <li>{item}</li>)}
+        </ul>
+        <div class="evaluation-grid">
+          {
+            page.loreRag.evaluation.map((item) => (
+              <article>
+                <div>
+                  <strong>{item.value}</strong>
+                  <EvidenceBadge status={item.status} />
+                </div>
+                <h3>{item.label}</h3>
+                <p>{item.note}</p>
+              </article>
+            ))
+          }
+        </div>
+        <p class="footnote">{page.loreRag.semanticNote}</p>
+      </section>
+
+      <section class="study-section reveal" id="memory-v2">
+        <StudyHeader label="07｜Memory V2 · Phase 4" title="Store ≠ Retrieve ≠ Inject" />
+        <div class="phase-banner">
+          <PhaseStatusBadge status={page.memoryV2.status} />
+          <div>
+            <strong>Current Design</strong>
+            <p>本阶段正在进行；下表区分已实现、设计中与规划项。</p>
+          </div>
+        </div>
+        <blockquote class="judgment-callout">{page.memoryV2.callout}</blockquote>
+        <div class="two-col">
+          <article>
+            <h3>Why Memory V2 · V1 问题</h3>
+            <ul>
+              {page.memoryV2.whyProblem.map((item) => <li>{item}</li>)}
+            </ul>
+          </article>
+          <article>
+            <h3>V2 目标</h3>
+            <p>{page.memoryV2.whyGoal}</p>
+          </article>
+        </div>
+        <div class="arch-diagram" tabindex="0" role="region" aria-label="Memory V2 设计流程">
+          <pre>{page.memoryV2.designFlow}</pre>
+        </div>
+        <div class="capability-status-list">
+          {
+            page.memoryV2.capabilities.map((item) => (
+              <article>
+                <header>
+                  <h3>{item.name}</h3>
+                  <span class={`cap-status cap-status--${item.status.toLowerCase().replace(' ', '-')}`}>
+                    {item.status}
+                  </span>
+                </header>
+                {item.note && <p>{item.note}</p>}
+              </article>
+            ))
+          }
+        </div>
+        {
+          interfaceFigures.length > 0 && (
+            <ProjectEvidenceGallery
+              figures={page.figures}
+              title={projectTitle}
+              slug={projectSlug}
+              group="interface"
+            />
+          )
+        }
+      </section>
+
+      <section class="study-section reveal" id="evaluation">
+        <StudyHeader label="08｜Evaluation / Trace / Bad Case" title="基线保留，V2 验证分开呈现" />
+
+        <h3 class="subhead">V1 Baseline & Lessons</h3>
+        <p class="section-lede">{page.v1Baseline.intro}</p>
+        <div class="evaluation-grid">
+          {
+            page.v1Baseline.metrics.map((item) => (
+              <article>
+                <div>
+                  <strong>{item.value}</strong>
+                  <EvidenceBadge status={item.status} />
+                </div>
+                <h3>{item.label}</h3>
+                {item.note && <p>{item.note}</p>}
+              </article>
+            ))
+          }
+        </div>
+        <div class="evaluation-grid">
+          {
+            page.v1Baseline.evaluations.map((item) => (
+              <article>
+                <div>
+                  <strong>{item.value}</strong>
+                  <EvidenceBadge status={item.status} />
+                </div>
+                <h3>{item.label}</h3>
+                <p>{item.note}</p>
+              </article>
+            ))
+          }
+        </div>
+        <div class="bad-case-list">
+          {
+            page.v1Baseline.badCases.map((badCase) => (
+              <article>
+                <header>
+                  <h3>{badCase.title}</h3>
+                  <EvidenceBadge status={badCase.status} />
+                </header>
+                <ol>
+                  <li>
+                    <span>问题</span>
+                    <p>{badCase.problem}</p>
+                  </li>
+                  <li>
+                    <span>定位</span>
+                    <p>{badCase.diagnosis}</p>
+                  </li>
+                  <li>
+                    <span>修复</span>
+                    <p>{badCase.fix}</p>
+                  </li>
+                  <li>
+                    <span>回归验证</span>
+                    <p>{badCase.verification}</p>
+                  </li>
+                </ol>
+              </article>
+            ))
+          }
+        </div>
+
+        <h3 class="subhead">V2 Validation</h3>
+        <p class="section-lede">{page.v2Validation.intro}</p>
+        <div class="evaluation-grid">
+          {
+            page.v2Validation.items.map((item) => (
+              <article>
+                <div>
+                  <strong>{item.value}</strong>
+                  <EvidenceBadge status={item.status} />
+                </div>
+                <h3>{item.label}</h3>
+                <p>{item.note}</p>
+              </article>
+            ))
+          }
+        </div>
+      </section>
+
+      <section class="study-section reveal" id="next">
+        <StudyHeader label="09｜边界 / 贡献 / Next" title="只写真实参与与真实计划" />
+        <h3 class="subhead">我的贡献</h3>
+        <ul class="contribution-list">
+          {page.contributions.map((item) => <li>{item}</li>)}
+        </ul>
+
+        <h3 class="subhead">产品边界</h3>
+        <dl class="risk-list">
+          {
+            page.risks.map((risk) => (
+              <div>
+                <dt>{risk.title}</dt>
+                <dd>{risk.description}</dd>
+              </div>
+            ))
+          }
+        </dl>
+        <blockquote class="boundary-statement">{page.boundaryStatement}</blockquote>
+
+        <h3 class="subhead">Next</h3>
+        <div class="next-list">
+          {
+            page.nextItems.map((item) => (
+              <article>
+                <header>
+                  <PhaseStatusBadge status={item.status} />
+                  <h3>{item.label}</h3>
+                </header>
+                <p>{item.detail}</p>
+              </article>
+            ))
+          }
+        </div>
+
+        <div class="source-note">
+          <strong>来源说明</strong>
+          <p>{sourceNote}</p>
+        </div>
+        <div class="project-mdx prose"><slot /></div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<script>
+  let studyNavObserver: IntersectionObserver | undefined;
+
+  const setupStudyNavigation = () => {
+    studyNavObserver?.disconnect();
+    const nav = document.querySelector<HTMLElement>('[data-study-nav]');
+    const links = nav ? [...nav.querySelectorAll<HTMLAnchorElement>('a[href^="#"]')] : [];
+    if (!nav || !links.length) return;
+
+    const sections = links
+      .map((link) => document.querySelector<HTMLElement>(link.hash))
+      .filter((section): section is HTMLElement => Boolean(section));
+
+    const setCurrent = (id: string) => {
+      links.forEach((link) => {
+        if (link.hash === `#${id}`) link.setAttribute('aria-current', 'location');
+        else link.removeAttribute('aria-current');
+      });
+    };
+
+    setCurrent(sections[0]?.id ?? '');
+    studyNavObserver = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+        if (visible) setCurrent((visible.target as HTMLElement).id);
+      },
+      { rootMargin: '-18% 0px -68% 0px', threshold: [0, 0.1] },
+    );
+    sections.forEach((section) => studyNavObserver?.observe(section));
+  };
+
+  setupStudyNavigation();
+  document.addEventListener('site:page-view', setupStudyNavigation);
+</script>
+
+<style>
+  .project-study--violet {
+    --study-accent: #7c62a8;
+    --study-accent-soft: color-mix(in srgb, #a987c2 13%, var(--surface-solid));
+  }
+
+  .project-study__layout {
+    display: grid;
+    grid-template-columns: 190px minmax(0, 1fr);
+    gap: clamp(3rem, 8vw, 8rem);
+    align-items: start;
+    padding-bottom: clamp(5rem, 10vw, 10rem);
+  }
+
+  .project-study__toc {
+    position: sticky;
+    top: 7rem;
+    padding-top: 0.8rem;
+  }
+
+  .project-study__toc > p {
+    margin: 0 0 0.8rem;
+    color: var(--text-main);
+    font-size: 0.78rem;
+    font-weight: 650;
+  }
+
+  .project-study__toc nav {
+    display: grid;
+  }
+
+  .project-study__toc a {
+    padding: 0.48rem 0;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    transition: color 180ms ease;
+  }
+
+  .project-study__toc a:hover,
+  .project-study__toc a[aria-current='location'] {
+    color: var(--study-accent);
+  }
+
+  .project-study__content {
+    width: min(100%, 940px);
+    min-width: 0;
+    overflow-x: hidden;
+  }
+
+  .study-section {
+    scroll-margin-top: 7rem;
+    padding: clamp(3.8rem, 8vw, 7rem) 0;
+    border-top: 1px solid var(--border-strong);
+  }
+
+  .study-section:first-child {
+    padding-top: 0.8rem;
+    border-top: 0;
+  }
+
+  :global(.study-heading) {
+    margin-bottom: clamp(2rem, 4vw, 2.8rem);
+  }
+
+  :global(.study-heading span) {
+    color: var(--study-accent);
+    font-size: 0.82rem;
+    font-weight: 650;
+  }
+
+  :global(.study-heading h2) {
+    max-width: 22ch;
+    margin: 0.55rem 0 0;
+    font-size: clamp(2.1rem, 4vw, 3rem);
+    letter-spacing: -0.018em;
+    line-height: 1.18;
+  }
+
+  .phase-banner {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    margin-bottom: 1.75rem;
+    padding: 1.1rem 1.25rem;
+    border-radius: var(--radius-sm);
+    background: var(--study-accent-soft);
+  }
+
+  .phase-banner strong {
+    display: block;
+    font-size: 1.02rem;
+  }
+
+  .phase-banner p {
+    margin: 0.35rem 0 0;
+    color: var(--text-secondary);
+    font-size: 0.86rem;
+    line-height: 1.6;
+  }
+
+  .summary-cards,
+  .evaluation-grid,
+  .two-col,
+  .arch-grid,
+  .capability-status-list,
+  .next-list {
+    display: grid;
+    gap: 1px;
+    border-block: 1px solid var(--border-strong);
+    background: var(--border);
+  }
+
+  .summary-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .evaluation-grid,
+  .capability-status-list,
+  .next-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin-top: 1.25rem;
+  }
+
+  .two-col,
+  .arch-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 1.25rem 0;
+  }
+
+  .summary-cards article,
+  .evaluation-grid article,
+  .two-col article,
+  .capability-status-list article,
+  .next-list article,
+  .arch-grid > div {
+    min-width: 0;
+    padding: 1.2rem 1.15rem 1.35rem;
+    background: var(--surface-solid);
+  }
+
+  .summary-cards h3,
+  .two-col h3,
+  .arch-grid h3,
+  .evaluation-grid h3,
+  .capability-status-list h3,
+  .next-list h3 {
+    margin: 0 0 0.55rem;
+    font-size: 0.95rem;
+  }
+
+  .summary-cards p,
+  .two-col p,
+  .evaluation-grid p,
+  .capability-status-list p,
+  .next-list p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.86rem;
+    line-height: 1.75;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .evaluation-grid article > div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    align-items: center;
+    margin-bottom: 0.55rem;
+  }
+
+  .evaluation-grid strong {
+    font-size: 1.15rem;
+    letter-spacing: -0.02em;
+  }
+
+  .section-lede {
+    margin: 0 0 1.25rem;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.8;
+  }
+
+  .judgment-callout,
+  .boundary-statement {
+    margin: 1.5rem 0;
+    padding: 1.25rem 1.4rem;
+    border-radius: var(--radius-sm);
+    background: var(--study-accent-soft);
+    color: var(--text-main);
+    font-size: clamp(0.95rem, 1.6vw, 1.08rem);
+    font-weight: 600;
+    line-height: 1.75;
+  }
+
+  .two-col ul,
+  .capability-list,
+  .phase-timeline ul {
+    margin: 0.4rem 0 0;
+    padding-left: 1.1rem;
+    color: var(--text-secondary);
+    font-size: 0.86rem;
+    line-height: 1.7;
+  }
+
+  .capability-list {
+    margin: 1rem 0 1.5rem;
+  }
+
+  .phase-timeline {
+    display: grid;
+    gap: 0;
+    margin: 0 0 2rem;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--border-strong);
+  }
+
+  .phase-timeline > li {
+    position: relative;
+    padding: 1.4rem 0 1.4rem 1.4rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .phase-timeline > li::before {
+    content: '';
+    position: absolute;
+    top: 1.7rem;
+    left: 0;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--study-accent);
+  }
+
+  .phase-timeline__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    align-items: center;
+    margin-bottom: 0.45rem;
+  }
+
+  .phase-timeline__meta h3 {
+    margin: 0;
+    font-size: 1.05rem;
+  }
+
+  .phase-timeline > li > p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.7;
+  }
+
+  .footnote {
+    margin: 0.75rem 0 0;
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    line-height: 1.65;
+  }
+
+  .arch-diagram {
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: var(--radius-sm);
+    background: var(--surface-soft);
+  }
+
+  .arch-diagram pre {
+    margin: 0;
+    padding: 1.1rem 1.2rem;
+    min-width: min(100%, 28rem);
+    color: var(--text-main);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.78rem;
+    line-height: 1.55;
+    white-space: pre;
+  }
+
+  .cap-status {
+    display: inline-flex;
+    padding: 0.16rem 0.48rem;
+    border-radius: 999px;
+    font-size: 0.62rem;
+    font-weight: 650;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+
+  .cap-status--implemented {
+    background: color-mix(in srgb, var(--success) 13%, var(--surface-solid));
+    color: color-mix(in srgb, var(--success) 88%, var(--text-main));
+  }
+
+  .cap-status--in-progress {
+    background: color-mix(in srgb, var(--primary-strong) 12%, var(--surface-solid));
+    color: var(--primary-strong);
+  }
+
+  .cap-status--planned {
+    background: var(--surface-soft);
+    color: var(--ink-500);
+  }
+
+  .capability-status-list article header,
+  .next-list article header,
+  .bad-case-list article header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.45rem;
+  }
+
+  .capability-status-list article header h3,
+  .next-list article header h3,
+  .bad-case-list article header h3 {
+    margin: 0;
+  }
+
+  .subhead {
+    margin: 2.5rem 0 0.85rem;
+    font-size: 1.15rem;
+  }
+
+  .subhead:first-of-type {
+    margin-top: 0;
+  }
+
+  .bad-case-list {
+    display: grid;
+    gap: 1rem;
+    margin: 1.5rem 0 2rem;
+  }
+
+  .bad-case-list article {
+    padding: 1.2rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface-solid);
+  }
+
+  .bad-case-list ol {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin: 1rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .bad-case-list li span {
+    display: block;
+    margin-bottom: 0.35rem;
+    color: var(--study-accent);
+    font-size: 0.68rem;
+    font-weight: 650;
+  }
+
+  .bad-case-list li p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.82rem;
+    line-height: 1.65;
+  }
+
+  .risk-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+    margin: 0;
+    border-top: 1px solid var(--border-strong);
+  }
+
+  .risk-list > div {
+    padding: 1rem 1rem 1.1rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .risk-list > div:nth-child(even) {
+    padding-left: 1rem;
+    border-left: 1px solid var(--border);
+  }
+
+  .risk-list dt {
+    margin-bottom: 0.35rem;
+    font-weight: 650;
+  }
+
+  .risk-list dd {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.86rem;
+    line-height: 1.7;
+  }
+
+  .contribution-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+    margin: 0 0 1.5rem;
+    padding: 0;
+    border-top: 1px solid var(--border-strong);
+    list-style: none;
+  }
+
+  .contribution-list li {
+    padding: 1rem 1rem 1rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.7;
+  }
+
+  .contribution-list li:nth-child(even) {
+    border-left: 1px solid var(--border);
+  }
+
+  .source-note {
+    margin-top: 2rem;
+    padding: 1rem 1.15rem;
+    border-left: 3px solid var(--study-accent);
+    background: var(--study-accent-soft);
+  }
+
+  .source-note strong {
+    font-size: 0.78rem;
+  }
+
+  .source-note p {
+    margin: 0.4rem 0 0;
+    color: var(--text-secondary);
+    font-size: 0.78rem;
+    line-height: 1.75;
+  }
+
+  .project-mdx {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+  }
+
+  @media (max-width: 900px) {
+    .project-study__layout {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+
+    .project-study__toc {
+      position: static;
+      min-width: 0;
+      overflow-x: auto;
+      padding-top: 0;
+    }
+
+    .project-study__toc > p {
+      display: none;
+    }
+
+    .project-study__toc nav {
+      display: flex;
+      min-width: max-content;
+      gap: 1rem;
+      border-bottom: 1px solid var(--border-strong);
+    }
+
+    .project-study__toc a {
+      flex: 0 0 auto;
+      border-bottom: 0;
+    }
+
+    .bad-case-list ol {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 700px) {
+    .summary-cards,
+    .evaluation-grid,
+    .two-col,
+    .arch-grid,
+    .capability-status-list,
+    .next-list,
+    .risk-list,
+    .contribution-list {
+      grid-template-columns: 1fr;
+    }
+
+    .risk-list > div:nth-child(n),
+    .contribution-list li:nth-child(n) {
+      padding-inline: 0;
+      border-left: 0;
+    }
+
+    .phase-timeline > li {
+      padding-left: 1.15rem;
+    }
+
+    .bad-case-list ol {
+      grid-template-columns: 1fr;
+    }
+
+    .arch-diagram pre {
+      font-size: 0.72rem;
+    }
+  }
+</style>

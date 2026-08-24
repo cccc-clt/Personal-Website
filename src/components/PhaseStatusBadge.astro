@@ -1,0 +1,46 @@
+---
+import type { PhaseStatus } from '../data/elysiaProjectPage';
+
+interface Props {
+  status: PhaseStatus;
+}
+
+const { status } = Astro.props;
+const labels: Record<PhaseStatus, string> = {
+  DONE: 'DONE',
+  IN_PROGRESS: 'IN PROGRESS',
+  NEXT: 'NEXT',
+};
+---
+
+<span class:list={['phase-status', `phase-status--${status.toLowerCase()}`]}>
+  {labels[status]}
+</span>
+
+<style>
+  .phase-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.18rem 0.55rem;
+    border-radius: 999px;
+    border: 1px solid color-mix(in srgb, currentColor 28%, transparent);
+    background: color-mix(in srgb, currentColor 10%, transparent);
+    color: var(--ink-650);
+    font-size: 0.62rem;
+    font-weight: 650;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+
+  .phase-status--done {
+    color: var(--success);
+  }
+
+  .phase-status--in_progress {
+    color: var(--primary-strong);
+  }
+
+  .phase-status--next {
+    color: var(--ink-500);
+  }
+</style>

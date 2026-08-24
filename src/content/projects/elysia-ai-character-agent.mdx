@@ -1,77 +1,78 @@
 ---
 index: 'PROJECT_006'
-title: '爱莉希雅 AI 角色陪伴应用'
-englishTitle: 'Elysia AI Character Companion'
+title: 'Elysia Persona Agent'
+englishTitle: '从 Character Companion 到 Persona Agent'
 codename: '记忆回廊'
-summary: '结合角色人设、长期记忆、亲密度与人工反馈机制的角色陪伴 Agent。'
-homepageSummary: '结合角色人设、长期记忆、亲密度与人工反馈机制的角色陪伴 Agent。'
-description: '基于 Streamlit 的非商业同人角色陪伴作品，包含长期记忆、待确认记忆、陪伴场景、可选语音提供方与一致性评测。'
-updated: 2026-07-17
+summary: '从 AI Character Companion 持续演进的 Persona Agent 实验，覆盖人格一致性、Agent Tool Calling、Permission、Lore RAG、Memory 与 Evaluation。'
+homepageSummary: '从角色陪伴到 Persona Agent：Harness、Permission、Lore RAG 与 Memory V2。'
+description: '一个从 AI Character Companion 持续演进的 Persona Agent 实验。围绕人格一致性、长期记忆、Agent Tool Calling、Permission / Approval、Lore RAG、Trace 与 Evaluation，探索角色 AI 从「像角色地聊天」走向「基于人格、记忆与世界观受控执行」的产品路径。'
+updated: 2026-08-24
 status: 'ITERATING'
-categories: ['角色 Agent', '长期记忆', '陪伴体验']
+categories: ['游戏 AI', 'Persona Agent', 'Agent', 'RAG', 'Memory', 'Evaluation']
 targetTracks: ['general', 'game', 'agent']
 filters: ['game-ai', 'agent', 'evaluation']
-role: '产品设计 / 记忆机制 / Agent 评测'
-period: '在线作品 · 公开仓库 · Fan-made 原型'
+role: '产品定义 / Agent 架构 / Memory·RAG·Permission / Evaluation'
+period: '在线作品 · 公开仓库 · V2 Phase 4 In Progress'
 techStack:
   [
     'Python',
     'Streamlit',
     'SQLite',
-    'JSON Fallback',
+    'ElysiaHarness',
+    'PermissionGate',
+    'Lore RAG',
     'OpenAI-compatible API',
     'edge-tts',
-    'Optional GPT-SoVITS',
   ]
-highlights: ['长期记忆', '待确认记忆', '陪伴场景', '角色一致性评测']
+highlights: ['Persona Agent', 'Agent Harness', 'Permission / Approval', 'Lore RAG', 'Memory V2']
 responsibilities:
-  - '设计记忆写入、待确认和用户管理流程'
-  - '拆解陪伴场景与角色一致性约束'
-  - '接入可选语音提供方并保留文本降级'
-  - '整理一致性评测和使用分析入口'
-targetUser: '希望研究角色陪伴 Agent、记忆控制和一致性评测的产品学习者与开发者。'
-goal: '验证角色陪伴中长期记忆、用户控制、语音降级和一致性评测如何组成完整产品体验。'
-problem: '角色 Agent 容易出现记忆误写、设定漂移和过度拟人化，语音资源也涉及额外的合规边界。'
-aiNeeded: '模型负责自然语言互动和记忆候选提取，但记忆确认、角色边界和风险提示需要产品机制约束。'
-solution: '用 SQLite 或 JSON 保存会话，把模型提取的信息先放入待确认记忆，再由用户决定保存或拒绝；陪伴场景、可选语音和一致性评测均保留降级与人工控制。'
-outcome: '在线作品与公开仓库已可访问；非商业同人原型覆盖记忆确认、场景、可选语音和一致性评测，不含官方角色资产。'
+  - '定义 Character Companion → Persona Agent 的产品方向与阶段验收'
+  - '设计 Agent Harness、Permission、Lore RAG 与 Memory V2 边界'
+  - '建立 V1 评测基线，并接入 V2 Trace / 本地测试与检索评测'
+  - '使用 Cursor / Codex 协同实现，负责验收标准与迭代决策'
+targetUser: '关注游戏角色 AI、Persona Agent、可控工具调用与评测闭环的产品学习者与招聘方。'
+goal: '验证角色 AI 如何从人格陪伴闭环，升级为可控、可追踪、具备世界观检索与长期记忆设计的 Persona Agent。'
+problem: '当角色 AI 拥有长期记忆、世界观知识与工具能力后，核心问题变成如何控制上下文、事实依据、工具权限、长期记忆与执行过程。'
+aiNeeded: '模型负责决策与角色化表达；工具执行、权限审批、Lore 检索与记忆确认需要产品机制与工程约束。'
+solution: 'Persona + ElysiaHarness + Permission / Approval + Lore RAG + Layered Memory 设计 + Trace / Evaluation，将人格、知识、私人记忆与工具执行拆分为可控模块。'
+outcome: 'V1 陪伴闭环与真实评测基线已完成；V2 Phase 1–3（Agent Core、Permission & Tools、Lore RAG）已在仓库验收；Phase 4 Memory V2 设计进行中。'
 flow:
   [
-    '进入陪伴场景',
-    '进行文本对话',
-    '提取记忆候选',
-    '用户确认或拒绝记忆',
-    '写入长期记忆',
-    '可选生成语音',
-    '查看一致性与使用记录',
+    '用户输入',
+    'ElysiaHarness 决策',
+    'Tool Call',
+    'PermissionGate',
+    'ToolResult / Observation',
+    'Trace',
+    '角色化回复',
   ]
 aiDesign:
-  - 'OpenAI-compatible API 承接对话，模型配置由本地环境提供'
-  - '记忆候选先进入待确认区，不自动永久写入'
-  - 'SQLite 为主要存储，JSON 可作为回退'
-  - '语音提供方为可选能力，缺失时保持文本体验'
-humanCheckpoints: ['确认或删除记忆', '复核角色设定边界', '决定是否启用本地语音资源']
-edgeCases: ['模型虚构共同经历', '不应保存的隐私被提取', '语音服务不可用', '长期对话后角色语气漂移']
+  - 'ElysiaHarness 承接多步 Tool Loop、Trace 与错误处理'
+  - 'PermissionGate 对 write / external 风险要求审批；拒绝后不执行'
+  - 'Lore RAG 通过 lore_search 提供可引用证据，默认 Feature Flag 关闭'
+  - 'Memory 保留 V1 确认流；Memory V2 将 Storage 与 Retrieval 分离（进行中）'
+humanCheckpoints: ['确认或删除记忆', '审批高风险工具调用', '复核 Lore 来源与角色边界']
+edgeCases: ['用户拒绝工具执行', '无 Lore 证据时应拒答', '删除记忆后旧上下文泄漏', '长对话 Token 与极端长尾']
 safety:
   [
-    '用户保留记忆控制权',
+    '用户保留记忆控制权与工具审批权',
     '不把 Agent 描述为现实关系替代品',
     '仓库不包含官方美术、音频、模型权重或角色资产',
     '非商业同人作品，与米哈游或 HoYoverse 无隶属关系',
   ]
-evaluationMetrics: ['角色一致性', '记忆引用正确性', '记忆确认可控性', '回复边界', '语音失败降级']
-failures: ['未经确认写入长期记忆', '把模型推断当成用户事实', '语音失败阻断文本对话']
+evaluationMetrics: ['人格一致性', 'Permission 合规', 'Lore groundedness', 'Trace 可观测性', 'Memory 可控性']
+failures: ['未经确认写入长期记忆', '拒绝后仍执行工具', '无证据却编造设定', '把私人记忆与 Lore 混用']
 iterations:
-  - stage: 'CURRENT_REPOSITORY'
-    problem: '长期记忆若自动写入，用户难以纠正错误或控制隐私。'
-    analysis: '角色陪伴中的记忆需要可见、可确认、可删除。'
-    change: '仓库提供待确认记忆、长期记忆管理、陪伴场景、可选语音和一致性评测。'
-    result: '当前公开仓库形成可运行的同人角色陪伴作品，且不包含官方角色资产。'
-    next: '继续扩展记忆冲突和角色漂移测试样本。'
-reflection: '陪伴体验越自然，越需要把记忆控制、身份边界和降级路径做得清楚。'
-nextSteps: ['扩展记忆冲突测试', '完善角色漂移样本', '加强语音资源合规说明']
+  - stage: 'V2_PHASE_4'
+    problem: '长期记忆增长后不宜全量注入 Prompt；需要 Storage 与 Retrieval 分离。'
+    analysis: 'V1 解决了确认与删除；V2 还需 Top-K、分层与评分召回。'
+    change: 'Phase 1–3 已落地 Harness、Permission 与 Lore RAG；Phase 4 进入 Memory V2 设计。'
+    result: '仓库当前开发线可演示 Agent Loop / 审批 / Lore 检索；Memory V2 尚未完成实现。'
+    next: '落地 L0/L1/L2 与 Top-K 检索，并准备 Phase 5 Agent Evaluation。'
+reflection: '角色越像、工具越多，越需要把权限、证据、记忆召回和 Trace 做成一等公民。'
+nextSteps: ['完成 Memory V2 Top-K 检索', '硬化语义 Lore 后端与人工核验门', '扩展工具集与 Phase 5 Agent Eval']
 cover: '../../assets/project-covers/elysia-ai-character-agent.webp'
-coverAlt: '爱莉希雅角色 Agent 的真实对话界面，包含角色状态、亲密度、反馈和长期记忆操作'
+coverAlt: 'Elysia Persona Agent 真实对话界面，包含角色状态、亲密度、反馈和长期记忆操作'
 coverPosition: 'center center'
 gallery: []
 featured: true
@@ -79,14 +80,14 @@ homepageFeatured: true
 homepageOrder: 2
 githubUrl: 'https://github.com/cccc-clt/elysia-ai-character-agent'
 demoUrl: 'https://elysia-ai-character-agent-gfgpbbhuzdrl6igygq6evb.streamlit.app/'
-sourceNote: '已依据公开 GitHub 仓库、在线作品与本地评测材料校对；这是非商业同人作品，仓库不含官方角色资产。'
+sourceNote: '已依据公开 GitHub 仓库（含 V2 开发分支）、在线作品、本地自动化测试与 Lore 检索评测报告校对；这是非商业同人作品，仓库不含官方角色资产。不把规划能力写成已上线结果。'
 order: { general: 2, game: 2, agent: 5, auto: 4 }
 ---
 
 ## 记忆不是默认授权
 
-原型把模型提取到的信息先放进“待确认记忆”，由用户决定保存或拒绝。这个流程比自动积累更多记忆更重要，因为错误记忆和隐私误收集都会直接伤害陪伴体验。
+原型把模型提取到的信息先放进「待确认记忆」，由用户决定保存或拒绝。V2 进一步强调：保存某条记忆，并不代表每次对话都应该把它提供给模型。
 
 ## 同人项目说明
 
-这是用于产品与工程学习的非商业同人作品，与米哈游或 HoYoverse 没有隶属或授权关系。公开仓库不包含官方图片、音频、模型权重或角色资产；可选语音能力需要使用者自行确认资源来源与许可。
+这是用于产品与工程学习的非商业同人作品，与米哈游或 HoYoverse 没有隶属或授权关系。公开仓库不包含官方图片、音频、模型权重或角色资产；可选语音能力需要使用者自行确认资源来源与许可。角色内容仅用于学习与产品实验，不代表官方线上服务。
